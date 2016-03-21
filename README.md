@@ -97,6 +97,7 @@ So you can run the tool as a git subcommand:
 
 ### TODO
 
+* [ ] make it possible to choose method (SSH or HTTPS)
 * [ ] make a `git-repo fork` action that will:
     - make a fork on the remote repository
     - clone the fork locally
