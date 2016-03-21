@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 
 setup(name='git-repo',
-      version='1.0',
-      description='tool for managing remote repositories from your git CLI!',
+      version='1.1',
+      description='Tool for managing remote repositories from your git CLI!',
       classifiers=[
             'Development Status :: 2 - Pre-Alpha',
       ],
@@ -12,7 +12,7 @@ setup(name='git-repo',
       author='Bernard `Guyzmo` Pratz',
       author_email='guyzmo+git-repo@m0g.net',
       setup_requires=['setuptools-markdown'],
-      long_description_mackdown_filename='README.md',
+      long_description_markdown_filename='README.md',
       install_requires=[
             'docopt',
             'GitPython',
