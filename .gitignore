@@ -8,3 +8,6 @@ bin/
 .installed.cfg
 *.egg-info
 __pycache__
+.eggs
+README.rst
+*.egg
