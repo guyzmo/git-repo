@@ -43,19 +43,18 @@ read the LICENSE file available in the sources, or check
 out: http://www.gnu.org/licenses/gpl-2.0.txt
 '''
 
+from docopt import docopt
+from subprocess import call
+from git import Repo, RemoteProgress
+from progress.bar import IncrementalBar as Bar
+
 import sys
+import json
 import pkg_resources
 
 __version__ = pkg_resources.require('git-repo')[0].version
 __author__ = 'Bernard `Guyzmo` Pratz <guyzmo+git_repo@m0g.net>'
 __contributors__ = []
-
-from subprocess import call
-from docopt import docopt
-from git import Repo
-
-import json
-
 
 ####################################################################################
 # repository_service.py
@@ -120,11 +119,22 @@ class RepositoryService:
         self._alias = c.get('alias', self.name)
         self._url = c.get('url', self.url)
 
+        self.connect()
+
     def clone(self, user, repo_name, branch='master'):
-        print('git clone {}/{}/{} {}'.format(self.url, user, repo_name, branch))
+        print('Cloning {}…'.format(repo_name))
+
+        class ProgressBar(RemoteProgress):
+            bar = Bar(message='Cloning {}'.format(repo_name), suffix='')
+
+            def update(self, op_code, cur_count, max_count=100, message=''):
+                self.bar.max = int(max_count or 100)
+                self.bar.goto(int(cur_count))
+
         self.repository.create_remote(self.name, '{}/{}/{}'.format(self.url, user, repo_name))
         # TODO add option for making this remote default for the branch
-        self.repository.remotes[0].pull(branch, kwargs={'-u': 'master'})
+        self.repository.remotes[0].pull(branch, progress=ProgressBar())
+        print()
 
     def add(self, repo, default=False):
         '''Adding repository as remote'''
@@ -149,79 +159,103 @@ class RepositoryService:
     def create(self, repo):
         raise NotImplementedError
 
+    def fork(self, repo):
+        raise NotImplementedError
+
 ####################################################################################
 # repository_bitbucket.py
+
+from bitbucket.bitbucket import Bitbucket
 
 
 @register_target('bb', 'bitbucket')
 class BitbucketService(RepositoryService):
     url = 'https://bitbucket.org'
 
-    def create(self, repo):
-        from bitbucket.bitbucket import Bitbucket
+    def connect(self):
         username, password = self._privatekey.split(':')
+        self.bb = Bitbucket(username, password)
+
+    def create(self, repo):
         repo_name = repo
         if '/' in repo:
             user, repo_name = repo.split('/')
-        print("creating bloody repo on bitbucket: ", self.url, ':', user, repo_name)
-        bb = Bitbucket(username, password)
         try:
-            bb.repository.create(repo_name, scm='git')
+            self.bb.repository.create(repo_name, scm='git')
         except Exception as err:
-            print(err)
-            print(dir(err))
             if err.message == 'name already exists on this account':
                 raise Exception("Project already exists.")
             else:
                 raise Exception("Unhandled error.")
         self.add(repo, default=True)
 
+    def fork(self, repo):
+        # TODO cannot figure out how to trigger a fork with the bitbucket API!
+        raise NotImplementedError
+
+
 ####################################################################################
 # repository_github.py
+
+import github3
 
 
 @register_target('hub', 'github')
 class GithubService(RepositoryService):
     url = 'https://github.com'
 
+    def connect(self):
+        self.gh = github3.login(token=self._privatekey)
+
     def create(self, repo):
         repo_name = repo
         if '/' in repo:
             user, repo_name = repo.split('/')
-        print("creating bloody repo on github: ", self.url, ':', user, repo_name)
-        import github3
-        gh = github3.login(token=self._privatekey)
         try:
-            gh.create_repo(repo_name)
+            self.gh.create_repo(repo_name)
         except github3.models.GitHubError as err:
-            print(err.message)
             if err.message == 'name already exists on this account':
                 raise Exception("Project already exists.")
             else:
                 raise Exception("Unhandled error.")
         self.add(repo, default=True)
 
+    def fork(self, repo):
+        user, repo_name = repo.split('/')
+        try:
+            fork = self.gh.repository(user, repo_name).fork()
+        except github3.models.GitHubError as err:
+            if err.message == 'name already exists on this account':
+                raise Exception("Project already exists.")
+            else:
+                raise Exception("Unhandled error.")
+        self.add(repo, name='upstream', default=False)
+        self.add(fork.full_name, default=True)
+
 
 ####################################################################################
 # repository_gitlab.py
+
+from gitlab import Gitlab
+from gitlab.exceptions import GitlabCreateError
 
 
 @register_target('lab', 'gitlab')
 class GitlabService(RepositoryService):
     url = 'https://gitlab.com'
 
+    def connect(self):
+        self.gl = Gitlab(self.url, self._privatekey)
+
     def create(self, repo):
         repo_name = repo
         if '/' in repo:
             user, repo_name = repo.split('/')
-        print("creating bloody repo on gitlab: ", repo, '→', self.url, ':', user, repo_name)
-        from gitlab import Gitlab
-        from gitlab.exceptions import GitlabCreateError
-        print(self._privatekey)
         try:
-            Gitlab(self.url, self._privatekey).projects.create(data={
+            self.gl.projects.create(data={
                 'name': repo_name,
-                # 'namespace_id': user, # TODO does not work
+                # 'namespace_id': user, # TODO does not work, cannot create on
+                # another namespace yet
             })
         except GitlabCreateError as err:
             if json.loads(err.response_body.decode('utf-8'))['message']['name'][0] == 'has already been taken':
@@ -230,13 +264,22 @@ class GitlabService(RepositoryService):
                 raise Exception("Unhandled error.")
         self.add(repo, default=True)
 
+    def fork(self, repo):
+        try:
+            fork = self.gl.projects.get(repo).forks.create()
+        except GitlabCreateError as err:
+            if json.loads(err.response_body.decode('utf-8'))['message']['name'][0] == 'has already been taken':
+                raise Exception("Project already exists.")
+            else:
+                raise Exception("Unhandled error.")
+        self.add(repo, name='upstream', default=False)
+        self.add('{}/{}'.format(fork.namespace['path'], fork.name), default=True)
+
 
 ####################################################################################
 
 
 def main(args):
-    print(args)
-
     if args['create'] or args['add']:
         repository = Repo()
         service = RepositoryService.get_service(repository, args['<target>'])
