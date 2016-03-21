@@ -5,22 +5,22 @@
 Control your remote git hosting services from the `git` commandline. The usage is
 very simple. To clone a new project, out of github, just issue:
 
-    % git-repo hub clone guyzmo/git-repo
+    % git hub clone guyzmo/git-repo
 
 But that works also with a project from gitlab, bitbucket, or your own gitlab:
 
-    % git-repo lab clone guyzmo/git-repo
-    % git-repo bb clone guyzmo/git-repo
-    % git-repo myprecious clone guyzmo/git-repo
+    % git lab clone guyzmo/git-repo
+    % git bb clone guyzmo/git-repo
+    % git myprecious clone guyzmo/git-repo
 
 If you want to can choose the default branch to clone:
 
-    % git-repo lab clone guyzmo/git-repo master
+    % git lab clone guyzmo/git-repo master
 
 Though sometimes, as you're starting a new project, you want to create a new
 repository to push to:
 
-    % git-repo hub create guyzmo/git-repo
+    % git hub create guyzmo/git-repo
 
 actually the namespace is facultative, as per default you can (and want to)
 only create new repositories within your own account.
@@ -28,13 +28,22 @@ only create new repositories within your own account.
 You might also want to add an existing remote ref to your workspace, and that
 can be easily done with:
 
-    % git-repo lab add guyzmo/git-repo
+    % git lab add guyzmo/git-repo
 
 Which will add `https://gitlab.com/guyzmo/git-repo` as the `gitlab` remote!
 
+Also, you can fork a repository using:
+
+    % git
+
 Finally, you can open the repository's page, using the `open` command:
 
-    % git-repo lab open guyzmo/git-repo
+    % git lab open guyzmo/git-repo
+
+
+> *Nota Bene*: Thanks to `git` CLI flexibility, by installing `git-repo` you directly
+> have acces to the tool using `git-repo hub …` or `git repo hub …`. For the
+> `git hub …` call, you have to set up aliases, see below how to configure that.
 
 ### Installation
 
@@ -95,14 +104,32 @@ So you can run the tool as a git subcommand:
 
     git hub clone guyzmo/git-repo
 
+### Development
+
+For development, I like to use `buildout`, and the repository is already configured
+for that. All you have to do, is install buildout, and then call it from the root of 
+the repository:
+
+    % pip install zc.buildout
+    % buildout
+
+and then you'll have the executable in `bin`:
+
+    % bin/git-repo --help
+
 ### TODO
 
+* [x] make a `git-repo fork` action
+ - still need to figure out how to make it work with bitbucket's api!
 * [ ] make it possible to choose method (SSH or HTTPS)
-* [ ] make a `git-repo fork` action that will:
-    - make a fork on the remote repository
-    - clone the fork locally
-    - add both the fork and the forked as remotes
+ - at the time being, all remotes are being added as HTTPS per default
+ - as a workaround you can change the default url using the `url` parameter in configuration
 * [ ] add OAuth support for bitbucket
+* [ ] handle default branches properly
+* [ ] show a nice progress bar, while it's fetching
+* [ ] make a nice way to push to all remotes at once
+ - maybe using that trick: http://stackoverflow.com/questions/4255865/git-push-to-multiple-repositories-simultaneously
+* [ ] add regression tests (and actually find a smart way to implement them…)
 * for more features, write an issue or, even better, a PR!
 
 ### License
