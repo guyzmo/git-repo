@@ -1,0 +1,10 @@
+var/
+*~
+*.swp
+build/
+dist/
+bin/
+.ropeproject/
+.installed.cfg
+*.egg-info
+__pycache__
