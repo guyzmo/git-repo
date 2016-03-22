@@ -90,7 +90,7 @@ Also, you can setup your own gitlab self-hosted server, using that configuration
     [gitrepo "myprecious"]
         type = gitlab
         private-key = YourSuperPrivateKey
-        url = https://gitlab.example.org/
+        fqdn = gitlab.example.org
 
 Finally, to make it really cool, you can make a few aliases in your gitconfig:
 
@@ -121,13 +121,12 @@ and then you'll have the executable in `bin`:
 
 * [x] make a `git-repo fork` action
  - still need to figure out how to make it work with bitbucket's api!
-* [ ] make it possible to choose method (SSH or HTTPS)
- - at the time being, all remotes are being added as HTTPS per default
- - as a workaround you can change the default url using the `url` parameter in configuration
+* [x] make it possible to choose method (SSH or HTTPS)
+ - HTTPS is used as RO and SSH as RW
 * [ ] add OAuth support for bitbucket
 * [ ] handle default branches properly
 * [ ] show a nice progress bar, while it's fetching
-* [ ] make a nice way to push to all remotes at once
+* [x] make a nice way to push to all remotes at once
  - maybe using that trick: http://stackoverflow.com/questions/4255865/git-push-to-multiple-repositories-simultaneously
 * [ ] add regression tests (and actually find a smart way to implement them…)
 * for more features, write an issue or, even better, a PR!

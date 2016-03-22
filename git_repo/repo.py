@@ -73,6 +73,7 @@ def set_url(self, url, **kwargs):
     self.repo.git.remote(scmd, self.name, url, **kwargs)
     return self
 
+import git
 git.remote.Remote.set_url = set_url
 
 
@@ -132,6 +133,28 @@ class RepositoryService:
 
         self.connect()
 
+    git_user = 'git'
+
+    @property
+    def url(self):
+        return 'https://{}'.format(self.fqdn)
+
+    @property
+    def url_auth(self):
+        return '{}@{}'.format(self.git_user, self.fqdn)
+
+    def format_path(self, repo_name, user=None, rw=False):
+        repo = repo_name
+        if user:
+            repo = '{}/{}'.format(user, repo_name)
+
+        if not rw and '/' in repo:
+            return '{}/{}'.format(self.url, repo)
+        elif rw and '/' in repo:
+            return '{}:{}'.format(self.url_auth, repo)
+        else:
+            raise Exception("Cannot tell how to handle this url: `{}`!".format(self.url))
+
     def clone(self, user, repo_name, branch='master'):
         print('Cloning {}…'.format(repo_name))
 
@@ -142,7 +165,7 @@ class RepositoryService:
                 self.bar.max = int(max_count or 100)
                 self.bar.goto(int(cur_count))
 
-        self.repository.create_remote(self.name, '{}/{}/{}'.format(self.url, user, repo_name))
+        self.repository.create_remote(self.name, self.format_path(user, repo_name, rw=True))
         # TODO add option for making this remote default for the branch
         self.repository.remotes[0].pull(branch, progress=ProgressBar())
         print()
@@ -158,22 +181,22 @@ class RepositoryService:
                 all_remote = r
         # update remote 'all'
         if not all_remote:
-            self.repository.create_remote('all', '{}/{}'.format(self.url, repo))
+            self.repository.create_remote('all', self.format_path(repo, rw=True))
         else:
-            all_remote.set_url(url='{}/{}'.format(self.url, repo), add=True)
+            all_remote.set_url(url=self.format_path(repo, rw=True), add=True)
         # adding "self" as the default remote
         if default:
             # TODO Check if -m master is indeed added
-            self.repository.create_remote(self.name, '{}/{}'.format(self.url, repo, kwargs={'m': 'master'}))
+            self.repository.create_remote(self.name, self.format_path(repo, rw=True), kwargs={'m': 'master'})
         else:
-            self.repository.create_remote(self.name, '{}/{}'.format(self.url, repo))
+            self.repository.create_remote(self.name, self.format_path(repo, rw=True))
 
     def open(self, repo=None):
         if not repo:
             url = self.c.get('remote "origin"', 'url')
             call([OPEN_COMMAND, url])
         else:
-            call([OPEN_COMMAND, '{}/{}'.format(self.url, repo)])
+            call([OPEN_COMMAND, self.format_path(repo, rw=False)])
 
     def create(self, repo):
         raise NotImplementedError
@@ -189,7 +212,7 @@ from bitbucket.bitbucket import Bitbucket
 
 @register_target('bb', 'bitbucket')
 class BitbucketService(RepositoryService):
-    url = 'https://bitbucket.org'
+    fqdn = 'bitbucket.org'
 
     def connect(self):
         username, password = self._privatekey.split(':')
@@ -221,7 +244,7 @@ import github3
 
 @register_target('hub', 'github')
 class GithubService(RepositoryService):
-    url = 'https://github.com'
+    url = 'github.com'
 
     def connect(self):
         self.gh = github3.login(token=self._privatekey)
@@ -261,7 +284,7 @@ from gitlab.exceptions import GitlabCreateError
 
 @register_target('lab', 'gitlab')
 class GitlabService(RepositoryService):
-    url = 'https://gitlab.com'
+    fqdn = 'gitlab.com'
 
     def connect(self):
         self.gl = Gitlab(self.url, self._privatekey)
