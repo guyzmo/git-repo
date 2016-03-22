@@ -68,6 +68,10 @@ __contributors__ = []
 
 log = logging.getLogger('git_repo.repo')
 
+if sys.version_info.major < 3:
+    print('Please use with python version 3')
+    sys.exit(1)
+
 ####################################################################################
 # repository_service.py
 

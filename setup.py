@@ -1,5 +1,11 @@
 from setuptools import setup, find_packages
 
+import sys
+
+if sys.version_info.major < 3:
+    print('Please install with python version 3')
+    sys.exit(1)
+
 
 setup(name='git-repo',
       version='1.3',
