@@ -65,6 +65,17 @@ else:
     OPEN_COMMAND = 'xdg-open'
 
 
+# Monkey patching of missing command Remote.set_url
+# TODO make a PR on pythongit
+def set_url(self, url, **kwargs):
+    scmd = 'set-url'
+    kwargs['insert_kwargs_after'] = scmd
+    self.repo.git.remote(scmd, self.name, url, **kwargs)
+    return self
+
+git.remote.Remote.set_url = set_url
+
+
 def register_target(repo_cmd, repo_service):
     """Decorator to register a class with an repo_service"""
     def decorate(klass):
@@ -139,13 +150,21 @@ class RepositoryService:
     def add(self, repo, default=False):
         '''Adding repository as remote'''
         # removing remote if it already exists
+        # and extract all repository
         for r in self.repository.remotes:
             if r.name == self.name:
                 self.repository.delete_remote(r)
-                break
-        # adding it back
+            elif r.name == 'all':
+                all_remote = r
+        # update remote 'all'
+        if not all_remote:
+            self.repository.create_remote('all', '{}/{}'.format(self.url, repo))
+        else:
+            all_remote.set_url(url='{}/{}'.format(self.url, repo), add=True)
+        # adding "self" as the default remote
         if default:
-            self.repository.create_remote(self.name, '{}/{}'.format(self.url, repo, kwargs={'-m': 'master'}))  # TODO does not work
+            # TODO Check if -m master is indeed added
+            self.repository.create_remote(self.name, '{}/{}'.format(self.url, repo, kwargs={'m': 'master'}))
         else:
             self.repository.create_remote(self.name, '{}/{}'.format(self.url, repo))
 
