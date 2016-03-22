@@ -34,12 +34,15 @@ Which will add `https://gitlab.com/guyzmo/git-repo` as the `gitlab` remote!
 
 Also, you can fork a repository using:
 
-    % git
+    % git hub fork neovim/neovim
+
+and of course, you can delete it using:
+
+    % git hub delete guyzmo/git-repo
 
 Finally, you can open the repository's page, using the `open` command:
 
     % git lab open guyzmo/git-repo
-
 
 > *Nota Bene*: Thanks to `git` CLI flexibility, by installing `git-repo` you directly
 > have acces to the tool using `git-repo hub …` or `git repo hub …`. For the
@@ -120,14 +123,17 @@ and then you'll have the executable in `bin`:
 ### TODO
 
 * [x] make a `git-repo fork` action
- - still need to figure out how to make it work with bitbucket's api!
 * [x] make it possible to choose method (SSH or HTTPS)
- - HTTPS is used as RO and SSH as RW
-* [ ] add OAuth support for bitbucket
-* [ ] handle default branches properly
-* [ ] show a nice progress bar, while it's fetching
+* [x] handle default branches properly
 * [x] make a nice way to push to all remotes at once
  - maybe using that trick: http://stackoverflow.com/questions/4255865/git-push-to-multiple-repositories-simultaneously
+* [ ] refactor the code into multiple modules
+* [ ] add support for handling gists
+* [ ] add support for handling pull requests 
+ - list them
+ - fetch them as local branches
+* [ ] add OAuth support for bitbucket
+* [ ] show a nice progress bar, while it's fetching
 * [ ] add regression tests (and actually find a smart way to implement them…)
 * for more features, write an issue or, even better, a PR!
 

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 
 setup(name='git-repo',
-      version='1.2',
+      version='1.3',
       description='Tool for managing remote repositories from your git CLI!',
       classifiers=[
             'Development Status :: 2 - Pre-Alpha',
