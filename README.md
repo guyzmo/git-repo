@@ -1,5 +1,12 @@
 ## Git-Repo: git services CLI utility
 
+* To get the sources:
+  * https://github.com/guyzmo/git-repo
+  * https://gitlab.com/guyzmo/git-repo
+  * https://bitbucket.org/guyzmo/git-repo
+* For issues:
+  * https://github.com/guyzmo/git-repo/issues
+
 ### Usage
 
 Control your remote git hosting services from the `git` commandline. The usage is
@@ -38,7 +45,7 @@ Also, you can fork a repository using:
 
 and of course, you can delete it using:
 
-    % git hub delete guyzmo/git-repo
+    % git bb delete guyzmo/git-repo
 
 Finally, you can open the repository's page, using the `open` command:
 
