@@ -48,6 +48,11 @@ Finally, you can open the repository's page, using the `open` command:
 > have acces to the tool using `git-repo hub …` or `git repo hub …`. For the
 > `git hub …` call, you have to set up aliases, see below how to configure that.
 
+And as a bonus, each time it's adding a new remote, it's updating the `all` remote,
+so that you can push your code to all your remote repositories in one command:
+
+    % git push all master
+
 ### Installation
 
 You can get the tool using pypi:
