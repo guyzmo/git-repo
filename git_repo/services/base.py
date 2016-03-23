@@ -26,8 +26,17 @@ def set_url(self, url, **kwargs):
     self.repo.git.remote(scmd, self.name, url, **kwargs)
     return self
 
+def list_urls(self):
+    '''Return the list of all configured URL targets'''
+    remote_details = self.repo.git.remote("show", self.name)
+    for line in remote_details.split('\n'):
+        if '  Push  URL:' in line:
+            yield line.split(': ')[-1]
+
+
 import git
 git.remote.Remote.set_url = set_url
+git.remote.Remote.list = property(list_urls)
 
 
 class ProgressBar(RemoteProgress):
@@ -206,16 +215,19 @@ class RepositoryService:
         for r in self.repository.remotes:
             if r.name == name:
                 self.repository.delete_remote(r)
+            # find and stash the remote 'all'
             elif r.name == 'all':
                 all_remote = r
         # update remote 'all'
         if not alone:
+            # if remote all does not exists
             if not all_remote:
-                # XXX remove current remote's url from all if already there to avoid doubles
-                # pythongit API lacks ability to get URLs from a remote…
                 self.repository.create_remote('all', self.format_path(repo, user, rw=True))
             else:
-                all_remote.set_url(url=self.format_path(repo, user, rw=True), add=True)
+                url = self.format_path(repo, user, rw=True)
+                # check if url not already in remote all
+                if url not in all_remote.list:
+                    all_remote.set_url(url=self.format_path(repo, user, rw=True), add=True)
 
         # adding "self" as the default remote
         if default:
