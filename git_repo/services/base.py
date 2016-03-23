@@ -3,11 +3,13 @@
 import logging
 log = logging.getLogger('git_repo.base')
 
+import os
 import sys
 
 from git import RemoteProgress
 from progress.bar import IncrementalBar as Bar
 
+from ..exceptions import ArgumentError
 
 '''select open command'''
 
@@ -234,6 +236,13 @@ class RepositoryService:
             return self.repository.create_remote(name, self.format_path(repo, user, rw=True), master='master')
         else:
             return self.repository.create_remote(name, self.format_path(repo, user, rw=True))
+
+    def connect(self):
+        '''Brings up the connection to the remote service's API
+
+        Meant to be overloaded by subclass
+        '''
+        raise NotImplementedError
 
     def delete(self, repo, user=None):
         '''Delete a remote repository on the service
