@@ -37,7 +37,7 @@ class GithubService(RepositoryService):
             else:
                 raise Exception("Unhandled error: {}".format(err))
         self.add(user=user, repo=repo, name='upstream', alone=True)
-        remote = self.add(repo=fork.full_name, user=self.gh.user().name, default=True)
+        remote = self.add(repo=repo, user=self.gh.user().name, default=True)
         self.pull(remote, branch)
         log.info("New forked repository available at {}/{}".format(self.url_ro,
                                                                    fork.full_name))
