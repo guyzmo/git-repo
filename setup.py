@@ -8,7 +8,7 @@ if sys.version_info.major < 3:
 
 
 setup(name='git-repo',
-      version='1.3',
+      version='1.4',
       description='Tool for managing remote repositories from your git CLI!',
       classifiers=[
             'Development Status :: 2 - Pre-Alpha',
