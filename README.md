@@ -139,7 +139,7 @@ and then you'll have the executable in `bin`:
 * [x] handle default branches properly
 * [x] make a nice way to push to all remotes at once
  - maybe using that trick: http://stackoverflow.com/questions/4255865/git-push-to-multiple-repositories-simultaneously
-* [ ] refactor the code into multiple modules
+* [x] refactor the code into multiple modules
 * [ ] add support for handling gists
 * [ ] add support for handling pull requests 
  - list them
