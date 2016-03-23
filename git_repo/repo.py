@@ -94,6 +94,9 @@ def main(args):
         if args['<branch>'] == None:
             args['<branch>'] = 'master'
 
+        if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys():
+            del os.environ['GIT_WORK_TREE']
+
         if args['create'] or args['add'] or args['delete']:
             repository = Repo()
             service = RepositoryService.get_service(repository, args['<target>'])
