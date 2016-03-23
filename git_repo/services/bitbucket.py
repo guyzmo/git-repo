@@ -93,7 +93,7 @@ class BitbucketService(RepositoryService):
     def connect(self):
         username, password = self._privatekey.split(':')
         self.bb = Bitbucket(username, password)
-        monkey_patch()
+        monkey_patch(self.bb)
 
     def create(self, repo):
         repo_name = repo
