@@ -105,7 +105,7 @@ def main(args):
 
 
         if '/' in args['<user>/<repo>']:
-            if len(args['<user>/<repo>'].split('/')) > 1:
+            if len(args['<user>/<repo>'].split('/')) > 2:
                 raise Exception('Too many slashes.'
                                 'Format of the parameter is <user>/<repo> or <repo>.')
             user, repo = args['<user>/<repo>'].split('/')
