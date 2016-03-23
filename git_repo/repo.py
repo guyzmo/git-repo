@@ -181,7 +181,7 @@ def main(args):
         return 1
     except Exception as err:
         log.error('Fatal error: {}'.format(err))
-        if log.level == logging.DEBUG:
+        if log_root.level == logging.DEBUG:
             log.exception('------------------------------------')
         return 2
 
