@@ -18,12 +18,9 @@ class GitlabService(RepositoryService):
         self.gl = Gitlab(self.url_ro, self._privatekey)
 
     def create(self, repo):
-        repo_name = repo
-        if '/' in repo:
-            user, repo_name = repo.split('/')
         try:
             self.gl.projects.create(data={
-                'name': repo_name,
+                'name': repo,
                 # 'namespace_id': user, # TODO does not work, cannot create on
                 # another namespace yet
             })
@@ -32,7 +29,7 @@ class GitlabService(RepositoryService):
                 raise Exception("Project already exists.")
             else:
                 raise Exception("Unhandled error.")
-        self.add(user=user, repo=repo_name, default=True)
+        self.add(user=user, repo=repo, default=True)
 
     def fork(self, user, repo, branch='master'):
         try:
@@ -48,18 +45,18 @@ class GitlabService(RepositoryService):
         log.info("New forked repository available at {}/{}".format(self.url_ro,
                                                                    fork.path_with_namespace))
 
-    def delete(self, repo_name, user=None):
+    def delete(self, repo, user=None):
         if not user:
             raise Exception('Need an user namespace')
         try:
-            repo = self.gl.projects.get('{}/{}'.format(user, repo_name))
-            if repo:
-                result = repo.delete()
-            if not repo or not result:
-                raise Exception("Cannot delete: repository {}/{} does not exists.".format(user, repo_name))
+            repository = self.gl.projects.get('{}/{}'.format(user, repo))
+            if repository:
+                result = repository.delete()
+            if not repository or not result:
+                raise Exception("Cannot delete: repository {}/{} does not exists.".format(user, repo))
         except GitlabGetError as err:
             if err.response_code == 404:
-                raise Exception("Cannot delete: repository {}/{} does not exists.".format(user, repo_name))
+                raise Exception("Cannot delete: repository {}/{} does not exists.".format(user, repo))
             elif err.response_code == 403:
                 raise Exception("You don't have enough permissions for deleting the repository. Check the namespace or the private token's privileges")
         except Exception as err:

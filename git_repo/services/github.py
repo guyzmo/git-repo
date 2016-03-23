@@ -14,18 +14,15 @@ class GithubService(RepositoryService):
     def connect(self):
         self.gh = github3.login(token=self._privatekey)
 
-    def create(self, repo):
-        repo_name = repo
-        if '/' in repo:
-            user, repo_name = repo.split('/')
+    def create(self, user, repo):
         try:
-            self.gh.create_repo(repo_name)
+            self.gh.create_repo(repo)
         except github3.models.GitHubError as err:
             if err.message == 'name already exists on this account':
                 raise Exception("Project already exists.")
             else:
                 raise Exception("Unhandled error.")
-        self.add(user=user, repo=repo_name, default=True)
+        self.add(user=user, repo=repo, default=True)
 
     def fork(self, user, repo, branch='master'):
         log.info("Forking repository {}/{}…".format(user, repo))
@@ -42,15 +39,15 @@ class GithubService(RepositoryService):
         log.info("New forked repository available at {}/{}".format(self.url_ro,
                                                                    fork.full_name))
 
-    def delete(self, repo_name, user=None):
+    def delete(self, repo, user=None):
         if not user:
             user = self.gh.user().name
         try:
-            repo = self.gh.repository(user, repo_name)
-            if repo:
-                result = repo.delete()
-            if not repo or not result:
-                raise Exception("Cannot delete: repository {}/{} does not exists.".format(user, repo_name))
+            repository = self.gh.repository(user, repo)
+            if repository:
+                result = repository.delete()
+            if not repository or not result:
+                raise Exception("Cannot delete: repository {}/{} does not exists.".format(user, repo))
         except github3.models.GitHubError as err:
             if err.code == 403:
                 raise Exception("You don't have enough permissions for deleting the repository. Check the namespace or the private token's privileges")

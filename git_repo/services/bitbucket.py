@@ -95,18 +95,15 @@ class BitbucketService(RepositoryService):
         self.bb = Bitbucket(username, password)
         monkey_patch(self.bb)
 
-    def create(self, repo):
-        repo_name = repo
-        if '/' in repo:
-            user, repo_name = repo.split('/')
+    def create(self, user, repo):
         try:
-            self.bb.repository.create(repo_name, scm='git')
+            self.bb.repository.create(repo, scm='git')
         except Exception as err:
             if err.message == 'name already exists on this account':
                 raise Exception("Project already exists.")
             else:
                 raise Exception("Unhandled error.")
-        self.add(user=user, repo=repo_name, default=True)
+        self.add(user=user, repo=repo, default=True)
 
     def fork(self, user, repo, branch='master'):
         log.info("Forking repository {}/{}…".format(user, repo))

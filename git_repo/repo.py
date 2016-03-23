@@ -103,19 +103,30 @@ def main(args):
         if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys():
             del os.environ['GIT_WORK_TREE']
 
+
+        if '/' in args['<user>/<repo>']:
+            if len(args['<user>/<repo>'].split('/')) > 1:
+                raise Exception('Too many slashes.'
+                                'Format of the parameter is <user>/<repo> or <repo>.')
+            user, repo = args['<user>/<repo>'].split('/')
+        else:
+            user = None
+            repo = args['<user>/<repo>']
+
         if args['create'] or args['add'] or args['delete']:
             repository = Repo()
             service = RepositoryService.get_service(repository, args['<target>'])
 
             if args['create']:
-                service.create(args['<user>/<repo>'])
-                log.info('Successfully created remote repository `{}/{}`, with local remote `{}`'.format(
-                    service.format_path(args['<user>/<repo>']),
+                service.create(user, repo)
+                log.info('Successfully created remote repository `{}`, '
+                         'with local remote `{}`'.format(
+                    service.format_path(user=user, repo=repo),
                     service.name)
                 )
 
             elif args['add']:
-                service.add(args['<user>/<repo>'])
+                service.add(user, repo)
                 log.info('Successfully added `{}` as remote named `{}`'.format(
                     args['<user>/<repo>'],
                     service.name)
@@ -123,16 +134,17 @@ def main(args):
 
             elif args['delete']:
                 if not args['--force']:
-                    ans = input('Are you sure you want to delete the repository {} from the server?\n[yN]> '.format(args['<user>/<repo>']))
+                    ans = input('Are you sure you want to delete the repository '
+                                '{} from the server?\n[yN]> '.format(args['<user>/<repo>']))
                     if 'y' in ans:
-                        ans = input('Are you really sure, there\'s no coming back?\n[type \'burn!\' to proceed]> ')
+                        ans = input('Are you really sure, there\'s no coming back?\n'
+                                    '[type \'burn!\' to proceed]> ')
                         if 'burn!' != ans:
                             return 0
                     else:
                         return 0
 
-                if '/' in args['<user>/<repo>']:
-                    user, repo = args['<user>/<repo>'].split('/')
+                if user:
                     service.delete(repo, user)
                 else:
                     service.delete(repo)
@@ -143,28 +155,26 @@ def main(args):
             return 0
 
         elif args['fork']:
-            user, repo_name = args['<user>/<repo>'].split('/')
-            if not os.path.exists(repo_name):
-                repository = Repo.init(repo_name)
+            if not os.path.exists(repo):
+                repository = Repo.init(repo)
                 service = RepositoryService.get_service(repository, args['<target>'])
-                service.fork(user, repo_name, branch=args['<branch>'])
+                service.fork(user, repo, branch=args['<branch>'])
                 log.info('Successfully cloned repository {} in ./{}'.format(
                     args['<user>/<repo>'],
-                    repo_name)
+                    repo)
                 )
 
                 return 0
             else:
-                raise Exception('Cannot clone repository, a folder named {} already exists!'.format(repo_name))
+                raise Exception('Cannot clone repository, a folder named {} already exists!'.format(repo))
 
         elif args['clone']:
-            user, repo_name = args['<user>/<repo>'].split('/')
-            repository = Repo.init(repo_name)
+            repository = Repo.init(repo)
             service = RepositoryService.get_service(repository, args['<target>'])
-            service.clone(user, repo_name, args['<branch>'])
+            service.clone(user, repo, args['<branch>'])
             log.info('Successfully cloned `{}` into `./{}`!'.format(
                 service.format_path(args['<user>/<repo>']),
-                repo_name)
+                repo)
             )
             return 0
 
@@ -173,7 +183,7 @@ def main(args):
                 repository = Repo()
             except:
                 repository = None
-            RepositoryService.get_service(repository, args['<target>']).open(args['<user>/<repo>'])
+            RepositoryService.get_service(repository, args['<target>']).open(user, repo)
             return 0
 
         log.error('Unknown action.')

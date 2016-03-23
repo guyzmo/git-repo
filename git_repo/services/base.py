@@ -160,20 +160,20 @@ class RepositoryService:
         else:
             remote.pull() #progress=ProgressBar())
 
-    def clone(self, user, repo_name, branch='master'):
+    def clone(self, user, repo, branch='master'):
         '''Clones a new repository
 
         :param user: namespace of the repository
-        :param repo_name: name slug of the repository
+        :param repo: name slug of the repository
         :Param branch: default branch to pull
 
         This command is fairly simple, and pretty close to the real `git clone`
         command, except it does not take a full path, but just a namespace/slug
         path for a given service.
         '''
-        log.info('Cloning {}…'.format(repo_name))
+        log.info('Cloning {}…'.format(repo))
 
-        remote = self.add(user=user, repo=repo_name, default=True)
+        remote = self.add(user=user, repo=repo, default=True)
         self.pull(remote, branch)
 
     def add(self, repo, user=None, name=None, default=False, alone=False):
@@ -223,7 +223,7 @@ class RepositoryService:
         else:
             return self.repository.create_remote(name, self.format_path(repo, user, rw=True))
 
-    def delete(self, repo):
+    def delete(self, repo, user=None):
         '''Delete a remote repository on the service
 
         :param repo: name of the remote repository to delete
@@ -232,13 +232,16 @@ class RepositoryService:
         '''
         raise NotImplementedError
 
-    def open(self, repo=None):
+    def open(self, user=None, repo=None):
         '''Open the URL of a repository in the user's browser'''
         if not repo:
             url = self.c.get('remote "origin"', 'url')
             call([OPEN_COMMAND, url])
         else:
-            call([OPEN_COMMAND, self.format_path(repo, rw=False)])
+            if not user:
+                call([OPEN_COMMAND, self.format_path(repo=repo, rw=False)])
+            else:
+                call([OPEN_COMMAND, self.format_path(user=user, repo=repo, rw=False)])
 
     def create(self, repo):
         '''Create a new remote repository on the service
