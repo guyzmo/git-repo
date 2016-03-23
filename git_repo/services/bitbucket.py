@@ -4,6 +4,7 @@ import logging
 log = logging.getLogger('git_repo.bitbucket')
 
 from .base import register_target, RepositoryService
+from ..exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
 
 from bitbucket.bitbucket import Bitbucket
 import json
@@ -96,20 +97,16 @@ class BitbucketService(RepositoryService):
         monkey_patch(self.bb)
 
     def create(self, user, repo):
-        try:
-            self.bb.repository.create(repo, scm='git')
-        except Exception as err:
-            if err.message == 'name already exists on this account':
-                raise Exception("Project already exists.")
-            else:
-                raise Exception("Unhandled error.")
+        success, result = self.bb.repository.create(repo, scm='git')
+        if not success and 'Service not found.' == result:
+            raise ResourceExistsError('Project {} already exists on this account.'.format(repo))
         self.add(user=user, repo=repo, default=True)
 
     def fork(self, user, repo, branch='master'):
         log.info("Forking repository {}/{}…".format(user, repo))
         success, result = self.bb.repository.fork(user, repo)
         if not success:
-            raise Exception("Couldn't complete fork: {message} (error #{code}: {reason})".format(**result))
+            raise ResourceError("Couldn't complete fork: {message} (error #{code}: {reason})".format(**result))
         fork = result
         self.add(repo=repo, user=user, name='upstream', alone=True)
         remote = self.add(repo=fork['slug'], user=fork['owner'], default=True)
@@ -121,8 +118,8 @@ class BitbucketService(RepositoryService):
             user = self.bb.user().name
         success, result = self.bb.repository.delete(user, repo)
         if not success and result['code'] == 404:
-            raise Exception("Cannot delete: repository {}/{} does not exists.".format(user, repo))
+            raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo))
         elif not success:
-            raise Exception("Couldn't complete deletion: {message} (error #{code}: {reason})".format(**result))
+            raise ResourceError("Couldn't complete deletion: {message} (error #{code}: {reason})".format(**result))
 
 

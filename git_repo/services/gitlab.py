@@ -3,12 +3,13 @@
 import logging
 log = logging.getLogger('git_repo.gitlab')
 
-import json
-
 from .base import register_target, RepositoryService
+from ..exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
 
 from gitlab import Gitlab
 from gitlab.exceptions import GitlabCreateError, GitlabGetError
+
+import json
 
 @register_target('lab', 'gitlab')
 class GitlabService(RepositoryService):
@@ -26,9 +27,9 @@ class GitlabService(RepositoryService):
             })
         except GitlabCreateError as err:
             if json.loads(err.response_body.decode('utf-8'))['message']['name'][0] == 'has already been taken':
-                raise Exception("Project already exists.")
+                raise ResourceExistsError("Project already exists.") from err
             else:
-                raise Exception("Unhandled error.")
+                raise ResourceError("Unhandled error.") from err
         self.add(user=user, repo=repo, default=True)
 
     def fork(self, user, repo, branch='master'):
@@ -36,9 +37,9 @@ class GitlabService(RepositoryService):
             fork = self.gl.projects.get('{}/{}'.format(user, repo)).forks.create({})
         except GitlabCreateError as err:
             if json.loads(err.response_body.decode('utf-8'))['message']['name'][0] == 'has already been taken':
-                raise Exception("Project already exists.")
+                raise ResourceExistsError("Project already exists.") from err
             else:
-                raise Exception("Unhandled error.")
+                raise ResourceError("Unhandled error.") from err
         self.add(user=user, repo=repo, name='upstream', alone=True)
         remote = self.add(repo=fork.name, user=fork.namespace['path'], default=True)
         self.pull(remote, branch)
@@ -47,19 +48,19 @@ class GitlabService(RepositoryService):
 
     def delete(self, repo, user=None):
         if not user:
-            raise Exception('Need an user namespace')
+            raise ArgumentError('Need an user namespace')
         try:
             repository = self.gl.projects.get('{}/{}'.format(user, repo))
             if repository:
                 result = repository.delete()
             if not repository or not result:
-                raise Exception("Cannot delete: repository {}/{} does not exists.".format(user, repo))
+                raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo))
         except GitlabGetError as err:
             if err.response_code == 404:
-                raise Exception("Cannot delete: repository {}/{} does not exists.".format(user, repo))
+                raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo)) from err
             elif err.response_code == 403:
-                raise Exception("You don't have enough permissions for deleting the repository. Check the namespace or the private token's privileges")
+                raise ResourcePermissionError("You don't have enough permissions for deleting the repository. Check the namespace or the private token's privileges") from err
         except Exception as err:
-            raise Exception("Unhandled exception: {}".format(err))
+            raise ResourceError("Unhandled exception: {}".format(err)) from err
 
 

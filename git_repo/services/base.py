@@ -119,7 +119,11 @@ class RepositoryService:
                 raise ValueError('Custom services SHALL have an URL setting.')
             self.fqdn = c['fqdn']
             self.name = name
-        self._privatekey = c.get('privatekey', None)
+        # if not in the configuration file, retrieve the private key from the
+        # environment (useful for travis configuration), otherwise, make it None.
+        self._privatekey = c.get('privatekey',
+                                 os.environ.get('PRIVATE_KEY_{}'.format(self.name.upper()),
+                                                None))
         self._alias = c.get('alias', self.name)
         self.fqdn = c.get('fqdn', self.fqdn)
 
@@ -159,7 +163,7 @@ class RepositoryService:
         elif rw and '/' in repo:
             return '{}:{}'.format(self.url_rw, repo)
         else:
-            raise Exception("Cannot tell how to handle this url: `{}/{}`!".format(user, repo_name))
+            raise ArgumentError("Cannot tell how to handle this url: `{}/{}`!".format(user, repo_name))
 
     def pull(self, remote, branch=None):
         '''Pull a repository
@@ -209,7 +213,7 @@ class RepositoryService:
             if '/' in repo:
                 user, repo = repo.split('/')
             else:
-                raise Exception('Unable to parse repository {}, missing path separator.'.format(repo))
+                raise ArgumentError('Unable to parse repository {}, missing path separator.'.format(repo))
 
         # removing remote if it already exists
         # and extract all repository

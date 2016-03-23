@@ -70,9 +70,11 @@ if sys.version_info.major < 3:
     print('Please use with python version 3')
     sys.exit(1)
 
+from .exceptions import ArgumentError
 from .services.base import RepositoryService
 
 from git import Repo, Git
+from git.exc import InvalidGitRepositoryError
 
 def main(args):
     try:
@@ -94,7 +96,7 @@ def main(args):
         log.addHandler(logging.StreamHandler())
 
         if args['--path'] != '.':
-            raise Exception('--path option not yet supported.')
+            raise ArgumentError('--path option not yet supported.')
 
         # FIXME workaround for default value that is not correctly parsed in docopt
         if args['<branch>'] == None:
@@ -103,11 +105,10 @@ def main(args):
         if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys():
             del os.environ['GIT_WORK_TREE']
 
-
         if '/' in args['<user>/<repo>']:
             if len(args['<user>/<repo>'].split('/')) > 2:
-                raise Exception('Too many slashes.'
-                                'Format of the parameter is <user>/<repo> or <repo>.')
+                raise ArgumentError('Too many slashes.'
+                                    'Format of the parameter is <user>/<repo> or <repo>.')
             user, repo = args['<user>/<repo>'].split('/')
         else:
             user = None
@@ -166,7 +167,8 @@ def main(args):
 
                 return 0
             else:
-                raise Exception('Cannot clone repository, a folder named {} already exists!'.format(repo))
+                raise FileExistsError('Cannot clone repository, '
+                                      'a folder named {} already exists!'.format(repo))
 
         elif args['clone']:
             repository = Repo.init(repo)
@@ -181,7 +183,7 @@ def main(args):
         elif args['open']:
             try:
                 repository = Repo()
-            except:
+            except InvalidGitRepositoryError:
                 repository = None
             RepositoryService.get_service(repository, args['<target>']).open(user, repo)
             return 0

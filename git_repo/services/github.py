@@ -4,6 +4,7 @@ import logging
 log = logging.getLogger('git_repo.github')
 
 from .base import register_target, RepositoryService
+from ..exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
 
 import github3
 
@@ -19,9 +20,9 @@ class GithubService(RepositoryService):
             self.gh.create_repo(repo)
         except github3.models.GitHubError as err:
             if err.message == 'name already exists on this account':
-                raise Exception("Project already exists.")
+                raise ResourceExistsError("Project already exists.") from err
             else:
-                raise Exception("Unhandled error.")
+                raise ResourceError("Unhandled error.") from err
         self.add(user=user, repo=repo, default=True)
 
     def fork(self, user, repo, branch='master'):
@@ -30,9 +31,9 @@ class GithubService(RepositoryService):
             fork = self.gh.repository(user, repo).create_fork()
         except github3.models.GitHubError as err:
             if err.message == 'name already exists on this account':
-                raise Exception("Project already exists.")
+                raise ResourceExistsError("Project already exists.") from err
             else:
-                raise Exception("Unhandled error: {}".format(err))
+                raise ResourceError("Unhandled error: {}".format(err)) from err
         self.add(user=user, repo=repo, name='upstream', alone=True)
         remote = self.add(repo=repo, user=self.gh.user().name, default=True)
         self.pull(remote, branch)
@@ -47,10 +48,10 @@ class GithubService(RepositoryService):
             if repository:
                 result = repository.delete()
             if not repository or not result:
-                raise Exception("Cannot delete: repository {}/{} does not exists.".format(user, repo))
+                raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo))
         except github3.models.GitHubError as err:
             if err.code == 403:
-                raise Exception("You don't have enough permissions for deleting the repository. Check the namespace or the private token's privileges")
-            raise Exception("Unhandled exception: {}".format(err))
+                raise ResourcePermissionError("You don't have enough permissions for deleting the repository. Check the namespace or the private token's privileges") from err
+            raise ResourceError("Unhandled exception: {}".format(err)) from err
 
 
