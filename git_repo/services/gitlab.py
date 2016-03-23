@@ -46,7 +46,7 @@ class GitlabService(RepositoryService):
         remote = self.add(repo=fork.name, user=fork.namespace['path'], default=True)
         self.pull(remote, branch)
         log.info("New forked repository available at {}/{}".format(self.url_ro,
-                                                                   fork.full_name))
+                                                                   fork.path_with_namespace))
 
     def delete(self, repo_name, user=None):
         if not user:
