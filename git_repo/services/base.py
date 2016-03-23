@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import logging
-log = logging.getLogger('git_repo.services.base')
+log = logging.getLogger('git_repo.base')
 
 import sys
 
@@ -262,4 +262,5 @@ class RepositoryService:
 
 # register all services by importing their modules
 from . import *
+
 

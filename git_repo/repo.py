@@ -64,7 +64,7 @@ __author__ = 'Bernard `Guyzmo` Pratz <guyzmo+git_repo@m0g.net>'
 __contributors__ = []
 
 log_root = logging.getLogger()
-log = logging.getLogger('git_repo.repo')
+log = logging.getLogger('git_repo')
 
 if sys.version_info.major < 3:
     print('Please use with python version 3')

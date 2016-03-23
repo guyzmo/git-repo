@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 import logging
-log = logging.getLogger('git_repo.base.gitlab')
+log = logging.getLogger('git_repo.gitlab')
+
+import json
 
 from .base import register_target, RepositoryService
 

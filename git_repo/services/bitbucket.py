@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import logging
-log = logging.getLogger('git_repo.services.bitbucket')
+log = logging.getLogger('git_repo.bitbucket')
 
 from .base import register_target, RepositoryService
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import logging
-log = logging.getLogger('git_repo.base.github')
+log = logging.getLogger('git_repo.github')
 
 from .base import register_target, RepositoryService
 
