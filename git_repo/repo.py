@@ -25,7 +25,7 @@ Options:
     <branch>            Branch to pull (when cloning) [default: master]
     -p,--path=<path>    Path to work on [default: .]
     -f,--force          Do not ask for confirmation
-    -v,--verbose        Makes it more chatty
+    -v,--verbose        Makes it more chatty (repeat twice to see git commands)
     -h,--help           Shows this message
 
 Configuration options:
@@ -63,6 +63,7 @@ __version__ = pkg_resources.require('git-repo')[0].version
 __author__ = 'Bernard `Guyzmo` Pratz <guyzmo+git_repo@m0g.net>'
 __contributors__ = []
 
+log_root = logging.getLogger()
 log = logging.getLogger('git_repo.repo')
 
 if sys.version_info.major < 3:
@@ -79,12 +80,17 @@ def main(args):
             print(args)
         if args['--verbose'] >= 2:  # -vv
             Git.GIT_PYTHON_TRACE = True
+            FORMAT = '> %(message)s'
+            formatter = logging.Formatter(fmt=FORMAT)
+            handler = logging.StreamHandler()
+            handler.setFormatter(formatter)
+            logging.getLogger('git.cmd').removeHandler(logging.NullHandler())
+            logging.getLogger('git.cmd').addHandler(handler)
         if args['--verbose'] >= 1:  # -v
-            log.setLevel(logging.DEBUG)
+            log_root.setLevel(logging.DEBUG)
         else:
-            log.setLevel(logging.INFO)
+            log_root.setLevel(logging.INFO)
 
-        log.removeHandler(logging.NullHandler())
         log.addHandler(logging.StreamHandler())
 
         if args['--path'] != '.':
