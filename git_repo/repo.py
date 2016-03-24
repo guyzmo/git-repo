@@ -15,7 +15,7 @@ Tool for managing remote repository services.
 Commands:
     add                 Add the service as a remote on this repository
     clone               Clones this repository from the service
-    Fork                Fork (and clone) the repository from the service
+    fork                Fork (and clone) the repository from the service
     create              Make this repository a new remote on the service
     delete              Delete the remote repository
     open                Open the given or current repository in a browser
@@ -74,7 +74,7 @@ from .exceptions import ArgumentError
 from .services.base import RepositoryService
 
 from git import Repo, Git
-from git.exc import InvalidGitRepositoryError
+from git.exc import InvalidGitRepositoryError, NoSuchPathError
 
 def main(args):
     try:
@@ -122,12 +122,12 @@ def main(args):
                 service.create(user, repo)
                 log.info('Successfully created remote repository `{}`, '
                          'with local remote `{}`'.format(
-                    service.format_path(user=user, repo=repo),
+                    service.format_path(repo, user=user),
                     service.name)
                 )
 
             elif args['add']:
-                service.add(user, repo)
+                service.add(repo, user)
                 log.info('Successfully added `{}` as remote named `{}`'.format(
                     args['<user>/<repo>'],
                     service.name)

@@ -22,6 +22,7 @@ setup(name='git-repo',
       install_requires=[
             'docopt',
             'GitPython',
+            'progress',
             'python-gitlab',
             'github3.py',
             'bitbucket-api',
@@ -32,8 +33,8 @@ setup(name='git-repo',
       git-repo = git_repo.repo:cli
       """,
       license='GPLv2',
-      packages=find_packages(),
       # test_suite='nose.collector',
       # tests_require=['nose'],
+      packages=['git_repo'],
       zip_safe=False
       )

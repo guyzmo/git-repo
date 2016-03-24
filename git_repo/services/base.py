@@ -13,6 +13,8 @@ from ..exceptions import ArgumentError
 
 '''select open command'''
 
+from subprocess import call
+
 if 'mac' in sys.platform:
     OPEN_COMMAND = 'open'
 else:
