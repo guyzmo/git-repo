@@ -6,6 +6,34 @@ if sys.version_info.major < 3:
     print('Please install with python version 3')
     sys.exit(1)
 
+from distutils.core import Command
+from distutils.core import setup
+
+class dist_clean(Command):
+    description = 'Clean the repository from all buildout stuff'
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+
+    def run(self):
+        import shutil, os
+        from glob import glob
+        path = os.path.split(__file__)[0]
+        shutil.rmtree(os.path.join(path, 'var'), ignore_errors=True)
+        shutil.rmtree(os.path.join(path, 'bin'), ignore_errors=True)
+        shutil.rmtree(os.path.join(path, '.tox'), ignore_errors=True)
+        for fname in glob('*.egg-info'):
+            shutil.rmtree(os.path.join(path, fname), ignore_errors=True)
+        shutil.rmtree(os.path.join(path, '.eggs'), ignore_errors=True)
+        shutil.rmtree(os.path.join(path, 'build'), ignore_errors=True)
+        shutil.rmtree(os.path.join(path, 'dist'), ignore_errors=True)
+        shutil.rmtree(os.path.join(path, '.installed.cfg'), ignore_errors=True)
+        print("Repository is now clean!")
 
 setup(name='git-repo',
       version='1.4',
@@ -17,7 +45,9 @@ setup(name='git-repo',
       url='https://github.com/guyzmo/git-repo',
       author='Bernard `Guyzmo` Pratz',
       author_email='guyzmo+git-repo@m0g.net',
-      setup_requires=['setuptools-markdown'],
+      setup_requires=[
+          'setuptools-markdown'
+      ],
       long_description_markdown_filename='README.md',
       install_requires=[
             'docopt',
@@ -27,6 +57,7 @@ setup(name='git-repo',
             'github3.py',
             'bitbucket-api',
       ],
+      cmdclass={'dist_clean': dist_clean},
       entry_points="""
       # -*- Entry points: -*-
       [console_scripts]
