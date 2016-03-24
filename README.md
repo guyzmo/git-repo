@@ -138,15 +138,17 @@ and then you'll have the executable in `bin`:
 * [x] make it possible to choose method (SSH or HTTPS)
 * [x] handle default branches properly
 * [x] make a nice way to push to all remotes at once
- - maybe using that trick: http://stackoverflow.com/questions/4255865/git-push-to-multiple-repositories-simultaneously
+  * [ ] maybe using that trick: http://stackoverflow.com/questions/4255865/git-push-to-multiple-repositories-simultaneously
 * [x] refactor the code into multiple modules
 * [ ] add support for handling gists
 * [ ] add support for handling pull requests 
- - list them
- - fetch them as local branches
+  * [ ] list them
+  * [ ] fetch them as local branches
 * [ ] add OAuth support for bitbucket
 * [ ] show a nice progress bar, while it's fetching
-* [ ] add regression tests (and actually find a smart way to implement them…)
+* [o] add regression tests (and actually find a smart way to implement them…)
+  * [x] added general tests without mockups
+  * [ ] make mockup of requests and subprocess calls
 * for more features, write an issue or, even better, a PR!
 
 ### License
