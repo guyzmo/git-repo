@@ -78,9 +78,14 @@ from git.exc import InvalidGitRepositoryError, NoSuchPathError
 
 def main(args):
     try:
-        if args['--verbose'] >= 3:  # -vvv
+        if args['--verbose'] >= 4:  # pragma: no cover
+            import http.client
+            http.client.HTTPConnection.debuglevel = 1
+            logging.getLogger("requests.packages.urllib3").setLevel(logging.DEBUG)
+            logging.getLogger("requests.packages.urllib3").propagate = True
+        if args['--verbose'] >= 3: # pragma: no cover
             print(args)
-        if args['--verbose'] >= 2:  # -vv
+        if args['--verbose'] >= 2: # pragma: no cover
             Git.GIT_PYTHON_TRACE = True
             FORMAT = '> %(message)s'
             formatter = logging.Formatter(fmt=FORMAT)
@@ -88,7 +93,7 @@ def main(args):
             handler.setFormatter(formatter)
             logging.getLogger('git.cmd').removeHandler(logging.NullHandler())
             logging.getLogger('git.cmd').addHandler(handler)
-        if args['--verbose'] >= 1:  # -v
+        if args['--verbose'] >= 1: # pragma: no cover
             log_root.setLevel(logging.DEBUG)
         else:
             log_root.setLevel(logging.INFO)
