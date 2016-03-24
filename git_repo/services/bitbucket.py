@@ -98,8 +98,10 @@ class BitbucketService(RepositoryService):
 
     def create(self, user, repo):
         success, result = self.bb.repository.create(repo, scm='git')
-        if not success and 'Service not found.' == result:
+        if not success and result['code'] == 400:
             raise ResourceExistsError('Project {} already exists on this account.'.format(repo))
+        elif not success:
+            raise ResourceError("Couldn't complete creation: {message} (error #{code}: {reason})".format(**result))
         self.add(user=user, repo=repo, default=True)
 
     def fork(self, user, repo, branch='master'):
@@ -115,7 +117,7 @@ class BitbucketService(RepositoryService):
 
     def delete(self, repo, user=None):
         if not user:
-            user = self.bb.user().name
+            user = self.bb._username
         success, result = self.bb.repository.delete(user, repo)
         if not success and result['code'] == 404:
             raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo))
