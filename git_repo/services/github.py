@@ -14,6 +14,11 @@ class GithubService(RepositoryService):
 
     def connect(self):
         self.gh = github3.login(token=self._privatekey)
+        if not self.gh:
+            if not self._privatekey:
+                raise ConnectionError('Could not connect to Github. Please configure .gitconfig with your github private key.')
+            else:
+                raise ConnectionError('Could not connect to Github. Check your configuration and try again.')
 
     def create(self, user, repo):
         try:

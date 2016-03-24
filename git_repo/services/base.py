@@ -90,14 +90,19 @@ class RepositoryService:
 
         # check configuration constraints
         if len(conf_section) == 0:
-            raise ValueError('Service {} unknown'.format(target))
+            if not target:
+                raise ValueError('Service {} unknown'.format(target))
+            else:
+                config = dict()
         elif len(conf_section) > 1:
             raise ValueError('Too many configurations for service {}'.format(target))
         # get configuration section as a dict
-        config = config._sections[conf_section[0]]
+        else:
+            config = config._sections[conf_section[0]]
 
         if target in cls.service_map:
             service = cls.service_map.get(target, cls)
+            service.name = target
         else:
             if 'type' not in config:
                 raise ValueError('Missing service type for custom service.')
@@ -119,12 +124,14 @@ class RepositoryService:
         self.repository = r
         self.config = c
 
-        name = ' '.join(c['__name__'].replace('"', '').split(' ')[1:])
-        if name != self.name:
-            if 'fqdn' not in c:
-                raise ValueError('Custom services SHALL have an URL setting.')
-            self.fqdn = c['fqdn']
-            self.name = name
+        # if there's a configuration file, update the names accordingly
+        if c:
+            name = ' '.join(c['__name__'].replace('"', '').split(' ')[1:])
+            if name != self.name:
+                if 'fqdn' not in c:
+                    raise ValueError('Custom services SHALL have an URL setting.')
+                self.fqdn = c['fqdn']
+                self.name = name
         # if not in the configuration file, retrieve the private key from the
         # environment (useful for travis configuration), otherwise, make it None.
         self._privatekey = c.get('privatekey',
