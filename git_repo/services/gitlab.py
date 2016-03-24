@@ -4,7 +4,7 @@ import logging
 log = logging.getLogger('git_repo.gitlab')
 
 from .base import register_target, RepositoryService
-from ..exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
+from ..exceptions import ArgumentError, ResourceError, ResourceExistsError, ResourceNotFoundError
 
 from gitlab import Gitlab
 from gitlab.exceptions import GitlabCreateError, GitlabGetError
@@ -17,8 +17,9 @@ class GitlabService(RepositoryService):
 
     def connect(self):
         self.gl = Gitlab(self.url_ro, self._privatekey)
+        self.gl.auth()
 
-    def create(self, repo):
+    def create(self, user, repo):
         try:
             self.gl.projects.create(data={
                 'name': repo,
@@ -36,10 +37,12 @@ class GitlabService(RepositoryService):
         try:
             fork = self.gl.projects.get('{}/{}'.format(user, repo)).forks.create({})
         except GitlabCreateError as err:
-            if json.loads(err.response_body.decode('utf-8'))['message']['name'][0] == 'has already been taken':
-                raise ResourceExistsError("Project already exists.") from err
-            else:
-                raise ResourceError("Unhandled error.") from err
+            try:
+                if json.loads(err.response_body.decode('utf-8'))['message']['name'][0] == 'has already been taken':
+                    raise ResourceExistsError("Project already exists.") from err
+            except:
+                pass
+            raise ResourceError("Unhandled error.") from err
         self.add(user=user, repo=repo, name='upstream', alone=True)
         remote = self.add(repo=fork.name, user=fork.namespace['path'], default=True)
         self.pull(remote, branch)
@@ -48,7 +51,7 @@ class GitlabService(RepositoryService):
 
     def delete(self, repo, user=None):
         if not user:
-            raise ArgumentError('Need an user namespace')
+            user = self.gh.user.username
         try:
             repository = self.gl.projects.get('{}/{}'.format(user, repo))
             if repository:
