@@ -100,9 +100,6 @@ def main(args):
 
         log.addHandler(logging.StreamHandler())
 
-        if args['--path'] != '.':
-            raise ArgumentError('--path option not yet supported.')
-
         # FIXME workaround for default value that is not correctly parsed in docopt
         if args['<branch>'] == None:
             args['<branch>'] = 'master'
@@ -119,8 +116,12 @@ def main(args):
             user = None
             repo = args['<user>/<repo>']
 
-        if args['create'] or args['add'] or args['delete']:
-            repository = Repo()
+        if args['create'] or args['add'] or args['delete'] or args['open']:
+            # Try to resolve existing repository path
+            try:
+                repository = Repo(os.path.join(args['--path'], repo))
+            except NoSuchPathError:
+                repository = Repo(args['--path'])
             service = RepositoryService.get_service(repository, args['<target>'])
 
             if args['create']:
@@ -162,12 +163,13 @@ def main(args):
 
         elif args['fork']:
             if not os.path.exists(repo):
-                repository = Repo.init(repo)
+                repo_path = os.path.join(args['--path'], repo)
+                repository = Repo.init(repo_path)
                 service = RepositoryService.get_service(repository, args['<target>'])
                 service.fork(user, repo, branch=args['<branch>'])
-                log.info('Successfully cloned repository {} in ./{}'.format(
+                log.info('Successfully cloned repository {} in {}'.format(
                     args['<user>/<repo>'],
-                    repo)
+                    repo_path)
                 )
 
                 return 0
@@ -176,12 +178,13 @@ def main(args):
                                       'a folder named {} already exists!'.format(repo))
 
         elif args['clone']:
-            repository = Repo.init(repo)
+            repo_path = os.path.join(args['--path'], repo)
+            repository = Repo.init(repo_path)
             service = RepositoryService.get_service(repository, args['<target>'])
             service.clone(user, repo, args['<branch>'])
-            log.info('Successfully cloned `{}` into `./{}`!'.format(
+            log.info('Successfully cloned `{}` into `{}`!'.format(
                 service.format_path(args['<user>/<repo>']),
-                repo)
+                repo_path)
             )
             return 0
 
