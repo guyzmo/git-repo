@@ -66,7 +66,7 @@ __contributors__ = []
 log_root = logging.getLogger()
 log = logging.getLogger('git_repo')
 
-if sys.version_info.major < 3:
+if sys.version_info.major < 3: # pragma: no cover
     print('Please use with python version 3')
     sys.exit(1)
 
@@ -140,7 +140,7 @@ def main(args):
                 )
 
             elif args['delete']:
-                if not args['--force']:
+                if not args['--force']: # pragma: no cover
                     ans = input('Are you sure you want to delete the repository '
                                 '{} from the server?\n[yN]> '.format(args['<user>/<repo>']))
                     if 'y' in ans:

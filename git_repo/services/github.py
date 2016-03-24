@@ -21,7 +21,7 @@ class GithubService(RepositoryService):
         except github3.models.GitHubError as err:
             if err.message == 'name already exists on this account':
                 raise ResourceExistsError("Project already exists.") from err
-            else:
+            else: # pragma: no cover
                 raise ResourceError("Unhandled error.") from err
         self.add(user=user, repo=repo, default=True)
 
@@ -32,7 +32,7 @@ class GithubService(RepositoryService):
         except github3.models.GitHubError as err:
             if err.message == 'name already exists on this account':
                 raise ResourceExistsError("Project already exists.") from err
-            else:
+            else: # pragma: no cover
                 raise ResourceError("Unhandled error: {}".format(err)) from err
         self.add(user=user, repo=repo, name='upstream', alone=True)
         remote = self.add(repo=repo, user=self.gh.user().name, default=True)
@@ -49,7 +49,7 @@ class GithubService(RepositoryService):
                 result = repository.delete()
             if not repository or not result:
                 raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo))
-        except github3.models.GitHubError as err:
+        except github3.models.GitHubError as err: # pragma: no cover
             if err.code == 403:
                 raise ResourcePermissionError("You don't have enough permissions for deleting the repository. Check the namespace or the private token's privileges") from err
             raise ResourceError("Unhandled exception: {}".format(err)) from err

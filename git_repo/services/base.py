@@ -24,13 +24,13 @@ else:
 
 # Monkey patching of missing command Remote.set_url
 # TODO make a PR on pythongit
-def set_url(self, url, **kwargs):
+def set_url(self, url, **kwargs): # pragma: no cover
     scmd = 'set-url'
     kwargs['insert_kwargs_after'] = scmd
     self.repo.git.remote(scmd, self.name, url, **kwargs)
     return self
 
-def list_urls(self):
+def list_urls(self): # pragma: no cover
     '''Return the list of all configured URL targets'''
     remote_details = self.repo.git.remote("show", self.name)
     for line in remote_details.split('\n'):
@@ -43,7 +43,7 @@ git.remote.Remote.set_url = set_url
 git.remote.Remote.list = property(list_urls)
 
 
-class ProgressBar(RemoteProgress):
+class ProgressBar(RemoteProgress): # pragma: no cover
     '''Nice looking progress bar for long running commands'''
     def setup(self, repo_name):
         # self.bar = Bar(message='Pulling from {}'.format(repo_name), suffix='')
@@ -115,6 +115,7 @@ class RepositoryService:
         Build a repository service instance, store configuration and parameters
         And launch the connection to the service
         '''
+
         self.repository = r
         self.config = c
 
@@ -179,7 +180,7 @@ class RepositoryService:
         '''
         if branch:
             remote.pull(branch)#, progress=ProgressBar())
-        else:
+        else: # pragma: no cover
             remote.pull() #progress=ProgressBar())
 
     def clone(self, user, repo, branch='master'):

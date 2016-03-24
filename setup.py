@@ -64,8 +64,8 @@ setup(name='git-repo',
       git-repo = git_repo.repo:cli
       """,
       license='GPLv2',
-      # test_suite='nose.collector',
-      # tests_require=['nose'],
       packages=['git_repo'],
+      test_suite='nose.collector',
+      tests_require=['nose'],
       zip_safe=False
       )
