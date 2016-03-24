@@ -92,6 +92,10 @@ class BitbucketService(RepositoryService):
     fqdn = 'bitbucket.org'
 
     def connect(self):
+        if not self._privatekey:
+            raise ConnectionError('Could not connect to BitBucket. Please configure .gitconfig with your bitbucket credentials.')
+        if not ':' in self._privatekey:
+            raise ConnectionError('Could not connect to BitBucket. Please setup your private key with login:password')
         username, password = self._privatekey.split(':')
         self.bb = Bitbucket(username, password)
         monkey_patch(self.bb)
