@@ -159,6 +159,10 @@ def main(args):
                     args['<user>/<repo>'],
                     service.name)
                 )
+
+            elif args['open']:
+                RepositoryService.get_service(None, args['<target>']).open(user, repo)
+
             return 0
 
         elif args['fork']:
@@ -186,14 +190,6 @@ def main(args):
                 service.format_path(args['<user>/<repo>']),
                 repo_path)
             )
-            return 0
-
-        elif args['open']:
-            try:
-                repository = Repo()
-            except InvalidGitRepositoryError:
-                repository = None
-            RepositoryService.get_service(repository, args['<target>']).open(user, repo)
             return 0
 
         log.error('Unknown action.')

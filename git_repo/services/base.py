@@ -81,7 +81,10 @@ class RepositoryService:
         :param command: aliased name of the service
         :return: instance for using the service
         '''
-        config = repository.config_reader()
+        if not repository:
+            config = git.config.GitConfigParser('/home/guyzmo/.gitconfig')
+        else:
+            config = repository.config_reader()
         target = cls.command_map.get(command, command)
         conf_section = list(filter(lambda n: 'gitrepo' in n and target in n, config.sections()))
 
@@ -104,7 +107,7 @@ class RepositoryService:
 
         return service(repository, config)
 
-    def __init__(self, r, c):
+    def __init__(self, r=None, c=None):
         '''
         :param r: git-python repository instance
         :param c: configuration data
@@ -129,7 +132,9 @@ class RepositoryService:
         self._alias = c.get('alias', self.name)
         self.fqdn = c.get('fqdn', self.fqdn)
 
-        self.connect()
+        # if service has a repository configured, connect
+        if r:
+            self.connect()
 
     '''URL handling'''
 
@@ -243,6 +248,13 @@ class RepositoryService:
         else:
             return self.repository.create_remote(name, self.format_path(repo, user, rw=True))
 
+    def open(self, user=None, repo=None):
+        '''Open the URL of a repository in the user's browser'''
+        if not user:
+            call([OPEN_COMMAND, self.format_path(repo, rw=False)])
+        else:
+            call([OPEN_COMMAND, self.format_path(repo, user=user, rw=False)])
+
     def connect(self):
         '''Brings up the connection to the remote service's API
 
@@ -258,17 +270,6 @@ class RepositoryService:
         Meant to be implemented by subclasses
         '''
         raise NotImplementedError
-
-    def open(self, user=None, repo=None):
-        '''Open the URL of a repository in the user's browser'''
-        if not repo:
-            url = self.c.get('remote "origin"', 'url')
-            call([OPEN_COMMAND, url])
-        else:
-            if not user:
-                call([OPEN_COMMAND, self.format_path(repo=repo, rw=False)])
-            else:
-                call([OPEN_COMMAND, self.format_path(user=user, repo=repo, rw=False)])
 
     def create(self, repo):
         '''Create a new remote repository on the service
