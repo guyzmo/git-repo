@@ -12,13 +12,23 @@ import github3
 class GithubService(RepositoryService):
     fqdn = 'github.com'
 
+    def __init__(self, *args, **kwarg):
+        super(GithubService, self).__init__(*args, **kwarg)
+        self.gh = github3.GitHub()
+
     def connect(self):
-        self.gh = github3.login(token=self._privatekey)
-        if not self.gh:
-            if not self._privatekey:
-                raise ConnectionError('Could not connect to Github. Please configure .gitconfig with your github private key.')
-            else:
-                raise ConnectionError('Could not connect to Github. Check your configuration and try again.')
+        try:
+            self.gh.login(token=self._privatekey)
+            self.username = self.gh.user()
+        except github3.models.GitHubError as err:
+            if err.code is 401:
+                if not self._privatekey:
+                    raise ConnectionError('Could not connect to Github. '
+                                          'Please configure .gitconfig '
+                                          'with your github private key.') from err
+                else:
+                    raise ConnectionError('Could not connect to Github. '
+                                          'Check your configuration and try again.') from err
 
     def create(self, user, repo):
         try:
@@ -40,23 +50,24 @@ class GithubService(RepositoryService):
             else: # pragma: no cover
                 raise ResourceError("Unhandled error: {}".format(err)) from err
         self.add(user=user, repo=repo, name='upstream', alone=True)
-        remote = self.add(repo=repo, user=self.gh.user().name, default=True)
+        remote = self.add(repo=repo, user=self.username, default=True)
         self.pull(remote, branch)
         log.info("New forked repository available at {}/{}".format(self.url_ro,
                                                                    fork.full_name))
 
     def delete(self, repo, user=None):
         if not user:
-            user = self.gh.user().name
+            user = self.username
         try:
             repository = self.gh.repository(user, repo)
             if repository:
                 result = repository.delete()
             if not repository or not result:
-                raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo))
+                raise ResourceNotFoundError('Cannot delete: repository {}/{} does not exists.'.format(user, repo))
         except github3.models.GitHubError as err: # pragma: no cover
             if err.code == 403:
-                raise ResourcePermissionError("You don't have enough permissions for deleting the repository. Check the namespace or the private token's privileges") from err
-            raise ResourceError("Unhandled exception: {}".format(err)) from err
+                raise ResourcePermissionError('You don\'t have enough permissions for deleting the repository. '
+                                              'Check the namespace or the private token\'s privileges') from err
+            raise ResourceError('Unhandled exception: {}'.format(err)) from err
 
 
