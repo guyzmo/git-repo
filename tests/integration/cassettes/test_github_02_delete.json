@@ -1,0 +1,176 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-03-25T00:06:19",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "gzip, deflate",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/user"
+      },
+      "response": {
+        "body": {
+          "base64_string": "H4sIAAAAAAAAA5VTwW6jMBT8F58TTAhtdy2t9hf20L30Ehlw4UnGtoxNlaL+e8eYRttIe0BCCjEz84bhzcK07ckwwfp4fR8tOzDqmKge6ro+HZicZZD+Er0GYgjBTYLzfDgVPYUhNnFSvrUmKBOK1o488kz+Pf86Q633m0aSZTi403K06WQyxCZ+szKEUd8Nz0NX8A32arW2b2DeG/2/OL9xYCnfk+l388FZuA2DQkaw/pFemKawx8iKX3j6uVCXFCZE7lW3w8zGgJU3AxcL98rZVSo2U+vJBbJmj6lvPOhY30tD73KvDngT6MnOnvErHjw1Y6v2EDNh4c7TLNtrisCrVtGMOHeL3TGhFa5OYYv/4lOncCmoi+zGVJ9XqSd1YEaOCXDbTKypk+bKhIlaH1iDsm1FQo8yquhtKAx2CLtUBMsThkNd23aNG/g/0tMaxygJRcxaA3klG41xwUeMbsh+PXKx0dRecoriCT3eTtZdY+JUfu08OsNEff6nAniKvy20AzKTAeOr8lQey/pYPT2falHi+vkCN9F13zCPx/J8rOrnshLVD1E/vrCPT2zMnGheBAAA",
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Encoding": "gzip",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Fri, 25 Mar 2016 00:06:27 GMT",
+          "ETag": "W/\"4eb8b69af42038c475b1199a758cf63d\"",
+          "Last-Modified": "Thu, 24 Mar 2016 02:28:46 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Transfer-Encoding": "chunked",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:1805E:C24079F:56F48103",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4965",
+          "X-RateLimit-Reset": "1458866438",
+          "X-Served-By": "2811da37fbdda4367181b328b22b2499",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/user"
+      }
+    },
+    {
+      "recorded_at": "2016-03-25T00:06:19",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "gzip, deflate",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/repos/guyzmo/foobar"
+      },
+      "response": {
+        "body": {
+          "base64_string": "H4sIAAAAAAAAA51YwY7iOBD9l1yXwTTT3btCWs1+xMxlL8hJTGJ1Eke2A6Kt/vd9ZZsksPTQ8QUS4/f8XK5yVeEyWWa7l+fXv7bb7dMq63grsl12UCrnOltlh6Fp9nGwGs7vrWLjb+rUCZ3tXNaoSnZAhQlAEef25fn5GYz8yC3X+0E3mFFb25sdY2HQrCtp6yEfjNCF6qzo7LpQLRtYAP84/v0dbJWOHESbYeCGq5eRJ4BBZtgopbZtc7N4WNRPHqcdVNOoE5C3Qj8nhyEihuzkn2VXLcYD45iytYCNIP2DNiyNXSLEz3eMvvayJAYDk2tRLhATEZBCp/rhmBa98lRDbgoteytVt0TUFQ48Sle8k+98KQ9wBnCSs2R5Px84cYRXLQEGgGO9lkdenMkEWhRCHmHOxWQ3SHDZc08B9gtHTcaVVux52VL4HHhjxMcq8wtbTPIDK8TMYw+egrIU42mFYDko/TZy/TZyvMliSEyEhH9gvztA4AHDDt/EOQFNKMfwGf25QHjxXGlu1aMQvSfmCu7Y/JXO1wreJoj0MMBrpVIs5GGAS2MG8SXXurc1jzbs4rXd0ObhEvmKr94jDDjo4sbIqhMiwTIj1LHLnZZr3hV1CtkF6Vh48ifGqwRZhAI4b1SegEbaYB7qmKl5uKftPk0JcRHyikqLQ6IsQo5UViedmZdE0JEIKcHi+BI0XZDMRUs1vKsGXqVwjVC6LpHWKv7+ME3f8+sJCyKqNrTMh9TrZEKTqpAhEXcppprAE5VPtr9P3ne3OEvVfpNtKx/lvns8EXjlnMlk5Fe3hPT+OC1/Jo2Qjk03XbhAI+dyq8Ub9KJpzhyL0oRjvSCZ+6PntqbbAgv0XIvlAiOQuZyjQFiv164W3Jd5rdBJMRVwIOC6qFHZLNfkLkjk+ZZbXy8eSFKJ+rFRvEyw2QgFTTiU5boCbn6GPTqYBDEeNudpZSOMVV3KHTZh54ydsvIgi69UxPdC4QrufhjZFWLFm2YFL7OykPA79BZ0JiidRIoNAg6S0RSGOrgRcMEEa2oRkI6F/qQUfaPOiXfADExhpQWq5XLPLerd7ebp9dvm+7fty8/NZrd53W3//Bdzhr58OKcfTP2ABldZ9Eg8oYv9XyMZq2ZqR7GqMfU0/Z9p8u6qkY6TiwaudePvj/iPtzniMwDE1KoVPTJwaAqMfMfT5iqjFmroYEMMnrhFqYZsNg1dsnC26xAYoONmH2It21k9UJuCkSmCZ4Mn+Sbnk0iFGTuS0F5MC7VSaxX/LghLqV50ca2ZoNBfkNrZ71fq/UspDnxo7D6Ujth8y431rVcvdIsdUFdL/2HEJizshXzhIpkugvCM3qwT9oTGZqZjnvzjLp4+/gO6UniDVhEAAA==",
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Encoding": "gzip",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Fri, 25 Mar 2016 00:06:28 GMT",
+          "ETag": "W/\"b0b54201d6beb3c2201e1935d8dc28f5\"",
+          "Last-Modified": "Fri, 25 Mar 2016 00:06:27 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Transfer-Encoding": "chunked",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "repo",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:1805E:C2407D5:56F48103",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4964",
+          "X-RateLimit-Reset": "1458866438",
+          "X-Served-By": "065b43cd9674091fec48a221b420fbb3",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/repos/guyzmo/foobar"
+      }
+    },
+    {
+      "recorded_at": "2016-03-25T00:06:19",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "gzip, deflate",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Length": "0",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "DELETE",
+        "uri": "https://api.github.com/repos/guyzmo/foobar"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": ""
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Content-Security-Policy": "default-src 'none'",
+          "Date": "Fri, 25 Mar 2016 00:06:28 GMT",
+          "Server": "GitHub.com",
+          "Status": "204 No Content",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept-Encoding",
+          "X-Accepted-OAuth-Scopes": "delete_repo",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:1805E:C2407EA:56F48104",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4963",
+          "X-RateLimit-Reset": "1458866438",
+          "X-Served-By": "7f48e2f7761567e923121f17538d7a6d",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 204,
+          "message": "No Content"
+        },
+        "url": "https://api.github.com/repos/guyzmo/foobar"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}
