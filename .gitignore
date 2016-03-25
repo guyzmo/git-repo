@@ -11,3 +11,4 @@ __pycache__
 .eggs
 README.rst
 *.egg
+.cache/
