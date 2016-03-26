@@ -26,8 +26,8 @@ colour_name(git_log, 'magenta')
 from git_repo.repo import log as gr_log
 colour_name(gr_log, 'green')
 
-from git_repo.services.github import log as ggh_log
-colour_name(ggh_log, 'blue')
+from git_repo.services.service import github
+colour_name(github.log, 'blue')
 
 #################################################################################
 # Enable logging
@@ -44,7 +44,7 @@ import betamax
 
 from unittest import TestCase
 
-from git_repo.services.base import github
+#from git_repo.services.service import github
 
 class Test_Github(TestCase):
     def setUp(self):
