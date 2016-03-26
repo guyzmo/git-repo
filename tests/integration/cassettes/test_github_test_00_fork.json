@@ -1,0 +1,235 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-03-26T12:28:55",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "gzip, deflate",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/user"
+      },
+      "response": {
+        "body": {
+          "base64_string": "H4sIAAAAAAAAA5VTTW+cMBT8Lz6z2LtLktZS1L/QQ3rJZWXAAUvGtvxBtEH57x1jum1W6gEJCXiemTcM7y1E20EZwsmQrh+TJRVRPeGnh6ZpjhURs4jCX5LXQIwxusApLcVQDyqOqU1B+s6aKE2sOzvRRAv5x/x8htrgN40sS1C403Jq0ylkiAV6szLGSd81L01X8A32ZrW272DeG/2/OL1xYKk8KzPs5oOzUBtHiYxg/TN/sApxj5EVv9B8u6g+KwRE7mW/w8zGgJV3AxcL9dLZVSq1ofPKRWXNHlNfeNCxfhBGfYi9OuAF0LOdPe1XPHhyxlTtIRbCQp1Xs+iuOQIvO6lmxLlb7I4JrXh1ElP8C786h6uivIh+yuvzJnSQFTFiyoDbZGJMnTBXwk3SuiItlm1bJOxRQdWDjbXBDGGW6mhpxlCoa9utcQP/U3i1xjEJhUUsWqPyUrQa7aJPaN0q++fIpVar7lJS5E+sIltlnTXCj6j8nX/enP9ZAZzitYN2RGYiov2JHdmBNYfT08ux4QzX91e4Sa7/gnk8sPPh9PjCGG++cfbwSj5/A80RPLheBAAA",
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Encoding": "gzip",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 26 Mar 2016 12:29:05 GMT",
+          "ETag": "W/\"afcdee465dd4ebbf5f0588092b6d7282\"",
+          "Last-Modified": "Sat, 26 Mar 2016 00:48:05 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Transfer-Encoding": "chunked",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:2E04:D182709:56F68090",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4987",
+          "X-RateLimit-Reset": "1458998258",
+          "X-Served-By": "a51acaae89a7607fd7ee967627be18e4",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/user"
+      }
+    },
+    {
+      "recorded_at": "2016-03-26T12:28:55",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "gzip, deflate",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/repos/guyzmo/github3.py"
+      },
+      "response": {
+        "body": {
+          "base64_string": "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",
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Encoding": "gzip",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 26 Mar 2016 12:29:05 GMT",
+          "ETag": "W/\"f066a8e5e14132e3e35f4fd12b0da7ae\"",
+          "Last-Modified": "Fri, 25 Mar 2016 00:01:46 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Transfer-Encoding": "chunked",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "repo",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:2E04:D182737:56F68091",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4986",
+          "X-RateLimit-Reset": "1458998258",
+          "X-Served-By": "a6882e5cd2513376cb9481dbcd83f3a2",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/repos/guyzmo/github3.py"
+      }
+    },
+    {
+      "recorded_at": "2016-03-26T12:28:55",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "gzip, deflate",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Length": "0",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "POST",
+        "uri": "https://api.github.com/repos/guyzmo/github3.py/forks"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"id\":54682051,\"name\":\"github3.py\",\"full_name\":\"guyzmo/github3.py\",\"owner\":{\"login\":\"guyzmo\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/guyzmo\",\"html_url\":\"https://github.com/guyzmo\",\"followers_url\":\"https://api.github.com/users/guyzmo/followers\",\"following_url\":\"https://api.github.com/users/guyzmo/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/guyzmo/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/guyzmo/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/guyzmo/subscriptions\",\"organizations_url\":\"https://api.github.com/users/guyzmo/orgs\",\"repos_url\":\"https://api.github.com/users/guyzmo/repos\",\"events_url\":\"https://api.github.com/users/guyzmo/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/guyzmo/received_events\",\"type\":\"User\",\"site_admin\":false},\"private\":false,\"html_url\":\"https://github.com/guyzmo/github3.py\",\"description\":\"Python library for interfacing with the GitHub APIv3\",\"fork\":true,\"url\":\"https://api.github.com/repos/guyzmo/github3.py\",\"forks_url\":\"https://api.github.com/repos/guyzmo/github3.py/forks\",\"keys_url\":\"https://api.github.com/repos/guyzmo/github3.py/keys{/key_id}\",\"collaborators_url\":\"https://api.github.com/repos/guyzmo/github3.py/collaborators{/collaborator}\",\"teams_url\":\"https://api.github.com/repos/guyzmo/github3.py/teams\",\"hooks_url\":\"https://api.github.com/repos/guyzmo/github3.py/hooks\",\"issue_events_url\":\"https://api.github.com/repos/guyzmo/github3.py/issues/events{/number}\",\"events_url\":\"https://api.github.com/repos/guyzmo/github3.py/events\",\"assignees_url\":\"https://api.github.com/repos/guyzmo/github3.py/assignees{/user}\",\"branches_url\":\"https://api.github.com/repos/guyzmo/github3.py/branches{/branch}\",\"tags_url\":\"https://api.github.com/repos/guyzmo/github3.py/tags\",\"blobs_url\":\"https://api.github.com/repos/guyzmo/github3.py/git/blobs{/sha}\",\"git_tags_url\":\"https://api.github.com/repos/guyzmo/github3.py/git/tags{/sha}\",\"git_refs_url\":\"https://api.github.com/repos/guyzmo/github3.py/git/refs{/sha}\",\"trees_url\":\"https://api.github.com/repos/guyzmo/github3.py/git/trees{/sha}\",\"statuses_url\":\"https://api.github.com/repos/guyzmo/github3.py/statuses/{sha}\",\"languages_url\":\"https://api.github.com/repos/guyzmo/github3.py/languages\",\"stargazers_url\":\"https://api.github.com/repos/guyzmo/github3.py/stargazers\",\"contributors_url\":\"https://api.github.com/repos/guyzmo/github3.py/contributors\",\"subscribers_url\":\"https://api.github.com/repos/guyzmo/github3.py/subscribers\",\"subscription_url\":\"https://api.github.com/repos/guyzmo/github3.py/subscription\",\"commits_url\":\"https://api.github.com/repos/guyzmo/github3.py/commits{/sha}\",\"git_commits_url\":\"https://api.github.com/repos/guyzmo/github3.py/git/commits{/sha}\",\"comments_url\":\"https://api.github.com/repos/guyzmo/github3.py/comments{/number}\",\"issue_comment_url\":\"https://api.github.com/repos/guyzmo/github3.py/issues/comments{/number}\",\"contents_url\":\"https://api.github.com/repos/guyzmo/github3.py/contents/{+path}\",\"compare_url\":\"https://api.github.com/repos/guyzmo/github3.py/compare/{base}...{head}\",\"merges_url\":\"https://api.github.com/repos/guyzmo/github3.py/merges\",\"archive_url\":\"https://api.github.com/repos/guyzmo/github3.py/{archive_format}{/ref}\",\"downloads_url\":\"https://api.github.com/repos/guyzmo/github3.py/downloads\",\"issues_url\":\"https://api.github.com/repos/guyzmo/github3.py/issues{/number}\",\"pulls_url\":\"https://api.github.com/repos/guyzmo/github3.py/pulls{/number}\",\"milestones_url\":\"https://api.github.com/repos/guyzmo/github3.py/milestones{/number}\",\"notifications_url\":\"https://api.github.com/repos/guyzmo/github3.py/notifications{?since,all,participating}\",\"labels_url\":\"https://api.github.com/repos/guyzmo/github3.py/labels{/name}\",\"releases_url\":\"https://api.github.com/repos/guyzmo/github3.py/releases{/id}\",\"deployments_url\":\"https://api.github.com/repos/guyzmo/github3.py/deployments\",\"created_at\":\"2016-03-25T00:01:43Z\",\"updated_at\":\"2016-03-25T00:01:46Z\",\"pushed_at\":\"2016-03-12T20:02:47Z\",\"git_url\":\"git://github.com/guyzmo/github3.py.git\",\"ssh_url\":\"git@github.com:guyzmo/github3.py.git\",\"clone_url\":\"https://github.com/guyzmo/github3.py.git\",\"svn_url\":\"https://github.com/guyzmo/github3.py\",\"homepage\":\"http://github3py.readthedocs.org/\",\"size\":8152,\"stargazers_count\":0,\"watchers_count\":0,\"language\":\"Python\",\"has_issues\":false,\"has_downloads\":true,\"has_wiki\":false,\"has_pages\":false,\"forks_count\":0,\"mirror_url\":null,\"open_issues_count\":0,\"forks\":0,\"open_issues\":0,\"watchers\":0,\"default_branch\":\"develop\",\"permissions\":{\"admin\":true,\"push\":true,\"pull\":true},\"parent\":{\"id\":3710711,\"name\":\"github3.py\",\"full_name\":\"sigmavirus24/github3.py\",\"owner\":{\"login\":\"sigmavirus24\",\"id\":240830,\"avatar_url\":\"https://avatars.githubusercontent.com/u/240830?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/sigmavirus24\",\"html_url\":\"https://github.com/sigmavirus24\",\"followers_url\":\"https://api.github.com/users/sigmavirus24/followers\",\"following_url\":\"https://api.github.com/users/sigmavirus24/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/sigmavirus24/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/sigmavirus24/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/sigmavirus24/subscriptions\",\"organizations_url\":\"https://api.github.com/users/sigmavirus24/orgs\",\"repos_url\":\"https://api.github.com/users/sigmavirus24/repos\",\"events_url\":\"https://api.github.com/users/sigmavirus24/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/sigmavirus24/received_events\",\"type\":\"User\",\"site_admin\":false},\"private\":false,\"html_url\":\"https://github.com/sigmavirus24/github3.py\",\"description\":\"Python library for interfacing with the GitHub APIv3\",\"fork\":false,\"url\":\"https://api.github.com/repos/sigmavirus24/github3.py\",\"forks_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/forks\",\"keys_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/keys{/key_id}\",\"collaborators_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/collaborators{/collaborator}\",\"teams_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/teams\",\"hooks_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/hooks\",\"issue_events_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/issues/events{/number}\",\"events_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/events\",\"assignees_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/assignees{/user}\",\"branches_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/branches{/branch}\",\"tags_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/tags\",\"blobs_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/git/blobs{/sha}\",\"git_tags_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/git/tags{/sha}\",\"git_refs_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/git/refs{/sha}\",\"trees_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/git/trees{/sha}\",\"statuses_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/statuses/{sha}\",\"languages_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/languages\",\"stargazers_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/stargazers\",\"contributors_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/contributors\",\"subscribers_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/subscribers\",\"subscription_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/subscription\",\"commits_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/commits{/sha}\",\"git_commits_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/git/commits{/sha}\",\"comments_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/comments{/number}\",\"issue_comment_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/issues/comments{/number}\",\"contents_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/contents/{+path}\",\"compare_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/compare/{base}...{head}\",\"merges_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/merges\",\"archive_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/{archive_format}{/ref}\",\"downloads_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/downloads\",\"issues_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/issues{/number}\",\"pulls_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/pulls{/number}\",\"milestones_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/milestones{/number}\",\"notifications_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/notifications{?since,all,participating}\",\"labels_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/labels{/name}\",\"releases_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/releases{/id}\",\"deployments_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/deployments\",\"created_at\":\"2012-03-13T19:58:53Z\",\"updated_at\":\"2016-03-26T02:25:55Z\",\"pushed_at\":\"2016-03-12T20:02:47Z\",\"git_url\":\"git://github.com/sigmavirus24/github3.py.git\",\"ssh_url\":\"git@github.com:sigmavirus24/github3.py.git\",\"clone_url\":\"https://github.com/sigmavirus24/github3.py.git\",\"svn_url\":\"https://github.com/sigmavirus24/github3.py\",\"homepage\":\"http://github3py.readthedocs.org/\",\"size\":8152,\"stargazers_count\":475,\"watchers_count\":475,\"language\":\"Python\",\"has_issues\":true,\"has_downloads\":true,\"has_wiki\":false,\"has_pages\":true,\"forks_count\":176,\"mirror_url\":null,\"open_issues_count\":53,\"forks\":176,\"open_issues\":53,\"watchers\":475,\"default_branch\":\"develop\"},\"source\":{\"id\":3710711,\"name\":\"github3.py\",\"full_name\":\"sigmavirus24/github3.py\",\"owner\":{\"login\":\"sigmavirus24\",\"id\":240830,\"avatar_url\":\"https://avatars.githubusercontent.com/u/240830?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/sigmavirus24\",\"html_url\":\"https://github.com/sigmavirus24\",\"followers_url\":\"https://api.github.com/users/sigmavirus24/followers\",\"following_url\":\"https://api.github.com/users/sigmavirus24/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/sigmavirus24/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/sigmavirus24/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/sigmavirus24/subscriptions\",\"organizations_url\":\"https://api.github.com/users/sigmavirus24/orgs\",\"repos_url\":\"https://api.github.com/users/sigmavirus24/repos\",\"events_url\":\"https://api.github.com/users/sigmavirus24/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/sigmavirus24/received_events\",\"type\":\"User\",\"site_admin\":false},\"private\":false,\"html_url\":\"https://github.com/sigmavirus24/github3.py\",\"description\":\"Python library for interfacing with the GitHub APIv3\",\"fork\":false,\"url\":\"https://api.github.com/repos/sigmavirus24/github3.py\",\"forks_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/forks\",\"keys_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/keys{/key_id}\",\"collaborators_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/collaborators{/collaborator}\",\"teams_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/teams\",\"hooks_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/hooks\",\"issue_events_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/issues/events{/number}\",\"events_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/events\",\"assignees_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/assignees{/user}\",\"branches_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/branches{/branch}\",\"tags_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/tags\",\"blobs_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/git/blobs{/sha}\",\"git_tags_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/git/tags{/sha}\",\"git_refs_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/git/refs{/sha}\",\"trees_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/git/trees{/sha}\",\"statuses_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/statuses/{sha}\",\"languages_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/languages\",\"stargazers_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/stargazers\",\"contributors_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/contributors\",\"subscribers_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/subscribers\",\"subscription_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/subscription\",\"commits_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/commits{/sha}\",\"git_commits_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/git/commits{/sha}\",\"comments_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/comments{/number}\",\"issue_comment_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/issues/comments{/number}\",\"contents_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/contents/{+path}\",\"compare_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/compare/{base}...{head}\",\"merges_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/merges\",\"archive_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/{archive_format}{/ref}\",\"downloads_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/downloads\",\"issues_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/issues{/number}\",\"pulls_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/pulls{/number}\",\"milestones_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/milestones{/number}\",\"notifications_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/notifications{?since,all,participating}\",\"labels_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/labels{/name}\",\"releases_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/releases{/id}\",\"deployments_url\":\"https://api.github.com/repos/sigmavirus24/github3.py/deployments\",\"created_at\":\"2012-03-13T19:58:53Z\",\"updated_at\":\"2016-03-26T02:25:55Z\",\"pushed_at\":\"2016-03-12T20:02:47Z\",\"git_url\":\"git://github.com/sigmavirus24/github3.py.git\",\"ssh_url\":\"git@github.com:sigmavirus24/github3.py.git\",\"clone_url\":\"https://github.com/sigmavirus24/github3.py.git\",\"svn_url\":\"https://github.com/sigmavirus24/github3.py\",\"homepage\":\"http://github3py.readthedocs.org/\",\"size\":8152,\"stargazers_count\":475,\"watchers_count\":475,\"language\":\"Python\",\"has_issues\":true,\"has_downloads\":true,\"has_wiki\":false,\"has_pages\":true,\"forks_count\":176,\"mirror_url\":null,\"open_issues_count\":53,\"forks\":176,\"open_issues\":53,\"watchers\":475,\"default_branch\":\"develop\"},\"network_count\":176,\"subscribers_count\":1}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Content-Length": "14640",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 26 Mar 2016 12:29:05 GMT",
+          "Server": "GitHub.com",
+          "Status": "202 Accepted",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "X-Accepted-OAuth-Scopes": "repo",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:2E04:D182764:56F68091",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4985",
+          "X-RateLimit-Reset": "1458998258",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 202,
+          "message": "Accepted"
+        },
+        "url": "https://api.github.com/repos/guyzmo/github3.py/forks"
+      }
+    },
+    {
+      "recorded_at": "2016-03-26T12:28:58",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "gzip, deflate",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/repos/sigmavirus24/github3.py"
+      },
+      "response": {
+        "body": {
+          "base64_string": "H4sIAAAAAAAAA62YQXPyNhCG/wrja/kQmJCknul87ant7Tukl14YYQusiW15JBmGePLf+65kY5tOIYl6YcBoH71a7cq7aiOZRcn6abV8Wq3mUcVLESXRQdq82a0X9TmaR/umKLbdH0YeSn6UujHxA5uMUqdK6Chpo0IdZAXGeCgoNE38sHxeL+cRP3LL9bbRBcbl1tYmYcw/NAtPbYzQqaqsqOwiVSVrmDf+fvxlDdpBdwzCRnhwxaplx/HGgBl2JSi3ZXElwU/tTK4G71VRqBMo16LvTcQuluRJR5HV4YsUWLZM2VzAd1jSOzlCGvt5Uc6qxQYau5UZcQw2RIvs08I6O8ii/X9vmRa1csBmZ1ItaytV9XmBE2vQlD7wSr7xr9FgbQAhaZ+X4qxgLY6Ixc+be7OW1VoeeXom12iRCnmEs7+IvLIH0Z5rStu/EBTkemnFlmclpeGeF0a8zyM3vcUg92COrPto9E/TPBOXXcWEP842V9WskDvN9Xm2V3omkbN6z1PE6uyEY2SGcJ39Lu0fzW72248/j5S9GPd6UXIzc53zJ8k4lUOkO3tyE4H0BACSXsU5iEP2LcNnl08pUp3vlOZW3Ts0bgucgFo2/kmxZAUvg4Q7AEC5UmGedACApDGN+FBo31644xjW50/VlDt/5H0ka26jPQFaucE5XwkR5MELpGX9qYx0qNI8DNszWua/ud3mhyCpZA/MrlC7IA5elMxBWmZy7t9DdhuqjqjEmEC12AdLJcYFanXgfjuZBLkg8RK02PognT2DtZ1HC14dGn4Io14g2HV6VR/4290i5nbuDBQgqULTcteEH3IDh5T62gH5HubSATNAXUFyu8y544BRYeNcUJbyXl1wm9ghJmH/P2ApTq/R9Pt+GXNfLjFaNpzJ/tDv6CHe7U79Xud4jq4dCAqJnsHan2puczq5MFXNtQgR3SFYu+MothaLRZsL7srqUujADPYEoLhOc1SNITrbnoGqp+TWVet7kpmhei8Uz4J8e4EA6LcxRKsnjPe/Rh8aJNABxsRSFsJYVYWdsQNlzK6UlXuZfqRjuZ1uE1D73cgqFXNeFHNErZWpRByj1qZdRMEpwjzkCVgGrgF8p1IIhHSQ17XwjJb5TjMTdaHOwafQCENJrAW6m2zLLbqSeLmKvy3X31brl9XPyeY52az/xpimziZjHmlM/PiyjJN4k2w2NKZuTD7CuCGr+CVeJhj18ERDcKx2cY1vuLfAJ+5K/nVpMOpT6CoChsbkg+Gvg1nyH5cqnVlaIECvMunjcx6v33X3TSE1V6WoUXt01zOXVa7r8wKeztDTZSo1CzTWjFYm3zD0ebWJJ1VGqpoK+/HwtJlHJ25REON9Pn7YVyeXTpKm5mbrcz9KrG6oVcWT4WwZPTzJVzk0tBhFkk1v5lvDbrrV0yMOY6m16q6dKpwFuFaoRdXN1gvbrH1/Co4zGg2JEEjDSrqFZWLPm8JufZGOlWToLgpVUzAJXWIpdAFCF2PjjtxH2kU8nUxeN1r1StgTutJekFMxroi6JcUP7/8AJcNbOr0TAAA=",
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Encoding": "gzip",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 26 Mar 2016 12:29:08 GMT",
+          "ETag": "W/\"12d26fc80b9636492c4a2bf4af0f86f9\"",
+          "Last-Modified": "Sat, 26 Mar 2016 02:25:55 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Transfer-Encoding": "chunked",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "repo",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:2E04:D18278B:56F68091",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4984",
+          "X-RateLimit-Reset": "1458998258",
+          "X-Served-By": "52437fedc85beec8da3449496900fb9a",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/repos/sigmavirus24/github3.py"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

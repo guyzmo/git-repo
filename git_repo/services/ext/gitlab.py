@@ -6,7 +6,7 @@ log = logging.getLogger('git_repo.gitlab')
 from ..service import register_target, RepositoryService
 from ...exceptions import ArgumentError, ResourceError, ResourceExistsError, ResourceNotFoundError
 
-from gitlab import Gitlab
+import gitlab
 from gitlab.exceptions import GitlabCreateError, GitlabGetError
 
 import json
@@ -15,8 +15,11 @@ import json
 class GitlabService(RepositoryService):
     fqdn = 'gitlab.com'
 
+    def __init__(self, *args, **kwarg):
+        self.gl = gitlab.Gitlab(self.url_ro, self._privatekey)
+        super(GithubService, self).__init__(*args, **kwarg)
+
     def connect(self):
-        self.gl = Gitlab(self.url_ro, self._privatekey)
         self.gl.auth()
 
     def create(self, user, repo):

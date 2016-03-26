@@ -1,0 +1,181 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-03-26T12:28:58",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "gzip, deflate",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/user"
+      },
+      "response": {
+        "body": {
+          "base64_string": "H4sIAAAAAAAAA5VTTW+cMBT8Lz6z2LtLktZS1L/QQ3rJZWXAAUvGtvxBtEH57x1jum1W6gEJCXiemTcM7y1E20EZwsmQrh+TJRVRPeGnh6ZpjhURs4jCX5LXQIwxusApLcVQDyqOqU1B+s6aKE2sOzvRRAv5x/x8htrgN40sS1C403Jq0ylkiAV6szLGSd81L01X8A32ZrW272DeG/2/OL1xYKk8KzPs5oOzUBtHiYxg/TN/sApxj5EVv9B8u6g+KwRE7mW/w8zGgJV3AxcL9dLZVSq1ofPKRWXNHlNfeNCxfhBGfYi9OuAF0LOdPe1XPHhyxlTtIRbCQp1Xs+iuOQIvO6lmxLlb7I4JrXh1ElP8C786h6uivIh+yuvzJnSQFTFiyoDbZGJMnTBXwk3SuiItlm1bJOxRQdWDjbXBDGGW6mhpxlCoa9utcQP/U3i1xjEJhUUsWqPyUrQa7aJPaN0q++fIpVar7lJS5E+sIltlnTXCj6j8nX/enP9ZAZzitYN2RGYiov2JHdmBNYfT08ux4QzX91e4Sa7/gnk8sPPh9PjCGG++cfbwSj5/A80RPLheBAAA",
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Encoding": "gzip",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 26 Mar 2016 12:29:08 GMT",
+          "ETag": "W/\"afcdee465dd4ebbf5f0588092b6d7282\"",
+          "Last-Modified": "Sat, 26 Mar 2016 00:48:05 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Transfer-Encoding": "chunked",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:2E05:F0D7219:56F68094",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4983",
+          "X-RateLimit-Reset": "1458998258",
+          "X-Served-By": "318e55760cf7cdb40e61175a4d36cd32",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/user"
+      }
+    },
+    {
+      "recorded_at": "2016-03-26T12:28:58",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"has_wiki\": true, \"has_downloads\": true, \"name\": \"foobar\", \"has_issues\": true, \"homepage\": \"\", \"gitignore_template\": \"\", \"description\": \"\", \"private\": false, \"auto_init\": false}"
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "gzip, deflate",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Length": "178",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "POST",
+        "uri": "https://api.github.com/user/repos"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"id\":54778073,\"name\":\"foobar\",\"full_name\":\"guyzmo/foobar\",\"owner\":{\"login\":\"guyzmo\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/guyzmo\",\"html_url\":\"https://github.com/guyzmo\",\"followers_url\":\"https://api.github.com/users/guyzmo/followers\",\"following_url\":\"https://api.github.com/users/guyzmo/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/guyzmo/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/guyzmo/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/guyzmo/subscriptions\",\"organizations_url\":\"https://api.github.com/users/guyzmo/orgs\",\"repos_url\":\"https://api.github.com/users/guyzmo/repos\",\"events_url\":\"https://api.github.com/users/guyzmo/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/guyzmo/received_events\",\"type\":\"User\",\"site_admin\":false},\"private\":false,\"html_url\":\"https://github.com/guyzmo/foobar\",\"description\":\"\",\"fork\":false,\"url\":\"https://api.github.com/repos/guyzmo/foobar\",\"forks_url\":\"https://api.github.com/repos/guyzmo/foobar/forks\",\"keys_url\":\"https://api.github.com/repos/guyzmo/foobar/keys{/key_id}\",\"collaborators_url\":\"https://api.github.com/repos/guyzmo/foobar/collaborators{/collaborator}\",\"teams_url\":\"https://api.github.com/repos/guyzmo/foobar/teams\",\"hooks_url\":\"https://api.github.com/repos/guyzmo/foobar/hooks\",\"issue_events_url\":\"https://api.github.com/repos/guyzmo/foobar/issues/events{/number}\",\"events_url\":\"https://api.github.com/repos/guyzmo/foobar/events\",\"assignees_url\":\"https://api.github.com/repos/guyzmo/foobar/assignees{/user}\",\"branches_url\":\"https://api.github.com/repos/guyzmo/foobar/branches{/branch}\",\"tags_url\":\"https://api.github.com/repos/guyzmo/foobar/tags\",\"blobs_url\":\"https://api.github.com/repos/guyzmo/foobar/git/blobs{/sha}\",\"git_tags_url\":\"https://api.github.com/repos/guyzmo/foobar/git/tags{/sha}\",\"git_refs_url\":\"https://api.github.com/repos/guyzmo/foobar/git/refs{/sha}\",\"trees_url\":\"https://api.github.com/repos/guyzmo/foobar/git/trees{/sha}\",\"statuses_url\":\"https://api.github.com/repos/guyzmo/foobar/statuses/{sha}\",\"languages_url\":\"https://api.github.com/repos/guyzmo/foobar/languages\",\"stargazers_url\":\"https://api.github.com/repos/guyzmo/foobar/stargazers\",\"contributors_url\":\"https://api.github.com/repos/guyzmo/foobar/contributors\",\"subscribers_url\":\"https://api.github.com/repos/guyzmo/foobar/subscribers\",\"subscription_url\":\"https://api.github.com/repos/guyzmo/foobar/subscription\",\"commits_url\":\"https://api.github.com/repos/guyzmo/foobar/commits{/sha}\",\"git_commits_url\":\"https://api.github.com/repos/guyzmo/foobar/git/commits{/sha}\",\"comments_url\":\"https://api.github.com/repos/guyzmo/foobar/comments{/number}\",\"issue_comment_url\":\"https://api.github.com/repos/guyzmo/foobar/issues/comments{/number}\",\"contents_url\":\"https://api.github.com/repos/guyzmo/foobar/contents/{+path}\",\"compare_url\":\"https://api.github.com/repos/guyzmo/foobar/compare/{base}...{head}\",\"merges_url\":\"https://api.github.com/repos/guyzmo/foobar/merges\",\"archive_url\":\"https://api.github.com/repos/guyzmo/foobar/{archive_format}{/ref}\",\"downloads_url\":\"https://api.github.com/repos/guyzmo/foobar/downloads\",\"issues_url\":\"https://api.github.com/repos/guyzmo/foobar/issues{/number}\",\"pulls_url\":\"https://api.github.com/repos/guyzmo/foobar/pulls{/number}\",\"milestones_url\":\"https://api.github.com/repos/guyzmo/foobar/milestones{/number}\",\"notifications_url\":\"https://api.github.com/repos/guyzmo/foobar/notifications{?since,all,participating}\",\"labels_url\":\"https://api.github.com/repos/guyzmo/foobar/labels{/name}\",\"releases_url\":\"https://api.github.com/repos/guyzmo/foobar/releases{/id}\",\"deployments_url\":\"https://api.github.com/repos/guyzmo/foobar/deployments\",\"created_at\":\"2016-03-26T12:29:08Z\",\"updated_at\":\"2016-03-26T12:29:08Z\",\"pushed_at\":\"2016-03-26T12:29:08Z\",\"git_url\":\"git://github.com/guyzmo/foobar.git\",\"ssh_url\":\"git@github.com:guyzmo/foobar.git\",\"clone_url\":\"https://github.com/guyzmo/foobar.git\",\"svn_url\":\"https://github.com/guyzmo/foobar\",\"homepage\":\"\",\"size\":0,\"stargazers_count\":0,\"watchers_count\":0,\"language\":null,\"has_issues\":true,\"has_downloads\":true,\"has_wiki\":true,\"has_pages\":false,\"forks_count\":0,\"mirror_url\":null,\"open_issues_count\":0,\"forks\":0,\"open_issues\":0,\"watchers\":0,\"default_branch\":\"master\",\"permissions\":{\"admin\":true,\"push\":true,\"pull\":true},\"network_count\":0,\"subscribers_count\":1}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "4438",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 26 Mar 2016 12:29:09 GMT",
+          "ETag": "\"67afd8223a00ed11aafa165bbdb13346\"",
+          "Location": "https://api.github.com/repos/guyzmo/foobar",
+          "Server": "GitHub.com",
+          "Status": "201 Created",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "public_repo, repo",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:2E05:F0D7251:56F68094",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4982",
+          "X-RateLimit-Reset": "1458998258",
+          "X-Served-By": "a474937f3b2fa272558fa6dc951018ad",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 201,
+          "message": "Created"
+        },
+        "url": "https://api.github.com/user/repos"
+      }
+    },
+    {
+      "recorded_at": "2016-03-26T12:28:59",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "gzip, deflate",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/repos/guyzmo/foobar"
+      },
+      "response": {
+        "body": {
+          "base64_string": "H4sIAAAAAAAAA51YwXLjKBD9F13XYxInM5lx1dbsR8xc9uJCEpaoSKACZJejyr/va8CS7HXGERdbwrzHo+mmuz1kssy2X59fXr4/vDytMsVbkW2zvdY5N9kq2/dNs4uDVX96azUbf9NHJUy2HbJGV1IBFSYARZybr8/Pz4+rjB+442bXmwYzauc6u2UsDNp1JV3d570VptDKCeXWhW5ZzwL45+HvJ7BVJnIQbYaBK65ORp4ABpllo5Tatc3V4mFRP3mcttdNo49AXgv9mByGiBiyk3+WqlqMB2Zg2tUCNoL0d9qwtG6JED9/YPS1kyUxWJjciHKBmIiAFDrV94EZ0WlP1ee2MLJzUqsloi5w4NGm4kq+8aU8wFnASc6S5f184MQBXrUEGAAD64w88OJEJjCiEPIAcy4mu0KCy506CrDfOGoyrnRix8uWwmfPGyveV5lf2GGSH1ghZu578BSUpRhPKwTLXpvXkeuPkeNNFkNiIiT8HfvdAAIPGHb4Kk4JaEINDJ/RnwuEF8+14U7fC9FbYi7gA5u/0vk6wdsEkR4GeK11ioU8DHBpbS8+5Vq3tubRlp29VvVtHi6Rz/jqLcKAgy5urayUEAmWGaEDO99pueGqqFPIzsiBhSd/YrxKkEUogPNG5wlopA3moQOzNQ/3tNulKSEuQl5QGbFPlEXIkcqZpDPzkgg6EiElOBxfgqYzkg3RUg1XVc+rFK4RStcl0lrF3+6m6Vt+PWFBRNWGkXmfep1MaFIVMiTiLsVUE3ii8sn2z8n75hZnqdpvsm3lvdx3iycCL5wzmYz86pqQ3u+n5Y+kEXJg000XLtDIudxq8QY9a5ozx6I04VjPSDb81XFX022BBTpuxHKBEciGnKNAWK/XQy24L/NaYZJiKuBAwE1Ro7JZrmk4I5HnW+58vbgnSSXqx0bzMsFmIxQ04VCW6wq4+Rl26GASxHjYnKeVjbBOq5Q7bMLOGZV2ci+Lz1TEt0LhAj78tFIVYsWbZgUvc7KQ8Dv0FnQmKJ1Eig0CDpLRFIY6uBFwwQRrGhGQAwv9SSm6Rp8S74AZmMLKCFTL5Y471Lubh8dvXx6evmy+/XrcbDc/tg/f/8Wcvivvzul6W9+hwVUWPRJP6GL/10jGqpnaUaxqbT1N/2eavL1opOPkooFrXfn7Pf7DdY74CAAxtW5FhwwcmgIr3/D0cJFRC90r2BCDR+5QqiGbTUPnLJxtFQIDdNzuQqxlW2d6alMwMkXwbPAoX+V8EqmwY0cS2otpoVYao+PfBWEp3QkV15oJCv0FqZ39fqHev5Riz/vG7ULpiM233DrfenXCtNgBdbX0H0ZswsJeyBfOkukiCM/ozZRwRzQ2Mx3z5B938fj+HzgZQAJWEQAA",
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Encoding": "gzip",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 26 Mar 2016 12:29:09 GMT",
+          "ETag": "W/\"67afd8223a00ed11aafa165bbdb13346\"",
+          "Last-Modified": "Sat, 26 Mar 2016 12:29:08 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Transfer-Encoding": "chunked",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "repo",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:2E05:F0D72C3:56F68095",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4981",
+          "X-RateLimit-Reset": "1458998258",
+          "X-Served-By": "2c18a09f3ac5e4dd1e004af7c5a94769",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/repos/guyzmo/foobar"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}
