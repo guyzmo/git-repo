@@ -20,7 +20,7 @@ def colour_name(logger, colour):
 colour_name(logging.getLogger('github3'), 'cyan')
 colour_name(logging.getLogger('git.cmd'), 'magenta')
 colour_name(logging.getLogger('git_repo', 'green')
-colour_name(logging.getLogger('git_repo.github'.log, 'blue')
+colour_name(logging.getLogger('git_repo.github', 'blue')
 
 #################################################################################
 # Enable logging
