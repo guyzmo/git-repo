@@ -17,17 +17,10 @@ def colour_name(logger, colour):
     format_name = '{'+colour+'}{}{reset}'
     logger.name = format_name.format(logger.name, **fmt)
 
-from github3.session import __logs__ as gh3_log
-colour_name(gh3_log, 'cyan')
-
-from git.cmd import log as git_log
-colour_name(git_log, 'magenta')
-
-from git_repo.repo import log as gr_log
-colour_name(gr_log, 'green')
-
-from git_repo.services.service import github
-colour_name(github.log, 'blue')
+colour_name(logging.getLogger('github3'), 'cyan')
+colour_name(logging.getLogger('git.cmd'), 'magenta')
+colour_name(logging.getLogger('git_repo', 'green')
+colour_name(logging.getLogger('git_repo.github'.log, 'blue')
 
 #################################################################################
 # Enable logging
@@ -44,7 +37,7 @@ import betamax
 
 from unittest import TestCase
 
-#from git_repo.services.service import github
+from git_repo.services.service import github
 
 class Test_Github(TestCase):
     def setUp(self):
