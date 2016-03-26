@@ -6,39 +6,45 @@ log = logging.getLogger('git_repo.bitbucket')
 from ..service import register_target, RepositoryService
 from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
 
-from bitbucket.bitbucket import Bitbucket
+import bitbucket.bitbucket as bitbucket
+from requests import Request, Session
 import json
 
+'''
+Extension of the bitbucket module implementation to add support for the extra
+features the original implementation lacked. This is a temporary measure, up
+until a PR is crafted for the original code.
+'''
 
-def monkey_patch(bb):
-    import types
-    # XXX odious monkey patching, need to do a PR upstream on bitbucket-api
-    # def get(self, user=None, repo_slug=None):
-    #     """ Get a single repository on Bitbucket and return it."""
-    #     username = user or self.bitbucket.username
-    #     repo_slug = repo_slug or self.bitbucket.repo_slug or ''
-    #     url = self.bitbucket.url('GET_REPO', username=username, repo_slug=repo_slug)
-    #     return self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth)
-    #
-    # bb.repository.bitbucket.URLS['GET_REPO'] = 'repositories/%(username)s/%(repo_slug)s/'
-    # bb.repository.get_repo = types.MethodType(get, bb.repository)
+bitbucket.URLS.update({
+    'GET_REPO' : 'repositories/%(username)s/%(repo_slug)s/',
+    'DELETE_REPO' : 'repositories/%(accountname)s/%(repo_slug)s',
+    'FORK_REPO' : 'repositories/%(username)s/%(repo_slug)s/fork',
+})
+
+class Bitbucket(bitbucket.Bitbucket):
+    def __init__(self, *args, **kwarg):
+        super(Bitbucket, self).__init__(self)
+        self.session = Session()
+        # XXX monkey patching of requests within bitbucket module
+        bitbucket.requests = self.session
+
+    def get(self, user=None, repo_slug=None):
+        """ Get a single repository on Bitbucket and return it."""
+        username = user or self.bitbucket.username
+        repo_slug = repo_slug or self.bitbucket.repo_slug or ''
+        url = self.bitbucket.url('GET_REPO', username=username, repo_slug=repo_slug)
+        return self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth)
 
     def delete(self, user, repo_slug):
         url = self.bitbucket.url('DELETE_REPO', accountname=user, repo_slug=repo_slug)
         return self.bitbucket.dispatch('DELETE', url, auth=self.bitbucket.auth)
-
-    bb.repository.bitbucket.URLS['DELETE_REPO'] = 'repositories/%(accountname)s/%(repo_slug)s'
-    bb.repository.delete = types.MethodType(delete, bb.repository)
 
     def fork(self, user, repo_slug, new_name=None):
         url = self.bitbucket.url('FORK_REPO', username=user, repo_slug=repo_slug)
         new_repo = new_name or repo_slug
         return self.bitbucket.dispatch('POST', url, name=new_repo, auth=self.bitbucket.auth)
 
-    bb.repository.bitbucket.URLS['FORK_REPO'] = 'repositories/%(username)s/%(repo_slug)s/fork'
-    bb.repository.fork = types.MethodType(fork, bb.repository)
-
-    from requests import Request, Session
     def dispatch(self, method, url, auth=None, params=None, **kwargs):
         """ Send HTTP request, with given method,
             credentials and data to the given URL,
@@ -50,8 +56,7 @@ def monkey_patch(bb):
             auth=auth,
             params=params,
             data=kwargs)
-        s = Session()
-        resp = s.send(r.prepare())
+        resp = self.session.send(r.prepare())
         status = resp.status_code
         text = resp.text
         error = resp.reason
@@ -84,21 +89,21 @@ def monkey_patch(bb):
         else:
             return (False, dict(message='Unidentified error.', reason=error, code=status))
 
-    bb.repository.bitbucket.dispatch = types.MethodType(dispatch, bb.repository.bitbucket)
-
 
 @register_target('bb', 'bitbucket')
 class BitbucketService(RepositoryService):
     fqdn = 'bitbucket.org'
+
+    def __init__(self, *args, **kwarg):
+        self.bb = Bitbucket()
+        super(BitbucketService, self).__init__(*args, **kwarg)
 
     def connect(self):
         if not self._privatekey:
             raise ConnectionError('Could not connect to BitBucket. Please configure .gitconfig with your bitbucket credentials.')
         if not ':' in self._privatekey:
             raise ConnectionError('Could not connect to BitBucket. Please setup your private key with login:password')
-        username, password = self._privatekey.split(':')
-        self.bb = Bitbucket(username, password)
-        monkey_patch(self.bb)
+        self.bb.username, self.bb.password = self._privatekey.split(':')
 
     def create(self, user, repo):
         success, result = self.bb.repository.create(repo, scm='git')
