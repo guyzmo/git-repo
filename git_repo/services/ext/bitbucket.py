@@ -3,8 +3,8 @@
 import logging
 log = logging.getLogger('git_repo.bitbucket')
 
-from .base import register_target, RepositoryService
-from ..exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
+from ..service import register_target, RepositoryService
+from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
 
 from bitbucket.bitbucket import Bitbucket
 import json

@@ -3,8 +3,8 @@
 import logging
 log = logging.getLogger('git_repo.gitlab')
 
-from .base import register_target, RepositoryService
-from ..exceptions import ArgumentError, ResourceError, ResourceExistsError, ResourceNotFoundError
+from ..service import register_target, RepositoryService
+from ...exceptions import ArgumentError, ResourceError, ResourceExistsError, ResourceNotFoundError
 
 from gitlab import Gitlab
 from gitlab.exceptions import GitlabCreateError, GitlabGetError

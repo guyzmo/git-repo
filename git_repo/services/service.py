@@ -60,6 +60,7 @@ class ProgressBar(RemoteProgress): # pragma: no cover
 def register_target(repo_cmd, repo_service):
     """Decorator to register a class with an repo_service"""
     def decorate(klass):
+        log.debug('Loading service module class: {}'.format(klass.__name__) )
         klass.command = repo_cmd
         klass.name = repo_service
         RepositoryService.service_map[repo_service] = klass
@@ -299,7 +300,13 @@ class RepositoryService:
         raise NotImplementedError
 
 
-# register all services by importing their modules
-from . import *
+'''
+register all services by importing their modules, from the ext pagckage
 
+they are registered using the `register_target()` decorator, and added
+to the `RepositorService.service_map` dictionary, and is accessed by the
+`main()` function using the `RepositoryService.get_service()` method.
+'''
+
+from .ext import *
 

@@ -71,7 +71,7 @@ if sys.version_info.major < 3: # pragma: no cover
     sys.exit(1)
 
 from .exceptions import ArgumentError
-from .services.base import RepositoryService
+from .services.service import RepositoryService
 
 from git import Repo, Git
 from git.exc import InvalidGitRepositoryError, NoSuchPathError

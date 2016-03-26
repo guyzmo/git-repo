@@ -3,8 +3,8 @@
 import logging
 log = logging.getLogger('git_repo.github')
 
-from .base import register_target, RepositoryService
-from ..exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
+from ..service import register_target, RepositoryService
+from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
 
 import github3
 
@@ -13,8 +13,8 @@ class GithubService(RepositoryService):
     fqdn = 'github.com'
 
     def __init__(self, *args, **kwarg):
-        super(GithubService, self).__init__(*args, **kwarg)
         self.gh = github3.GitHub()
+        super(GithubService, self).__init__(*args, **kwarg)
 
     def connect(self):
         try:
