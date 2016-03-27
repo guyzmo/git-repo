@@ -38,7 +38,7 @@ class GithubService(RepositoryService):
                 raise ResourceExistsError("Project already exists.") from err
             else: # pragma: no cover
                 raise ResourceError("Unhandled error.") from err
-        self.add(user=user, repo=repo, default=True)
+        self.add(user=user, repo=repo, tracking=self.name)
 
     def fork(self, user, repo, branch='master'):
         log.info("Forking repository {}/{}…".format(user, repo))
@@ -50,8 +50,8 @@ class GithubService(RepositoryService):
             else: # pragma: no cover
                 raise ResourceError("Unhandled error: {}".format(err)) from err
         self.add(user=user, repo=repo, name='upstream', alone=True)
-        remote = self.add(repo=repo, user=self.username, default=True)
         self.pull(remote, branch)
+        remote = self.add(repo=repo, user=self.username, tracking=self.name)
         log.info("New forked repository available at {}/{}".format(self.url_ro,
                                                                    fork.full_name))
 

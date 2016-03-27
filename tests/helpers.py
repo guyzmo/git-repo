@@ -34,22 +34,31 @@ class GitRepoTestCase(TestCase):
         try:
             self.repository.remote(remote)
         except ValueError as err:
-            raise AssertionError("Remote {} not in repository".format(remote))
+            raise AssertionError("Remote {} not in repository".format(remote)) from err
 
     def assert_added_remote_defaults(self):
         self.assert_added_remote(self.service.name)
         self.assert_added_remote('all')
+
+    def assert_tracking_remote(self, remote_name=None, branch_name='master'):
+        if not remote_name:
+            remote_name = self.service.name
+        for branch in self.repository.branches:
+            if branch == branch_name:
+                assert remote_name in self.repository.branches[0].tracking_branch().name, \
+                    'Could not set "{}" as tracking branch master'.format(self.service.name)
 
     '''test cases templates'''
 
     def action_fork(self, cassette_name, local_namespace, remote_namespace, repository):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
             self.service.connect()
-            self.service.fork(local_namespace, repository)
+            self.service.fork(remote_namespace, repository)
             #
-            self.assertIsNotNone(self.service.gh.repository(remote_namespace, repository),
-                                 "Fork not found on {}".format(self.service.name))
+            assert self.service.gh.repository(remote_namespace, repository) is not None, \
+                                 "Fork not found on {}".format(self.service.name)
             self.assert_added_remote_defaults()
+            self.assert_tracking_remote(local_namespace)
 
 
     def action_create(self, cassette_name, namespace, repository):
@@ -88,14 +97,14 @@ class GitRepoTestCase(TestCase):
             #
             self.assert_added_remote_defaults()
 
-    def action_add(self, cassette_name, namespace, repository, alone=False, name=None, default=False):
+    def action_add(self, cassette_name, namespace, repository, alone=False, name=None, tracking='master'):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
             # init git in the repository's destination
             self.repository.init()
             self.service.connect()
-            self.service.add(user=namespace, repo=repository)
+            self.service.add(user=namespace, repo=repository, alone=alone, name=name, tracking=tracking)
             #
-            if not default:
+            if not tracking:
                 if not alone and not name:
                     self.assert_added_remote_defaults()
                 elif not alone and name:
@@ -108,17 +117,17 @@ class GitRepoTestCase(TestCase):
             else:
                 if not alone and not name:
                     self.assert_added_remote_defaults()
+                    self.assert_tracking_remote()
                 elif not alone and name:
                     self.assert_added_remote(name)
                     self.assert_added_remote('all')
+                    self.assert_tracking_remote(name)
                 elif alone and not name:
                     self.assert_added_remote(self.service.name)
+                    self.assert_tracking_remote(branch_name=tracking)
                 elif alone and name:
                     self.assert_added_remote(name)
-                self.assertTrue(
-                    self.service.name in self.repository.branches[0].tracking_branch().name,
-                    'Could not set "" as tracking branch master'.format(self.service.name)
-                )
+                    self.assert_tracking_remote(name, tracking)
 
     def action_open(self, cassette_name, namespace, repository):
         #with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):

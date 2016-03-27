@@ -196,7 +196,7 @@ class RepositoryService:
 
         :param user: namespace of the repository
         :param repo: name slug of the repository
-        :Param branch: default branch to pull
+        :Param branch: branch to pull as tracking
 
         This command is fairly simple, and pretty close to the real `git clone`
         command, except it does not take a full path, but just a namespace/slug
@@ -204,15 +204,15 @@ class RepositoryService:
         '''
         log.info('Cloning {}…'.format(repo))
 
-        remote = self.add(user=user, repo=repo, default=True)
+        remote = self.add(user=user, repo=repo, tracking=True)
         self.pull(remote, branch)
 
-    def add(self, repo, user=None, name=None, default=False, alone=False):
+    def add(self, repo, user=None, name=None, tracking=False, alone=False):
         '''Adding repository as remote
 
         :param repo: Name slug of the repository to add
         :param name: Name of the remote when stored
-        :param default: When set, makes this remote the default for master operations
+        :param tracking: When set, makes this remote the tracking for master operations
         :param alone: When set, exclude this remote from the "all" remote
 
         This method creates a new remote within the current repository *repo*.
@@ -251,9 +251,16 @@ class RepositoryService:
                 if url not in all_remote.list:
                     all_remote.set_url(url=self.format_path(repo, user, rw=True), add=True)
 
-        # adding "self" as the default remote
-        if default:
-            return self.repository.create_remote(name, self.format_path(repo, user, rw=True), master='master')
+        # adding "self" as the tracking remote
+        if tracking:
+            remote = self.repository.create_remote(name, self.format_path(repo, user, rw=True))
+            # lookup tracking branch (usually master)
+            for branch in self.repository.branches:
+                if tracking == branch.name:
+                    # set that branch as tracking
+                    branch.set_tracking_branch(remote.refs[0])
+                    break
+            return remote
         else:
             return self.repository.create_remote(name, self.format_path(repo, user, rw=True))
 

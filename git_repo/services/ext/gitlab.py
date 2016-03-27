@@ -47,8 +47,8 @@ class GitlabService(RepositoryService):
                 pass
             raise ResourceError("Unhandled error.") from err
         self.add(user=user, repo=repo, name='upstream', alone=True)
-        remote = self.add(repo=fork.name, user=fork.namespace['path'], default=True)
         self.pull(remote, branch)
+        remote = self.add(repo=fork.name, user=fork.namespace['path'], tracking=self.name)
         log.info("New forked repository available at {}/{}".format(self.url_ro,
                                                                    fork.path_with_namespace))
 

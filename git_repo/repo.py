@@ -2,8 +2,8 @@
 
 '''
 Usage:
-    {self} [--path=<path>] [-v -v...] <target> add <user>/<repo>
     {self} [--path=<path>] [-v -v...] <target> fork <user>/<repo> [<branch>]
+    {self} [--path=<path>] [-v -v...] <target> add <user>/<repo> [<name>] [-t <branch>] [-a]
     {self} [--path=<path>] [-v -v...] <target> clone <user>/<repo> [<branch>]
     {self} [--path=<path>] [-v -v...] <target> create <user>/<repo>
     {self} [--path=<path>] [-v -v...] <target> delete <user>/<repo> [-f]
@@ -13,26 +13,31 @@ Usage:
 Tool for managing remote repository services.
 
 Commands:
-    add                 Add the service as a remote on this repository
-    clone               Clones this repository from the service
-    fork                Fork (and clone) the repository from the service
-    create              Make this repository a new remote on the service
-    delete              Delete the remote repository
-    open                Open the given or current repository in a browser
+    add                      Add the service as a remote on this repository
+    clone                    Clones this repository from the service
+    fork                     Fork (and clone) the repository from the service
+    create                   Make this repository a new remote on the service
+    delete                   Delete the remote repository
+    open                     Open the given or current repository in a browser
 
 Options:
-    <user>/<repo>       Repository to work with
-    <branch>            Branch to pull (when cloning) [default: master]
-    -p,--path=<path>    Path to work on [default: .]
-    -f,--force          Do not ask for confirmation
-    -v,--verbose        Makes it more chatty (repeat twice to see git commands)
-    -h,--help           Shows this message
+    <user>/<repo>            Repository to work with
+    <branch>                 Branch to pull (when cloning) [default: master]
+    -p,--path=<path>         Path to work on [default: .]
+    -f,--force               Do not ask for confirmation
+    -v,--verbose             Makes it more chatty (repeat twice to see git commands)
+    -h,--help                Shows this message
+
+Options for add:
+    <name>                   Name to use for the remote (defaults to name of repo)
+    -t,--tracking <branch>   Makes this remote tracking for the current branch
+    -a,--alone               Does not add the remote to the 'all' remote
 
 Configuration options:
-    alias               Name to use for the git remote
-    url                 URL of the repository
-    private-key         Private key to use for connecting to the service
-    type                Name of the service to use (github, gitlab, bitbucket)
+    alias                    Name to use for the git remote
+    url                      URL of the repository
+    private-key              Private key to use for connecting to the service
+    type                     Name of the service to use (github, gitlab, bitbucket)
 
 Configuration example:
 
@@ -133,7 +138,10 @@ def main(args):
                 )
 
             elif args['add']:
-                service.add(repo, user)
+                service.add(repo, user,
+                            name=args['<name>'],
+                            tracking=args['--tracking'],
+                            alone=args['--alone'])
                 log.info('Successfully added `{}` as remote named `{}`'.format(
                     args['<user>/<repo>'],
                     service.name)
