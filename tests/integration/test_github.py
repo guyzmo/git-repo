@@ -91,21 +91,21 @@ class Test_Github(GitRepoTestCase):
         self.action_add(cassette_name=sys._getframe().f_code.co_name,
                         namespace='guyzmo',
                         repository='git-repo',
-                        default=True)
+                        tracking='github')
 
     def test_10_add__default_name(self):
         self.action_add(cassette_name=sys._getframe().f_code.co_name,
                         namespace='guyzmo',
                         repository='git-repo',
                         name='test0r',
-                        default=True)
+                        tracking='github')
 
     def test_11_add__alone_default(self):
         self.action_add(cassette_name=sys._getframe().f_code.co_name,
                         namespace='guyzmo',
                         repository='git-repo',
                         alone=True,
-                        default=True)
+                        tracking='github')
 
     def test_12_add__alone_default_name(self):
         self.action_add(cassette_name=sys._getframe().f_code.co_name,
@@ -113,7 +113,7 @@ class Test_Github(GitRepoTestCase):
                         repository='git-repo',
                         alone=True,
                         name='test0r',
-                        default=True)
+                        tracking='github')
 
     def test_13_open(self):
         self.action_open(cassette_name=sys._getframe().f_code.co_name,
