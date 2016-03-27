@@ -1,0 +1,64 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-03-27T17:06:55",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "gzip, deflate",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/user"
+      },
+      "response": {
+        "body": {
+          "base64_string": "H4sIAAAAAAAAA5VTTW+cMBT8Lz6z2LtLktZS1L/QQ3rJZWXAAUvGtvxBtEH57x1jum1W6gEJCXiemTcM7y1E20EZwsmQrh+TJRVRPeGnh6ZpjhURs4jCX5LXQIwxusApLcVQDyqOqU1B+s6aKE2sOzvRRAv5x/x8htrgN40sS1C403Jq0ylkiAV6szLGSd81L01X8A32ZrW272DeG/2/OL1xYKk8KzPs5oOzUBtHiYxg/TN/sApxj5EVv9B8u6g+KwRE7mW/w8zGgJV3AxcL9dLZVSq1ofPKRWXNHlNfeNCxfhBGfYi9OuAF0LOdPe1XPHhyxlTtIRbCQp1Xs+iuOQIvO6lmxLlb7I4JrXh1ElP8C786h6uivIh+yuvzJnSQFTFiyoDbZGJMnTBXwk3SuiItlm1bJOxRQdWDjbXBDGGW6mhpxlCoa9utcQP/U3i1xjEJhUUsWqPyUrQa7aJPaN0q++fIpVar7lJS5E+sIltlnTXCj6j8nX/enP9ZAZzitYN2RGYiov2JHdmBNYfT08ux4QzX91e4Sa7/gnk8sPPh9PjCGG++cfbwSj5/A80RPLheBAAA",
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Encoding": "gzip",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sun, 27 Mar 2016 17:07:06 GMT",
+          "ETag": "W/\"afcdee465dd4ebbf5f0588092b6d7282\"",
+          "Last-Modified": "Sat, 26 Mar 2016 00:48:05 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Transfer-Encoding": "chunked",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:36C6:488E504:56F81339",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4990",
+          "X-RateLimit-Reset": "1459101472",
+          "X-Served-By": "a7f8a126c9ed3f1c4715a34c0ddc7290",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/user"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

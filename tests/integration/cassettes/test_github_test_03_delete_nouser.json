@@ -1,0 +1,176 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-03-26T16:52:14",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "gzip, deflate",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/user"
+      },
+      "response": {
+        "body": {
+          "base64_string": "H4sIAAAAAAAAA5VTTW+cMBT8Lz6z2LtLktZS1L/QQ3rJZWXAAUvGtvxBtEH57x1jum1W6gEJCXiemTcM7y1E20EZwsmQrh+TJRVRPeGnh6ZpjhURs4jCX5LXQIwxusApLcVQDyqOqU1B+s6aKE2sOzvRRAv5x/x8htrgN40sS1C403Jq0ylkiAV6szLGSd81L01X8A32ZrW272DeG/2/OL1xYKk8KzPs5oOzUBtHiYxg/TN/sApxj5EVv9B8u6g+KwRE7mW/w8zGgJV3AxcL9dLZVSq1ofPKRWXNHlNfeNCxfhBGfYi9OuAF0LOdPe1XPHhyxlTtIRbCQp1Xs+iuOQIvO6lmxLlb7I4JrXh1ElP8C786h6uivIh+yuvzJnSQFTFiyoDbZGJMnTBXwk3SuiItlm1bJOxRQdWDjbXBDGGW6mhpxlCoa9utcQP/U3i1xjEJhUUsWqPyUrQa7aJPaN0q++fIpVar7lJS5E+sIltlnTXCj6j8nX/enP9ZAZzitYN2RGYiov2JHdmBNYfT08ux4QzX91e4Sa7/gnk8sPPh9PjCGG++cfbwSj5/A80RPLheBAAA",
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Encoding": "gzip",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 26 Mar 2016 16:52:24 GMT",
+          "ETag": "W/\"afcdee465dd4ebbf5f0588092b6d7282\"",
+          "Last-Modified": "Sat, 26 Mar 2016 00:48:05 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Transfer-Encoding": "chunked",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:6B9B:D48A16F:56F6BE48",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4990",
+          "X-RateLimit-Reset": "1459014310",
+          "X-Served-By": "139317cebd6caf9cd03889139437f00b",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/user"
+      }
+    },
+    {
+      "recorded_at": "2016-03-26T16:52:14",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "gzip, deflate",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/repos/guyzmo/github3.py"
+      },
+      "response": {
+        "body": {
+          "base64_string": "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",
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Encoding": "gzip",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 26 Mar 2016 16:52:24 GMT",
+          "ETag": "W/\"06bebc83c798c8fe3786ecf9b2950824\"",
+          "Last-Modified": "Sat, 26 Mar 2016 16:49:49 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Transfer-Encoding": "chunked",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "repo",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:6B9B:D48A190:56F6BE48",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4989",
+          "X-RateLimit-Reset": "1459014310",
+          "X-Served-By": "a474937f3b2fa272558fa6dc951018ad",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/repos/guyzmo/github3.py"
+      }
+    },
+    {
+      "recorded_at": "2016-03-26T16:52:14",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "gzip, deflate",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Length": "0",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "DELETE",
+        "uri": "https://api.github.com/repos/guyzmo/github3.py"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": ""
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Content-Security-Policy": "default-src 'none'",
+          "Date": "Sat, 26 Mar 2016 16:52:24 GMT",
+          "Server": "GitHub.com",
+          "Status": "204 No Content",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept-Encoding",
+          "X-Accepted-OAuth-Scopes": "delete_repo",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:6B9B:D48A1AB:56F6BE48",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4988",
+          "X-RateLimit-Reset": "1459014310",
+          "X-Served-By": "593010132f82159af0ded24b4932e109",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 204,
+          "message": "No Content"
+        },
+        "url": "https://api.github.com/repos/guyzmo/github3.py"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}
