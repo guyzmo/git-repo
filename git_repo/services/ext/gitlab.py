@@ -69,4 +69,7 @@ class GitlabService(RepositoryService):
         except Exception as err:
             raise ResourceError("Unhandled exception: {}".format(err)) from err
 
+    @property
+    def user(self):
+        return self.gl.user.username
 

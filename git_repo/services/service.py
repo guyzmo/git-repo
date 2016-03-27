@@ -306,6 +306,10 @@ class RepositoryService:
         '''
         raise NotImplementedError
 
+    @property
+    def user(self):
+        raise NotImplementedError
+
 
 '''
 register all services by importing their modules, from the ext pagckage

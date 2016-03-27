@@ -133,4 +133,11 @@ class BitbucketService(RepositoryService):
         elif not success:
             raise ResourceError("Couldn't complete deletion: {message} (error #{code}: {reason})".format(**result))
 
+    @property
+    def user(self):
+        ret, user = bb.get_user()
+        if ret:
+            return user['username']
+        raise ResourceError("Could not retrieve username: {message} (error #{code}: {reason}".format(**result))
+
 

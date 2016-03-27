@@ -70,4 +70,7 @@ class GithubService(RepositoryService):
                                               'Check the namespace or the private token\'s privileges') from err
             raise ResourceError('Unhandled exception: {}'.format(err)) from err
 
+    @property
+    def user(self):
+        return self.gh.user().name
 

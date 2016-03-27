@@ -82,13 +82,12 @@ class GitRepoTestCase(TestCase):
                 self.service.delete(repo=repository)
             #
             if not namespace:
-                # TODO make a method in repositoryservice that returns current user
-                namespace = 'guyzmo'
             self.assertIsNone(self.service.gh.repository(namespace, repository),
                               "Repository '{}' not deleted from {}".format(
                                   '/'.join([namespace, repository]) if namespace else repository,
                                   self.service.name
                               ))
+                namespace = self.service.user
 
     def action_clone(self, cassette_name, namespace, repository):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
