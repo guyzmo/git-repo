@@ -153,7 +153,7 @@ def main(args):
                     ans = input('Are you sure you want to delete the repository '
                                 '{} from the server?\n[yN]> '.format(args['<user>/<repo>']))
                     if 'y' in ans:
-                        ans = input('Are you really sure, there\'s no coming back?\n'
+                        ans = input('Are you really sure? there\'s no coming back!\n'
                                     '[type \'burn!\' to proceed]> ')
                         if 'burn!' != ans:
                             return 0

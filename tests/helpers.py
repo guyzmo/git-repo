@@ -66,11 +66,11 @@ class GitRepoTestCase(TestCase):
             self.service.connect()
             self.service.create(namespace, repository)
             #
-            self.assertIsNotNone(self.service.gh.repository(namespace, repository),
+            assert self.service.gh.repository(namespace, repository), \
                                  "Remote repository {} not found on {}".format(
                                      repository,
                                      self.service.name
-                                 ))
+                                 )
             self.assert_added_remote_defaults()
 
     def action_delete(self, cassette_name, repository, namespace=None):
@@ -82,12 +82,12 @@ class GitRepoTestCase(TestCase):
                 self.service.delete(repo=repository)
             #
             if not namespace:
-            self.assertIsNone(self.service.gh.repository(namespace, repository),
-                              "Repository '{}' not deleted from {}".format(
-                                  '/'.join([namespace, repository]) if namespace else repository,
-                                  self.service.name
-                              ))
                 namespace = self.service.user
+            remote_repo = self.service.gh.repository(namespace, repository)
+            assert remote_repo is not None, "Repository '{}' not deleted from {}".format(
+                    '/'.join([namespace, repository]) if namespace else repository,
+                    self.service.name
+                )
 
     def action_clone(self, cassette_name, namespace, repository):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
