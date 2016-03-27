@@ -296,7 +296,7 @@ class RepositoryService:
         '''
         raise NotImplementedError
 
-    def fork(self, repo):
+    def fork(self, repo, clone=True):
         '''Forks a new remote repository on the service
         and pulls commits from it
 

@@ -40,7 +40,7 @@ class GithubService(RepositoryService):
                 raise ResourceError("Unhandled error.") from err
         self.add(user=user, repo=repo, tracking=self.name)
 
-    def fork(self, user, repo, branch='master'):
+    def fork(self, user, repo, branch='master', clone=True):
         log.info("Forking repository {}/{}…".format(user, repo))
         try:
             fork = self.gh.repository(user, repo).create_fork()
@@ -50,8 +50,9 @@ class GithubService(RepositoryService):
             else: # pragma: no cover
                 raise ResourceError("Unhandled error: {}".format(err)) from err
         self.add(user=user, repo=repo, name='upstream', alone=True)
-        self.pull(remote, branch)
         remote = self.add(repo=repo, user=self.username, tracking=self.name)
+        if clone:
+            self.pull(remote, branch)
         log.info("New forked repository available at {}/{}".format(self.url_ro,
                                                                    fork.full_name))
 

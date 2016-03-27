@@ -113,7 +113,7 @@ class BitbucketService(RepositoryService):
             raise ResourceError("Couldn't complete creation: {message} (error #{code}: {reason})".format(**result))
         self.add(user=user, repo=repo, default=True)
 
-    def fork(self, user, repo, branch='master'):
+    def fork(self, user, repo, branch='master', clone=True):
         log.info("Forking repository {}/{}…".format(user, repo))
         success, result = self.bb.repository.fork(user, repo)
         if not success:
@@ -121,7 +121,8 @@ class BitbucketService(RepositoryService):
         fork = result
         self.add(repo=repo, user=user, name='upstream', alone=True)
         remote = self.add(repo=fork['slug'], user=fork['owner'], default=True)
-        self.pull(remote, branch)
+        if clone:
+            self.pull(remote, branch)
         log.info("New forked repository available at {}".format(self.format_path(fork['slug'], fork['owner'])))
 
     def delete(self, repo, user=None):

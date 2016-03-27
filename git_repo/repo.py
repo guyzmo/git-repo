@@ -2,8 +2,8 @@
 
 '''
 Usage:
-    {self} [--path=<path>] [-v -v...] <target> fork <user>/<repo> [<branch>]
     {self} [--path=<path>] [-v -v...] <target> add <user>/<repo> [<name>] [-t <branch>] [-a]
+    {self} [--path=<path>] [-v -v...] <target> fork <user>/<repo> [<branch>] [--no-clone]
     {self} [--path=<path>] [-v -v...] <target> clone <user>/<repo> [<branch>]
     {self} [--path=<path>] [-v -v...] <target> create <user>/<repo>
     {self} [--path=<path>] [-v -v...] <target> delete <user>/<repo> [-f]
@@ -25,6 +25,7 @@ Options:
     <branch>                 Branch to pull (when cloning) [default: master]
     -p,--path=<path>         Path to work on [default: .]
     -f,--force               Do not ask for confirmation
+    --no-clone               Do not clone locally after fork
     -v,--verbose             Makes it more chatty (repeat twice to see git commands)
     -h,--help                Shows this message
 
@@ -178,7 +179,7 @@ def main(args):
                 repo_path = os.path.join(args['--path'], repo)
                 repository = Repo.init(repo_path)
                 service = RepositoryService.get_service(repository, args['<target>'])
-                service.fork(user, repo, branch=args['<branch>'])
+                service.fork(user, repo, branch=args['<branch>'], clone=args['--no-clone'])
                 log.info('Successfully cloned repository {} in {}'.format(
                     args['<user>/<repo>'],
                     repo_path)
