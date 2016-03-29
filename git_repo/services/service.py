@@ -83,7 +83,7 @@ class RepositoryService:
         :return: instance for using the service
         '''
         if not repository:
-            config = git.config.GitConfigParser('/home/guyzmo/.gitconfig')
+            config = git.config.GitConfigParser(os.path.join(os.environ['HOME'], '.gitconfig'))
         else:
             config = repository.config_reader()
         target = cls.command_map.get(command, command)
