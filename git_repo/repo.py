@@ -101,7 +101,7 @@ def main(args):
             logging.getLogger('git.cmd').addHandler(handler)
         if args['--verbose'] >= 1: # pragma: no cover
             log_root.setLevel(logging.DEBUG)
-        else:
+        else: #pragma: no cover
             log_root.setLevel(logging.INFO)
 
         log.addHandler(logging.StreamHandler())
@@ -110,7 +110,7 @@ def main(args):
         if args['<branch>'] == None:
             args['<branch>'] = 'master'
 
-        if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys():
+        if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys(): #pragma: no cover
             del os.environ['GIT_WORK_TREE']
 
         if '/' in args['<user>/<repo>']:
@@ -214,8 +214,8 @@ def main(args):
         return 2
 
 
-def cli():
+def cli(): #pragma: no cover
     sys.exit(main(docopt(__doc__.format(self=sys.argv[0], version=__version__))))
 
-if __name__ == '__main__':
+if __name__ == '__main__': #pragma: no cover
     cli()

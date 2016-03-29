@@ -15,9 +15,9 @@ from ..exceptions import ArgumentError
 
 from subprocess import call
 
-if 'mac' in sys.platform:
+if 'mac' in sys.platform: #pragma: no cover
     OPEN_COMMAND = 'open'
-else:
+else: #pragma: no cover
     OPEN_COMMAND = 'xdg-open'
 
 '''monkey patching of git module'''
@@ -268,14 +268,14 @@ class RepositoryService:
         '''Open the URL of a repository in the user's browser'''
         call([OPEN_COMMAND, self.format_path(repo, namespace=user, rw=False)])
 
-    def connect(self):
+    def connect(self): #pragma: no cover
         '''Brings up the connection to the remote service's API
 
         Meant to be overloaded by subclass
         '''
         raise NotImplementedError
 
-    def delete(self, repo, user=None):
+    def delete(self, repo, user=None): #pragma: no cover
         '''Delete a remote repository on the service
 
         :param repo: name of the remote repository to delete
@@ -284,7 +284,7 @@ class RepositoryService:
         '''
         raise NotImplementedError
 
-    def create(self, repo):
+    def create(self, repo): #pragma: no cover
         '''Create a new remote repository on the service
 
         :param repo: name of the repository to create
@@ -293,7 +293,7 @@ class RepositoryService:
         '''
         raise NotImplementedError
 
-    def fork(self, repo, clone=True):
+    def fork(self, repo, clone=True): #pragma: no cover
         '''Forks a new remote repository on the service
         and pulls commits from it
 
@@ -304,7 +304,7 @@ class RepositoryService:
         raise NotImplementedError
 
     @property
-    def user(self):
+    def user(self): #pragma: no cover
         raise NotImplementedError
 
 
