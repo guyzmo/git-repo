@@ -125,9 +125,12 @@ def main(args):
         if args['create'] or args['add'] or args['delete'] or args['open']:
             # Try to resolve existing repository path
             try:
-                repository = Repo(os.path.join(args['--path'], repo))
-            except NoSuchPathError:
-                repository = Repo(args['--path'])
+                try:
+                    repository = Repo(os.path.join(args['--path'], repo))
+                except NoSuchPathError:
+                    repository = Repo(args['--path'])
+            except InvalidGitRepositoryError:
+                raise FileNotFoundError('Cannot find path to the repository.')
             service = RepositoryService.get_service(repository, args['<target>'])
 
             if args['create']:
