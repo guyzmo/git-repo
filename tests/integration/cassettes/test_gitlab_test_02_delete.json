@@ -1,0 +1,129 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-03-28T02:08:42",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Connection": "keep-alive",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.9.1"
+        },
+        "method": "GET",
+        "uri": "https://gitlab.com/api/v3/user"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "{\"name\":\"Guyzmo\",\"username\":\"guyzmo\",\"id\":459552,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/guyzmo\",\"created_at\":\"2016-03-21T12:52:59.859Z\",\"is_admin\":false,\"bio\":\"\\\\_o\\u003c\",\"skype\":\"\",\"linkedin\":\"\",\"twitter\":\"\",\"website_url\":\"\",\"last_sign_in_at\":\"2016-03-21T13:48:05.259Z\",\"confirmed_at\":\"2016-03-21T13:48:05.234Z\",\"email\":\"guyzmo+gitlab@m0g.net\",\"theme_id\":2,\"color_scheme_id\":1,\"projects_limit\":100000,\"current_sign_in_at\":\"2016-03-27T17:56:15.904Z\",\"identities\":[],\"can_create_group\":true,\"can_create_project\":true,\"two_factor_enabled\":false,\"external\":false,\"private_token\":\"<PRIVATE_KEY_GITLAB>\"}"
+        },
+        "headers": {
+          "Cache-Control": "max-age=0, private, must-revalidate",
+          "Content-Length": "715",
+          "Content-Type": "application/json",
+          "Date": "Mon, 28 Mar 2016 02:08:54 GMT",
+          "Etag": "W/\"e19490551a45fe235fbc1bf42e7ac4b6\"",
+          "Server": "nginx",
+          "Status": "200 OK",
+          "Vary": "Origin",
+          "X-Request-Id": "58cadbe4-1a97-423c-9ebc-9a7f4a4a0971",
+          "X-Runtime": "2.178773"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://gitlab.com/api/v3/user"
+      }
+    },
+    {
+      "recorded_at": "2016-03-28T02:08:45",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Connection": "keep-alive",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.9.1"
+        },
+        "method": "GET",
+        "uri": "https://gitlab.com/api/v3/projects/guyzmo%2Ffoobar"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "{\"id\":1005922,\"description\":null,\"default_branch\":null,\"tag_list\":[],\"public\":false,\"archived\":false,\"visibility_level\":0,\"ssh_url_to_repo\":\"git@gitlab.com:guyzmo/foobar.git\",\"http_url_to_repo\":\"https://gitlab.com/guyzmo/foobar.git\",\"web_url\":\"https://gitlab.com/guyzmo/foobar\",\"owner\":{\"name\":\"Guyzmo\",\"username\":\"guyzmo\",\"id\":459552,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/guyzmo\"},\"name\":\"foobar\",\"name_with_namespace\":\"Guyzmo / foobar\",\"path\":\"foobar\",\"path_with_namespace\":\"guyzmo/foobar\",\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"builds_enabled\":true,\"snippets_enabled\":false,\"created_at\":\"2016-03-28T02:08:25.166Z\",\"last_activity_at\":\"2016-03-28T02:08:27.779Z\",\"shared_runners_enabled\":true,\"creator_id\":459552,\"namespace\":{\"id\":540439,\"name\":\"guyzmo\",\"path\":\"guyzmo\",\"owner_id\":459552,\"created_at\":\"2016-03-21T12:53:00.139Z\",\"updated_at\":\"2016-03-21T12:53:00.139Z\",\"description\":\"\",\"avatar\":null,\"membership_lock\":false,\"share_with_group_lock\":false,\"visibility_level\":20,\"last_ldap_sync_at\":null},\"avatar_url\":null,\"star_count\":0,\"forks_count\":0,\"open_issues_count\":0,\"runners_token\":\"U5eNGEjbjgVs5Kzs5kBP\",\"public_builds\":true,\"permissions\":{\"project_access\":{\"access_level\":40,\"notification_level\":3},\"group_access\":null}}"
+        },
+        "headers": {
+          "Cache-Control": "max-age=0, private, must-revalidate",
+          "Content-Length": "1378",
+          "Content-Type": "application/json",
+          "Date": "Mon, 28 Mar 2016 02:08:56 GMT",
+          "Etag": "W/\"f2da978295eb8e12dc7721bdb84b0d23\"",
+          "Server": "nginx",
+          "Status": "200 OK",
+          "Vary": "Origin",
+          "X-Request-Id": "85b751d1-ad90-46de-a998-b49eadbaf51f",
+          "X-Runtime": "2.332948"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://gitlab.com/api/v3/projects/guyzmo%2Ffoobar"
+      }
+    },
+    {
+      "recorded_at": "2016-03-28T02:08:47",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Connection": "keep-alive",
+          "Content-Length": "0",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.9.1"
+        },
+        "method": "DELETE",
+        "uri": "https://gitlab.com/api/v3/projects/1005922?name=foobar&forks=%3Cgitlab.objects.ProjectForkManager+object+at+0x7f6d91caf9b0%3E&visibility_level=0&path=foobar&keys=%3Cgitlab.objects.ProjectKeyManager+object+at+0x7f6d91cafa20%3E&snippets=%3Cgitlab.objects.ProjectSnippetManager+object+at+0x7f6d91cafba8%3E&wiki_enabled=True&owner=%3Cclass+%27gitlab.objects.User%27%3E+%3D%3E+%7B%27web_url%27%3A+%27https%3A%2F%2Fgitlab.com%2Fu%2Fguyzmo%27%2C+%27name%27%3A+%27Guyzmo%27%2C+%27keys%27%3A+%3Cgitlab.objects.UserKeyManager+object+at+0x7f6d91caf7b8%3E%2C+%27_from_api%27%3A+False%2C+%27gitlab%27%3A+%3Cgitlab.Gitlab+object+at+0x7f6d94924160%3E%2C+%27avatar_url%27%3A+%27https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F917dc55c63895af9953df7d798cdd5f8%3Fs%3D80%26d%3Didenticon%27%2C+%27state%27%3A+%27active%27%2C+%27username%27%3A+%27guyzmo%27%2C+%27id%27%3A+459552%7D&variables=%3Cgitlab.objects.ProjectVariableManager+object+at+0x7f6d91cafc50%3E&shared_runners_enabled=True&events=%3Cgitlab.objects.ProjectEventManager+object+at+0x7f6d91caf940%3E&tags=%3Cgitlab.objects.ProjectTagManager+object+at+0x7f6d91cafbe0%3E&created_at=2016-03-28T02%3A08%3A25.166Z&builds_enabled=True&branches=%3Cgitlab.objects.ProjectBranchManager+object+at+0x7f6d91caf860%3E&_from_api=True&labels=%3Cgitlab.objects.ProjectLabelManager+object+at+0x7f6d91cafa90%3E&id=1005922&http_url_to_repo=https%3A%2F%2Fgitlab.com%2Fguyzmo%2Ffoobar.git&builds=%3Cgitlab.objects.ProjectBuildManager+object+at+0x7f6d91caf898%3E&files=%3Cgitlab.objects.ProjectFileManager+object+at+0x7f6d91caf978%3E&public_builds=True&commits=%3Cgitlab.objects.ProjectCommitManager+object+at+0x7f6d91caf8d0%3E&hooks=%3Cgitlab.objects.ProjectHookManager+object+at+0x7f6d91caf9e8%3E&namespace=%3Cclass+%27gitlab.objects.Group%27%3E+%3D%3E+%7B%27last_ldap_sync_at%27%3A+None%2C+%27name%27%3A+%27guyzmo%27%2C+%27created_at%27%3A+%272016-03-21T12%3A53%3A00.139Z%27%2C+%27visibility_level%27%3A+20%2C+%27_from_api%27%3A+False%2C+%27share_with_group_lock%27%3A+False%2C+%27membership_lock%27%3A+False%2C+%27path%27%3A+%27guyzmo%27%2C+%27owner_id%27%3A+459552%2C+%27description%27%3A+%27%27%2C+%27updated_at%27%3A+%272016-03-21T12%3A53%3A00.139Z%27%2C+%27avatar%27%3A+None%2C+%27gitlab%27%3A+%3Cgitlab.Gitlab+object+at+0x7f6d94924160%3E%2C+%27members%27%3A+%3Cgitlab.objects.GroupMemberManager+object+at+0x7f6d91caf828%3E%2C+%27id%27%3A+540439%7D&milestones=%3Cgitlab.objects.ProjectMilestoneManager+object+at+0x7f6d91cafb38%3E&merge_requests_enabled=True&web_url=https%3A%2F%2Fgitlab.com%2Fguyzmo%2Ffoobar&last_activity_at=2016-03-28T02%3A08%3A27.779Z&notes=%3Cgitlab.objects.ProjectNoteManager+object+at+0x7f6d91cafb70%3E&issues_enabled=True&forks_count=0&snippets_enabled=False&mergerequests=%3Cgitlab.objects.ProjectMergeRequestManager+object+at+0x7f6d91cafb00%3E&ssh_url_to_repo=git%40gitlab.com%3Aguyzmo%2Ffoobar.git&path_with_namespace=guyzmo%2Ffoobar&commitstatuses=%3Cgitlab.objects.ProjectCommitStatusManager+object+at+0x7f6d91caf908%3E&open_issues_count=0&gitlab=%3Cgitlab.Gitlab+object+at+0x7f6d94924160%3E&runners_token=U5eNGEjbjgVs5Kzs5kBP&members=%3Cgitlab.objects.ProjectMemberManager+object+at+0x7f6d91cafac8%3E&public=False&triggers=%3Cgitlab.objects.ProjectTriggerManager+object+at+0x7f6d91cafc18%3E&permissions=project_access&permissions=group_access&issues=%3Cgitlab.objects.ProjectIssueManager+object+at+0x7f6d91cafa58%3E&archived=False&star_count=0&name_with_namespace=Guyzmo+%2F+foobar&creator_id=459552"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "\"53bdd91c74db575e128c75cc\""
+        },
+        "headers": {
+          "Cache-Control": "max-age=0, private, must-revalidate",
+          "Content-Length": "26",
+          "Content-Type": "application/json",
+          "Date": "Mon, 28 Mar 2016 02:08:58 GMT",
+          "Etag": "W/\"1fc4cfa7d0f0c9dd4ea7b6cf1f1ae916\"",
+          "Server": "nginx",
+          "Status": "200 OK",
+          "Vary": "Origin",
+          "X-Request-Id": "10188a38-f1bc-4460-8417-a6970b2dd5c3",
+          "X-Runtime": "2.076487"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://gitlab.com/api/v3/projects/1005922?name=foobar&forks=%3Cgitlab.objects.ProjectForkManager+object+at+0x7f6d91caf9b0%3E&visibility_level=0&path=foobar&keys=%3Cgitlab.objects.ProjectKeyManager+object+at+0x7f6d91cafa20%3E&snippets=%3Cgitlab.objects.ProjectSnippetManager+object+at+0x7f6d91cafba8%3E&wiki_enabled=True&owner=%3Cclass+%27gitlab.objects.User%27%3E+%3D%3E+%7B%27web_url%27%3A+%27https%3A%2F%2Fgitlab.com%2Fu%2Fguyzmo%27%2C+%27name%27%3A+%27Guyzmo%27%2C+%27keys%27%3A+%3Cgitlab.objects.UserKeyManager+object+at+0x7f6d91caf7b8%3E%2C+%27_from_api%27%3A+False%2C+%27gitlab%27%3A+%3Cgitlab.Gitlab+object+at+0x7f6d94924160%3E%2C+%27avatar_url%27%3A+%27https%3A%2F%2Fsecure.gravatar.com%2Favatar%2F917dc55c63895af9953df7d798cdd5f8%3Fs%3D80%26d%3Didenticon%27%2C+%27state%27%3A+%27active%27%2C+%27username%27%3A+%27guyzmo%27%2C+%27id%27%3A+459552%7D&variables=%3Cgitlab.objects.ProjectVariableManager+object+at+0x7f6d91cafc50%3E&shared_runners_enabled=True&events=%3Cgitlab.objects.ProjectEventManager+object+at+0x7f6d91caf940%3E&tags=%3Cgitlab.objects.ProjectTagManager+object+at+0x7f6d91cafbe0%3E&created_at=2016-03-28T02%3A08%3A25.166Z&builds_enabled=True&branches=%3Cgitlab.objects.ProjectBranchManager+object+at+0x7f6d91caf860%3E&_from_api=True&labels=%3Cgitlab.objects.ProjectLabelManager+object+at+0x7f6d91cafa90%3E&id=1005922&http_url_to_repo=https%3A%2F%2Fgitlab.com%2Fguyzmo%2Ffoobar.git&builds=%3Cgitlab.objects.ProjectBuildManager+object+at+0x7f6d91caf898%3E&files=%3Cgitlab.objects.ProjectFileManager+object+at+0x7f6d91caf978%3E&public_builds=True&commits=%3Cgitlab.objects.ProjectCommitManager+object+at+0x7f6d91caf8d0%3E&hooks=%3Cgitlab.objects.ProjectHookManager+object+at+0x7f6d91caf9e8%3E&namespace=%3Cclass+%27gitlab.objects.Group%27%3E+%3D%3E+%7B%27last_ldap_sync_at%27%3A+None%2C+%27name%27%3A+%27guyzmo%27%2C+%27created_at%27%3A+%272016-03-21T12%3A53%3A00.139Z%27%2C+%27visibility_level%27%3A+20%2C+%27_from_api%27%3A+False%2C+%27share_with_group_lock%27%3A+False%2C+%27membership_lock%27%3A+False%2C+%27path%27%3A+%27guyzmo%27%2C+%27owner_id%27%3A+459552%2C+%27description%27%3A+%27%27%2C+%27updated_at%27%3A+%272016-03-21T12%3A53%3A00.139Z%27%2C+%27avatar%27%3A+None%2C+%27gitlab%27%3A+%3Cgitlab.Gitlab+object+at+0x7f6d94924160%3E%2C+%27members%27%3A+%3Cgitlab.objects.GroupMemberManager+object+at+0x7f6d91caf828%3E%2C+%27id%27%3A+540439%7D&milestones=%3Cgitlab.objects.ProjectMilestoneManager+object+at+0x7f6d91cafb38%3E&merge_requests_enabled=True&web_url=https%3A%2F%2Fgitlab.com%2Fguyzmo%2Ffoobar&last_activity_at=2016-03-28T02%3A08%3A27.779Z&notes=%3Cgitlab.objects.ProjectNoteManager+object+at+0x7f6d91cafb70%3E&issues_enabled=True&forks_count=0&snippets_enabled=False&mergerequests=%3Cgitlab.objects.ProjectMergeRequestManager+object+at+0x7f6d91cafb00%3E&ssh_url_to_repo=git%40gitlab.com%3Aguyzmo%2Ffoobar.git&path_with_namespace=guyzmo%2Ffoobar&commitstatuses=%3Cgitlab.objects.ProjectCommitStatusManager+object+at+0x7f6d91caf908%3E&open_issues_count=0&gitlab=%3Cgitlab.Gitlab+object+at+0x7f6d94924160%3E&runners_token=U5eNGEjbjgVs5Kzs5kBP&members=%3Cgitlab.objects.ProjectMemberManager+object+at+0x7f6d91cafac8%3E&public=False&triggers=%3Cgitlab.objects.ProjectTriggerManager+object+at+0x7f6d91cafc18%3E&permissions=project_access&permissions=group_access&issues=%3Cgitlab.objects.ProjectIssueManager+object+at+0x7f6d91cafa58%3E&archived=False&star_count=0&name_with_namespace=Guyzmo+%2F+foobar&creator_id=459552"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}
