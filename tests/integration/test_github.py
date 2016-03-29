@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
+import os
 import sys
 import logging
+
+import pytest
 
 #################################################################################
 # Enable logging
@@ -10,14 +13,11 @@ log = logging.getLogger('test.github')
 
 #################################################################################
 
-from tempfile import TemporaryDirectory
-from git import Repo
-
-from tests.helpers import GitRepoTestCase
-
-from unittest import TestCase
+from tests.helpers import GitRepoTestCase, Repo
 
 from git_repo.services.service import github
+from git_repo.exceptions import ResourceExistsError
+
 
 class Test_Github(GitRepoTestCase):
     log = log
@@ -38,6 +38,12 @@ class Test_Github(GitRepoTestCase):
         self.action_create(cassette_name=sys._getframe().f_code.co_name,
                            namespace='guyzmo',
                            repository='foobar')
+
+    def test_01_create__already_exists(self):
+        with pytest.raises(ResourceExistsError):
+            self.action_create(cassette_name=sys._getframe().f_code.co_name,
+                            namespace='guyzmo',
+                            repository='git-repo')
 
 
     def test_02_delete(self):
