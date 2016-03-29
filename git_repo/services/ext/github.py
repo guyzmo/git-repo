@@ -71,6 +71,12 @@ class GithubService(RepositoryService):
                                               'Check the namespace or the private token\'s privileges') from err
             raise ResourceError('Unhandled exception: {}'.format(err)) from err
 
+    def get_repository(self, user, repo):
+        repository = self.gh.repository(user, repo)
+        if not repository:
+            raise ResourceNotFoundError('Cannot delete: repository {}/{} does not exists.'.format(user, repo))
+        return repository
+
     @property
     def user(self):
         return self.gh.user().name

@@ -134,6 +134,13 @@ class BitbucketService(RepositoryService):
         elif not success:
             raise ResourceError("Couldn't complete deletion: {message} (error #{code}: {reason})".format(**result))
 
+    def get_repository(self, user, repo):
+        found, repo_list = self.service.bb.repository.public(user)
+        for r in repo_list:
+            if r['name'] == repo:
+                return r
+        raise ResourceNotFoundError('Cannot delete: repository {}/{} does not exists.'.format(user, repo))
+
     @property
     def user(self):
         ret, user = bb.get_user()

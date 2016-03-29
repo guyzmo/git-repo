@@ -70,6 +70,13 @@ class GitlabService(RepositoryService):
         except Exception as err:
             raise ResourceError("Unhandled exception: {}".format(err)) from err
 
+    def get_repository(self, user, repo):
+        try:
+            return self.gl.projects.get('{}/{}'.format(user, repo))
+        except GitlabGetError as err:
+            if err.response_code == 404:
+                raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo)) from err
+
     @property
     def user(self):
         return self.gl.user.username

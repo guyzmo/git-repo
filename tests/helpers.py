@@ -28,7 +28,31 @@ class GitRepoTestCase(TestCase):
         # when initiating service with no repository, the connection is not triggered
         self.service = self.get_service()
         self.service.repository = self.repository
+        # setup http api mockup
         self.recorder = betamax.Betamax(self.get_requests_session())
+        # have git commands logged
+        make_git_verbose()
+
+    '''assertion helpers'''
+
+    def assert_repository_exists(self, namespace, repository):
+        try:
+            self.service.get_repository(namespace, repository)
+        except Exception as err:
+            raise AssertionError("Repository {}/{} not found on {}: {}".format(namespace,
+                                                                               repository,
+                                                                               self.service.name,
+                                                                               err)) from err
+
+    def assert_repository_not_exists(self, namespace, repository):
+        try:
+            self.service.get_repository(namespace, repository)
+        except Exception as err:
+            return
+        #raise AssertionError("Repository {}/{} exists on {}".format(namespace,
+        #                                                                       repository,
+        #                                                                       self.service.name,
+        #                                                                ))
 
     def assert_added_remote(self, remote):
         try:
@@ -55,8 +79,7 @@ class GitRepoTestCase(TestCase):
             self.service.connect()
             self.service.fork(remote_namespace, repository)
             #
-            assert self.service.gh.repository(remote_namespace, repository) is not None, \
-                                 "Fork not found on {}".format(self.service.name)
+            self.assert_repository_exists(remote_namespace, repository)
             self.assert_added_remote_defaults()
             self.assert_tracking_remote(local_namespace)
 
@@ -66,11 +89,7 @@ class GitRepoTestCase(TestCase):
             self.service.connect()
             self.service.create(namespace, repository)
             #
-            assert self.service.gh.repository(namespace, repository), \
-                                 "Remote repository {} not found on {}".format(
-                                     repository,
-                                     self.service.name
-                                 )
+            self.assert_repository_exists(namespace, repository)
             self.assert_added_remote_defaults()
 
     def action_delete(self, cassette_name, repository, namespace=None):
@@ -83,11 +102,7 @@ class GitRepoTestCase(TestCase):
             #
             if not namespace:
                 namespace = self.service.user
-            remote_repo = self.service.gh.repository(namespace, repository)
-            assert remote_repo is not None, "Repository '{}' not deleted from {}".format(
-                    '/'.join([namespace, repository]) if namespace else repository,
-                    self.service.name
-                )
+            self.assert_repository_not_exists(namespace, repository)
 
     def action_clone(self, cassette_name, namespace, repository):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
