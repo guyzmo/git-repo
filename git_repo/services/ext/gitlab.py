@@ -16,11 +16,12 @@ class GitlabService(RepositoryService):
     fqdn = 'gitlab.com'
 
     def __init__(self, *args, **kwarg):
+        self.gl = gitlab.Gitlab(self.url_ro)
         super(GitlabService, self).__init__(*args, **kwarg)
-        self.gl = gitlab.Gitlab(self.url_ro, self._privatekey)
 
     def connect(self):
-        self.gl.auth()
+        self.gl.set_token(self._privatekey)
+        self.gl.token_auth()
 
     def create(self, user, repo):
         try:
