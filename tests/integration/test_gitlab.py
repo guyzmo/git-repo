@@ -10,10 +10,12 @@ log = logging.getLogger('test.gitlab')
 #################################################################################
 
 import sys
+import pytest
 
 from tests.helpers import GitRepoTestCase
 
 from git_repo.services.service import gitlab
+from git_repo.exceptions import ResourceExistsError
 
 # monkey patch requests with session
 from requests import Session
@@ -39,6 +41,12 @@ class Test_Gitlab(GitRepoTestCase):
         self.action_create(cassette_name=sys._getframe().f_code.co_name,
                            namespace='guyzmo',
                            repository='foobar')
+
+    def test_01_create__already_exists(self):
+        with pytest.raises(ResourceExistsError):
+            self.action_create(cassette_name=sys._getframe().f_code.co_name,
+                            namespace='guyzmo',
+                            repository='git-repo')
 
 
     def test_02_delete(self):
