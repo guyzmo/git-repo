@@ -35,20 +35,18 @@ class GitlabService(RepositoryService):
                 raise ResourceExistsError("Project already exists.") from err
             else:
                 raise ResourceError("Unhandled error.") from err
-        self.add(user=user, repo=repo, default=True)
+        self.add(user=user, repo=repo, tracking=self.name)
 
     def fork(self, user, repo, branch='master', clone=True):
         try:
             fork = self.gl.projects.get('{}/{}'.format(user, repo)).forks.create({})
         except GitlabCreateError as err:
-            try:
-                if json.loads(err.response_body.decode('utf-8'))['message']['name'][0] == 'has already been taken':
-                    raise ResourceExistsError("Project already exists.") from err
-            except:
-                pass
-            raise ResourceError("Unhandled error.") from err
+            if json.loads(err.response_body.decode('utf-8'))['message']['name'][0] == 'has already been taken':
+                raise ResourceExistsError("Project already exists.") from err
+            else:
+                raise ResourceError("Unhandled error: {}".format(err)) from err
         self.add(user=user, repo=repo, name='upstream', alone=True)
-        remote = self.add(repo=fork.name, user=fork.namespace['path'], tracking=self.name)
+        remote = self.add(repo=fork.path, user=fork.namespace['path'], tracking=self.name)
         if clone:
             self.pull(remote, branch)
         log.info("New forked repository available at {}/{}".format(self.url_ro,
@@ -56,7 +54,7 @@ class GitlabService(RepositoryService):
 
     def delete(self, repo, user=None):
         if not user:
-            user = self.gh.user.username
+            user = self.user
         try:
             repository = self.gl.projects.get('{}/{}'.format(user, repo))
             if repository:

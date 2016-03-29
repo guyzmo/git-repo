@@ -3,19 +3,9 @@
 import logging
 
 #################################################################################
-# make all debug prefix more readable by colourising them
-
-from tests.helpers import colourise_logger, fmt
-
-colourise_logger(logging.getLogger('gitlab'), 'cyan')
-colourise_logger(logging.getLogger('git.cmd'), 'magenta')
-colourise_logger(logging.getLogger('git_repo'), 'green')
-colourise_logger(logging.getLogger('git_repo.gitlab'), 'blue')
-
-#################################################################################
 # Enable logging
 
-log = logging.getLogger('{red}test.gitlab{reset}'.format(**fmt))
+log = logging.getLogger('test.gitlab')
 
 #################################################################################
 
@@ -40,6 +30,7 @@ class Test_Gitlab(GitRepoTestCase):
 
     def test_00_fork(self):
         self.action_fork(cassette_name=sys._getframe().f_code.co_name,
+                         # TODO not supported yet
                          local_namespace='guyzmo',
                          remote_namespace='sigmavirus24',
                          repository='github3-py')
