@@ -266,10 +266,7 @@ class RepositoryService:
 
     def open(self, user=None, repo=None):
         '''Open the URL of a repository in the user's browser'''
-        if not user:
-            call([OPEN_COMMAND, self.format_path(repo, rw=False)])
-        else:
-            call([OPEN_COMMAND, self.format_path(repo, namespace=user, rw=False)])
+        call([OPEN_COMMAND, self.format_path(repo, namespace=user, rw=False)])
 
     def connect(self):
         '''Brings up the connection to the remote service's API
