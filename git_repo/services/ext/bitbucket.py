@@ -104,23 +104,27 @@ class BitbucketService(RepositoryService):
         if not ':' in self._privatekey:
             raise ConnectionError('Could not connect to BitBucket. Please setup your private key with login:password')
         self.bb.username, self.bb.password = self._privatekey.split(':')
+        self.bb.get_user()
 
     def create(self, user, repo):
-        success, result = self.bb.repository.create(repo, scm='git')
+        success, result = self.bb.repository.create(repo, scm='git', public=True)
         if not success and result['code'] == 400:
             raise ResourceExistsError('Project {} already exists on this account.'.format(repo))
         elif not success:
             raise ResourceError("Couldn't complete creation: {message} (error #{code}: {reason})".format(**result))
-        self.add(user=user, repo=repo, default=True)
+        self.add(user=user, repo=repo, tracking=self.name)
 
     def fork(self, user, repo, branch='master', clone=True):
         log.info("Forking repository {}/{}…".format(user, repo))
-        success, result = self.bb.repository.fork(user, repo)
+        repositories = self.get_repository(user, repo)
+        if repo in repositories:
+            raise ResourceExistsError('Cannot fork repository as it already exists')
+        success, result = self.bb.fork(user, repo)
         if not success:
             raise ResourceError("Couldn't complete fork: {message} (error #{code}: {reason})".format(**result))
         fork = result
         self.add(repo=repo, user=user, name='upstream', alone=True)
-        remote = self.add(repo=fork['slug'], user=fork['owner'], default=True)
+        remote = self.add(repo=fork['slug'], user=fork['owner'], tracking=self.name)
         if clone:
             self.pull(remote, branch)
         log.info("New forked repository available at {}".format(self.format_path(repository=fork['slug'],
@@ -129,14 +133,19 @@ class BitbucketService(RepositoryService):
     def delete(self, repo, user=None):
         if not user:
             user = self.bb._username
-        success, result = self.bb.repository.delete(user, repo)
+        success, result = self.bb.delete(user, repo)
         if not success and result['code'] == 404:
             raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo))
         elif not success:
             raise ResourceError("Couldn't complete deletion: {message} (error #{code}: {reason})".format(**result))
 
     def get_repository(self, user, repo):
-        found, repo_list = self.service.bb.repository.public(user)
+        if user != self.user:
+            result, repo_list = self.bb.repository.public(user)
+        else:
+            result, repo_list = self.bb.repository.all()
+        if not result:
+            raise ResourceError("Couldn't list repositories: {message} (error #{code}: {reason})".format(**repo_list))
         for r in repo_list:
             if r['name'] == repo:
                 return r
@@ -144,7 +153,7 @@ class BitbucketService(RepositoryService):
 
     @property
     def user(self):
-        ret, user = bb.get_user()
+        ret, user = self.bb.get_user()
         if ret:
             return user['username']
         raise ResourceError("Could not retrieve username: {message} (error #{code}: {reason}".format(**result))
