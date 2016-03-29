@@ -1,0 +1,88 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-03-29T19:51:02",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Connection": "keep-alive",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.9.1"
+        },
+        "method": "GET",
+        "uri": "https://gitlab.com/api/v3/user"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "{\"name\":\"Guyzmo\",\"username\":\"guyzmo\",\"id\":459552,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/guyzmo\",\"created_at\":\"2016-03-21T12:52:59.859Z\",\"is_admin\":false,\"bio\":\"\\\\_o\\u003c\",\"skype\":\"\",\"linkedin\":\"\",\"twitter\":\"\",\"website_url\":\"\",\"last_sign_in_at\":\"2016-03-21T13:48:05.259Z\",\"confirmed_at\":\"2016-03-21T13:48:05.234Z\",\"email\":\"guyzmo+gitlab@m0g.net\",\"theme_id\":2,\"color_scheme_id\":1,\"projects_limit\":100000,\"current_sign_in_at\":\"2016-03-27T17:56:15.904Z\",\"identities\":[],\"can_create_group\":true,\"can_create_project\":true,\"two_factor_enabled\":false,\"external\":false,\"private_token\":\"<PRIVATE_KEY_GITLAB>\"}"
+        },
+        "headers": {
+          "Cache-Control": "max-age=0, private, must-revalidate",
+          "Content-Length": "715",
+          "Content-Type": "application/json",
+          "Date": "Tue, 29 Mar 2016 19:51:15 GMT",
+          "Etag": "W/\"e19490551a45fe235fbc1bf42e7ac4b6\"",
+          "Server": "nginx",
+          "Status": "200 OK",
+          "Vary": "Origin",
+          "X-Request-Id": "59294587-01ae-4a00-bdf2-a55696f61fa8",
+          "X-Runtime": "0.075371"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://gitlab.com/api/v3/user"
+      }
+    },
+    {
+      "recorded_at": "2016-03-29T19:51:03",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"name\": \"git-repo\"}"
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "gzip, deflate",
+          "Connection": "keep-alive",
+          "Content-Length": "20",
+          "Content-type": "application/json",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.9.1"
+        },
+        "method": "POST",
+        "uri": "https://gitlab.com/api/v3/projects"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "{\"message\":{\"name\":[\"has already been taken\"],\"path\":[\"has already been taken\"],\"limit_reached\":[]}}"
+        },
+        "headers": {
+          "Cache-Control": "no-cache",
+          "Content-Length": "100",
+          "Content-Type": "application/json",
+          "Date": "Tue, 29 Mar 2016 19:51:15 GMT",
+          "Server": "nginx",
+          "Status": "400 Bad Request",
+          "Vary": "Origin",
+          "X-Request-Id": "d104f1e1-037c-4c4f-aa1f-9dd01bcc329f",
+          "X-Runtime": "0.171846"
+        },
+        "status": {
+          "code": 400,
+          "message": "Bad Request"
+        },
+        "url": "https://gitlab.com/api/v3/projects"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}
