@@ -34,7 +34,7 @@ class GithubService(RepositoryService):
         try:
             self.gh.create_repo(repo)
         except github3.models.GitHubError as err:
-            if err.message == 'name already exists on this account':
+            if err.code == 422 or err.message == 'name already exists on this account':
                 raise ResourceExistsError("Project already exists.") from err
             else: # pragma: no cover
                 raise ResourceError("Unhandled error.") from err
