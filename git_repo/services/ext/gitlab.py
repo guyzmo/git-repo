@@ -58,7 +58,7 @@ class GitlabService(RepositoryService):
         try:
             repository = self.gl.projects.get('{}/{}'.format(user, repo))
             if repository:
-                result = repository.delete()
+                result = self.gl.delete(repository.__class__, repository.id)
             if not repository or not result:
                 raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo))
         except GitlabGetError as err:
