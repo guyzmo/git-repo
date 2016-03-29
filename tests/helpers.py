@@ -11,6 +11,139 @@ import os
 import logging
 import betamax
 
+from git_repo.repo import RepositoryService, main
+
+class RepositoryMockup(RepositoryService):
+    fqdn = 'http://example.org'
+
+    def pull(self, *args, **kwarg):
+        self._did_pull = (args, kwarg)
+
+    def clone(self, *args, **kwarg):
+        self._did_clone = (args, kwarg)
+
+    def add(self, *args, **kwarg):
+        self._did_add = (args, kwarg)
+
+    def open(self, *args, **kwarg):
+        self._did_open = (args, kwarg)
+
+    def connect(self):
+        self._did_connect = True
+
+    def delete(self, *args, **kwarg):
+        self._did_delete = (args, kwarg)
+
+    def create(self, *args, **kwarg):
+        self._did_create = (args, kwarg)
+
+    def fork(self, *args, **kwarg):
+        self._did_fork = (args, kwarg)
+
+    @property
+    def user(self):
+        self._did_user = True
+        return 'foobar'
+
+    def get_repository(self, *args, **kwarg):
+        return {}
+
+class GitRepoMainTestCase(TestCase):
+    def setUp(self):
+        self.log.info('GitRepoMainTestCase')
+        self.tempdir = TemporaryDirectory()
+        self.addCleanup(self.tempdir.cleanup)
+        RepositoryService.service_map = {
+            'github': RepositoryMockup,
+            'gitlab': RepositoryMockup,
+            'bitbucket': RepositoryMockup,
+        }
+        RepositoryService.command_map = {
+            'hub': 'github',
+            'lab': 'gitlab',
+            'bb': 'bitbucket',
+        }
+
+    def setup_args(self, d, args={}):
+        cli_args = {
+            '--force': False,
+            '--help': False,
+            '--path': '.',
+            '--verbose': 4,
+            '--no-clone': False,
+            '--tracking': 'master',
+            '--alone': False,
+            '<name>': None,
+            '<branch>': None,
+            '<target>': self.target,
+            '<user>/<repo>': '',
+            'add': False,
+            'clone': False,
+            'create': False,
+            'delete': False,
+            'fork': False,
+            'open': False
+        }
+        cli_args.update(d)
+        cli_args.update(args)
+        return cli_args
+
+    def main_clone(self, repo, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'clone': True,
+            '<user>/<repo>': repo,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for clone".format(rc)
+
+    def main_fork(self, repo, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'fork': True,
+            '<user>/<repo>': repo,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for fork".format(rc)
+
+    def main_create(self, repo, rc=0, args={}):
+        os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+        Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+        assert rc == main(self.setup_args({
+            'create': True,
+            '<user>/<repo>': repo,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for create".format(rc)
+
+    def main_delete(self, repo, rc=0, args={}):
+        os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+        Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+        assert rc == main(self.setup_args({
+            'delete': True,
+            '<user>/<repo>': repo,
+            '--force': True,
+            '--path': self.tempdir.name,
+        }, args)), "Non {} result for delete".format(rc)
+
+    def main_add(self, repo, rc=0, args={}):
+        os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+        Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+        assert rc == main(self.setup_args({
+            'add': True,
+            '<user>/<repo>': repo,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for add".format(rc)
+
+    def main_open(self, repo, rc=0, args={}):
+        os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+        Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+        assert rc == main(self.setup_args({
+            'open': True,
+            '<user>/<repo>': repo,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for open".format(rc)
+
+    def main_noop(self, repo, rc=1, args={}):
+        assert rc == main(self.setup_args({
+            '<user>/<repo>': repo,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for no-action".format(rc)
 
 class GitRepoTestCase(TestCase):
     def setUp(self):
