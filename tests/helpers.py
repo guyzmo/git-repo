@@ -52,6 +52,16 @@ class GitRepoTestCase(TestCase):
         for cmd, out, err, rc in cmd_list:
             self.Popen.set_command(cmd, out, err, returncode=rc)
 
+    def mockup_git(self, namespace, repository):
+        # disable refspec check
+        from git import remote
+        remote.Remote._assert_refspec = lambda self: None
+        # write FETCH_HEAD ref
+        with open(os.path.join(self.repository.git_dir, 'FETCH_HEAD'), 'w') as f:
+            f.write("749656b8b3b282d11a4221bb84e48291ca23ecc6" \
+                    "		branch 'master' of git@{}/{}/{}".format(self.service.fqdn, namespace, repository))
+        return Replace('git.cmd.Popen', self.Popen)
+
     '''assertion helpers'''
 
     def assert_repository_exists(self, namespace, repository):
@@ -94,37 +104,53 @@ class GitRepoTestCase(TestCase):
     '''test cases templates'''
 
     def action_fork(self, cassette_name, local_namespace, remote_namespace, repository):
-        # disable refspec check
-        from git import remote
-        remote.Remote._assert_refspec = lambda self: None
-        # write FETCH_HEAD ref
-        with open(os.path.join(self.repository.git_dir, 'FETCH_HEAD'), 'w') as f:
-            f.write("749656b8b3b282d11a4221bb84e48291ca23ecc6" \
-                    "		branch 'master' of git@github.com/{}/{}".format(local_namespace, repository))
-        # prepare output for git commands
-        remote_slug = self.service.format_path(namespace=remote_namespace, repository=repository, rw=True)
-        local_slug = self.service.format_path(namespace=local_namespace, repository=repository, rw=True)
-        self.set_mock_popen_commands([
-            ('git remote add upstream {}'.format(remote_slug), b'', b'', 0),
-            ('git remote add all {}'.format(local_slug), b'', b'', 0),
-            ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
-            ('git pull -v {} master'.format(self.service.name), b'', '\n'.join([
-                'POST git-upload-pack (140 bytes)',
-                'remote: Counting objects: 8318, done.',
-                'remote: Compressing objects: 100% (3/3), done.',
-                'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
-                'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
-                'Resolving deltas: 100% (5126/5126), done.',
-                'From {}:{}/{}'.format(self.service.fqdn, local_namespace, repository),
-                ' * branch            master     -> FETCH_HEAD',
-                ' * [new branch]      master     -> {}/master'.format(self.service.name)]).encode('utf-8'),
-            0)
-        ])
         # hijack subprocess call
-        with Replace('git.cmd.Popen', self.Popen):
+        with self.mockup_git(local_namespace, repository):
+            # prepare output for git commands
+            remote_slug = self.service.format_path(namespace=remote_namespace, repository=repository, rw=True)
+            local_slug = self.service.format_path(namespace=local_namespace, repository=repository, rw=True)
+            self.set_mock_popen_commands([
+                ('git remote add upstream {}'.format(remote_slug), b'', b'', 0),
+                ('git remote add all {}'.format(local_slug), b'', b'', 0),
+                ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
+                ('git pull -v {} master'.format(self.service.name), b'', '\n'.join([
+                    'POST git-upload-pack (140 bytes)',
+                    'remote: Counting objects: 8318, done.',
+                    'remote: Compressing objects: 100% (3/3), done.',
+                    'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
+                    'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
+                    'Resolving deltas: 100% (5126/5126), done.',
+                    'From {}:{}/{}'.format(self.service.fqdn, local_namespace, repository),
+                    ' * branch            master     -> FETCH_HEAD',
+                    ' * [new branch]      master     -> {}/master'.format(self.service.name)]).encode('utf-8'),
+                0)
+            ])
             with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
                 self.service.connect()
                 self.service.fork(remote_namespace, repository)
+
+    def action_clone(self, cassette_name, namespace, repository):
+        # hijack subprocess call
+        with self.mockup_git(namespace, repository):
+            local_slug = self.service.format_path(namespace=namespace, repository=repository, rw=True)
+            self.set_mock_popen_commands([
+                ('git remote add all {}'.format(local_slug), b'', b'', 0),
+                ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
+                ('git pull -v {} master'.format(self.service.name), b'', '\n'.join([
+                    'POST git-upload-pack (140 bytes)',
+                    'remote: Counting objects: 8318, done.',
+                    'remote: Compressing objects: 100% (3/3), done.',
+                    'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
+                    'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
+                    'Resolving deltas: 100% (5126/5126), done.',
+                    'From {}:{}/{}'.format(self.service.fqdn, namespace, repository),
+                    ' * branch            master     -> FETCH_HEAD',
+                    ' * [new branch]      master     -> {}/master'.format(self.service.name)]).encode('utf-8'),
+                0)
+            ])
+            with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+                self.service.connect()
+                self.service.clone(namespace, repository)
 
     def action_create(self, cassette_name, namespace, repository):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
@@ -145,13 +171,6 @@ class GitRepoTestCase(TestCase):
             if not namespace:
                 namespace = self.service.user
             self.assert_repository_not_exists(namespace, repository)
-
-    def action_clone(self, cassette_name, namespace, repository):
-        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
-            self.service.connect()
-            self.service.clone(namespace, repository)
-            #
-            self.assert_added_remote_defaults()
 
     def action_add(self, cassette_name, namespace, repository, alone=False, name=None, tracking='master'):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
