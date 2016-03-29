@@ -27,23 +27,23 @@ class Bitbucket(bitbucket.Bitbucket):
         super(Bitbucket, self).__init__(self)
         self.session = Session()
         # XXX monkey patching of requests within bitbucket module
-        bitbucket.requests = self.session
+        self.requests = self.session
 
     def get(self, user=None, repo_slug=None):
         """ Get a single repository on Bitbucket and return it."""
-        username = user or self.bitbucket.username
-        repo_slug = repo_slug or self.bitbucket.repo_slug or ''
-        url = self.bitbucket.url('GET_REPO', username=username, repo_slug=repo_slug)
-        return self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth)
+        username = user or self.username
+        repo_slug = repo_slug or self.repo_slug or ''
+        url = self.url('GET_REPO', username=username, repo_slug=repo_slug)
+        return self.dispatch('GET', url, auth=self.auth)
 
     def delete(self, user, repo_slug):
-        url = self.bitbucket.url('DELETE_REPO', accountname=user, repo_slug=repo_slug)
-        return self.bitbucket.dispatch('DELETE', url, auth=self.bitbucket.auth)
+        url = self.url('DELETE_REPO', username=user, accountname=user, repo_slug=repo_slug)
+        return self.dispatch('DELETE', url, auth=self.auth)
 
     def fork(self, user, repo_slug, new_name=None):
-        url = self.bitbucket.url('FORK_REPO', username=user, repo_slug=repo_slug)
+        url = self.url('FORK_REPO', username=user, repo_slug=repo_slug)
         new_repo = new_name or repo_slug
-        return self.bitbucket.dispatch('POST', url, name=new_repo, auth=self.bitbucket.auth)
+        return self.dispatch('POST', url, name=new_repo, auth=self.auth)
 
     def dispatch(self, method, url, auth=None, params=None, **kwargs):
         """ Send HTTP request, with given method,
