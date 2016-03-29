@@ -123,7 +123,8 @@ class BitbucketService(RepositoryService):
         remote = self.add(repo=fork['slug'], user=fork['owner'], default=True)
         if clone:
             self.pull(remote, branch)
-        log.info("New forked repository available at {}".format(self.format_path(fork['slug'], fork['owner'])))
+        log.info("New forked repository available at {}".format(self.format_path(repository=fork['slug'],
+                                                                                 namespace=fork['owner'])))
 
     def delete(self, repo, user=None):
         if not user:

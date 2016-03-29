@@ -134,7 +134,7 @@ def main(args):
                 service.create(user, repo)
                 log.info('Successfully created remote repository `{}`, '
                          'with local remote `{}`'.format(
-                    service.format_path(repo, user=user),
+                    service.format_path(repo, namespace=user),
                     service.name)
                 )
 

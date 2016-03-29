@@ -159,20 +159,20 @@ class RepositoryService:
     def url_rw(self):
         return '{}@{}'.format(self.git_user, self.fqdn)
 
-    def format_path(self, repo_name, user=None, rw=False):
+    def format_path(self, repository, namespace=None, rw=False):
         '''format the repository's URL
 
-        :param repo_name: name of the repository
-        :param user: namespace of the repository
+        :param repository: name of the repository
+        :param namespace: namespace of the repository
         :param rw: return a git+ssh URL if true, an https URL otherwise
         :return: the full URI of the repository ready to use as remote
 
-        if user is not given, repo_name is expected to be of format
+        if namespace is not given, repository is expected to be of format
         `<namespace>/<repository>`.
         '''
-        repo = repo_name
-        if user:
-            repo = '{}/{}'.format(user, repo_name)
+        repo = repository
+        if namespace:
+            repo = '{}/{}'.format(namespace, repository)
 
         if not rw and '/' in repo:
             return '{}/{}'.format(self.url_ro, repo)
@@ -269,7 +269,7 @@ class RepositoryService:
         if not user:
             call([OPEN_COMMAND, self.format_path(repo, rw=False)])
         else:
-            call([OPEN_COMMAND, self.format_path(repo, user=user, rw=False)])
+            call([OPEN_COMMAND, self.format_path(repo, namespace=user, rw=False)])
 
     def connect(self):
         '''Brings up the connection to the remote service's API
