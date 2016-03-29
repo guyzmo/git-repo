@@ -149,7 +149,7 @@ class BitbucketService(RepositoryService):
         for r in repo_list:
             if r['name'] == repo:
                 return r
-        raise ResourceNotFoundError('Cannot delete: repository {}/{} does not exists.'.format(user, repo))
+        #raise ResourceNotFoundError('Cannot retrieve repository: {}/{} does not exists.'.format(user, repo))
 
     @property
     def user(self):
