@@ -4,19 +4,9 @@ import sys
 import logging
 
 #################################################################################
-# make all debug prefix more readable by colourising them
-
-from tests.helpers import colourise_logger, fmt
-
-colourise_logger(logging.getLogger('github3'), 'cyan')
-colourise_logger(logging.getLogger('git.cmd'), 'magenta')
-colourise_logger(logging.getLogger('git_repo'), 'green')
-colourise_logger(logging.getLogger('git_repo.github'), 'blue')
-
-#################################################################################
 # Enable logging
 
-log = logging.getLogger('{red}test.github{reset}'.format(**fmt))
+log = logging.getLogger('test.github')
 
 #################################################################################
 
@@ -41,7 +31,8 @@ class Test_Github(GitRepoTestCase):
     def test_00_fork(self):
         self.action_fork(cassette_name=sys._getframe().f_code.co_name,
                          local_namespace='guyzmo',
-                         remote_namespace='sigmavirus24', repository='github3.py')
+                         remote_namespace='sigmavirus24',
+                         repository='github3.py')
 
     def test_01_create(self):
         self.action_create(cassette_name=sys._getframe().f_code.co_name,

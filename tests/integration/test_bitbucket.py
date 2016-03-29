@@ -3,19 +3,9 @@
 import logging
 
 #################################################################################
-# make all debug prefix more readable by colourising them
-
-from tests.helpers import colourise_logger, fmt
-
-colourise_logger(logging.getLogger('bitbucket'), 'cyan')
-colourise_logger(logging.getLogger('git.cmd'), 'magenta')
-colourise_logger(logging.getLogger('git_repo'), 'green')
-colourise_logger(logging.getLogger('git_repo.bitbucket'), 'blue')
-
-#################################################################################
 # Enable logging
 
-log = logging.getLogger('{red}test.bitbucket{reset}'.format(**fmt))
+log = logging.getLogger('test.bitbucket')
 
 #################################################################################
 
@@ -39,7 +29,8 @@ class Test_BitBucket(GitRepoTestCase):
     def test_00_fork(self):
         self.action_fork(cassette_name=__name__,
                          local_namespace='guyzmo',
-                         remote_namespace='abdo2015', repository='git_tutorial')
+                         remote_namespace='abdo2015',
+                         repository='git_tutorial')
 
     def test_01_create(self):
         self.action_create(cassette_name=__name__,

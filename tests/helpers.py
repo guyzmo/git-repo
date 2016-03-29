@@ -1,23 +1,21 @@
 #!/usr/bin/env python
 
-fmt = dict(
-    green = '[32m',
-    red = '[31m',
-    blue = '[35m',
-    magenta = '[34m',
-    cyan = '[96m',
-    reset = '[0m'
-)
-def colourise_logger(logger, colour):
-    if not 'git_repo' in logger.name:
-        logger.name = 'git_repo.{}'.format(logger.name)
-    format_name = '{'+colour+'}{}{reset}'
-    logger.name = format_name.format(logger.name, **fmt)
-
 from tempfile import TemporaryDirectory
 from unittest import TestCase
-from git import Repo
+from git import Repo, Git
+
+import logging
 import betamax
+
+def make_git_verbose():
+    # setup git logging
+    Git.GIT_PYTHON_TRACE = True
+    FORMAT = '> %(message)s'
+    formatter = logging.Formatter(fmt=FORMAT)
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    logging.getLogger('git.cmd').removeHandler(logging.NullHandler())
+    logging.getLogger('git.cmd').addHandler(handler)
 
 class GitRepoTestCase(TestCase):
     def setUp(self):
