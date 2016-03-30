@@ -3,9 +3,13 @@ python:
     - "3.4"
     - "3.5"
     - "3.5-dev" # 3.5 development branch
+addons:
+  apt:
+    packages:
+        - pandoc
 # command to install dependencies
 install:
     - "pip install zc.buildout"
     - "buildout"
 # command to run tests
-script: "bin/py.test --nosugar"
+script: "bin/py.test"
