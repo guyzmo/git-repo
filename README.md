@@ -6,7 +6,7 @@
   * https://bitbucket.org/guyzmo/git-repo
 * Issues: https://github.com/guyzmo/git-repo/issues
 * [![Show Travis Build Status](https://travis-ci.org/guyzmo/git-repo.svg)](https://travis-ci.org/guyzmo/git-repo)
-* [![Version](https://img.shields.io/pypi/v/requests.svg) ![Downloads](https://img.shields.io/pypi/dm/requests.svg)](https://pypi.python.org/pypi/git-repo)
+* [![Pypi Version](https://img.shields.io/pypi/v/git-repo.svg) ![Pypi Downloads](https://img.shields.io/pypi/dm/git-repo.svg)](https://pypi.python.org/pypi/git-repo)
 
 ### Usage
 

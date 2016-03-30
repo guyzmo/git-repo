@@ -9,7 +9,7 @@
         },
         "headers": {},
         "method": "GET",
-        "uri": "https://bitbucket.org/!api/1.0/users/guyzmo+git-repo+projects+bitbucket@m0g.net/"
+        "uri": "https://bitbucket.org/!api/1.0/users/git-repo-test/"
       },
       "response": {
         "body": {
@@ -42,7 +42,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://bitbucket.org/!api/1.0/users/guyzmo+git-repo+projects+bitbucket@m0g.net/"
+        "url": "https://bitbucket.org/!api/1.0/users/git-repo-test/"
       }
     }
   ],
