@@ -4,8 +4,9 @@
   * https://github.com/guyzmo/git-repo
   * https://gitlab.com/guyzmo/git-repo
   * https://bitbucket.org/guyzmo/git-repo
-* For issues:
-  * https://github.com/guyzmo/git-repo/issues
+* Issues: https://github.com/guyzmo/git-repo/issues
+* Build results: [![Show Travis Build Status](https://travis-ci.org/guyzmo/git-repo.svg)](https://travis-ci.org/guyzmo/git-repo)
+* Pypi: [![Version](https://img.shields.io/pypi/v/requests.svg) ![Downloads](https://img.shields.io/pypi/dm/requests.svg)](https://pypi.python.org/pypi/git-repo)
 
 ### Usage
 
@@ -138,17 +139,15 @@ and then you'll have the executable in `bin`:
 * [x] make it possible to choose method (SSH or HTTPS)
 * [x] handle default branches properly
 * [x] make a nice way to push to all remotes at once
-  * [ ] maybe using that trick: http://stackoverflow.com/questions/4255865/git-push-to-multiple-repositories-simultaneously
 * [x] refactor the code into multiple modules
+* [x] add regression tests (and actually find a smart way to implement them…)
+* [x] add travis build
 * [ ] add support for handling gists
 * [ ] add support for handling pull requests 
   * [ ] list them
   * [ ] fetch them as local branches
 * [ ] add OAuth support for bitbucket
 * [ ] show a nice progress bar, while it's fetching
-* [o] add regression tests (and actually find a smart way to implement them…)
-  * [x] added general tests without mockups
-  * [ ] make mockup of requests and subprocess calls
 * for more features, write an issue or, even better, a PR!
 
 ### License
