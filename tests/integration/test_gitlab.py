@@ -39,8 +39,7 @@ class Test_Gitlab(GitRepoTestCase):
 
     def test_00_fork(self):
         self.action_fork(cassette_name=sys._getframe().f_code.co_name,
-                         # TODO not supported yet
-                         local_namespace='git-repo-test',
+                         local_namespace=self.local_namespace,
                          remote_namespace='sigmavirus24',
                          repository='github3-py')
 
