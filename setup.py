@@ -36,12 +36,12 @@ class dist_clean(Command):
         print("Repository is now clean!")
 
 setup(name='git-repo',
-      version='1.4',
+      version='1.5.0',
       description='Tool for managing remote repositories from your git CLI!',
       classifiers=[
           # 'Development Status :: 2 - Pre-Alpha',
-          'Development Status :: 3 - Alpha',
-          # 'Development Status :: 4 - Beta',
+          # 'Development Status :: 3 - Alpha',
+          'Development Status :: 4 - Beta',
           # 'Development Status :: 5 - Production/Stable',
           # 'Development Status :: 6 - Mature',
           # 'Development Status :: 7 - Inactive',
@@ -64,6 +64,7 @@ setup(name='git-repo',
           'setuptools-markdown'
       ],
       long_description_markdown_filename='README.md',
+      include_package_data = True,
       install_requires=[
             'docopt',
             'GitPython',
