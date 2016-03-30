@@ -9,6 +9,7 @@ log = logging.getLogger('test.bitbucket')
 
 #################################################################################
 
+import os
 import sys
 
 from tests.helpers import GitRepoTestCase
@@ -18,6 +19,12 @@ from git_repo.services.service import bitbucket
 class Test_BitBucket(GitRepoTestCase):
     log = log
 
+    @property
+    def local_namespace(self):
+        if 'BITBUCKET_NAMESPACE' in os.environ:
+            return os.environ['BITBUCKET_NAMESPACE']
+        return 'git-repo-test'
+
     def get_service(self):
         return bitbucket.BitbucketService(c=dict())
 
@@ -26,19 +33,19 @@ class Test_BitBucket(GitRepoTestCase):
 
     def test_00_fork(self):
         self.action_fork(cassette_name=sys._getframe().f_code.co_name,
-                         local_namespace='guyzmo',
+                         local_namespace=self.local_namespace,
                          remote_namespace='abdo2015',
                          repository='git_tutorial')
 
     def test_01_create(self):
         self.action_create(cassette_name=sys._getframe().f_code.co_name,
-                           namespace='guyzmo',
+                           namespace=self.local_namespace,
                            repository='foobar')
 
 
     def test_02_delete(self):
         self.action_delete(cassette_name=sys._getframe().f_code.co_name,
-                           namespace='guyzmo',
+                           namespace=self.local_namespace,
                            repository='foobar')
 
     def test_03_delete_nouser(self):

@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2016-03-29T12:53:58",
+      "recorded_at": "2016-03-30T14:13:27",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -20,19 +20,19 @@
       "response": {
         "body": {
           "encoding": null,
-          "string": "{\"name\":\"Guyzmo\",\"username\":\"guyzmo\",\"id\":459552,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/guyzmo\",\"created_at\":\"2016-03-21T12:52:59.859Z\",\"is_admin\":false,\"bio\":\"\\\\_o\\u003c\",\"skype\":\"\",\"linkedin\":\"\",\"twitter\":\"\",\"website_url\":\"\",\"last_sign_in_at\":\"2016-03-21T13:48:05.259Z\",\"confirmed_at\":\"2016-03-21T13:48:05.234Z\",\"email\":\"guyzmo+gitlab@m0g.net\",\"theme_id\":2,\"color_scheme_id\":1,\"projects_limit\":100000,\"current_sign_in_at\":\"2016-03-27T17:56:15.904Z\",\"identities\":[],\"can_create_group\":true,\"can_create_project\":true,\"two_factor_enabled\":false,\"external\":false,\"private_token\":\"<PRIVATE_KEY_GITLAB>\"}"
+          "string": "{\"name\":\"git-repo-test\",\"username\":\"git-repo-test\",\"id\":470686,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/59014873897ec9bf64471e4ddf61c8d5?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/git-repo-test\",\"created_at\":\"2016-03-30T13:15:50.649Z\",\"is_admin\":false,\"bio\":\"\",\"skype\":\"\",\"linkedin\":\"\",\"twitter\":\"\",\"website_url\":\"\",\"last_sign_in_at\":\"2016-03-30T13:19:50.252Z\",\"confirmed_at\":\"2016-03-30T13:18:12.005Z\",\"email\":\"guyzmo+git-repo+projects+gitlab@m0g.net\",\"theme_id\":2,\"color_scheme_id\":1,\"projects_limit\":100000,\"current_sign_in_at\":\"2016-03-30T13:19:50.252Z\",\"identities\":[],\"can_create_group\":true,\"can_create_project\":true,\"two_factor_enabled\":false,\"external\":false,\"private_token\":\"<PRIVATE_KEY_GITLAB>\"}"
         },
         "headers": {
           "Cache-Control": "max-age=0, private, must-revalidate",
-          "Content-Length": "715",
+          "Content-Length": "744",
           "Content-Type": "application/json",
-          "Date": "Tue, 29 Mar 2016 12:54:10 GMT",
-          "Etag": "W/\"e19490551a45fe235fbc1bf42e7ac4b6\"",
+          "Date": "Wed, 30 Mar 2016 14:13:40 GMT",
+          "Etag": "W/\"76175f0e11cbbd54fc8475d86a9ab425\"",
           "Server": "nginx",
           "Status": "200 OK",
           "Vary": "Origin",
-          "X-Request-Id": "7cdf5f4c-500d-44e5-8ac4-bf4d7c88a023",
-          "X-Runtime": "0.192124"
+          "X-Request-Id": "b333fc10-92e9-41ed-97d7-d6b341d7eff7",
+          "X-Runtime": "2.667785"
         },
         "status": {
           "code": 200,
@@ -42,7 +42,7 @@
       }
     },
     {
-      "recorded_at": "2016-03-29T12:54:00",
+      "recorded_at": "2016-03-30T14:13:30",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -56,34 +56,34 @@
           "User-Agent": "python-requests/2.9.1"
         },
         "method": "GET",
-        "uri": "https://gitlab.com/api/v3/projects/guyzmo%2Ffoobar"
+        "uri": "https://gitlab.com/api/v3/projects/git-repo-test%2Ffoobar"
       },
       "response": {
         "body": {
           "encoding": null,
-          "string": "{\"id\":1010971,\"description\":null,\"default_branch\":null,\"tag_list\":[],\"public\":false,\"archived\":false,\"visibility_level\":0,\"ssh_url_to_repo\":\"git@gitlab.com:guyzmo/foobar.git\",\"http_url_to_repo\":\"https://gitlab.com/guyzmo/foobar.git\",\"web_url\":\"https://gitlab.com/guyzmo/foobar\",\"owner\":{\"name\":\"Guyzmo\",\"username\":\"guyzmo\",\"id\":459552,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/guyzmo\"},\"name\":\"foobar\",\"name_with_namespace\":\"Guyzmo / foobar\",\"path\":\"foobar\",\"path_with_namespace\":\"guyzmo/foobar\",\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"builds_enabled\":true,\"snippets_enabled\":false,\"created_at\":\"2016-03-29T12:52:37.142Z\",\"last_activity_at\":\"2016-03-29T12:52:39.919Z\",\"shared_runners_enabled\":true,\"creator_id\":459552,\"namespace\":{\"id\":540439,\"name\":\"guyzmo\",\"path\":\"guyzmo\",\"owner_id\":459552,\"created_at\":\"2016-03-21T12:53:00.139Z\",\"updated_at\":\"2016-03-21T12:53:00.139Z\",\"description\":\"\",\"avatar\":null,\"membership_lock\":false,\"share_with_group_lock\":false,\"visibility_level\":20,\"last_ldap_sync_at\":null},\"avatar_url\":null,\"star_count\":0,\"forks_count\":0,\"open_issues_count\":0,\"runners_token\":\"4v7LEmxoqUWouMQQsX5r\",\"public_builds\":true,\"permissions\":{\"project_access\":{\"access_level\":40,\"notification_level\":3},\"group_access\":null}}"
+          "string": "{\"id\":1015171,\"description\":null,\"default_branch\":null,\"tag_list\":[],\"public\":false,\"archived\":false,\"visibility_level\":0,\"ssh_url_to_repo\":\"git@gitlab.com:git-repo-test/foobar.git\",\"http_url_to_repo\":\"https://gitlab.com/git-repo-test/foobar.git\",\"web_url\":\"https://gitlab.com/git-repo-test/foobar\",\"owner\":{\"name\":\"git-repo-test\",\"username\":\"git-repo-test\",\"id\":470686,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/59014873897ec9bf64471e4ddf61c8d5?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/git-repo-test\"},\"name\":\"foobar\",\"name_with_namespace\":\"git-repo-test / foobar\",\"path\":\"foobar\",\"path_with_namespace\":\"git-repo-test/foobar\",\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"builds_enabled\":true,\"snippets_enabled\":false,\"created_at\":\"2016-03-30T14:13:27.746Z\",\"last_activity_at\":\"2016-03-30T14:13:29.956Z\",\"shared_runners_enabled\":true,\"creator_id\":470686,\"namespace\":{\"id\":554043,\"name\":\"git-repo-test\",\"path\":\"git-repo-test\",\"owner_id\":470686,\"created_at\":\"2016-03-30T13:15:50.947Z\",\"updated_at\":\"2016-03-30T13:36:53.588Z\",\"description\":\"\",\"avatar\":null,\"membership_lock\":false,\"share_with_group_lock\":false,\"visibility_level\":20,\"last_ldap_sync_at\":null},\"avatar_url\":null,\"star_count\":0,\"forks_count\":0,\"open_issues_count\":0,\"runners_token\":\"wyVtSdo4YEXqkBCvJryV\",\"public_builds\":true,\"permissions\":{\"project_access\":{\"access_level\":40,\"notification_level\":3},\"group_access\":null}}"
         },
         "headers": {
           "Cache-Control": "max-age=0, private, must-revalidate",
-          "Content-Length": "1378",
+          "Content-Length": "1448",
           "Content-Type": "application/json",
-          "Date": "Tue, 29 Mar 2016 12:54:13 GMT",
-          "Etag": "W/\"180a82528d93bc7c7f2673e0e6d19fa5\"",
+          "Date": "Wed, 30 Mar 2016 14:13:43 GMT",
+          "Etag": "W/\"130812c6ef87e2767447885ddc81cbb5\"",
           "Server": "nginx",
           "Status": "200 OK",
           "Vary": "Origin",
-          "X-Request-Id": "9c29f53f-a226-40e0-84cf-b669ebeb26e5",
-          "X-Runtime": "2.220834"
+          "X-Request-Id": "34d65708-2c8b-481b-b043-4e06efbdcf80",
+          "X-Runtime": "2.473256"
         },
         "status": {
           "code": 200,
           "message": "OK"
         },
-        "url": "https://gitlab.com/api/v3/projects/guyzmo%2Ffoobar"
+        "url": "https://gitlab.com/api/v3/projects/git-repo-test%2Ffoobar"
       }
     },
     {
-      "recorded_at": "2016-03-29T12:54:03",
+      "recorded_at": "2016-03-30T14:13:32",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -98,30 +98,30 @@
           "User-Agent": "python-requests/2.9.1"
         },
         "method": "DELETE",
-        "uri": "https://gitlab.com/api/v3/projects/1010971?id=1010971"
+        "uri": "https://gitlab.com/api/v3/projects/1015171?id=1015171"
       },
       "response": {
         "body": {
           "encoding": null,
-          "string": "\"08d0efd8d0ebc74846375a32\""
+          "string": "\"3c0034595e9e5467ce746df1\""
         },
         "headers": {
           "Cache-Control": "max-age=0, private, must-revalidate",
           "Content-Length": "26",
           "Content-Type": "application/json",
-          "Date": "Tue, 29 Mar 2016 12:54:15 GMT",
-          "Etag": "W/\"240f6a5d6774c13030504ab61fb57d2e\"",
+          "Date": "Wed, 30 Mar 2016 14:13:45 GMT",
+          "Etag": "W/\"3a43d04124c854dc889816f23387a931\"",
           "Server": "nginx",
           "Status": "200 OK",
           "Vary": "Origin",
-          "X-Request-Id": "e0a6e9a8-207b-4405-8f90-d1d536bb7120",
-          "X-Runtime": "2.044881"
+          "X-Request-Id": "dee299e9-844a-49d3-8d3e-82f4658314cb",
+          "X-Runtime": "2.295192"
         },
         "status": {
           "code": 200,
           "message": "OK"
         },
-        "url": "https://gitlab.com/api/v3/projects/1010971?id=1010971"
+        "url": "https://gitlab.com/api/v3/projects/1015171?id=1015171"
       }
     }
   ],

@@ -13,7 +13,7 @@ log = logging.getLogger('test.github')
 
 #################################################################################
 
-from tests.helpers import GitRepoTestCase, Repo
+from tests.helpers import GitRepoTestCase
 
 from git_repo.services.service import github
 from git_repo.exceptions import ResourceExistsError
@@ -21,6 +21,12 @@ from git_repo.exceptions import ResourceExistsError
 
 class Test_Github(GitRepoTestCase):
     log = log
+
+    @property
+    def local_namespace(self):
+        if 'GITHUB_NAMESPACE' in os.environ:
+            return os.environ['GITHUB_NAMESPACE']
+        return 'git-repo-test'
 
     def get_service(self):
         return github.GithubService(c=dict())
@@ -30,25 +36,25 @@ class Test_Github(GitRepoTestCase):
 
     def test_00_fork(self):
         self.action_fork(cassette_name=sys._getframe().f_code.co_name,
-                         local_namespace='guyzmo',
+                         local_namespace=self.local_namespace,
                          remote_namespace='sigmavirus24',
                          repository='github3.py')
 
     def test_01_create(self):
         self.action_create(cassette_name=sys._getframe().f_code.co_name,
-                           namespace='guyzmo',
+                           namespace=self.local_namespace,
                            repository='foobar')
 
     def test_01_create__already_exists(self):
         with pytest.raises(ResourceExistsError):
             self.action_create(cassette_name=sys._getframe().f_code.co_name,
-                            namespace='guyzmo',
+                            namespace=self.local_namespace,
                             repository='git-repo')
 
 
     def test_02_delete(self):
         self.action_delete(cassette_name=sys._getframe().f_code.co_name,
-                           namespace='guyzmo',
+                           namespace=self.local_namespace,
                            repository='foobar')
 
     def test_03_delete_nouser(self):

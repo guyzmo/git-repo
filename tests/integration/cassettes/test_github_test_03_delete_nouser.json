@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2016-03-26T16:52:14",
+      "recorded_at": "2016-03-30T14:11:39",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -21,7 +21,7 @@
       },
       "response": {
         "body": {
-          "base64_string": "H4sIAAAAAAAAA5VTTW+cMBT8Lz6z2LtLktZS1L/QQ3rJZWXAAUvGtvxBtEH57x1jum1W6gEJCXiemTcM7y1E20EZwsmQrh+TJRVRPeGnh6ZpjhURs4jCX5LXQIwxusApLcVQDyqOqU1B+s6aKE2sOzvRRAv5x/x8htrgN40sS1C403Jq0ylkiAV6szLGSd81L01X8A32ZrW272DeG/2/OL1xYKk8KzPs5oOzUBtHiYxg/TN/sApxj5EVv9B8u6g+KwRE7mW/w8zGgJV3AxcL9dLZVSq1ofPKRWXNHlNfeNCxfhBGfYi9OuAF0LOdPe1XPHhyxlTtIRbCQp1Xs+iuOQIvO6lmxLlb7I4JrXh1ElP8C786h6uivIh+yuvzJnSQFTFiyoDbZGJMnTBXwk3SuiItlm1bJOxRQdWDjbXBDGGW6mhpxlCoa9utcQP/U3i1xjEJhUUsWqPyUrQa7aJPaN0q++fIpVar7lJS5E+sIltlnTXCj6j8nX/enP9ZAZzitYN2RGYiov2JHdmBNYfT08ux4QzX91e4Sa7/gnk8sPPh9PjCGG++cfbwSj5/A80RPLheBAAA",
+          "base64_string": "H4sIAAAAAAAAA52TzW6kMBCE38VnJsBMws4grfYlNpdckAEPWGtsy26IJmjefcv8JFkUKVputnF9ri66R6ZMIzXLWSPp4IQ1BxKeWMRkzfL0nGbn5JhFjA+cuCt6p3C1JbI+j+P50D9A2vZl74WrjCah6aEyXdzHq/zX8PMEYuMWSkAzHGxoVi6kWQ6cj7euWurUxsX8+qTZ3r4apcwrOFvj3z4Vv0vhc15L3ezFQDrGhlqBBFHWPYQhPe2wNclGFOqpkHUAefwXJ+r/t7YIYexVw9MYh78/EfvSV05akkbvsPiPHDjjGq7lG9+Jg9yDEsztMDPJIBcD2nKHftaNsXVy4NUtxONEJeSAxPcyNwAg6WYFRuIZvRHylyQKXndhLK9ceRExzTtc0L1SEUOjW65v67bEAK9rZaop5nUvOi4xsLOulU7wUr1zSmnWT7YvlayKOaz8GLHlYOo2lifrCGCSPu3Q1dOuApeQByfUcEzS7JCcDqfkd3rK0yR/Or+gpt7W396ZMkbpH6+SIa6K9XyxhxdDx9ZfnNfS/8GE8QZFBmMYf14ax8ksxq3iCGdc8mRXJ0QI3PIKisuP7Ck7Pl4uXyoXc6uJ+/0v/NTFfjsFAAA=",
           "encoding": "utf-8",
           "string": ""
         },
@@ -32,9 +32,9 @@
           "Content-Encoding": "gzip",
           "Content-Security-Policy": "default-src 'none'",
           "Content-Type": "application/json; charset=utf-8",
-          "Date": "Sat, 26 Mar 2016 16:52:24 GMT",
-          "ETag": "W/\"afcdee465dd4ebbf5f0588092b6d7282\"",
-          "Last-Modified": "Sat, 26 Mar 2016 00:48:05 GMT",
+          "Date": "Wed, 30 Mar 2016 14:11:52 GMT",
+          "ETag": "W/\"dc8b940dc6934c70bc77d1657436a1ff\"",
+          "Last-Modified": "Wed, 30 Mar 2016 13:10:58 GMT",
           "Server": "GitHub.com",
           "Status": "200 OK",
           "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
@@ -44,12 +44,12 @@
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "deny",
           "X-GitHub-Media-Type": "github.v3; param=full; format=json",
-          "X-GitHub-Request-Id": "4EC11365:6B9B:D48A16F:56F6BE48",
-          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-GitHub-Request-Id": "4EC11365:1805E:14376313:56FBDEA8",
+          "X-OAuth-Scopes": "admin:public_key, admin:repo_hook, delete_repo, gist, repo, user",
           "X-RateLimit-Limit": "5000",
-          "X-RateLimit-Remaining": "4990",
-          "X-RateLimit-Reset": "1459014310",
-          "X-Served-By": "139317cebd6caf9cd03889139437f00b",
+          "X-RateLimit-Remaining": "4988",
+          "X-RateLimit-Reset": "1459350704",
+          "X-Served-By": "8a5c38021a5cd7cef7b8f49a296fee40",
           "X-XSS-Protection": "1; mode=block"
         },
         "status": {
@@ -60,7 +60,7 @@
       }
     },
     {
-      "recorded_at": "2016-03-26T16:52:14",
+      "recorded_at": "2016-03-30T14:11:39",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -76,11 +76,11 @@
           "User-Agent": "github3.py/0.9.5"
         },
         "method": "GET",
-        "uri": "https://api.github.com/repos/guyzmo/github3.py"
+        "uri": "https://api.github.com/repos/git-repo-test/github3.py"
       },
       "response": {
         "body": {
-          "base64_string": "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",
+          "base64_string": "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",
           "encoding": "utf-8",
           "string": ""
         },
@@ -91,9 +91,9 @@
           "Content-Encoding": "gzip",
           "Content-Security-Policy": "default-src 'none'",
           "Content-Type": "application/json; charset=utf-8",
-          "Date": "Sat, 26 Mar 2016 16:52:24 GMT",
-          "ETag": "W/\"06bebc83c798c8fe3786ecf9b2950824\"",
-          "Last-Modified": "Sat, 26 Mar 2016 16:49:49 GMT",
+          "Date": "Wed, 30 Mar 2016 14:11:52 GMT",
+          "ETag": "W/\"fc9b0a15ba791a8d1c4cfbd4a9753d5a\"",
+          "Last-Modified": "Wed, 30 Mar 2016 14:11:47 GMT",
           "Server": "GitHub.com",
           "Status": "200 OK",
           "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
@@ -103,23 +103,23 @@
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "deny",
           "X-GitHub-Media-Type": "github.v3; param=full; format=json",
-          "X-GitHub-Request-Id": "4EC11365:6B9B:D48A190:56F6BE48",
-          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-GitHub-Request-Id": "4EC11365:1805E:1437635C:56FBDEA8",
+          "X-OAuth-Scopes": "admin:public_key, admin:repo_hook, delete_repo, gist, repo, user",
           "X-RateLimit-Limit": "5000",
-          "X-RateLimit-Remaining": "4989",
-          "X-RateLimit-Reset": "1459014310",
-          "X-Served-By": "a474937f3b2fa272558fa6dc951018ad",
+          "X-RateLimit-Remaining": "4987",
+          "X-RateLimit-Reset": "1459350704",
+          "X-Served-By": "01d096e6cfe28f8aea352e988c332cd3",
           "X-XSS-Protection": "1; mode=block"
         },
         "status": {
           "code": 200,
           "message": "OK"
         },
-        "url": "https://api.github.com/repos/guyzmo/github3.py"
+        "url": "https://api.github.com/repos/git-repo-test/github3.py"
       }
     },
     {
-      "recorded_at": "2016-03-26T16:52:14",
+      "recorded_at": "2016-03-30T14:11:39",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -136,7 +136,7 @@
           "User-Agent": "github3.py/0.9.5"
         },
         "method": "DELETE",
-        "uri": "https://api.github.com/repos/guyzmo/github3.py"
+        "uri": "https://api.github.com/repos/git-repo-test/github3.py"
       },
       "response": {
         "body": {
@@ -147,7 +147,7 @@
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
           "Content-Security-Policy": "default-src 'none'",
-          "Date": "Sat, 26 Mar 2016 16:52:24 GMT",
+          "Date": "Wed, 30 Mar 2016 14:11:52 GMT",
           "Server": "GitHub.com",
           "Status": "204 No Content",
           "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
@@ -156,19 +156,19 @@
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "deny",
           "X-GitHub-Media-Type": "github.v3; param=full; format=json",
-          "X-GitHub-Request-Id": "4EC11365:6B9B:D48A1AB:56F6BE48",
-          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-GitHub-Request-Id": "4EC11365:1805E:14376383:56FBDEA8",
+          "X-OAuth-Scopes": "admin:public_key, admin:repo_hook, delete_repo, gist, repo, user",
           "X-RateLimit-Limit": "5000",
-          "X-RateLimit-Remaining": "4988",
-          "X-RateLimit-Reset": "1459014310",
-          "X-Served-By": "593010132f82159af0ded24b4932e109",
+          "X-RateLimit-Remaining": "4986",
+          "X-RateLimit-Reset": "1459350704",
+          "X-Served-By": "139317cebd6caf9cd03889139437f00b",
           "X-XSS-Protection": "1; mode=block"
         },
         "status": {
           "code": 204,
           "message": "No Content"
         },
-        "url": "https://api.github.com/repos/guyzmo/github3.py"
+        "url": "https://api.github.com/repos/git-repo-test/github3.py"
       }
     }
   ],

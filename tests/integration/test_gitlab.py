@@ -9,6 +9,7 @@ log = logging.getLogger('test.gitlab')
 
 #################################################################################
 
+import os
 import sys
 import pytest
 
@@ -24,6 +25,12 @@ gitlab.gitlab.requests = Session()
 class Test_Gitlab(GitRepoTestCase):
     log = log
 
+    @property
+    def local_namespace(self):
+        if 'GITLAB_NAMESPACE' in os.environ:
+            return os.environ['GITLAB_NAMESPACE']
+        return 'git-repo-test'
+
     def get_service(self):
         return gitlab.GitlabService(c=dict())
 
@@ -33,25 +40,25 @@ class Test_Gitlab(GitRepoTestCase):
     def test_00_fork(self):
         self.action_fork(cassette_name=sys._getframe().f_code.co_name,
                          # TODO not supported yet
-                         local_namespace='guyzmo',
+                         local_namespace='git-repo-test',
                          remote_namespace='sigmavirus24',
                          repository='github3-py')
 
     def test_01_create(self):
         self.action_create(cassette_name=sys._getframe().f_code.co_name,
-                           namespace='guyzmo',
+                           namespace=self.local_namespace,
                            repository='foobar')
 
     def test_01_create__already_exists(self):
         with pytest.raises(ResourceExistsError):
             self.action_create(cassette_name=sys._getframe().f_code.co_name,
-                            namespace='guyzmo',
+                            namespace=self.local_namespace,
                             repository='git-repo')
 
 
     def test_02_delete(self):
         self.action_delete(cassette_name=sys._getframe().f_code.co_name,
-                           namespace='guyzmo',
+                           namespace=self.local_namespace,
                            repository='foobar')
 
     def test_03_delete_nouser(self):
