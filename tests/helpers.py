@@ -186,6 +186,7 @@ class GitRepoTestCase(TestCase):
         self.service.repository = self.repository
         # setup http api mockup
         self.recorder = betamax.Betamax(self.get_requests_session())
+        self.get_requests_session().headers['Accept-Encoding'] = 'identity'
         # have git commands logged
         Git.GIT_PYTHON_TRACE = True
         FORMAT = '> %(message)s'
