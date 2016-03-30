@@ -74,6 +74,9 @@ class RepositoryService:
     service_map = dict()
     command_map = dict()
 
+    # this symbol is made available for testing purposes
+    _current = None
+
     @classmethod
     def get_service(cls, repository, command):
         '''Accessor for a repository given a command
@@ -111,7 +114,8 @@ class RepositoryService:
                 raise ValueError('Service type {} does not exists.')
             service = cls.service_map.get(config['type'], cls)
 
-        return service(repository, config)
+        cls._current = service(repository, config)
+        return cls._current
 
     def __init__(self, r=None, c=None):
         '''

@@ -15,6 +15,17 @@ from git_repo.repo import RepositoryService, main
 
 class RepositoryMockup(RepositoryService):
     fqdn = 'http://example.org'
+    def __init__(self, *args, **kwarg):
+        super(RepositoryMockup, self).__init__(*args, **kwarg)
+        self._did_pull = None
+        self._did_clone = None
+        self._did_add = None
+        self._did_open = None
+        self._did_connect = None
+        self._did_delete = None
+        self._did_create = None
+        self._did_fork = None
+        self._did_user = False
 
     def pull(self, *args, **kwarg):
         self._did_pull = (args, kwarg)
@@ -53,6 +64,9 @@ class GitRepoMainTestCase(TestCase):
         self.log.info('GitRepoMainTestCase')
         self.tempdir = TemporaryDirectory()
         self.addCleanup(self.tempdir.cleanup)
+        def reset_service():
+            RepositoryService._current = RepositoryMockup(c={})
+        self.addCleanup(reset_service)
         RepositoryService.service_map = {
             'github': RepositoryMockup,
             'gitlab': RepositoryMockup,
@@ -268,7 +282,33 @@ class GitRepoTestCase(TestCase):
             ])
             with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
                 self.service.connect()
-                self.service.fork(remote_namespace, repository)
+                self.service.fork(remote_namespace, repository, clone=True)
+
+    def action_fork__no_clone(self, cassette_name, local_namespace, remote_namespace, repository):
+        # hijack subprocess call
+        with self.mockup_git(local_namespace, repository):
+            # prepare output for git commands
+            remote_slug = self.service.format_path(namespace=remote_namespace, repository=repository, rw=True)
+            local_slug = self.service.format_path(namespace=local_namespace, repository=repository, rw=True)
+            self.set_mock_popen_commands([
+                ('git remote add upstream {}'.format(remote_slug), b'', b'', 0),
+                ('git remote add all {}'.format(local_slug), b'', b'', 0),
+                ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
+                ('git pull -v {} master'.format(self.service.name), b'', '\n'.join([
+                    'POST git-upload-pack (140 bytes)',
+                    'remote: Counting objects: 8318, done.',
+                    'remote: Compressing objects: 100% (3/3), done.',
+                    'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
+                    'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
+                    'Resolving deltas: 100% (5126/5126), done.',
+                    'From {}:{}/{}'.format(self.service.fqdn, local_namespace, repository),
+                    ' * branch            master     -> FETCH_HEAD',
+                    ' * [new branch]      master     -> {}/master'.format(self.service.name)]).encode('utf-8'),
+                0)
+            ])
+            with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+                self.service.connect()
+                self.service.fork(remote_namespace, repository, clone=False)
 
     def action_clone(self, cassette_name, namespace, repository):
         # hijack subprocess call
@@ -296,7 +336,15 @@ class GitRepoTestCase(TestCase):
     def action_create(self, cassette_name, namespace, repository):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
             self.service.connect()
-            self.service.create(namespace, repository)
+            self.service.create(namespace, repository, add=True)
+            #
+            self.assert_repository_exists(namespace, repository)
+            self.assert_added_remote_defaults()
+
+    def action_create__no_add(self, cassette_name, namespace, repository):
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            self.service.create(namespace, repository, add=False)
             #
             self.assert_repository_exists(namespace, repository)
             self.assert_added_remote_defaults()
