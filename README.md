@@ -133,6 +133,36 @@ and then you'll have the executable in `bin`:
 
     % bin/git-repo --help
 
+To run the tests:
+
+    % bin/py.test
+
+You can use the following options for py.test to help you debug when tests fail:
+
+* `-v` will show more details upon errors
+* `-x` will stop upon the first failure
+* `--pdb` will launch the debugger where an exception has been launched
+
+
+The tests use recordings of exchanged HTTP data, so that we don't need real credentials
+and a real connection, when testing the API on minor changes. Those recordings are
+called cassettes, thanks to the [betamax](https://github.com/sigmavirus24/betamax) framework
+being in use in the test suites.
+
+When running existing tests, based on the provided cassettes, you don't need any 
+setting. Also, if you've got a configuration in `~/.gitconfig`, the tests will use
+them. Anyway, you can use environment variables for those settings (environment
+variables will have precedence over the configuration settings):
+
+To use your own credentials, you can setup the following environment variables:
+
+* `GITHUB_NAMESPACE` (which defaults to `not_configured`) is the name of the account to use on github
+* `GITLAB_NAMESPACE` (which defaults to `not_configured`) is the name of the account to use on gitlab 
+* `BITBUCKET_NAMESPACE` (which defaults to `not_configured`) is the name of the account to use on bitbucket
+* `PRIVATE_KEY_GITHUB` your private token you've setup on github for your account
+* `PRIVATE_KEY_GITLAB` your private token you've setup on gitlab for your account
+* `PRIVATE_KEY_BITBUCKET` your private token you've setup on bitbucket for your account
+
 ### TODO
 
 * [x] make a `git-repo fork` action
@@ -148,6 +178,8 @@ and then you'll have the executable in `bin`:
   * [ ] fetch them as local branches
 * [ ] add OAuth support for bitbucket
 * [ ] show a nice progress bar, while it's fetching
+  * partly implemented: the issue looks like that gitpython expects output from git
+    on stderr, whereas it's outputing on stdout.
 * for more features, write an issue or, even better, a PR!
 
 ### License

@@ -11,7 +11,7 @@
           "Accept": "*/*",
           "Accept-Encoding": "gzip, deflate",
           "Connection": "keep-alive",
-          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITHUB>",
           "User-Agent": "python-requests/2.9.1"
         },
         "method": "GET",
@@ -20,7 +20,7 @@
       "response": {
         "body": {
           "encoding": null,
-          "string": "{\"name\":\"git-repo-test\",\"username\":\"git-repo-test\",\"id\":470686,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/59014873897ec9bf64471e4ddf61c8d5?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/git-repo-test\",\"created_at\":\"2016-03-30T13:15:50.649Z\",\"is_admin\":false,\"bio\":\"\",\"skype\":\"\",\"linkedin\":\"\",\"twitter\":\"\",\"website_url\":\"\",\"last_sign_in_at\":\"2016-03-30T13:19:50.252Z\",\"confirmed_at\":\"2016-03-30T13:18:12.005Z\",\"email\":\"guyzmo+git-repo+projects+gitlab@m0g.net\",\"theme_id\":2,\"color_scheme_id\":1,\"projects_limit\":100000,\"current_sign_in_at\":\"2016-03-30T13:19:50.252Z\",\"identities\":[],\"can_create_group\":true,\"can_create_project\":true,\"two_factor_enabled\":false,\"external\":false,\"private_token\":\"<PRIVATE_KEY_GITLAB>\"}"
+          "string": "{\"name\":\"<GITHUB_NAMESPACE>\",\"username\":\"<GITHUB_NAMESPACE>\",\"id\":470686,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/59014873897ec9bf64471e4ddf61c8d5?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/<GITHUB_NAMESPACE>\",\"created_at\":\"2016-03-30T13:15:50.649Z\",\"is_admin\":false,\"bio\":\"\",\"skype\":\"\",\"linkedin\":\"\",\"twitter\":\"\",\"website_url\":\"\",\"last_sign_in_at\":\"2016-03-30T13:19:50.252Z\",\"confirmed_at\":\"2016-03-30T13:18:12.005Z\",\"email\":\"guyzmo+git-repo+projects+gitlab@m0g.net\",\"theme_id\":2,\"color_scheme_id\":1,\"projects_limit\":100000,\"current_sign_in_at\":\"2016-03-30T13:19:50.252Z\",\"identities\":[],\"can_create_group\":true,\"can_create_project\":true,\"two_factor_enabled\":false,\"external\":false,\"private_token\":\"<PRIVATE_KEY_GITHUB>\"}"
         },
         "headers": {
           "Cache-Control": "max-age=0, private, must-revalidate",
@@ -54,7 +54,7 @@
           "Connection": "keep-alive",
           "Content-Length": "20",
           "Content-type": "application/json",
-          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITHUB>",
           "User-Agent": "python-requests/2.9.1"
         },
         "method": "POST",

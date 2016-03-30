@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2016-03-30T14:11:41",
+      "recorded_at": "2016-03-30T21:01:42",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -10,7 +10,7 @@
         "headers": {
           "Accept": "application/vnd.github.v3.full+json",
           "Accept-Charset": "utf-8",
-          "Accept-Encoding": "gzip, deflate",
+          "Accept-Encoding": "identity",
           "Authorization": "token <PRIVATE_KEY_GITHUB>",
           "Connection": "keep-alive",
           "Content-Type": "application/json",
@@ -21,35 +21,33 @@
       },
       "response": {
         "body": {
-          "base64_string": "H4sIAAAAAAAAA52TzW6kMBCE38VnJsBMws4grfYlNpdckAEPWGtsy26IJmjefcv8JFkUKVputnF9ri66R6ZMIzXLWSPp4IQ1BxKeWMRkzfL0nGbn5JhFjA+cuCt6p3C1JbI+j+P50D9A2vZl74WrjCah6aEyXdzHq/zX8PMEYuMWSkAzHGxoVi6kWQ6cj7euWurUxsX8+qTZ3r4apcwrOFvj3z4Vv0vhc15L3ezFQDrGhlqBBFHWPYQhPe2wNclGFOqpkHUAefwXJ+r/t7YIYexVw9MYh78/EfvSV05akkbvsPiPHDjjGq7lG9+Jg9yDEsztMDPJIBcD2nKHftaNsXVy4NUtxONEJeSAxPcyNwAg6WYFRuIZvRHylyQKXndhLK9ceRExzTtc0L1SEUOjW65v67bEAK9rZaop5nUvOi4xsLOulU7wUr1zSmnWT7YvlayKOaw8jdhyMHUby5N1BDBJn3bo6mlXgUvIgxNqOCZpdkhOh1PyOz3laZI/nV9QU2/rb+9MGaP0j1fJEFfFer7Yw4uhY+svzmvp/2DCeIMigzGMPy+N42QW41ZxhDMuebKrEyIEbnkFxeVH9pQdHy+XL5WLudXE/f4XlwML3jsFAAA=",
           "encoding": "utf-8",
-          "string": ""
+          "string": "{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false,\"name\":\"<GITHUB_NAMESPACE>\",\"company\":null,\"blog\":\"http://<GITHUB_NAMESPACE>.got.nothing.to/blog/\",\"location\":\"Paris\",\"email\":null,\"hireable\":true,\"bio\":null,\"public_repos\":69,\"public_gists\":10,\"followers\":43,\"following\":13,\"created_at\":\"2010-04-27T14:04:09Z\",\"updated_at\":\"2016-03-26T00:48:05Z\"}"
         },
         "headers": {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
           "Cache-Control": "private, max-age=60, s-maxage=60",
-          "Content-Encoding": "gzip",
+          "Content-Length": "1118",
           "Content-Security-Policy": "default-src 'none'",
           "Content-Type": "application/json; charset=utf-8",
-          "Date": "Wed, 30 Mar 2016 14:11:55 GMT",
-          "ETag": "W/\"1be75f49aacaf67548f171692cc83506\"",
-          "Last-Modified": "Wed, 30 Mar 2016 13:10:58 GMT",
+          "Date": "Wed, 30 Mar 2016 21:01:55 GMT",
+          "ETag": "\"031cbfb6e1a055fa6dea52788f2a6582\"",
+          "Last-Modified": "Sat, 26 Mar 2016 00:48:05 GMT",
           "Server": "GitHub.com",
           "Status": "200 OK",
           "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
-          "Transfer-Encoding": "chunked",
           "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
           "X-Accepted-OAuth-Scopes": "",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "deny",
           "X-GitHub-Media-Type": "github.v3; param=full; format=json",
-          "X-GitHub-Request-Id": "4EC11365:18060:DBD983D:56FBDEAB",
-          "X-OAuth-Scopes": "admin:public_key, admin:repo_hook, delete_repo, gist, repo, user",
+          "X-GitHub-Request-Id": "4EC11365:18060:E0C4726:56FC3EC3",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
           "X-RateLimit-Limit": "5000",
           "X-RateLimit-Remaining": "4981",
-          "X-RateLimit-Reset": "1459350704",
-          "X-Served-By": "139317cebd6caf9cd03889139437f00b",
+          "X-RateLimit-Reset": "1459375302",
+          "X-Served-By": "c6c65e5196703428e7641f7d1e9bc353",
           "X-XSS-Protection": "1; mode=block"
         },
         "status": {
