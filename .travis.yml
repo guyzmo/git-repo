@@ -1,11 +1,11 @@
-nguage: python
+language: python
 python:
     - "3.4"
     - "3.5"
     - "3.5-dev" # 3.5 development branch
 # command to install dependencies
 install:
-    - "pip3 --user install zc.buildout"
+    - "pip install zc.buildout"
     - "buildout"
 # command to run tests
 script: "bin/py.test --nosugar"
