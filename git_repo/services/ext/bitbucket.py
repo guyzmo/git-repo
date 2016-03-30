@@ -104,7 +104,9 @@ class BitbucketService(RepositoryService):
         if not ':' in self._privatekey:
             raise ConnectionError('Could not connect to BitBucket. Please setup your private key with login:password')
         self.bb.username, self.bb.password = self._privatekey.split(':')
-        self.bb.get_user()
+        result, _ = self.bb.get_user()
+        if not result:
+            raise ConnectionError('Could not connect to BitBucket. Not authorized, wrong credentials.')
 
     def create(self, user, repo, add=False):
         success, result = self.bb.repository.create(repo, scm='git', public=True)
@@ -133,7 +135,7 @@ class BitbucketService(RepositoryService):
 
     def delete(self, repo, user=None):
         if not user:
-            user = self.bb._username
+            user = self.user
         success, result = self.bb.delete(user, repo)
         if not success and result['code'] == 404:
             raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo))
