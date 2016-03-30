@@ -2,10 +2,10 @@
 
 '''
 Usage:
-    {self} [--path=<path>] [-v -v...] <target> add <user>/<repo> [<name>] [-t <branch>] [-a]
-    {self} [--path=<path>] [-v -v...] <target> fork <user>/<repo> [<branch>] [--no-clone]
+    {self} [--path=<path>] [-v -v...] <target> add <user>/<repo> [<name>] [--tracking=<branch>] [-a]
+    {self} [--path=<path>] [-v -v...] <target> fork <user>/<repo> [<branch>] [--clone]
     {self} [--path=<path>] [-v -v...] <target> clone <user>/<repo> [<branch>]
-    {self} [--path=<path>] [-v -v...] <target> create <user>/<repo>
+    {self} [--path=<path>] [-v -v...] <target> create <user>/<repo> [--add]
     {self} [--path=<path>] [-v -v...] <target> delete <user>/<repo> [-f]
     {self} [--path=<path>] [-v -v...] <target> open [<user>/<repo>]
     {self} --help
@@ -25,7 +25,8 @@ Options:
     <branch>                 Branch to pull (when cloning) [default: master]
     -p,--path=<path>         Path to work on [default: .]
     -f,--force               Do not ask for confirmation
-    --no-clone               Do not clone locally after fork
+    --clone                  Clone locally after fork
+    --add                    Add to local repository after creation
     -v,--verbose             Makes it more chatty (repeat twice to see git commands)
     -h,--help                Shows this message
 
@@ -134,7 +135,7 @@ def main(args):
             service = RepositoryService.get_service(repository, args['<target>'])
 
             if args['create']:
-                service.create(user, repo)
+                service.create(user, repo, add=args['--add'])
                 log.info('Successfully created remote repository `{}`, '
                          'with local remote `{}`'.format(
                     service.format_path(repo, namespace=user),
@@ -182,7 +183,7 @@ def main(args):
                 repo_path = os.path.join(args['--path'], repo)
                 repository = Repo.init(repo_path)
                 service = RepositoryService.get_service(repository, args['<target>'])
-                service.fork(user, repo, branch=args['<branch>'], clone=args['--no-clone'])
+                service.fork(user, repo, branch=args['<branch>'], clone=args['--clone'])
                 log.info('Successfully cloned repository {} in {}'.format(
                     args['<user>/<repo>'],
                     repo_path)

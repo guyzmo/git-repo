@@ -284,7 +284,7 @@ class RepositoryService:
         '''
         raise NotImplementedError
 
-    def create(self, repo): #pragma: no cover
+    def create(self, user, repo, add=False): #pragma: no cover
         '''Create a new remote repository on the service
 
         :param repo: name of the repository to create
@@ -293,7 +293,7 @@ class RepositoryService:
         '''
         raise NotImplementedError
 
-    def fork(self, repo, clone=True): #pragma: no cover
+    def fork(self, user, repo, clone=False): #pragma: no cover
         '''Forks a new remote repository on the service
         and pulls commits from it
 

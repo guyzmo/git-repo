@@ -30,7 +30,7 @@ class GithubService(RepositoryService):
                     raise ConnectionError('Could not connect to Github. '
                                           'Check your configuration and try again.') from err
 
-    def create(self, user, repo):
+    def create(self, user, repo, add=False):
         try:
             self.gh.create_repo(repo)
         except github3.models.GitHubError as err:
@@ -38,9 +38,10 @@ class GithubService(RepositoryService):
                 raise ResourceExistsError("Project already exists.") from err
             else: # pragma: no cover
                 raise ResourceError("Unhandled error.") from err
-        self.add(user=user, repo=repo, tracking=self.name)
+        if add:
+            self.add(user=user, repo=repo, tracking=self.name)
 
-    def fork(self, user, repo, branch='master', clone=True):
+    def fork(self, user, repo, branch='master', clone=False):
         log.info("Forking repository {}/{}…".format(user, repo))
         try:
             fork = self.gh.repository(user, repo).create_fork()

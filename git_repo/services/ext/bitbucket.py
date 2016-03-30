@@ -106,15 +106,16 @@ class BitbucketService(RepositoryService):
         self.bb.username, self.bb.password = self._privatekey.split(':')
         self.bb.get_user()
 
-    def create(self, user, repo):
+    def create(self, user, repo, add=False):
         success, result = self.bb.repository.create(repo, scm='git', public=True)
         if not success and result['code'] == 400:
             raise ResourceExistsError('Project {} already exists on this account.'.format(repo))
         elif not success:
             raise ResourceError("Couldn't complete creation: {message} (error #{code}: {reason})".format(**result))
-        self.add(user=user, repo=repo, tracking=self.name)
+        if add:
+            self.add(user=user, repo=repo, tracking=self.name)
 
-    def fork(self, user, repo, branch='master', clone=True):
+    def fork(self, user, repo, branch='master', clone=False):
         log.info("Forking repository {}/{}…".format(user, repo))
         repositories = self.get_repository(user, repo)
         if repo in repositories:

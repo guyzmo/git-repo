@@ -23,7 +23,7 @@ class GitlabService(RepositoryService):
         self.gl.set_token(self._privatekey)
         self.gl.token_auth()
 
-    def create(self, user, repo):
+    def create(self, user, repo, add=False):
         try:
             self.gl.projects.create(data={
                 'name': repo,
@@ -35,9 +35,10 @@ class GitlabService(RepositoryService):
                 raise ResourceExistsError("Project already exists.") from err
             else:
                 raise ResourceError("Unhandled error.") from err
-        self.add(user=user, repo=repo, tracking=self.name)
+        if add:
+            self.add(user=user, repo=repo, tracking=self.name)
 
-    def fork(self, user, repo, branch='master', clone=True):
+    def fork(self, user, repo, branch='master', clone=False):
         try:
             fork = self.gl.projects.get('{}/{}'.format(user, repo)).forks.create({})
         except GitlabCreateError as err:

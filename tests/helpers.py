@@ -73,6 +73,7 @@ class GitRepoMainTestCase(TestCase):
             '--no-clone': False,
             '--tracking': 'master',
             '--alone': False,
+            '--add': False,
             '<name>': None,
             '<branch>': None,
             '<target>': self.target,
@@ -88,19 +89,23 @@ class GitRepoMainTestCase(TestCase):
         cli_args.update(args)
         return cli_args
 
+    def main_add(self, repo, rc=0, args={}):
+        os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+        Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+        assert rc == main(self.setup_args({
+            'add': True,
+            '<user>/<repo>': repo,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for add".format(rc)
+        return RepositoryService._current._did_add
+
     def main_clone(self, repo, rc=0, args={}):
         assert rc == main(self.setup_args({
             'clone': True,
             '<user>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for clone".format(rc)
-
-    def main_fork(self, repo, rc=0, args={}):
-        assert rc == main(self.setup_args({
-            'fork': True,
-            '<user>/<repo>': repo,
-            '--path': self.tempdir.name
-        }, args)), "Non {} result for fork".format(rc)
+        return RepositoryService._current._did_clone
 
     def main_create(self, repo, rc=0, args={}):
         os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
@@ -110,6 +115,7 @@ class GitRepoMainTestCase(TestCase):
             '<user>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for create".format(rc)
+        return RepositoryService._current._did_create
 
     def main_delete(self, repo, rc=0, args={}):
         os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
@@ -120,15 +126,16 @@ class GitRepoMainTestCase(TestCase):
             '--force': True,
             '--path': self.tempdir.name,
         }, args)), "Non {} result for delete".format(rc)
+        return RepositoryService._current._did_delete
 
-    def main_add(self, repo, rc=0, args={}):
-        os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
-        Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+    def main_fork(self, repo, rc=0, args={}):
         assert rc == main(self.setup_args({
-            'add': True,
+            'fork': True,
             '<user>/<repo>': repo,
+            '--clone': True,
             '--path': self.tempdir.name
-        }, args)), "Non {} result for add".format(rc)
+        }, args)), "Non {} result for fork".format(rc)
+        return RepositoryService._current._did_fork
 
     def main_open(self, repo, rc=0, args={}):
         os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
@@ -138,6 +145,7 @@ class GitRepoMainTestCase(TestCase):
             '<user>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for open".format(rc)
+        return RepositoryService._current._did_open
 
     def main_noop(self, repo, rc=1, args={}):
         assert rc == main(self.setup_args({
