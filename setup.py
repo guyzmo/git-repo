@@ -36,7 +36,7 @@ class dist_clean(Command):
         print("Repository is now clean!")
 
 setup(name='git-repo',
-      version='1.5.1',
+      version='1.5.2',
       description='Tool for managing remote repositories from your git CLI!',
       classifiers=[
           # 'Development Status :: 2 - Pre-Alpha',
@@ -80,7 +80,7 @@ setup(name='git-repo',
       git-repo = git_repo.repo:cli
       """,
       license='GPLv2',
-      packages=find_packages(exclude=['git_repo']),
+      packages=find_packages(exclude=['tests']),
       test_suite='pytest',
       tests_require=[
           'pytest',
