@@ -269,7 +269,8 @@ class GitRepoTestCase(TestCase):
                 ('git remote add upstream {}'.format(remote_slug), b'', b'', 0),
                 ('git remote add all {}'.format(local_slug), b'', b'', 0),
                 ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
-                ('git pull -v {} master'.format(self.service.name), b'', '\n'.join([
+                ('git version', b'git version 2.8.0', b'', 0),
+                ('git pull -v --progress {} master'.format(self.service.name), b'', '\n'.join([
                     'POST git-upload-pack (140 bytes)',
                     'remote: Counting objects: 8318, done.',
                     'remote: Compressing objects: 100% (3/3), done.',
@@ -295,7 +296,8 @@ class GitRepoTestCase(TestCase):
                 ('git remote add upstream {}'.format(remote_slug), b'', b'', 0),
                 ('git remote add all {}'.format(local_slug), b'', b'', 0),
                 ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
-                ('git pull -v {} master'.format(self.service.name), b'', '\n'.join([
+                ('git version', b'git version 2.8.0', b'', 0),
+                ('git pull -v --progress {} master'.format(self.service.name), b'', '\n'.join([
                     'POST git-upload-pack (140 bytes)',
                     'remote: Counting objects: 8318, done.',
                     'remote: Compressing objects: 100% (3/3), done.',
@@ -318,7 +320,8 @@ class GitRepoTestCase(TestCase):
             self.set_mock_popen_commands([
                 ('git remote add all {}'.format(local_slug), b'', b'', 0),
                 ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
-                ('git pull -v {} master'.format(self.service.name), b'', '\n'.join([
+                ('git version', b'git version 2.8.0', b'', 0),
+                ('git pull -v --progress {} master'.format(self.service.name), b'', '\n'.join([
                     'POST git-upload-pack (140 bytes)',
                     'remote: Counting objects: 8318, done.',
                     'remote: Compressing objects: 100% (3/3), done.',
