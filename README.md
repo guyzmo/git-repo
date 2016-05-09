@@ -48,9 +48,22 @@ and of course, you can delete it using:
 
     % git bb delete guyzmo/git-repo
 
+Once you're all set with your repository, you can check requests to merge 
+(aka Pull Requests on github) using the `request` command:
+
+    % git hub request guyzmo/git-repo list
+    List of open requests to merge:
+    id     title                                                           URL
+    2     prefer gitrepo.<target>.token > privatekey, docs                https://api.github.com/repos/guyzmo/git-repo/issues/2
+
+And fetch it locally to check and/or amend it before merging:
+
+    % git hub request guyzmo/git-repo fetch 2
+
 Finally, you can open the repository's page, using the `open` command:
 
     % git lab open guyzmo/git-repo
+    Successfully fetched branch `2` of `guyzmo/git-repo` into `request-2`!
 
 > *Nota Bene*: Thanks to `git` CLI flexibility, by installing `git-repo` you directly
 > have acces to the tool using `git-repo hub …` or `git repo hub …`. For the
@@ -173,9 +186,12 @@ To use your own credentials, you can setup the following environment variables:
 * [x] add regression tests (and actually find a smart way to implement them…)
 * [x] add travis build
 * [ ] add support for handling gists
-* [ ] add support for handling pull requests 
-  * [ ] list them
-  * [ ] fetch them as local branches
+* [ ] add support for handling pull requests
+  * [x] list them
+  * [x] fetch them as local branches
+  * [x] github support
+  * [ ] gitlab support
+  * [ ] bitbucket support
 * [ ] add OAuth support for bitbucket
 * [ ] show a nice progress bar, while it's fetching
   * partly implemented: the issue looks like that gitpython expects output from git

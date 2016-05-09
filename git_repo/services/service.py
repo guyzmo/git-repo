@@ -199,6 +199,16 @@ class RepositoryService:
             remote.pull(progress=pb)
         print()
 
+    def fetch(self, remote, remote_branch, local_branch):
+        '''Pull a repository
+        :param remote: git-remote instance
+        :param branch: name of the branch to pull
+        '''
+        pb = ProgressBar()
+        pb.setup(self.name)
+        remote.fetch(':'.join([remote_branch, local_branch]), progress=pb)
+        print()
+
     def clone(self, user, repo, branch='master'):
         '''Clones a new repository
 
@@ -304,6 +314,25 @@ class RepositoryService:
     def fork(self, user, repo, clone=False): #pragma: no cover
         '''Forks a new remote repository on the service
         and pulls commits from it
+
+        :param repo: name of the repository to create
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
+    def request_list(self, user, repo):
+        '''Lists all available request for merging code
+        sent to the remote repository
+
+        :param repo: name of the repository to create
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
+    def request_fetch(self, user, repo, request, pull=False): #pragma: no cover
+        '''Fetches given request as a branch, and switch if pull is true
 
         :param repo: name of the repository to create
 
