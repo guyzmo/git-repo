@@ -138,11 +138,13 @@ class RepositoryService:
                 self.name = name
         # if not in the configuration file, retrieve the private key from the
         # environment (useful for travis configuration), otherwise, make it None.
-        # using "privatekey" or "private_token" in configuration file to avoid
+        # using "token" > "private_token" > "privatekey" in configuration file to avoid
         # confusion with the SSH keys (yes that happened).
+        # NB: `git config` doesn't parse underscores in option names, token.
         self._privatekey = os.environ.get('PRIVATE_KEY_{}'.format(self.name.upper()),
-                                          c.get('private_token',
-                                                c.get('privatekey', None)))
+                                          c.get('token',
+                                                c.get('private_token',
+                                                      c.get('privatekey', None))))
         self._alias = c.get('alias', self.name)
         self.fqdn = c.get('fqdn', self.fqdn)
 

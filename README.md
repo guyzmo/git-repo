@@ -123,13 +123,13 @@ To configure `git-repo` you need to tweak your `~/.gitconfig`. For each service
 you've got an account on, you have to make a section in the gitconfig:
 
     [gitrepo "gitlab"]
-        private_token = YourVerySecretKey
+        token = YourVerySecretKey
 
     [gitrepo "github"]
-        private_token = YourOtherVerySecretKey
+        token = YourOtherVerySecretKey
 
     [gitrepo "bitbucket"]
-        private_token = username:password
+        token = username:password
 
 Here, we're setting the basics: just the private token. You'll notice that for bitbucket
 the private token is your username and password seperated by a column. That's because
@@ -140,7 +140,7 @@ You also have the ability to set up an alias:
 
     [gitrepo "bitbucket"]
         alias = bit
-        private_token = username:password
+        token = username:password
 
 that will change the command you use for a name you'll prefer to handle actions
 for the service you use:
@@ -151,7 +151,7 @@ Also, you can setup your own gitlab self-hosted server, using that configuration
 
     [gitrepo "myprecious"]
         type = gitlab
-        private_token = YourSuperPrivateKey
+        token = YourSuperPrivateKey
         fqdn = gitlab.example.org
 
 Finally, to make it really cool, you can make a few aliases in your gitconfig:

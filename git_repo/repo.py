@@ -62,18 +62,18 @@ Options for gist:
 Configuration options:
     alias                    Name to use for the git remote
     url                      URL of the repository
-    private-key              Private key to use for connecting to the service
+    token                    Private token to use for connecting to the service
     type                     Name of the service to use (github, gitlab, bitbucket)
 
 Configuration example:
 
 [gitrepo "gitlab"]
-    private-key = YourSecretKey
+    token = yourapitoken
     alias = lab
 
 [gitrepo "personal"]
     type = gitlab
-    private-key = YourSecretKey
+    token = yourapitoken
     url = http://custom.org
 
 {self} version {version}, Copyright ⓒ2016 Bernard `Guyzmo` Pratz
