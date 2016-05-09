@@ -48,9 +48,42 @@ and of course, you can delete it using:
 
     % git bb delete guyzmo/git-repo
 
-Finally, you can open the repository's page, using the `open` command:
+You can open the repository's page, using the `open` command:
 
     % git lab open guyzmo/git-repo
+
+Finally, another extra feature you can play with is the gist handling:
+
+    % git hub gist list
+    id                                                              title
+    https://gist.github.com/4a0dd9177524b2b125e9166640666737        This is a test gist
+
+Then you can list files within it:
+
+    % git hub gist list a7ce4fddba7744ddf335
+    language         size  name
+    Python           1048  unicode_combined.py
+    % git hub -v gist list https://gist.github.com/4a0dd9177524b2b125e9166640666737
+    language         size  name
+    Markdown         16    README.md
+    Text             14    LICENSE
+    reStructuredText 17    README.rst
+
+to output it locally, you can use the fetch command (and specify the file if there's more than one):
+
+    % git hub gist fetch https://gist.github.com/a7ce4fddba7744ddf335 > mygist.py
+    % git hub gist fetch 4a0dd9177524b2b125e9166640666737 LICENSE > LICENSE_from_gist
+
+but for more thorough modifications or consulting, you can as well clone it:
+
+    % git hub gist clone 4a0dd9177524b2b125e9166640666737
+    Pulling from github |████████████████████████████████|
+    Successfully cloned `4a0dd9177524b2b125e9166640666737` into `./4a0dd9177524b2b125e9166640666737`!
+
+And when you're done you just get rid of it:
+
+    % git hub gist -f delete 4a0dd9177524b2b125e9166640666737
+    Successfully deleted gist!
 
 > *Nota Bene*: Thanks to `git` CLI flexibility, by installing `git-repo` you directly
 > have acces to the tool using `git-repo hub …` or `git repo hub …`. For the
@@ -173,13 +206,20 @@ To use your own credentials, you can setup the following environment variables:
 * [x] add regression tests (and actually find a smart way to implement them…)
 * [x] add travis build
 * [ ] add support for handling gists
-* [ ] add support for handling pull requests 
+  * [x] github support
+  * [ ] gitlab support
+  * [ ] bitbucket support
+* [ ] add support for handling pull requests
   * [ ] list them
   * [ ] fetch them as local branches
+  * [ ] github support
+  * [ ] gitlab support
+  * [ ] bitbucket support
 * [ ] add OAuth support for bitbucket
 * [ ] show a nice progress bar, while it's fetching
   * partly implemented: the issue looks like that gitpython expects output from git
     on stderr, whereas it's outputing on stdout.
+* [ ] do what's needed to make a nice documentation (if possible in markdown !@#$)
 * for more features, write an issue or, even better, a PR!
 
 ### License

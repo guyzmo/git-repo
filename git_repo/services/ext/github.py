@@ -3,7 +3,7 @@
 import logging
 log = logging.getLogger('git_repo.github')
 
-from ..service import register_target, RepositoryService
+from ..service import register_target, RepositoryService, os
 from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
 
 import github3
@@ -77,6 +77,82 @@ class GithubService(RepositoryService):
         if not repository:
             raise ResourceNotFoundError('Cannot delete: repository {}/{} does not exists.'.format(user, repo))
         return repository
+
+    def _format_gist(self, gist):
+        return gist.split('https://gist.github.com/')[-1].split('.git')[0]
+
+    def gist_list(self, gist=None):
+        if not gist:
+            log.info("{:56}\t{}".format('id', 'title'.ljust(60)))
+            for gist in self.gh.iter_gists(self.gh.user().name):
+                yield "{:56}\t{}".format(
+                        gist.html_url,
+                        gist.description[:60].replace('\n', '\\n').ljust(60) if gist.description else "",
+                        )
+        else:
+            log.info("{}\t{}\t{}".format('language'.ljust(10), 'size'.ljust(6), 'name'))
+            gist = self.gh.gist(gist.split('https://gist.github.com/')[-1])
+            for gist_file in gist.iter_files():
+                yield "{:10}\t{: 6}\t{}".format(
+                        gist_file.language if gist_file.language else 'Raw text',
+                        gist_file.size,
+                        gist_file.filename
+                )
+
+
+    def gist_fetch(self, gist, fname=None):
+        try:
+            gist = self.gh.gist(gist.split('https://gist.github.com/')[-1])
+        except Exception as err:
+            raise ResourceNotFoundError('Could not find gist') from err
+        if gist.files == 1 and not fname:
+            gist_file = list(gist.iter_files())[0]
+        else:
+            for gist_file in gist.iter_files():
+                if gist_file.filename == fname:
+                    break
+            else:
+                raise ResourceNotFoundError('Could not find file within gist.')
+
+        print(gist_file.content)
+
+    def gist_clone(self, gist):
+        try:
+            gist = self.gh.gist(gist.split('https://gist.github.com/')[-1])
+        except Exception as err:
+            raise ResourceNotFoundError('Could not find gist') from err
+        remote = self.repository.create_remote('gist', gist.git_push_url)
+        self.pull(remote, 'master')
+
+    def gist_create(self, gist_pathes, description, secret=False):
+        def load_file(fname, path='.'):
+            with open(os.path.join(path, fname), 'r') as f:
+                return {'content': f.read()}
+
+        gist_files = dict()
+        for gist_path in gist_pathes:
+            if not os.path.isdir(gist_path):
+                gist_files[gist_path] = load_file(gist_path)
+            else:
+                for gist_file in os.listdir(gist_path):
+                    if not os.path.isdir(os.path.join(gist_path, gist_file)) and not gist_file.startswith('.'):
+                        gist_files[gist_file] = load_file(gist_file, gist_path)
+
+        gist = self.gh.create_gist(
+                description=description,
+                files=gist_files,
+                public=not secret # isn't it obvious? ☺
+            )
+
+        return gist.html_url
+
+    def gist_delete(self, gist_id):
+        try:
+            gist = self.gh.gist(gist_id.split('https://gist.github.com/')[-1])
+            return gist.delete()
+        except Exception as err:
+            raise ResourceNotFoundError('Could not find gist') from err
+
 
     @property
     def user(self):

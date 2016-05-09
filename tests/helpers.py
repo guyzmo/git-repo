@@ -97,7 +97,17 @@ class GitRepoMainTestCase():
             'create': False,
             'delete': False,
             'fork': False,
-            'open': False
+            'gist': False,
+            'fetch': False,
+            'fork': False,
+            'list': False,
+            'open': False,
+            '--secret': False,
+            '<description>': None,
+            '<gist>': None,
+            '<gist_file>': None,
+            '<gist_path>': [],
+            '<user>/<repo>': None,
         }
         cli_args.update(d)
         cli_args.update(args)

@@ -311,6 +311,42 @@ class RepositoryService:
         '''
         raise NotImplementedError
 
+    def gist_list(self):
+        '''Lists gists
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
+    def gist_fetch(self, gist):
+        '''Fetches a published gist
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
+    def gist_clone(self, gist):
+        '''Clones a gist
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
+
+    def gist_create(self, gist_path, secret=False):
+        '''Pushes a new gist
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
+    def gist_delete(self, gist_path, secret=False):
+        '''Deletes a new gist
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
     @property
     def user(self): #pragma: no cover
         raise NotImplementedError
