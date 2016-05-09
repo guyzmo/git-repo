@@ -46,15 +46,14 @@ git.remote.Remote.list = property(list_urls)
 class ProgressBar(RemoteProgress): # pragma: no cover
     '''Nice looking progress bar for long running commands'''
     def setup(self, repo_name):
-        # self.bar = Bar(message='Pulling from {}'.format(repo_name), suffix='')
-        pass
+        self.bar = Bar(message='Pulling from {}'.format(repo_name), suffix='')
 
     def update(self, op_code, cur_count, max_count=100, message=''):
-        log.info("{}, {}, {}, {}".formatn(op_code, cur_count, max_count, message))
-        # max_count = int(max_count or 100)
-        # if max_count != self.bar.max:
-        #     self.bar.max = max_count
-        # self.bar.goto(int(cur_count))
+        #log.info("{}, {}, {}, {}".format(op_code, cur_count, max_count, message))
+        max_count = int(max_count or 100)
+        if max_count != self.bar.max:
+            self.bar.max = max_count
+        self.bar.goto(int(cur_count))
 
 
 def register_target(repo_cmd, repo_service):
@@ -192,10 +191,13 @@ class RepositoryService:
         :param remote: git-remote instance
         :param branch: name of the branch to pull
         '''
+        pb = ProgressBar()
+        pb.setup(self.name)
         if branch:
-            remote.pull(branch)#, progress=ProgressBar())
+            remote.pull(branch, progress=pb)
         else: # pragma: no cover
-            remote.pull() #progress=ProgressBar())
+            remote.pull(progress=pb)
+        print()
 
     def clone(self, user, repo, branch='master'):
         '''Clones a new repository
