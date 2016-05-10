@@ -37,7 +37,7 @@ Options for add:
 
 Configuration options:
     alias                    Name to use for the git remote
-    url                      URL of the repository
+    fqdn                     URL of the repository
     private-key              Private key to use for connecting to the service
     type                     Name of the service to use (github, gitlab, bitbucket)
 
@@ -50,7 +50,7 @@ Configuration example:
 [gitrepo "personal"]
     type = gitlab
     private-key = YourSecretKey
-    url = http://custom.org
+    fqdn= http://custom.org
 
 {self} version {version}, Copyright ⓒ2016 Bernard `Guyzmo` Pratz
 {self} comes with ABSOLUTELY NO WARRANTY; for more informations
