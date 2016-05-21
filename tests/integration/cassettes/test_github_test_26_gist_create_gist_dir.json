@@ -1,0 +1,120 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-05-21T17:32:10",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false,\"name\":\"<GITHUB_NAMESPACE>\",\"company\":null,\"blog\":\"http://<GITHUB_NAMESPACE>.got.nothing.to/blog/\",\"location\":\"Paris\",\"email\":null,\"hireable\":true,\"bio\":null,\"public_repos\":72,\"public_gists\":13,\"followers\":44,\"following\":13,\"created_at\":\"2010-04-27T14:04:09Z\",\"updated_at\":\"2016-03-26T00:48:05Z\"}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "1118",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 21 May 2016 17:32:11 GMT",
+          "ETag": "\"46f3b18c088f857862f3076708248b61\"",
+          "Last-Modified": "Sat, 26 Mar 2016 00:48:05 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:1C0C0:387FBCD:57409B9A",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4989",
+          "X-RateLimit-Reset": "1463855029",
+          "X-Served-By": "7b641bda7ec2ca7cd9df72d2578baf75",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/user"
+      }
+    },
+    {
+      "recorded_at": "2016-05-21T17:32:11",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"public\": false, \"description\": \"this is a secret test.\", \"files\": {\"random-fortune-3.txt\": {\"content\": \"All wars are civil wars, because all men are brothers ... Each one owes\\ninfinitely more to the human race than to the particular country in\\nwhich he was born.\\n\\t\\t-- Francois Fenelon\\n\"}, \"random-fortune-1.txt\": {\"content\": \"No one can guarantee the actions of another.\\n\\t\\t-- Spock, \\\"Day of the Dove\\\", stardate unknown\\n\"}, \"random-fortune-2.txt\": {\"content\": \"I'm having BEAUTIFUL THOUGHTS about the INSIPID WIVES of smug and\\nwealthy CORPORATE LAWYERS ...\\n\"}, \"random-fortune-4.txt\": {\"content\": \"\\\"The lawgiver, of all beings, most owes the law allegiance.\\n He of all men should behave as though the law compelled him.\\n But it is the universal weakness of mankind that what we are\\n given to administer we presently imagine we own.\\\"\\n\\t\\t-- H. G. Wells\\n\"}}}"
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Length": "878",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "POST",
+        "uri": "https://api.github.com/gists"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"url\":\"https://api.github.com/gists/f99d6f70953a366cea782ec6fcc58585\",\"forks_url\":\"https://api.github.com/gists/f99d6f70953a366cea782ec6fcc58585/forks\",\"commits_url\":\"https://api.github.com/gists/f99d6f70953a366cea782ec6fcc58585/commits\",\"id\":\"f99d6f70953a366cea782ec6fcc58585\",\"git_pull_url\":\"https://gist.github.com/f99d6f70953a366cea782ec6fcc58585.git\",\"git_push_url\":\"https://gist.github.com/f99d6f70953a366cea782ec6fcc58585.git\",\"html_url\":\"https://gist.github.com/f99d6f70953a366cea782ec6fcc58585\",\"files\":{\"random-fortune-1.txt\":{\"filename\":\"random-fortune-1.txt\",\"type\":\"text/plain\",\"language\":\"Text\",\"raw_url\":\"https://gist.githubusercontent.com/<GITHUB_NAMESPACE>/f99d6f70953a366cea782ec6fcc58585/raw/c899c15de8923e907d624d2102da40588fa0df24/random-fortune-1.txt\",\"size\":93,\"truncated\":false,\"content\":\"No one can guarantee the actions of another.\\n\\t\\t-- Spock, \\\"Day of the Dove\\\", stardate unknown\\n\"},\"random-fortune-2.txt\":{\"filename\":\"random-fortune-2.txt\",\"type\":\"text/plain\",\"language\":\"Text\",\"raw_url\":\"https://gist.githubusercontent.com/<GITHUB_NAMESPACE>/f99d6f70953a366cea782ec6fcc58585/raw/adcb0ba26e1136cd22323e325b864d284f42fd0b/random-fortune-2.txt\",\"size\":96,\"truncated\":false,\"content\":\"I'm having BEAUTIFUL THOUGHTS about the INSIPID WIVES of smug and\\nwealthy CORPORATE LAWYERS ...\\n\"},\"random-fortune-3.txt\":{\"filename\":\"random-fortune-3.txt\",\"type\":\"text/plain\",\"language\":\"Text\",\"raw_url\":\"https://gist.githubusercontent.com/<GITHUB_NAMESPACE>/f99d6f70953a366cea782ec6fcc58585/raw/9c2ba8a4620af65572a67fe2aff727b4fa4f4fe8/random-fortune-3.txt\",\"size\":181,\"truncated\":false,\"content\":\"All wars are civil wars, because all men are brothers ... Each one owes\\ninfinitely more to the human race than to the particular country in\\nwhich he was born.\\n\\t\\t-- Francois Fenelon\\n\"},\"random-fortune-4.txt\":{\"filename\":\"random-fortune-4.txt\",\"type\":\"text/plain\",\"language\":\"Text\",\"raw_url\":\"https://gist.githubusercontent.com/<GITHUB_NAMESPACE>/f99d6f70953a366cea782ec6fcc58585/raw/306433d5c9b92475cba3a14b5bcb7600696583ff/random-fortune-4.txt\",\"size\":252,\"truncated\":false,\"content\":\"\\\"The lawgiver, of all beings, most owes the law allegiance.\\n He of all men should behave as though the law compelled him.\\n But it is the universal weakness of mankind that what we are\\n given to administer we presently imagine we own.\\\"\\n\\t\\t-- H. G. Wells\\n\"}},\"public\":false,\"created_at\":\"2016-05-21T17:32:12Z\",\"updated_at\":\"2016-05-21T17:32:12Z\",\"description\":\"this is a secret test.\",\"comments\":0,\"user\":null,\"comments_url\":\"https://api.github.com/gists/f99d6f70953a366cea782ec6fcc58585/comments\",\"owner\":{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false},\"forks\":[],\"history\":[{\"user\":{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false},\"version\":\"34b8e94218f339b51eeef836763a901d77c8041d\",\"committed_at\":\"2016-05-21T17:32:12Z\",\"change_status\":{\"total\":13,\"additions\":13,\"deletions\":0},\"url\":\"https://api.github.com/gists/f99d6f70953a366cea782ec6fcc58585/34b8e94218f339b51eeef836763a901d77c8041d\"}],\"truncated\":false}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "4577",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 21 May 2016 17:32:12 GMT",
+          "ETag": "\"61e6b104ad7eb4162316d5deef46c5a1\"",
+          "Location": "https://api.github.com/gists/f99d6f70953a366cea782ec6fcc58585",
+          "Server": "GitHub.com",
+          "Status": "201 Created",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:1C0C0:387FBE6:57409B9B",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4988",
+          "X-RateLimit-Reset": "1463855029",
+          "X-Served-By": "d0b3c2c33a23690498aa8e70a435a259",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 201,
+          "message": "Created"
+        },
+        "url": "https://api.github.com/gists"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}
