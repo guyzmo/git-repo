@@ -237,9 +237,15 @@ def main(args):
         elif args['gist']:
             service = RepositoryService.get_service(None, args['<target>'])
             service.connect()
-                for gist_file in service.gist_list(args['<gist>']):
-                    print(gist_file)
             if args['list'] or args['ls']:
+                if args['<gist>']:
+                    log.info("{:15}\t{:>7}\t{}".format('language', 'size', 'name'))
+                    for gist_file in service.gist_list(args['<gist>']):
+                        print("{:15}\t{:7}\t{}".format(*gist_file))
+                else:
+                    log.info("{:56}\t{}".format('id', 'title'.ljust(60)))
+                    for gist in service.gist_list():
+                        print( "{:56}\t{}".format(gist[0], gist[1]))
             elif args['fetch']:
                 # send gist to stdout, not using log.info on purpose here!
                 print(service.gist_fetch(args['<gist>'], args['<gist_file>']))

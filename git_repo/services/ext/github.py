@@ -83,21 +83,16 @@ class GithubService(RepositoryService):
 
     def gist_list(self, gist=None):
         if not gist:
-            log.info("{:56}\t{}".format('id', 'title'.ljust(60)))
             for gist in self.gh.iter_gists(self.gh.user().name):
-                yield "{:56}\t{}".format(
-                        gist.html_url,
-                        gist.description[:60].replace('\n', '\\n').ljust(60) if gist.description else "",
-                        )
+                yield (gist.html_url, gist.description)
         else:
-            log.info("{}\t{}\t{}".format('language'.ljust(10), 'size'.ljust(6), 'name'))
-            gist = self.gh.gist(gist.split('https://gist.github.com/')[-1])
+            gist = self.gh.gist(self._format_gist(gist))
+            if gist is None:
+                raise ResourceNotFoundError('Gist does not exists.')
             for gist_file in gist.iter_files():
-                yield "{:10}\t{: 6}\t{}".format(
-                        gist_file.language if gist_file.language else 'Raw text',
+                yield (gist_file.language if gist_file.language else 'Raw text',
                         gist_file.size,
-                        gist_file.filename
-                )
+                        gist_file.filename)
 
 
     def gist_fetch(self, gist, fname=None):
