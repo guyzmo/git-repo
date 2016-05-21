@@ -154,6 +154,17 @@ class Test_Main(GitRepoMainTestCase):
         assert ('guyzmo', 'git-repo') == repo_slug
         assert {'branch': 'foobar', 'clone': True} == seen_args
 
+    def test_request_list(self):
+        repo_slug, seen_args = self.main_request_list('guyzmo/git-repo', 0,
+                                                      args={})
+
+    def test_request_fetch__request(self):
+        repo_slug, seen_args = self.main_request_fetch('guyzmo/git-repo', 0,
+                                                       args={})
+
+    def test_request_fetch__bad_request(self):
+        repo_slug, seen_args = self.main_request_fetch('guyzmo/git-repo', 0,
+                                                       args={})
     def test_open(self):
         repo_slug, seen_args = self.main_open('guyzmo/git-repo', 0)
         assert ('guyzmo', 'git-repo') == repo_slug

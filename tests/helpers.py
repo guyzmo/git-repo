@@ -156,6 +156,11 @@ class GitRepoMainTestCase():
         }, args)), "Non {} result for fork".format(rc)
         return RepositoryService._current._did_fork
 
+    def main_request_list(self, repo, rc=0, args={}):
+        assert True
+
+    def main_request_fetch(self, repo, rc=0, args={}):
+        assert True
     def main_open(self, repo, rc=0, args={}):
         os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
         Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
