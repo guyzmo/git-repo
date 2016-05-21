@@ -127,7 +127,7 @@ class GithubService(RepositoryService):
         gist_files = dict()
         for gist_path in gist_pathes:
             if not os.path.isdir(gist_path):
-                gist_files[gist_path] = load_file(gist_path)
+                gist_files[os.path.basename(gist_path)] = load_file(gist_path)
             else:
                 for gist_file in os.listdir(gist_path):
                     if not os.path.isdir(os.path.join(gist_path, gist_file)) and not gist_file.startswith('.'):
