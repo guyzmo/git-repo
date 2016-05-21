@@ -318,14 +318,14 @@ class RepositoryService:
         '''
         raise NotImplementedError
 
-    def gist_fetch(self, gist):
+    def gist_fetch(self, gist): #pragma: no cover
         '''Fetches a published gist
 
         Meant to be implemented by subclasses
         '''
         raise NotImplementedError
 
-    def gist_clone(self, gist):
+    def gist_clone(self, gist): #pragma: no cover
         '''Clones a gist
 
         Meant to be implemented by subclasses
@@ -333,14 +333,14 @@ class RepositoryService:
         raise NotImplementedError
 
 
-    def gist_create(self, gist_path, secret=False):
+    def gist_create(self, gist_path, secret=False): #pragma: no cover
         '''Pushes a new gist
 
         Meant to be implemented by subclasses
         '''
         raise NotImplementedError
 
-    def gist_delete(self, gist_path, secret=False):
+    def gist_delete(self, gist_path, secret=False): #pragma: no cover
         '''Deletes a new gist
 
         Meant to be implemented by subclasses
