@@ -68,10 +68,10 @@ setup(name='git-repo',
       install_requires=[
             'docopt',
             'GitPython',
-            'progress',
-            'github3.py',
-            'bitbucket-api',
+            'progress==1.2',
             'python-gitlab==0.13',
+            'github3.py==0.9.5',
+            'bitbucket-api==0.5.0',
       ],
       cmdclass={'dist_clean': dist_clean},
       entry_points="""
@@ -83,10 +83,11 @@ setup(name='git-repo',
       packages=find_packages(exclude=['tests']),
       test_suite='pytest',
       tests_require=[
-          'pytest',
+          'pytest==2.9.1',
           'pytest-cov',
           'pytest-sugar',
-          'pytest-capturelog'
+          'pytest-capturelog',
+          'pytest-datadir-ng==1.1.0',
       ],
       zip_safe=False
       )
