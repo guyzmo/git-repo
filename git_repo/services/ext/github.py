@@ -142,11 +142,10 @@ class GithubService(RepositoryService):
         return gist.html_url
 
     def gist_delete(self, gist_id):
-        try:
-            gist = self.gh.gist(self._format_gist(gist))
-            return gist.delete()
-        except Exception as err:
-            raise ResourceNotFoundError('Could not find gist') from err
+        gist = self.gh.gist(self._format_gist(gist_id))
+        if not gist:
+            raise ResourceNotFoundError('Could not find gist')
+        gist.delete()
 
 
     @property
