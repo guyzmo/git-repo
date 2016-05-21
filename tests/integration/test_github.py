@@ -234,10 +234,10 @@ class Test_Github(GitRepoTestCase):
 
     def test_22_gist_create_gist_file_list(self, datadir):
         test_files = [
-                datadir[ 'random-fortune-1.txt' ],
-                datadir[ 'random-fortune-2.txt' ],
-                datadir[ 'random-fortune-3.txt' ],
-                datadir[ 'random-fortune-4.txt' ],
+                str(datadir[ 'random-fortune-1.txt' ]),
+                str(datadir[ 'random-fortune-2.txt' ]),
+                str(datadir[ 'random-fortune-3.txt' ]),
+                str(datadir[ 'random-fortune-4.txt' ]),
         ]
         self.action_gist_create(cassette_name=sys._getframe().f_code.co_name,
                 description='this is a test.',
@@ -246,30 +246,61 @@ class Test_Github(GitRepoTestCase):
 
     def test_23_gist_create_gist_dir(self, datadir):
         test_dir = [
-                datadir[ 'a_directory' ],
+                str(datadir[ 'a_directory' ]),
         ]
         self.action_gist_create(cassette_name=sys._getframe().f_code.co_name,
                 description='this is a test.',
                 gist_files=test_dir,
                 secret=False)
 
-    def test_23_gist_create_gist_file_list_secret(self, datadir):
+    def test_24_gist_create_gist_file(self, datadir):
+        test_file = str(datadir[ 'random-fortune-1.txt' ])
         self.action_gist_create(cassette_name=sys._getframe().f_code.co_name,
-                description=None, gist_files=None, secret=None)
+                description='this is a secret test.',
+                gist_files=[ test_file ],
+                secret=True)
 
-    def test_24_gist_create_gist_file_secret(self, datadir):
+    def test_25_gist_create_gist_file_list(self, datadir):
+        test_files = [
+                str(datadir[ 'random-fortune-1.txt' ]),
+                str(datadir[ 'random-fortune-2.txt' ]),
+                str(datadir[ 'random-fortune-3.txt' ]),
+                str(datadir[ 'random-fortune-4.txt' ]),
+        ]
         self.action_gist_create(cassette_name=sys._getframe().f_code.co_name,
-                description=None, gist_files=None, secret=None)
+                description='this is a secret test.',
+                gist_files=test_files,
+                secret=True)
 
-    def test_26_gist_create_gist_dir_secret(self, datadir):
+    def test_26_gist_create_gist_dir(self, datadir):
+        test_dir = [
+                str(datadir[ 'a_directory' ]),
+        ]
         self.action_gist_create(cassette_name=sys._getframe().f_code.co_name,
-                description=None, gist_files=None, secret=None)
+                description='this is a secret test.',
+                gist_files=test_dir,
+                secret=True)
 
     def test_27_gist_delete(self):
         self.action_gist_delete(cassette_name=sys._getframe().f_code.co_name,
-                gist=None)
+                gist='7dcc495dda5e684cba94940a01f60e95')
 
-    def test_28_open(self):
+    def test_28_gist_delete__not_exist(self):
+        with pytest.raises(ResourceNotFoundError):
+            self.action_gist_delete(cassette_name=sys._getframe().f_code.co_name,
+                    gist='7dcc495dda5e684cba94940a01f60e95')
+
+    def test_29_gist_create_gist__file_not_exist(self, datadir):
+        with pytest.raises(FileNotFoundError):
+            test_dir = [
+                    'does_not_exists'
+            ]
+            self.action_gist_create(cassette_name=sys._getframe().f_code.co_name,
+                    description='this is a secret test.',
+                    gist_files=test_dir,
+                    secret=False)
+
+    def test_30_open(self):
         self.action_open(cassette_name=sys._getframe().f_code.co_name,
                          namespace='guyzmo',
                          repository='git-repo')
