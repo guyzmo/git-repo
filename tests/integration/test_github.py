@@ -226,8 +226,7 @@ class Test_Github(GitRepoTestCase):
                     gist='4170462', gist_file='failed')
 
     def test_21_gist_create_gist_file(self, datadir):
-        print('xxx', datadir)
-        test_file = datadir[ 'random-fortune-1.txt' ]
+        test_file = str(datadir[ 'random-fortune-1.txt' ])
         self.action_gist_create(cassette_name=sys._getframe().f_code.co_name,
                 description='this is a test.',
                 gist_files=[ test_file ],
