@@ -81,10 +81,7 @@ class GithubService(RepositoryService):
     def request_list(self, user, repo):
         repository = self.gh.repository(user, repo)
         for pull in repository.iter_pulls():
-            yield "{: 3}\t{}\t{}".format(
-                    pull.number,
-                    pull.title[:60].ljust(60),
-                    pull.links['issue'])
+            yield ( pull.number, pull.title, pull.links['issue'] )
 
     def request_fetch(self, user, repo, request, pull=False): #pragma: no cover
         for remote in self.repository.remotes:
