@@ -409,6 +409,67 @@ class GitRepoTestCase():
                     self.assert_added_remote(name)
                     self.assert_tracking_remote(name, tracking)
 
+    def action_request_list(self, cassette_name, namespace, repository, rq_list_data=[]):
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            requests = list(self.service.request_list(user=namespace, repo=repository))
+            for i, rq in enumerate(rq_list_data):
+                assert requests[i] == rq
+
+    def action_request_fetch(self, cassette_name, namespace, repository, request, pull=False):
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            self.service.clone(namespace, repository)
+            self.service.request_fetch(repository, namespace, request)
+            assert self.repository.branches[-1].name == 'request-{}'.format(request)
+
+    def action_gist_list(self, cassette_name, gist=None, gist_list_data=[]):
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            if gist is None:
+                gists = list(self.service.gist_list())
+                for i, g in enumerate(gist_list_data):
+                    assert gists[i] == g
+            else:
+                gist_files = list(self.service.gist_list())
+                for i, gf in enumerate(gist_list_data):
+                    assert gist_files[i] == gf
+
+    def action_gist_clone(self, cassette_name, gist):
+        with self.mockup_git(None, None):
+            self.set_mock_popen_commands([
+                ('git version', b'git version 2.8.0', b'', 0),
+                ('git remote add gist {}.git'.format(gist), b'', b'', 0),
+                ('git pull --progress -v gist master', b'', b'\n'.join([
+                    b'POST git-upload-pack (140 bytes)',
+                    b'remote: Counting objects: 8318, done.',
+                    b'remote: Compressing objects: 100% (3/3), done.',
+                    b'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
+                    b'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
+                    b'Resolving deltas: 100% (5126/5126), done.',
+                    bytes('From {}'.format(gist), 'utf-8'),
+                    b' * branch            master     -> FETCH_HEAD']),
+                0),
+            ])
+            with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+                self.service.connect()
+                self.service.gist_clone(gist)
+
+
+    def action_gist_fetch(self, cassette_name, gist, gist_file=None):
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            content = self.service.gist_fetch(gist, gist_file)
+            return content
+
+    def action_gist_create(self, cassette_name, description, gist_files, secret):
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            content = self.service.gist_create(gist_files, description, secret)
+
+    def action_gist_delete(self, cassette_name, gist):
+        assert False
+
     def action_open(self, cassette_name, namespace, repository):
         self.set_mock_popen_commands([
             ('xdg-open {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),
