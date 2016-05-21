@@ -18,10 +18,6 @@ from tests.helpers import GitRepoTestCase
 from git_repo.services.service import gitlab
 from git_repo.exceptions import ResourceExistsError
 
-# monkey patch requests with session
-from requests import Session
-gitlab.gitlab.requests = Session()
-
 class Test_Gitlab(GitRepoTestCase):
     log = log
 
