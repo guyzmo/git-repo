@@ -486,7 +486,9 @@ class GitRepoTestCase():
             content = self.service.gist_create(gist_files, description, secret)
 
     def action_gist_delete(self, cassette_name, gist):
-        assert False
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            content = self.service.gist_delete(gist)
 
     def action_open(self, cassette_name, namespace, repository):
         self.set_mock_popen_commands([
