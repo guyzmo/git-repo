@@ -118,7 +118,30 @@ class Test_Github(GitRepoTestCase):
                         name='test0r',
                         tracking='github')
 
-    def test_13_open(self):
+    def test_13_request_list(self):
+        self.action_request_list(
+                cassette_name=sys._getframe().f_code.co_name,
+                namespace='guyzmo',
+                repository='git-repo',
+                rq_list_data=[
+            (3, 'docs for fqdn > url', 'https://api.github.com/repos/guyzmo/git-repo/issues/3'),
+            (2, 'prefer gitrepo.<target>.token > privatekey, docs', 'https://api.github.com/repos/guyzmo/git-repo/issues/2'),
+        ])
+
+    def test_14_request_fetch(self):
+        self.action_request_fetch(cassette_name=sys._getframe().f_code.co_name,
+                namespace='guyzmo',
+                repository='git-repo',
+                request='2')
+
+    def test_15_request_fetch__bad_request(self):
+        with pytest.raises(ResourceNotFoundError):
+            self.action_request_fetch(cassette_name=sys._getframe().f_code.co_name,
+                namespace='guyzmo',
+                repository='git-repo',
+                request='1')
+
+    def test_31_open(self):
         self.action_open(cassette_name=sys._getframe().f_code.co_name,
                          namespace='guyzmo',
                          repository='git-repo')
