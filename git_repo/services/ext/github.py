@@ -97,7 +97,7 @@ class GithubService(RepositoryService):
 
     def gist_fetch(self, gist, fname=None):
         try:
-            gist = self.gh.gist(gist.split('https://gist.github.com/')[-1])
+            gist = self.gh.gist(self._format_gist(gist))
         except Exception as err:
             raise ResourceNotFoundError('Could not find gist') from err
         if gist.files == 1 and not fname:
@@ -109,7 +109,7 @@ class GithubService(RepositoryService):
             else:
                 raise ResourceNotFoundError('Could not find file within gist.')
 
-        print(gist_file.content)
+        return gist_file.content
 
     def gist_clone(self, gist):
         try:
@@ -143,7 +143,7 @@ class GithubService(RepositoryService):
 
     def gist_delete(self, gist_id):
         try:
-            gist = self.gh.gist(gist_id.split('https://gist.github.com/')[-1])
+            gist = self.gh.gist(self._format_gist(gist))
             return gist.delete()
         except Exception as err:
             raise ResourceNotFoundError('Could not find gist') from err
