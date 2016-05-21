@@ -1,0 +1,105 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-05-12T18:40:11",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"message\":\"Bad credentials\",\"documentation_url\":\"https://developer.github.com/v3\"}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Content-Length": "83",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Thu, 12 May 2016 18:40:20 GMT",
+          "Server": "GitHub.com",
+          "Status": "401 Unauthorized",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:B215:13F135:5734CE14",
+          "X-RateLimit-Limit": "60",
+          "X-RateLimit-Remaining": "59",
+          "X-RateLimit-Reset": "1463082020",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 401,
+          "message": "Unauthorized"
+        },
+        "url": "https://api.github.com/user"
+      }
+    },
+    {
+      "recorded_at": "2016-05-12T18:40:11",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/gists/42"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"message\":\"Bad credentials\",\"documentation_url\":\"https://developer.github.com/v3\"}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Content-Length": "83",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Thu, 12 May 2016 18:40:20 GMT",
+          "Server": "GitHub.com",
+          "Status": "401 Unauthorized",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:B215:13F189:5734CE14",
+          "X-RateLimit-Limit": "60",
+          "X-RateLimit-Remaining": "58",
+          "X-RateLimit-Reset": "1463082020",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 401,
+          "message": "Unauthorized"
+        },
+        "url": "https://api.github.com/gists/42"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}
