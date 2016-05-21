@@ -321,7 +321,7 @@ class RepositoryService:
         '''
         raise NotImplementedError
 
-    def request_list(self, user, repo):
+    def request_list(self, user, repo): #pragma: no cover
         '''Lists all available request for merging code
         sent to the remote repository
 
