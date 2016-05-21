@@ -8,7 +8,7 @@ Usage:
     {self} [--path=<path>] [-v -v...] <target> create <user>/<repo> [--add]
     {self} [--path=<path>] [-v -v...] <target> delete <user>/<repo> [-f]
     {self} [--path=<path>] [-v -v...] <target> open [<user>/<repo>]
-    {self} [--path=<path>] [-v -v...] <target> gist list [<gist>]
+    {self} [--path=<path>] [-v -v...] <target> gist (list|ls) [<gist>]
     {self} [--path=<path>] [-v -v...] <target> gist clone <gist>
     {self} [--path=<path>] [-v -v...] <target> gist fetch <gist> [<gist_file>]
     {self} [--path=<path>] [-v -v...] <target> gist create [--secret] <description> [<gist_path> <gist_path>...]
@@ -237,9 +237,9 @@ def main(args):
         elif args['gist']:
             service = RepositoryService.get_service(None, args['<target>'])
             service.connect()
-            if args['list']:
                 for gist_file in service.gist_list(args['<gist>']):
                     print(gist_file)
+            if args['list'] or args['ls']:
             elif args['fetch']:
                 # send gist to stdout, not using log.info on purpose here!
                 print(service.gist_fetch(args['<gist>'], args['<gist_file>']))
