@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from tempfile import TemporaryDirectory
-from unittest import TestCase
 from git import Repo, Git
 
 from testfixtures import Replace, ShouldRaise, compare
@@ -59,14 +58,10 @@ class RepositoryMockup(RepositoryService):
     def get_repository(self, *args, **kwarg):
         return {}
 
-class GitRepoMainTestCase(TestCase):
-    def setUp(self):
-        self.log.info('GitRepoMainTestCase')
+class GitRepoMainTestCase():
+    def setup_method(self, method):
+        self.log.info('GitRepoMainTestCase.setup_method({})'.format(method))
         self.tempdir = TemporaryDirectory()
-        self.addCleanup(self.tempdir.cleanup)
-        def reset_service():
-            RepositoryService._current = RepositoryMockup(c={})
-        self.addCleanup(reset_service)
         RepositoryService.service_map = {
             'github': RepositoryMockup,
             'gitlab': RepositoryMockup,
@@ -77,6 +72,11 @@ class GitRepoMainTestCase(TestCase):
             'lab': 'gitlab',
             'bb': 'bitbucket',
         }
+
+    def teardown_method(self, method):
+        self.log.info('GitRepoMainTestCase.teardown_method({})'.format(method))
+        RepositoryService._current = RepositoryMockup(c={})
+        self.tempdir.cleanup()
 
     def setup_args(self, d, args={}):
         cli_args = {
@@ -166,12 +166,11 @@ class GitRepoMainTestCase(TestCase):
             '--path': self.tempdir.name
         }, args)), "Non {} result for no-action".format(rc)
 
-class GitRepoTestCase(TestCase):
-    def setUp(self):
-        self.log.info('GitRepoTestCase')
+class GitRepoTestCase():
+    def setup_method(self, method):
+        self.log.info('GitRepoTestCase.setup_method({})'.format(method))
         # build temporary directory
         self.tempdir = TemporaryDirectory()
-        self.addCleanup(self.tempdir.cleanup)
         # repository mockup (in a temporary place)
         self.repository = Repo.init(self.tempdir.name)
         # setup git command mockup
@@ -200,6 +199,10 @@ class GitRepoTestCase(TestCase):
         http.client.HTTPConnection.debuglevel = 1
         logging.getLogger('requests.packages.urllib3').setLevel(logging.DEBUG)
         logging.getLogger('requests.packages.urllib3').propagate = True
+
+    def teardown_method(self, method):
+        self.log.info('GitRepoTestCase.teardown_method({})'.format(method))
+        self.tempdir.cleanup()
 
     '''popen helper'''
 
