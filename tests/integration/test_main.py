@@ -154,6 +154,54 @@ class Test_Main(GitRepoMainTestCase):
         assert ('guyzmo', 'git-repo') == repo_slug
         assert {'branch': 'foobar', 'clone': True} == seen_args
 
+    def test_gist_list(self):
+        repo_slug, seen_args = self.main_gist_list(0, args={})
+
+    def test_gist_list__with_gist(self):
+        repo_slug, seen_args = self.main_gist_list(0, args={})
+
+    def test_gist_list__with_bad_gist(self):
+        repo_slug, seen_args = self.main_gist_list(0, args={})
+
+    def test_gist_clone__with_gist(self):
+        repo_slug, seen_args = self.main_gist_clone(0, args={})
+
+    def test_gist_clone__with_bad_gist(self):
+        repo_slug, seen_args = self.main_gist_clone(0, args={})
+
+    def test_gist_fetch__with_gist(self, capsys):
+        repo_slug, seen_args = self.main_gist_fetch(capsys, 0, args={})
+
+    def test_gist_fetch__with_bad_gist(self, capsys):
+        repo_slug, seen_args = self.main_gist_fetch(capsys, 0, args={})
+
+    def test_gist_fetch__with_gist_file(self, capsys):
+        repo_slug, seen_args = self.main_gist_fetch(capsys, 0, args={})
+
+    def test_gist_fetch__with_bad_gist_file(self, capsys):
+        repo_slug, seen_args = self.main_gist_fetch(capsys, 0, args={})
+
+    def test_gist_create__gist_file(self):
+        repo_slug, seen_args = self.main_gist_create(0, args={})
+
+    def test_gist_create__gist_file_list(self):
+        repo_slug, seen_args = self.main_gist_create(0, args={})
+
+    def test_gist_create__gist_dir(self):
+        repo_slug, seen_args = self.main_gist_create(0, args={})
+
+    def test_gist_create__gist_file_list_secret(self):
+        repo_slug, seen_args = self.main_gist_create(0, args={})
+
+    def test_gist_create__gist_file_secret(self):
+        repo_slug, seen_args = self.main_gist_create(0, args={})
+
+    def test_gist_create__gist_dir_secret(self):
+        repo_slug, seen_args = self.main_gist_create(0, args={})
+
+    def test_gist_delete(self):
+        repo_slug, seen_args = self.main_gist_delete(0, args={})
+
     def test_open(self):
         repo_slug, seen_args = self.main_open('guyzmo/git-repo', 0)
         assert ('guyzmo', 'git-repo') == repo_slug
