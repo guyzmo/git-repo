@@ -8,7 +8,7 @@ Usage:
     {self} [--path=<path>] [-v -v...] <target> create <user>/<repo> [--add]
     {self} [--path=<path>] [-v -v...] <target> delete <user>/<repo> [-f]
     {self} [--path=<path>] [-v -v...] <target> open [<user>/<repo>]
-    {self} [--path=<path>] [-v -v...] <target> request [<user>/<repo>] list
+    {self} [--path=<path>] [-v -v...] <target> request [<user>/<repo>] (list|ls)
     {self} [--path=<path>] [-v -v...] <target> request [<user>/<repo>] fetch <request>
     {self} --help
 
@@ -179,7 +179,7 @@ def main(args):
                 )
 
             elif args['request']:
-                if args['list']:
+                if args['list'] or args['ls']:
                     log.info('List of open requests to merge:')
                     log.info(" {}\t{}\t{}".format('id', 'title'.ljust(60), 'URL'))
                     for pr in service.request_list(user, repo):
