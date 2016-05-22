@@ -98,7 +98,7 @@
           "User-Agent": "python-requests/2.9.1"
         },
         "method": "DELETE",
-        "uri": "https://gitlab.com/api/v3/projects/1015165?id=1015165"
+        "uri": "https://gitlab.com/api/v3/projects/1015165"
       },
       "response": {
         "body": {
@@ -121,7 +121,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://gitlab.com/api/v3/projects/1015165?id=1015165"
+        "url": "https://gitlab.com/api/v3/projects/1015165"
       }
     }
   ],
