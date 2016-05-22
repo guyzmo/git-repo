@@ -209,7 +209,7 @@ class RepositoryService:
         remote.fetch(':'.join([remote_branch, local_branch]), progress=pb)
         print()
 
-    def clone(self, user, repo, branch='master'):
+    def clone(self, user, repo, branch='master', rw=True):
         '''Clones a new repository
 
         :param user: namespace of the repository
@@ -222,10 +222,10 @@ class RepositoryService:
         '''
         log.info('Cloning {}…'.format(repo))
 
-        remote = self.add(user=user, repo=repo, tracking=True)
+        remote = self.add(user=user, repo=repo, tracking=True, rw=rw)
         self.pull(remote, branch)
 
-    def add(self, repo, user=None, name=None, tracking=False, alone=False):
+    def add(self, repo, user=None, name=None, tracking=False, alone=False, rw=True):
         '''Adding repository as remote
 
         :param repo: Name slug of the repository to add
@@ -262,16 +262,16 @@ class RepositoryService:
         if not alone:
             # if remote all does not exists
             if not all_remote:
-                self.repository.create_remote('all', self.format_path(repo, user, rw=True))
+                self.repository.create_remote('all', self.format_path(repo, user, rw=rw))
             else:
                 url = self.format_path(repo, user, rw=True)
                 # check if url not already in remote all
                 if url not in all_remote.list:
-                    all_remote.set_url(url=self.format_path(repo, user, rw=True), add=True)
+                    all_remote.set_url(url=self.format_path(repo, user, rw=rw), add=True)
 
         # adding "self" as the tracking remote
         if tracking:
-            remote = self.repository.create_remote(name, self.format_path(repo, user, rw=True))
+            remote = self.repository.create_remote(name, self.format_path(repo, user, rw=rw))
             # lookup tracking branch (usually master)
             for branch in self.repository.branches:
                 if tracking == branch.name:
@@ -280,7 +280,7 @@ class RepositoryService:
                     break
             return remote
         else:
-            return self.repository.create_remote(name, self.format_path(repo, user, rw=True))
+            return self.repository.create_remote(name, self.format_path(repo, user, rw=rw))
 
     def open(self, user=None, repo=None):
         '''Open the URL of a repository in the user's browser'''
