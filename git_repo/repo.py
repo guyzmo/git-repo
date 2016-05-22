@@ -8,6 +8,8 @@ Usage:
     {self} [--path=<path>] [-v -v...] <target> create <user>/<repo> [--add]
     {self} [--path=<path>] [-v -v...] <target> delete <user>/<repo> [-f]
     {self} [--path=<path>] [-v -v...] <target> open [<user>/<repo>]
+    {self} [--path=<path>] [-v -v...] <target> request [<user>/<repo>] (list|ls)
+    {self} [--path=<path>] [-v -v...] <target> request [<user>/<repo>] fetch <request>
     {self} [--path=<path>] [-v -v...] <target> gist (list|ls) [<gist>]
     {self} [--path=<path>] [-v -v...] <target> gist clone <gist>
     {self} [--path=<path>] [-v -v...] <target> gist fetch <gist> [<gist_file>]
@@ -24,6 +26,7 @@ Commands:
     create                   Make this repository a new remote on the service
     delete                   Delete the remote repository
     gist                     Manages gist files
+    request                  Handles requests for merge
     open                     Open the given or current repository in a browser
 
 Options:
@@ -159,7 +162,7 @@ def main(args):
             user = None
             repo = args['<user>/<repo>']
 
-        if args['create'] and not args['gist'] or args['add'] or args['delete'] and not args['gist'] or args['open']:
+        if args['create'] and not args['gist'] or args['add'] or args['delete'] and not args['gist'] or args['open'] or args['request']:
             # Try to resolve existing repository path
             try:
                 try:
@@ -201,6 +204,20 @@ def main(args):
                     args['<user>/<repo>'],
                     service.name)
                 )
+
+            elif args['request']:
+                if args['list'] or args['ls']:
+                    log.info('List of open requests to merge:')
+                    log.info(" {}\t{}\t{}".format('id', 'title'.ljust(60), 'URL'))
+                    for pr in service.request_list(user, repo):
+                        print("{}\t{}\t{}".format(pr[0].rjust(3), pr[1][:60].ljust(60), pr[2]))
+                elif args['fetch'] and args['<request>']:
+                    new_branch = service.request_fetch(user, repo, args['<request>'])
+                    log.info('Successfully fetched request id `{}` of `{}` into `{}`!'.format(
+                        args['<request>'],
+                        args['<user>/<repo>'],
+                        new_branch)
+                    )
 
             elif args['open']:
                 RepositoryService.get_service(None, args['<target>']).open(user, repo)

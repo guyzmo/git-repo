@@ -8,6 +8,8 @@ from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundEr
 
 import github3
 
+from git.exc import GitCommandError
+
 @register_target('hub', 'github')
 class GithubService(RepositoryService):
     fqdn = 'github.com'
@@ -147,6 +149,32 @@ class GithubService(RepositoryService):
             raise ResourceNotFoundError('Could not find gist')
         gist.delete()
 
+    def request_list(self, user, repo):
+        repository = self.gh.repository(user, repo)
+        for pull in repository.iter_pulls():
+            yield ( pull.number, pull.title, pull.links['issue'] )
+
+    def request_fetch(self, user, repo, request, pull=False):
+        if pull:
+            raise NotImplementedError('Pull operation on requests for merge are not yet supported')
+        log.info('remotes: {}'.format(self.repository.remotes))
+        try:
+            for remote in self.repository.remotes:
+                log.info('request_fetch, remote_name {}'.format(remote.name))
+                if remote.name == self.name:
+                    local_branch_name = 'request-{}'.format(request)
+                    self.fetch(
+                        remote,
+                        'pull/{}/head'.format(request),
+                        local_branch_name
+                    )
+                    return local_branch_name
+            else:
+                raise ResourceNotFoundError('Could not find remote {}'.format(self.name))
+        except GitCommandError as err:
+            if 'Error when fetching: fatal: Couldn\'t find remote ref' in err.command[0]:
+                raise ResourceNotFoundError('Could not find opened request #{}'.format(request)) from err
+            raise err
 
     @property
     def user(self):

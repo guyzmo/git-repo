@@ -48,9 +48,22 @@ and of course, you can delete it using:
 
     % git bb delete guyzmo/git-repo
 
-You can open the repository's page, using the `open` command:
+Once you're all set with your repository, you can check requests to merge 
+(aka Pull Requests on github) using the `request` command:
+
+    % git hub request guyzmo/git-repo list
+    List of open requests to merge:
+    id     title                                                           URL
+    2     prefer gitrepo.<target>.token > privatekey, docs                https://api.github.com/repos/guyzmo/git-repo/issues/2
+
+And fetch it locally to check and/or amend it before merging:
+
+    % git hub request guyzmo/git-repo fetch 2
+
+Finally, you can open the repository's page, using the `open` command:
 
     % git lab open guyzmo/git-repo
+    Successfully fetched branch `2` of `guyzmo/git-repo` into `request-2`!
 
 Finally, another extra feature you can play with is the gist handling:
 
@@ -210,9 +223,9 @@ To use your own credentials, you can setup the following environment variables:
   * [ ] gitlab support
   * [ ] bitbucket support
 * [ ] add support for handling pull requests
-  * [ ] list them
-  * [ ] fetch them as local branches
-  * [ ] github support
+  * [x] list them
+  * [x] fetch them as local branches
+  * [x] github support
   * [ ] gitlab support
   * [ ] bitbucket support
 * [ ] add OAuth support for bitbucket

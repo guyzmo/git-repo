@@ -30,6 +30,8 @@ class RepositoryMockup(RepositoryService):
         self._did_gist_clone = None
         self._did_gist_create = None
         self._did_gist_delete = None
+        self._did_request_list = None
+        self._did_request_fetch = None
 
     def pull(self, *args, **kwarg):
         self._did_pull = (args, kwarg)
@@ -94,6 +96,18 @@ class RepositoryMockup(RepositoryService):
         if args[0] == 'bad':
             raise Exception('bad gist!')
 
+    def request_list(self, *args, **kwarg):
+        self._did_request_list = (args, kwarg)
+        return [('1', 'desc1', 'http://request/1'),
+                ('2', 'desc2', 'http://request/2'),
+                ('3', 'desc3', 'http://request/3')]
+
+    def request_fetch(self, *args, **kwarg):
+        self._did_request_fetch = (args, kwarg)
+        if args[-1] == 'bad':
+            raise Exception('bad request for merge!')
+        return "pr/42"
+
     @property
     def user(self):
         self._did_user = True
@@ -152,6 +166,8 @@ class GitRepoMainTestCase():
             '<gist>': None,
             '<gist_file>': None,
             '<gist_path>': [],
+            'request': False,
+            '<request>': None,
             '<user>/<repo>': None,
         }
         cli_args.update(d)
@@ -246,6 +262,26 @@ class GitRepoMainTestCase():
             'delete': True,
         }, args)), "Non {} result for gist delete".format(rc)
         return RepositoryService._current._did_gist_delete
+
+    def main_request_list(self, repo, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'request': True,
+            'list': True,
+            '<user>/<repo>': repo,
+            '--clone': True,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for request list".format(rc)
+        return RepositoryService._current._did_request_list
+
+    def main_request_fetch(self, repo, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'request': True,
+            'fetch': True,
+            '<user>/<repo>': repo,
+            '--clone': True,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for request fetch".format(rc)
+        return RepositoryService._current._did_request_fetch
 
     def main_open(self, repo, rc=0, args={}):
         os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
@@ -506,7 +542,7 @@ class GitRepoTestCase():
     def action_request_fetch(self, cassette_name, namespace, repository, request, pull=False):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
             self.service.connect()
-            self.service.clone(namespace, repository)
+            self.service.clone(namespace, repository, rw=False)
             self.service.request_fetch(repository, namespace, request)
             assert self.repository.branches[-1].name == 'request-{}'.format(request)
 
