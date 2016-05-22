@@ -183,7 +183,7 @@ def main(args):
                     log.info('List of open requests to merge:')
                     log.info(" {}\t{}\t{}".format('id', 'title'.ljust(60), 'URL'))
                     for pr in service.request_list(user, repo):
-                        print("{: 3}\t{}\t{}".format(pr[0], pr[1][:60].ljust(60), pr[2]))
+                        print("{}\t{}\t{}".format(pr[0].rjust(3), pr[1][:60].ljust(60), pr[2]))
                 elif args['fetch'] and args['<request>']:
                     new_branch = service.request_fetch(user, repo, args['<request>'])
                     log.info('Successfully fetched request id `{}` of `{}` into `{}`!'.format(
