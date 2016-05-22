@@ -25,6 +25,11 @@ class RepositoryMockup(RepositoryService):
         self._did_create = None
         self._did_fork = None
         self._did_user = False
+        self._did_gist_list = None
+        self._did_gist_fetch = None
+        self._did_gist_clone = None
+        self._did_gist_create = None
+        self._did_gist_delete = None
 
     def pull(self, *args, **kwarg):
         self._did_pull = (args, kwarg)
@@ -49,6 +54,45 @@ class RepositoryMockup(RepositoryService):
 
     def fork(self, *args, **kwarg):
         self._did_fork = (args, kwarg)
+
+    def gist_list(self, *args, **kwarg):
+        self._did_gist_list = (args, kwarg)
+        if len(args) == 0:
+            return [('id1', 'value1'),
+                    ('id2', 'value2'),
+                    ('id3', 'value3')]
+        elif len(args) == 1:
+            if args[0] == 'bad':
+                raise Exception('bad gist!')
+            else:
+                return [('lang1', 'size1', 'name1'),
+                        ('lang2', 'size2', 'name2'),
+                        ('lang3', 'size3', 'name3')]
+
+    def gist_fetch(self, *args, **kwarg):
+        self._did_gist_fetch = (args, kwarg)
+        if args[0] == 'bad':
+            raise Exception('bad gist!')
+        elif args[1] == 'bad':
+            raise Exception('bad gist file!')
+        else:
+            return "content of a gist"
+
+    def gist_clone(self, *args, **kwarg):
+        self._did_gist_clone = (args, kwarg)
+        if args[0] == 'bad':
+            raise Exception('bad gist!')
+
+    def gist_create(self, *args, **kwarg):
+        self._did_gist_create = (args, kwarg)
+        if 'exists' in args[0]:
+            raise Exception('gist exists!')
+        return 'https://gists/42'
+
+    def gist_delete(self, *args, **kwarg):
+        self._did_gist_delete = (args, kwarg)
+        if args[0] == 'bad':
+            raise Exception('bad gist!')
 
     @property
     def user(self):
@@ -101,6 +145,7 @@ class GitRepoMainTestCase():
             'fetch': False,
             'fork': False,
             'list': False,
+            'ls': False,
             'open': False,
             '--secret': False,
             '<description>': None,
@@ -160,23 +205,47 @@ class GitRepoMainTestCase():
         }, args)), "Non {} result for fork".format(rc)
         return RepositoryService._current._did_fork
 
-    def main_request_list(self, repo, rc=0, args={}):
-        assert True
-
-    def main_request_fetch(self, repo, rc=0, args={}):
-        assert True
-
     def main_gist_list(self, rc=0, args={}):
-        assert True
+        assert rc == main(self.setup_args({
+            'gist': True,
+            'list': True,
+        }, args)), "Non {} result for gist list".format(rc)
+        return RepositoryService._current._did_gist_list
 
-    def main_gist_fetch(self, capsys, rc=0, args={}):
-        assert True
+    def main_gist_ls(self, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'gist': True,
+            'ls': True,
+        }, args)), "Non {} result for gist ls".format(rc)
+        return RepositoryService._current._did_gist_list
+
+    def main_gist_clone(self, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'gist': True,
+            'clone': True,
+        }, args)), "Non {} result for gist clone".format(rc)
+        return RepositoryService._current._did_gist_clone
+
+    def main_gist_fetch(self, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'gist': True,
+            'fetch': True,
+        }, args)), "Non {} result for gist fetch".format(rc)
+        return RepositoryService._current._did_gist_fetch
 
     def main_gist_create(self, rc=0, args={}):
-        assert True
+        assert rc == main(self.setup_args({
+            'gist': True,
+            'create': True,
+        }, args)), "Non {} result for gist create".format(rc)
+        return RepositoryService._current._did_gist_create
 
     def main_gist_delete(self, rc=0, args={}):
-        assert True
+        assert rc == main(self.setup_args({
+            'gist': True,
+            'delete': True,
+        }, args)), "Non {} result for gist delete".format(rc)
+        return RepositoryService._current._did_gist_delete
 
     def main_open(self, repo, rc=0, args={}):
         os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
