@@ -83,7 +83,7 @@ class GithubService(RepositoryService):
     def request_list(self, user, repo):
         repository = self.gh.repository(user, repo)
         for pull in repository.iter_pulls():
-            yield ( pull.number, pull.title, pull.links['issue'] )
+            yield ( str(pull.number), pull.title, pull.links['issue'] )
 
     def request_fetch(self, user, repo, request, pull=False):
         if pull:
