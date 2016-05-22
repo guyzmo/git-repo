@@ -157,10 +157,8 @@ class GithubService(RepositoryService):
     def request_fetch(self, user, repo, request, pull=False):
         if pull:
             raise NotImplementedError('Pull operation on requests for merge are not yet supported')
-        log.info('remotes: {}'.format(self.repository.remotes))
         try:
             for remote in self.repository.remotes:
-                log.info('request_fetch, remote_name {}'.format(remote.name))
                 if remote.name == self.name:
                     local_branch_name = 'request/{}'.format(request)
                     self.fetch(
