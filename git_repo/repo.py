@@ -262,11 +262,8 @@ def main(args):
                     if not confirm('gist', args['<gist>']):
                         return 0
 
-                if service.gist_delete(args['<gist>']):
-                    log.info('Successfully deleted gist!')
-                else:
-                    log.info('Failure to delete gist…')
-                    return 2
+                service.gist_delete(args['<gist>'])
+                log.info('Successfully deleted gist!')
             return 0
 
         log.error('Unknown action.')
