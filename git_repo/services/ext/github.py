@@ -152,7 +152,7 @@ class GithubService(RepositoryService):
     def request_list(self, user, repo):
         repository = self.gh.repository(user, repo)
         for pull in repository.iter_pulls():
-            yield ( pull.number, pull.title, pull.links['issue'] )
+            yield ( str(pull.number), pull.title, pull.links['issue'] )
 
     def request_fetch(self, user, repo, request, pull=False):
         if pull:
@@ -162,7 +162,7 @@ class GithubService(RepositoryService):
             for remote in self.repository.remotes:
                 log.info('request_fetch, remote_name {}'.format(remote.name))
                 if remote.name == self.name:
-                    local_branch_name = 'request-{}'.format(request)
+                    local_branch_name = 'request/{}'.format(request)
                     self.fetch(
                         remote,
                         'pull/{}/head'.format(request),

@@ -309,8 +309,6 @@ class Test_Main(GitRepoMainTestCase):
         out, err = capsys.readouterr()
         assert ('guyzmo', 'git-repo', 'bad') == seen_args
         assert {} == extra_args
-        print('out:', out)
-        print('err:', caplog.text)
         assert out == ''
         assert 'Fatal error: bad request for merge!' in caplog.text
 

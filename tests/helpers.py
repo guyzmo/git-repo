@@ -544,7 +544,7 @@ class GitRepoTestCase():
             self.service.connect()
             self.service.clone(namespace, repository, rw=False)
             self.service.request_fetch(repository, namespace, request)
-            assert self.repository.branches[-1].name == 'request-{}'.format(request)
+            assert self.repository.branches[-1].name == 'request/{}'.format(request)
 
     def action_gist_list(self, cassette_name, gist=None, gist_list_data=[]):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
