@@ -450,7 +450,7 @@ class GitRepoTestCase():
     def action_request_fetch(self, cassette_name, namespace, repository, request, pull=False):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
             self.service.connect()
-            self.service.clone(namespace, repository)
+            self.service.clone(namespace, repository, rw=False)
             self.service.request_fetch(repository, namespace, request)
             assert self.repository.branches[-1].name == 'request-{}'.format(request)
 

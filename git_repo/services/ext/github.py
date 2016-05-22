@@ -85,7 +85,7 @@ class GithubService(RepositoryService):
         for pull in repository.iter_pulls():
             yield ( pull.number, pull.title, pull.links['issue'] )
 
-    def request_fetch(self, user, repo, request, pull=False): #pragma: no cover
+    def request_fetch(self, user, repo, request, pull=False):
         if pull:
             raise NotImplementedError('Pull operation on requests for merge are not yet supported')
         log.info('remotes: {}'.format(self.repository.remotes))
