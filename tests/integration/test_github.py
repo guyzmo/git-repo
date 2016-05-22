@@ -306,8 +306,8 @@ class Test_Github(GitRepoTestCase):
                 namespace='guyzmo',
                 repository='git-repo',
                 rq_list_data=[
-            (3, 'docs for fqdn > url', 'https://api.github.com/repos/guyzmo/git-repo/issues/3'),
-            (2, 'prefer gitrepo.<target>.token > privatekey, docs', 'https://api.github.com/repos/guyzmo/git-repo/issues/2'),
+            ('3', 'docs for fqdn > url', 'https://api.github.com/repos/guyzmo/git-repo/issues/3'),
+            ('2', 'prefer gitrepo.<target>.token > privatekey, docs', 'https://api.github.com/repos/guyzmo/git-repo/issues/2'),
         ])
 
     def test_31_request_fetch(self):
