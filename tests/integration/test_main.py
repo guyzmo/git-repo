@@ -154,17 +154,38 @@ class Test_Main(GitRepoMainTestCase):
         assert ('guyzmo', 'git-repo') == repo_slug
         assert {'branch': 'foobar', 'clone': True} == seen_args
 
-    def test_request_list(self):
-        repo_slug, seen_args = self.main_request_list('guyzmo/git-repo', 0,
-                                                      args={})
+    def test_request_list(self, capsys, caplog):
+        from subprocess import call
+        call(['git', 'init', '-q', self.tempdir.name])
+        repo_slug, seen_args = self.main_request_list('guyzmo/git-repo', 0, args={})
+        out, err = capsys.readouterr()
+        assert out ==  '  1\tdesc1                                                       \thttp://request/1\n  2\tdesc2                                                       \thttp://request/2\n  3\tdesc3                                                       \thttp://request/3\n'
+        assert 'id' in caplog.text and 'title' in caplog.text and 'URL' in caplog.text
 
-    def test_request_fetch__request(self):
-        repo_slug, seen_args = self.main_request_fetch('guyzmo/git-repo', 0,
-                                                       args={})
+    def test_request_fetch__request(self, capsys, caplog):
+        from subprocess import call
+        call(['git', 'init', '-q', self.tempdir.name])
+        seen_args, extra_args = self.main_request_fetch('guyzmo/git-repo', 0,
+                args={'<request>': '42'})
+        out, err = capsys.readouterr()
+        assert ('guyzmo', 'git-repo', '42') == seen_args
+        assert {} == extra_args
+        assert out == ''
+        assert 'Successfully fetched request id `42` of `guyzmo/git-repo` into `pr/42`!' in caplog.text
 
-    def test_request_fetch__bad_request(self):
-        repo_slug, seen_args = self.main_request_fetch('guyzmo/git-repo', 0,
-                                                       args={})
+    def test_request_fetch__bad_request(self, capsys, caplog):
+        from subprocess import call
+        call(['git', 'init', '-q', self.tempdir.name])
+        seen_args, extra_args = self.main_request_fetch('guyzmo/git-repo', 2,
+                args={'<request>': 'bad', '--verbose': 0})
+        out, err = capsys.readouterr()
+        assert ('guyzmo', 'git-repo', 'bad') == seen_args
+        assert {} == extra_args
+        print('out:', out)
+        print('err:', caplog.text)
+        assert out == ''
+        assert 'Fatal error: bad request for merge!' in caplog.text
+
     def test_open(self):
         repo_slug, seen_args = self.main_open('guyzmo/git-repo', 0)
         assert ('guyzmo', 'git-repo') == repo_slug

@@ -16,7 +16,7 @@ log = logging.getLogger('test.github')
 from tests.helpers import GitRepoTestCase
 
 from git_repo.services.service import github
-from git_repo.exceptions import ResourceExistsError
+from git_repo.exceptions import ResourceExistsError, ResourceNotFoundError
 
 
 class Test_Github(GitRepoTestCase):
@@ -118,7 +118,12 @@ class Test_Github(GitRepoTestCase):
                         name='test0r',
                         tracking='github')
 
-    def test_13_request_list(self):
+    def test_13_open(self):
+        self.action_open(cassette_name=sys._getframe().f_code.co_name,
+                         namespace='guyzmo',
+                         repository='git-repo')
+
+    def test_14_request_list(self):
         self.action_request_list(
                 cassette_name=sys._getframe().f_code.co_name,
                 namespace='guyzmo',
@@ -128,22 +133,17 @@ class Test_Github(GitRepoTestCase):
             (2, 'prefer gitrepo.<target>.token > privatekey, docs', 'https://api.github.com/repos/guyzmo/git-repo/issues/2'),
         ])
 
-    def test_14_request_fetch(self):
+    def test_15_request_fetch(self):
         self.action_request_fetch(cassette_name=sys._getframe().f_code.co_name,
                 namespace='guyzmo',
                 repository='git-repo',
                 request='2')
 
-    def test_15_request_fetch__bad_request(self):
+    def test_16_request_fetch__bad_request(self):
         with pytest.raises(ResourceNotFoundError):
             self.action_request_fetch(cassette_name=sys._getframe().f_code.co_name,
                 namespace='guyzmo',
                 repository='git-repo',
                 request='1')
-
-    def test_31_open(self):
-        self.action_open(cassette_name=sys._getframe().f_code.co_name,
-                         namespace='guyzmo',
-                         repository='git-repo')
 
 

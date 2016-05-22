@@ -25,6 +25,8 @@ class RepositoryMockup(RepositoryService):
         self._did_create = None
         self._did_fork = None
         self._did_user = False
+        self._did_request_list = None
+        self._did_request_fetch = None
 
     def pull(self, *args, **kwarg):
         self._did_pull = (args, kwarg)
@@ -49,6 +51,18 @@ class RepositoryMockup(RepositoryService):
 
     def fork(self, *args, **kwarg):
         self._did_fork = (args, kwarg)
+
+    def request_list(self, *args, **kwarg):
+        self._did_request_list = (args, kwarg)
+        return [('1', 'desc1', 'http://request/1'),
+                ('2', 'desc2', 'http://request/2'),
+                ('3', 'desc3', 'http://request/3')]
+
+    def request_fetch(self, *args, **kwarg):
+        self._did_request_fetch = (args, kwarg)
+        if args[-1] == 'bad':
+            raise Exception('bad request for merge!')
+        return "pr/42"
 
     @property
     def user(self):
@@ -100,6 +114,7 @@ class GitRepoMainTestCase():
             'fetch': False,
             'fork': False,
             'list': False,
+            'ls': False,
             'open': False,
             'request': False,
             '<request>': None,
@@ -157,10 +172,25 @@ class GitRepoMainTestCase():
         return RepositoryService._current._did_fork
 
     def main_request_list(self, repo, rc=0, args={}):
-        assert True
+        assert rc == main(self.setup_args({
+            'request': True,
+            'list': True,
+            '<user>/<repo>': repo,
+            '--clone': True,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for request list".format(rc)
+        return RepositoryService._current._did_request_list
 
     def main_request_fetch(self, repo, rc=0, args={}):
-        assert True
+        assert rc == main(self.setup_args({
+            'request': True,
+            'fetch': True,
+            '<user>/<repo>': repo,
+            '--clone': True,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for request fetch".format(rc)
+        return RepositoryService._current._did_request_fetch
+
     def main_open(self, repo, rc=0, args={}):
         os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
         Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
@@ -409,6 +439,20 @@ class GitRepoTestCase():
                 elif alone and name:
                     self.assert_added_remote(name)
                     self.assert_tracking_remote(name, tracking)
+
+    def action_request_list(self, cassette_name, namespace, repository, rq_list_data=[]):
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            requests = list(self.service.request_list(user=namespace, repo=repository))
+            for i, rq in enumerate(rq_list_data):
+                assert requests[i] == rq
+
+    def action_request_fetch(self, cassette_name, namespace, repository, request, pull=False):
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            self.service.clone(namespace, repository)
+            self.service.request_fetch(repository, namespace, request)
+            assert self.repository.branches[-1].name == 'request-{}'.format(request)
 
     def action_open(self, cassette_name, namespace, repository):
         self.set_mock_popen_commands([
