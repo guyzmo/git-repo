@@ -112,12 +112,21 @@ class Test_Main(GitRepoMainTestCase):
         assert did_add is None
 
     def test_delete(self):
+        repo_slug, seen_args = self.main_delete('guyzmo/git-repo', 0, args={'--force': True})
+        assert ('git-repo', 'guyzmo') == repo_slug
+        assert {} == seen_args
+
+    def test_delete__ask(self):
+        import io, sys
+        stdin = sys.stdin
+        sys.stdin = io.StringIO('y\nburn!')
         repo_slug, seen_args = self.main_delete('guyzmo/git-repo', 0)
+        sys.stdin = stdin
         assert ('git-repo', 'guyzmo') == repo_slug
         assert {} == seen_args
 
     def test_delete__no_user(self):
-        repo_slug, seen_args = self.main_delete('git-repo', 0)
+        repo_slug, seen_args = self.main_delete('git-repo', 0, args={'--force': True})
         assert ('git-repo',) == repo_slug
         assert {} == seen_args
 

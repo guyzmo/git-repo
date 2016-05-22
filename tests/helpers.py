@@ -137,7 +137,6 @@ class GitRepoMainTestCase(TestCase):
         assert rc == main(self.setup_args({
             'delete': True,
             '<user>/<repo>': repo,
-            '--force': True,
             '--path': self.tempdir.name,
         }, args)), "Non {} result for delete".format(rc)
         return RepositoryService._current._did_delete
