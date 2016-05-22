@@ -86,8 +86,8 @@ setup(name='git-repo',
           'pytest==2.9.1',
           'pytest-cov',
           'pytest-sugar',
-          'pytest-capturelog',
-          'pytest-datadir-ng==1.1.0',
+          'pytest-catchlog',
+          'pytest-datadir-ng',
       ],
       zip_safe=False
       )
