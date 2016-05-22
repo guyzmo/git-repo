@@ -93,7 +93,7 @@ class GithubService(RepositoryService):
             for remote in self.repository.remotes:
                 log.info('request_fetch, remote_name {}'.format(remote.name))
                 if remote.name == self.name:
-                    local_branch_name = 'request-{}'.format(request)
+                    local_branch_name = 'request/{}'.format(request)
                     self.fetch(
                         remote,
                         'pull/{}/head'.format(request),

@@ -452,7 +452,7 @@ class GitRepoTestCase():
             self.service.connect()
             self.service.clone(namespace, repository, rw=False)
             self.service.request_fetch(repository, namespace, request)
-            assert self.repository.branches[-1].name == 'request-{}'.format(request)
+            assert self.repository.branches[-1].name == 'request/{}'.format(request)
 
     def action_open(self, cassette_name, namespace, repository):
         self.set_mock_popen_commands([
