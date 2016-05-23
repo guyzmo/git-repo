@@ -1,0 +1,120 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-05-21T17:32:05",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false,\"name\":\"<GITHUB_NAMESPACE>\",\"company\":null,\"blog\":\"http://<GITHUB_NAMESPACE>.got.nothing.to/blog/\",\"location\":\"Paris\",\"email\":null,\"hireable\":true,\"bio\":null,\"public_repos\":72,\"public_gists\":13,\"followers\":44,\"following\":13,\"created_at\":\"2010-04-27T14:04:09Z\",\"updated_at\":\"2016-03-26T00:48:05Z\"}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "1118",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 21 May 2016 17:32:06 GMT",
+          "ETag": "\"46f3b18c088f857862f3076708248b61\"",
+          "Last-Modified": "Sat, 26 Mar 2016 00:48:05 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:B212:6AD3A95:57409B96",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4991",
+          "X-RateLimit-Reset": "1463855029",
+          "X-Served-By": "4c8b2d4732c413f4b9aefe394bd65569",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/user"
+      }
+    },
+    {
+      "recorded_at": "2016-05-21T17:32:07",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"files\": {\"random-fortune-4.txt\": {\"content\": \"It's hard to tune heavily tuned code.  :-)\\n\\t\\t-- Larry Wall in <199801141725.JAA07555@wall.org>\\n\"}, \"random-fortune-3.txt\": {\"content\": \"You may be right, I may be crazy,\\nBut it just may be a lunatic you're looking for!\\n\\t\\t-- Billy Joel\\n\"}, \"random-fortune-1.txt\": {\"content\": \"Your best consolation is the hope that the things you failed to get weren't\\nreally worth having.\\n\"}, \"random-fortune-2.txt\": {\"content\": \"Spectacularism:\\n\\tA fascination with extreme situations.\\n\\t\\t-- Douglas Coupland, \\\"Generation X: Tales for an Accelerated\\n\\t\\t   Culture\\\"\\n\"}}, \"description\": \"this is a secret test.\", \"public\": false}"
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Length": "679",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "POST",
+        "uri": "https://api.github.com/gists"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"url\":\"https://api.github.com/gists/76a6968618dc897499457c6578095d98\",\"forks_url\":\"https://api.github.com/gists/76a6968618dc897499457c6578095d98/forks\",\"commits_url\":\"https://api.github.com/gists/76a6968618dc897499457c6578095d98/commits\",\"id\":\"76a6968618dc897499457c6578095d98\",\"git_pull_url\":\"https://gist.github.com/76a6968618dc897499457c6578095d98.git\",\"git_push_url\":\"https://gist.github.com/76a6968618dc897499457c6578095d98.git\",\"html_url\":\"https://gist.github.com/76a6968618dc897499457c6578095d98\",\"files\":{\"random-fortune-1.txt\":{\"filename\":\"random-fortune-1.txt\",\"type\":\"text/plain\",\"language\":\"Text\",\"raw_url\":\"https://gist.githubusercontent.com/<GITHUB_NAMESPACE>/76a6968618dc897499457c6578095d98/raw/1d4c746630a25f87cd02492a7ec8c5b210c1ba56/random-fortune-1.txt\",\"size\":97,\"truncated\":false,\"content\":\"Your best consolation is the hope that the things you failed to get weren't\\nreally worth having.\\n\"},\"random-fortune-2.txt\":{\"filename\":\"random-fortune-2.txt\",\"type\":\"text/plain\",\"language\":\"Text\",\"raw_url\":\"https://gist.githubusercontent.com/<GITHUB_NAMESPACE>/76a6968618dc897499457c6578095d98/raw/cf25024b6191ee66fb06c34209686f72d93427cd/random-fortune-2.txt\",\"size\":133,\"truncated\":false,\"content\":\"Spectacularism:\\n\\tA fascination with extreme situations.\\n\\t\\t-- Douglas Coupland, \\\"Generation X: Tales for an Accelerated\\n\\t\\t   Culture\\\"\\n\"},\"random-fortune-3.txt\":{\"filename\":\"random-fortune-3.txt\",\"type\":\"text/plain\",\"language\":\"Text\",\"raw_url\":\"https://gist.githubusercontent.com/<GITHUB_NAMESPACE>/76a6968618dc897499457c6578095d98/raw/9c4c0668b1dc6a61807493fbfcc8967a3f88cc6f/random-fortune-3.txt\",\"size\":99,\"truncated\":false,\"content\":\"You may be right, I may be crazy,\\nBut it just may be a lunatic you're looking for!\\n\\t\\t-- Billy Joel\\n\"},\"random-fortune-4.txt\":{\"filename\":\"random-fortune-4.txt\",\"type\":\"text/plain\",\"language\":\"Text\",\"raw_url\":\"https://gist.githubusercontent.com/<GITHUB_NAMESPACE>/76a6968618dc897499457c6578095d98/raw/e8c73af50ab71d04508c6782a681bbc372eb983a/random-fortune-4.txt\",\"size\":95,\"truncated\":false,\"content\":\"It's hard to tune heavily tuned code.  :-)\\n\\t\\t-- Larry Wall in <199801141725.JAA07555@wall.org>\\n\"}},\"public\":false,\"created_at\":\"2016-05-21T17:32:07Z\",\"updated_at\":\"2016-05-21T17:32:07Z\",\"description\":\"this is a secret test.\",\"comments\":0,\"user\":null,\"comments_url\":\"https://api.github.com/gists/76a6968618dc897499457c6578095d98/comments\",\"owner\":{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false},\"forks\":[],\"history\":[{\"user\":{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false},\"version\":\"bde0d40621152b350e8ad3274f8bcee70746bbd4\",\"committed_at\":\"2016-05-21T17:32:07Z\",\"change_status\":{\"total\":11,\"additions\":11,\"deletions\":0},\"url\":\"https://api.github.com/gists/76a6968618dc897499457c6578095d98/bde0d40621152b350e8ad3274f8bcee70746bbd4\"}],\"truncated\":false}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "4377",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 21 May 2016 17:32:07 GMT",
+          "ETag": "\"57e754fb102aa3b761f1cb8f7271e3de\"",
+          "Location": "https://api.github.com/gists/76a6968618dc897499457c6578095d98",
+          "Server": "GitHub.com",
+          "Status": "201 Created",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:B212:6AD3AA8:57409B96",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4990",
+          "X-RateLimit-Reset": "1463855029",
+          "X-Served-By": "474556b853193c38f1b14328ce2d1b7d",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 201,
+          "message": "Created"
+        },
+        "url": "https://api.github.com/gists"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from tempfile import TemporaryDirectory
-from unittest import TestCase
 from git import Repo, Git
 
 from testfixtures import Replace, ShouldRaise, compare
@@ -26,6 +25,13 @@ class RepositoryMockup(RepositoryService):
         self._did_create = None
         self._did_fork = None
         self._did_user = False
+        self._did_gist_list = None
+        self._did_gist_fetch = None
+        self._did_gist_clone = None
+        self._did_gist_create = None
+        self._did_gist_delete = None
+        self._did_request_list = None
+        self._did_request_fetch = None
 
     def pull(self, *args, **kwarg):
         self._did_pull = (args, kwarg)
@@ -51,6 +57,57 @@ class RepositoryMockup(RepositoryService):
     def fork(self, *args, **kwarg):
         self._did_fork = (args, kwarg)
 
+    def gist_list(self, *args, **kwarg):
+        self._did_gist_list = (args, kwarg)
+        if len(args) == 0:
+            return [('id1', 'value1'),
+                    ('id2', 'value2'),
+                    ('id3', 'value3')]
+        elif len(args) == 1:
+            if args[0] == 'bad':
+                raise Exception('bad gist!')
+            else:
+                return [('lang1', 'size1', 'name1'),
+                        ('lang2', 'size2', 'name2'),
+                        ('lang3', 'size3', 'name3')]
+
+    def gist_fetch(self, *args, **kwarg):
+        self._did_gist_fetch = (args, kwarg)
+        if args[0] == 'bad':
+            raise Exception('bad gist!')
+        elif args[1] == 'bad':
+            raise Exception('bad gist file!')
+        else:
+            return "content of a gist"
+
+    def gist_clone(self, *args, **kwarg):
+        self._did_gist_clone = (args, kwarg)
+        if args[0] == 'bad':
+            raise Exception('bad gist!')
+
+    def gist_create(self, *args, **kwarg):
+        self._did_gist_create = (args, kwarg)
+        if 'exists' in args[0]:
+            raise Exception('gist exists!')
+        return 'https://gists/42'
+
+    def gist_delete(self, *args, **kwarg):
+        self._did_gist_delete = (args, kwarg)
+        if args[0] == 'bad':
+            raise Exception('bad gist!')
+
+    def request_list(self, *args, **kwarg):
+        self._did_request_list = (args, kwarg)
+        return [('1', 'desc1', 'http://request/1'),
+                ('2', 'desc2', 'http://request/2'),
+                ('3', 'desc3', 'http://request/3')]
+
+    def request_fetch(self, *args, **kwarg):
+        self._did_request_fetch = (args, kwarg)
+        if args[-1] == 'bad':
+            raise Exception('bad request for merge!')
+        return "pr/42"
+
     @property
     def user(self):
         self._did_user = True
@@ -59,14 +116,10 @@ class RepositoryMockup(RepositoryService):
     def get_repository(self, *args, **kwarg):
         return {}
 
-class GitRepoMainTestCase(TestCase):
-    def setUp(self):
-        self.log.info('GitRepoMainTestCase')
+class GitRepoMainTestCase():
+    def setup_method(self, method):
+        self.log.info('GitRepoMainTestCase.setup_method({})'.format(method))
         self.tempdir = TemporaryDirectory()
-        self.addCleanup(self.tempdir.cleanup)
-        def reset_service():
-            RepositoryService._current = RepositoryMockup(c={})
-        self.addCleanup(reset_service)
         RepositoryService.service_map = {
             'github': RepositoryMockup,
             'gitlab': RepositoryMockup,
@@ -77,6 +130,11 @@ class GitRepoMainTestCase(TestCase):
             'lab': 'gitlab',
             'bb': 'bitbucket',
         }
+
+    def teardown_method(self, method):
+        self.log.info('GitRepoMainTestCase.teardown_method({})'.format(method))
+        RepositoryService._current = RepositoryMockup(c={})
+        self.tempdir.cleanup()
 
     def setup_args(self, d, args={}):
         cli_args = {
@@ -97,7 +155,20 @@ class GitRepoMainTestCase(TestCase):
             'create': False,
             'delete': False,
             'fork': False,
-            'open': False
+            'gist': False,
+            'fetch': False,
+            'fork': False,
+            'list': False,
+            'ls': False,
+            'open': False,
+            '--secret': False,
+            '<description>': None,
+            '<gist>': None,
+            '<gist_file>': None,
+            '<gist_path>': [],
+            'request': False,
+            '<request>': None,
+            '<user>/<repo>': None,
         }
         cli_args.update(d)
         cli_args.update(args)
@@ -137,7 +208,6 @@ class GitRepoMainTestCase(TestCase):
         assert rc == main(self.setup_args({
             'delete': True,
             '<user>/<repo>': repo,
-            '--force': True,
             '--path': self.tempdir.name,
         }, args)), "Non {} result for delete".format(rc)
         return RepositoryService._current._did_delete
@@ -150,6 +220,68 @@ class GitRepoMainTestCase(TestCase):
             '--path': self.tempdir.name
         }, args)), "Non {} result for fork".format(rc)
         return RepositoryService._current._did_fork
+
+    def main_gist_list(self, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'gist': True,
+            'list': True,
+        }, args)), "Non {} result for gist list".format(rc)
+        return RepositoryService._current._did_gist_list
+
+    def main_gist_ls(self, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'gist': True,
+            'ls': True,
+        }, args)), "Non {} result for gist ls".format(rc)
+        return RepositoryService._current._did_gist_list
+
+    def main_gist_clone(self, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'gist': True,
+            'clone': True,
+        }, args)), "Non {} result for gist clone".format(rc)
+        return RepositoryService._current._did_gist_clone
+
+    def main_gist_fetch(self, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'gist': True,
+            'fetch': True,
+        }, args)), "Non {} result for gist fetch".format(rc)
+        return RepositoryService._current._did_gist_fetch
+
+    def main_gist_create(self, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'gist': True,
+            'create': True,
+        }, args)), "Non {} result for gist create".format(rc)
+        return RepositoryService._current._did_gist_create
+
+    def main_gist_delete(self, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'gist': True,
+            'delete': True,
+        }, args)), "Non {} result for gist delete".format(rc)
+        return RepositoryService._current._did_gist_delete
+
+    def main_request_list(self, repo, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'request': True,
+            'list': True,
+            '<user>/<repo>': repo,
+            '--clone': True,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for request list".format(rc)
+        return RepositoryService._current._did_request_list
+
+    def main_request_fetch(self, repo, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'request': True,
+            'fetch': True,
+            '<user>/<repo>': repo,
+            '--clone': True,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for request fetch".format(rc)
+        return RepositoryService._current._did_request_fetch
 
     def main_open(self, repo, rc=0, args={}):
         os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
@@ -167,12 +299,11 @@ class GitRepoMainTestCase(TestCase):
             '--path': self.tempdir.name
         }, args)), "Non {} result for no-action".format(rc)
 
-class GitRepoTestCase(TestCase):
-    def setUp(self):
-        self.log.info('GitRepoTestCase')
+class GitRepoTestCase():
+    def setup_method(self, method):
+        self.log.info('GitRepoTestCase.setup_method({})'.format(method))
         # build temporary directory
         self.tempdir = TemporaryDirectory()
-        self.addCleanup(self.tempdir.cleanup)
         # repository mockup (in a temporary place)
         self.repository = Repo.init(self.tempdir.name)
         # setup git command mockup
@@ -201,6 +332,10 @@ class GitRepoTestCase(TestCase):
         http.client.HTTPConnection.debuglevel = 1
         logging.getLogger('requests.packages.urllib3').setLevel(logging.DEBUG)
         logging.getLogger('requests.packages.urllib3').propagate = True
+
+    def teardown_method(self, method):
+        self.log.info('GitRepoTestCase.teardown_method({})'.format(method))
+        self.tempdir.cleanup()
 
     '''popen helper'''
 
@@ -270,7 +405,7 @@ class GitRepoTestCase(TestCase):
                 ('git remote add all {}'.format(local_slug), b'', b'', 0),
                 ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
                 ('git version', b'git version 2.8.0', b'', 0),
-                ('git pull -v --progress {} master'.format(self.service.name), b'', '\n'.join([
+                ('git pull --progress -v {} master'.format(self.service.name), b'', '\n'.join([
                     'POST git-upload-pack (140 bytes)',
                     'remote: Counting objects: 8318, done.',
                     'remote: Compressing objects: 100% (3/3), done.',
@@ -297,7 +432,7 @@ class GitRepoTestCase(TestCase):
                 ('git remote add all {}'.format(local_slug), b'', b'', 0),
                 ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
                 ('git version', b'git version 2.8.0', b'', 0),
-                ('git pull -v --progress {} master'.format(self.service.name), b'', '\n'.join([
+                ('git pull --progress -v {} master'.format(self.service.name), b'', '\n'.join([
                     'POST git-upload-pack (140 bytes)',
                     'remote: Counting objects: 8318, done.',
                     'remote: Compressing objects: 100% (3/3), done.',
@@ -321,7 +456,7 @@ class GitRepoTestCase(TestCase):
                 ('git remote add all {}'.format(local_slug), b'', b'', 0),
                 ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
                 ('git version', b'git version 2.8.0', b'', 0),
-                ('git pull -v --progress {} master'.format(self.service.name), b'', '\n'.join([
+                ('git pull --progress -v {} master'.format(self.service.name), b'', '\n'.join([
                     'POST git-upload-pack (140 bytes)',
                     'remote: Counting objects: 8318, done.',
                     'remote: Compressing objects: 100% (3/3), done.',
@@ -396,6 +531,69 @@ class GitRepoTestCase(TestCase):
                 elif alone and name:
                     self.assert_added_remote(name)
                     self.assert_tracking_remote(name, tracking)
+
+    def action_request_list(self, cassette_name, namespace, repository, rq_list_data=[]):
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            requests = list(self.service.request_list(user=namespace, repo=repository))
+            for i, rq in enumerate(rq_list_data):
+                assert requests[i] == rq
+
+    def action_request_fetch(self, cassette_name, namespace, repository, request, pull=False):
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            self.service.clone(namespace, repository, rw=False)
+            self.service.request_fetch(repository, namespace, request)
+            assert self.repository.branches[-1].name == 'request/{}'.format(request)
+
+    def action_gist_list(self, cassette_name, gist=None, gist_list_data=[]):
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            if gist is None:
+                gists = list(self.service.gist_list())
+                for i, g in enumerate(gist_list_data):
+                    assert gists[i] == g
+            else:
+                gist_files = list(self.service.gist_list())
+                for i, gf in enumerate(gist_list_data):
+                    assert gist_files[i] == gf
+
+    def action_gist_clone(self, cassette_name, gist):
+        with self.mockup_git(None, None):
+            self.set_mock_popen_commands([
+                ('git version', b'git version 2.8.0', b'', 0),
+                ('git remote add gist {}.git'.format(gist), b'', b'', 0),
+                ('git pull --progress -v gist master', b'', b'\n'.join([
+                    b'POST git-upload-pack (140 bytes)',
+                    b'remote: Counting objects: 8318, done.',
+                    b'remote: Compressing objects: 100% (3/3), done.',
+                    b'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
+                    b'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
+                    b'Resolving deltas: 100% (5126/5126), done.',
+                    bytes('From {}'.format(gist), 'utf-8'),
+                    b' * branch            master     -> FETCH_HEAD']),
+                0),
+            ])
+            with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+                self.service.connect()
+                self.service.gist_clone(gist)
+
+
+    def action_gist_fetch(self, cassette_name, gist, gist_file=None):
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            content = self.service.gist_fetch(gist, gist_file)
+            return content
+
+    def action_gist_create(self, cassette_name, description, gist_files, secret):
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            content = self.service.gist_create(gist_files, description, secret)
+
+    def action_gist_delete(self, cassette_name, gist):
+        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            self.service.connect()
+            content = self.service.gist_delete(gist)
 
     def action_open(self, cassette_name, namespace, repository):
         self.set_mock_popen_commands([

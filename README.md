@@ -48,9 +48,55 @@ and of course, you can delete it using:
 
     % git bb delete guyzmo/git-repo
 
+Once you're all set with your repository, you can check requests to merge 
+(aka Pull Requests on github) using the `request` command:
+
+    % git hub request guyzmo/git-repo list
+    List of open requests to merge:
+    id     title                                                           URL
+    2     prefer gitrepo.<target>.token > privatekey, docs                https://api.github.com/repos/guyzmo/git-repo/issues/2
+
+And fetch it locally to check and/or amend it before merging:
+
+    % git hub request guyzmo/git-repo fetch 2
+
 Finally, you can open the repository's page, using the `open` command:
 
     % git lab open guyzmo/git-repo
+    Successfully fetched branch `2` of `guyzmo/git-repo` into `request-2`!
+
+Finally, another extra feature you can play with is the gist handling:
+
+    % git hub gist list
+    id                                                              title
+    https://gist.github.com/4a0dd9177524b2b125e9166640666737        This is a test gist
+
+Then you can list files within it:
+
+    % git hub gist list a7ce4fddba7744ddf335
+    language         size  name
+    Python           1048  unicode_combined.py
+    % git hub -v gist list https://gist.github.com/4a0dd9177524b2b125e9166640666737
+    language         size  name
+    Markdown         16    README.md
+    Text             14    LICENSE
+    reStructuredText 17    README.rst
+
+to output it locally, you can use the fetch command (and specify the file if there's more than one):
+
+    % git hub gist fetch https://gist.github.com/a7ce4fddba7744ddf335 > mygist.py
+    % git hub gist fetch 4a0dd9177524b2b125e9166640666737 LICENSE > LICENSE_from_gist
+
+but for more thorough modifications or consulting, you can as well clone it:
+
+    % git hub gist clone 4a0dd9177524b2b125e9166640666737
+    Pulling from github |████████████████████████████████|
+    Successfully cloned `4a0dd9177524b2b125e9166640666737` into `./4a0dd9177524b2b125e9166640666737`!
+
+And when you're done you just get rid of it:
+
+    % git hub gist -f delete 4a0dd9177524b2b125e9166640666737
+    Successfully deleted gist!
 
 > *Nota Bene*: Thanks to `git` CLI flexibility, by installing `git-repo` you directly
 > have acces to the tool using `git-repo hub …` or `git repo hub …`. For the
@@ -77,13 +123,13 @@ To configure `git-repo` you need to tweak your `~/.gitconfig`. For each service
 you've got an account on, you have to make a section in the gitconfig:
 
     [gitrepo "gitlab"]
-        private_token = YourVerySecretKey
+        token = YourVerySecretKey
 
     [gitrepo "github"]
-        private_token = YourOtherVerySecretKey
+        token = YourOtherVerySecretKey
 
     [gitrepo "bitbucket"]
-        private_token = username:password
+        token = username:password
 
 Here, we're setting the basics: just the private token. You'll notice that for bitbucket
 the private token is your username and password seperated by a column. That's because
@@ -94,7 +140,7 @@ You also have the ability to set up an alias:
 
     [gitrepo "bitbucket"]
         alias = bit
-        private_token = username:password
+        token = username:password
 
 that will change the command you use for a name you'll prefer to handle actions
 for the service you use:
@@ -105,7 +151,7 @@ Also, you can setup your own gitlab self-hosted server, using that configuration
 
     [gitrepo "myprecious"]
         type = gitlab
-        private_token = YourSuperPrivateKey
+        token = YourSuperPrivateKey
         fqdn = gitlab.example.org
 
 Finally, to make it really cool, you can make a few aliases in your gitconfig:
@@ -173,13 +219,20 @@ To use your own credentials, you can setup the following environment variables:
 * [x] add regression tests (and actually find a smart way to implement them…)
 * [x] add travis build
 * [ ] add support for handling gists
-* [ ] add support for handling pull requests 
-  * [ ] list them
-  * [ ] fetch them as local branches
+  * [x] github support
+  * [ ] gitlab support
+  * [ ] bitbucket support
+* [ ] add support for handling pull requests
+  * [x] list them
+  * [x] fetch them as local branches
+  * [x] github support
+  * [ ] gitlab support
+  * [ ] bitbucket support
 * [ ] add OAuth support for bitbucket
 * [ ] show a nice progress bar, while it's fetching
   * partly implemented: the issue looks like that gitpython expects output from git
     on stderr, whereas it's outputing on stdout.
+* [ ] do what's needed to make a nice documentation (if possible in markdown !@#$)
 * for more features, write an issue or, even better, a PR!
 
 ### License

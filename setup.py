@@ -36,7 +36,7 @@ class dist_clean(Command):
         print("Repository is now clean!")
 
 setup(name='git-repo',
-      version='1.5.2',
+      version='1.6.0',
       description='Tool for managing remote repositories from your git CLI!',
       classifiers=[
           # 'Development Status :: 2 - Pre-Alpha',
@@ -67,11 +67,11 @@ setup(name='git-repo',
       include_package_data = True,
       install_requires=[
             'docopt',
-            'GitPython',
-            'progress',
-            'python-gitlab',
-            'github3.py',
-            'bitbucket-api',
+            'GitPython==2.0.2',
+            'progress==1.2',
+            'python-gitlab==0.13',
+            'github3.py==0.9.5',
+            'bitbucket-api==0.5.0',
       ],
       cmdclass={'dist_clean': dist_clean},
       entry_points="""
@@ -83,10 +83,11 @@ setup(name='git-repo',
       packages=find_packages(exclude=['tests']),
       test_suite='pytest',
       tests_require=[
-          'pytest',
+          'pytest==2.9.1',
           'pytest-cov',
           'pytest-sugar',
-          'pytest-capturelog'
+          'pytest-catchlog',
+          'pytest-datadir-ng',
       ],
       zip_safe=False
       )

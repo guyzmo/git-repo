@@ -1,0 +1,119 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-05-12T17:36:58",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false,\"name\":\"<GITHUB_NAMESPACE>\",\"company\":null,\"blog\":\"http://<GITHUB_NAMESPACE>.got.nothing.to/blog/\",\"location\":\"Paris\",\"email\":null,\"hireable\":true,\"bio\":null,\"public_repos\":72,\"public_gists\":10,\"followers\":44,\"following\":13,\"created_at\":\"2010-04-27T14:04:09Z\",\"updated_at\":\"2016-03-26T00:48:05Z\"}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "1118",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Thu, 12 May 2016 17:37:07 GMT",
+          "ETag": "\"0aa481b18bc60170aa178c9983d294fc\"",
+          "Last-Modified": "Sat, 26 Mar 2016 00:48:05 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:2CBA:8FDACD2:5734BF43",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4984",
+          "X-RateLimit-Reset": "1463075761",
+          "X-Served-By": "4c8b2d4732c413f4b9aefe394bd65569",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/user"
+      }
+    },
+    {
+      "recorded_at": "2016-05-12T17:36:59",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/gists/10118958"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"url\":\"https://api.github.com/gists/10118958\",\"forks_url\":\"https://api.github.com/gists/10118958/forks\",\"commits_url\":\"https://api.github.com/gists/10118958/commits\",\"id\":\"10118958\",\"git_pull_url\":\"https://gist.github.com/10118958.git\",\"git_push_url\":\"https://gist.github.com/10118958.git\",\"html_url\":\"https://gist.github.com/10118958\",\"files\":{\"i2c_scanner.c\":{\"filename\":\"i2c_scanner.c\",\"type\":\"text/plain\",\"language\":\"C\",\"raw_url\":\"https://gist.githubusercontent.com/<GITHUB_NAMESPACE>/10118958/raw/bbc8ec3611c82adb71f55c524cda9a92529b9563/i2c_scanner.c\",\"size\":2542,\"truncated\":false,\"content\":\"// by @<GITHUB_NAMESPACE> under WTFPL license\\n// http://i.got.nothing.to/hack/on/run-the-sl030-rfid-reader-on-linux/\\n\\n#include <errno.h>\\n#include <string.h>\\n#include <stdio.h>\\n#include <stdlib.h>\\n#include <unistd.h>\\n#include <linux/i2c-dev.h>\\n#include <sys/ioctl.h>\\n#include <sys/types.h>\\n#include <sys/stat.h>\\n#include <fcntl.h>\\n#include <time.h>\\n\\nconst char STATUS[][32] = {\\n    /*0x00*/ \\\"Operation succeed\\\",\\n    /*0x01*/ \\\"No tag\\\",\\n    /*0x02*/ \\\"Login succeed\\\",\\n    /*0x03*/ \\\"Login fail\\\",\\n    /*0x04*/ \\\"Read fail\\\",\\n    /*0x05*/ \\\"Write fail\\\",\\n    /*0x06*/ \\\"Unable to read after write\\\",\\n    /*0x08*/ \\\"Address overflow\\\",\\n    /*0x09*/ \\\"Download Key fail\\\",\\n    /*0x0A*/ \\\"Collision occur\\\",\\n    /*0x0C*/ \\\"Load key fail\\\",\\n    /*0x0D*/ \\\"Not authenticate\\\",\\n    /*0x0E*/ \\\"Not a value block\\\"\\n};\\n\\nint main(void) {\\n    int file;\\n    char filename[40];\\n    const char *buffer;\\n    int addr = 0x50; // Addr of SL030\\n\\n    sprintf(filename,\\\"/dev/i2c-3\\\");\\n    if ((file = open(filename,O_RDWR)) < 0) {\\n        printf(\\\"Failed to open the bus.\\\");\\n        exit(1);\\n    }\\n\\n    if (ioctl(file,I2C_SLAVE,addr) < 0) {\\n        printf(\\\"Failed to acquire bus access and/or talk to slave.\\\\n\\\");\\n        exit(1);\\n    }\\n    char buf[128] = {0};\\n    for (int i=0;i<128;++i) buf[i] = 0;\\n\\n    // ------------ WRITE COMMAND ------------------\\n    unsigned char reg = 0x01; // Device register to access\\n    buf[0] = 1;\\n    buf[1] = reg;\\n\\n    if (write(file,buf,2) != 2) {\\n        // ERROR HANDLING: i2c transaction failed\\n        printf(\\\"Failed to write to the i2c bus.\\\\n\\\");\\n        buffer = strerror(errno);\\n        printf(buffer);\\n        printf(\\\"\\\\n\\\\n\\\");\\n    } else {\\n    printf(\\\"write success\\\\n\\\\n\\\");\\n    }\\n\\n    for (int i=0;i<128;++i) buf[i] = 0;\\n\\n    struct timespec tim, tim2;\\n    tim.tv_sec = 0;\\n    tim.tv_nsec = 20000000;\\n    nanosleep(&tim,&tim2);\\n\\n    // ------------ READ CARD STATUS ------------------\\n    unsigned short len=0;\\n    unsigned short cmd=0;\\n    unsigned short sta=0;\\n    // Using I2C Read\\n    if (read(file,buf,128) <= 0) {\\n        // ERROR HANDLING: i2c transaction failed\\n        printf(\\\"Failed to read from the i2c bus.\\\\n\\\");\\n        buffer = strerror(errno);\\n        printf(buffer);\\n        printf(\\\"\\\\n\\\\n\\\");\\n    return 1;\\n    }\\n    len = (unsigned short)buf[0];\\n    cmd = (unsigned short)buf[1];\\n    sta = (unsigned short)buf[2];\\n\\n    printf(\\\"Length:  %d\\\\n\\\",len);\\n    printf(\\\"Command: 0x%02X\\\\n\\\",cmd);\\n    printf(\\\"Status:  %s\\\\n\\\",STATUS[sta]);\\n    printf(\\\"Data: \\\");\\n    for (int i=3;i<len;++i)\\n        printf(\\\"%02X;\\\", buf[i]);\\n\\n    printf(\\\"\\\\n\\\\n\\\");\\n\\n    return 0;\\n}\\n\"}},\"public\":true,\"created_at\":\"2014-04-08T12:48:36Z\",\"updated_at\":\"2015-08-29T13:58:21Z\",\"description\":\"I2C scanner code for SL030\",\"comments\":0,\"user\":null,\"comments_url\":\"https://api.github.com/gists/10118958/comments\",\"owner\":{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false},\"forks\":[],\"history\":[{\"user\":{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false},\"version\":\"1794496ade34a2f6ec3ef3c1d840fffe556759bc\",\"committed_at\":\"2014-04-08T12:48:36Z\",\"change_status\":{\"total\":100,\"additions\":100,\"deletions\":0},\"url\":\"https://api.github.com/gists/10118958/1794496ade34a2f6ec3ef3c1d840fffe556759bc\"}],\"truncated\":false}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "5510",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Thu, 12 May 2016 17:37:07 GMT",
+          "ETag": "\"49e4017004bf84384ff37dc98c10a165\"",
+          "Last-Modified": "Sat, 26 Mar 2016 00:48:05 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:2CBA:8FDAD26:5734BF43",
+          "X-OAuth-Scopes": "delete_repo, gist, repo",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4983",
+          "X-RateLimit-Reset": "1463075761",
+          "X-Served-By": "01d096e6cfe28f8aea352e988c332cd3",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/gists/10118958"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

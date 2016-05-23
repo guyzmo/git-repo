@@ -138,11 +138,13 @@ class RepositoryService:
                 self.name = name
         # if not in the configuration file, retrieve the private key from the
         # environment (useful for travis configuration), otherwise, make it None.
-        # using "privatekey" or "private_token" in configuration file to avoid
+        # using "token" > "private_token" > "privatekey" in configuration file to avoid
         # confusion with the SSH keys (yes that happened).
+        # NB: `git config` doesn't parse underscores in option names, token.
         self._privatekey = os.environ.get('PRIVATE_KEY_{}'.format(self.name.upper()),
-                                          c.get('private_token',
-                                                c.get('privatekey', None)))
+                                          c.get('token',
+                                                c.get('private_token',
+                                                      c.get('privatekey', None))))
         self._alias = c.get('alias', self.name)
         self.fqdn = c.get('fqdn', self.fqdn)
 
@@ -199,7 +201,17 @@ class RepositoryService:
             remote.pull(progress=pb)
         print()
 
-    def clone(self, user, repo, branch='master'):
+    def fetch(self, remote, remote_branch, local_branch):
+        '''Pull a repository
+        :param remote: git-remote instance
+        :param branch: name of the branch to pull
+        '''
+        pb = ProgressBar()
+        pb.setup(self.name)
+        remote.fetch(':'.join([remote_branch, local_branch]), progress=pb)
+        print()
+
+    def clone(self, user, repo, branch='master', rw=True):
         '''Clones a new repository
 
         :param user: namespace of the repository
@@ -212,10 +224,10 @@ class RepositoryService:
         '''
         log.info('Cloning {}…'.format(repo))
 
-        remote = self.add(user=user, repo=repo, tracking=True)
+        remote = self.add(user=user, repo=repo, tracking=True, rw=rw)
         self.pull(remote, branch)
 
-    def add(self, repo, user=None, name=None, tracking=False, alone=False):
+    def add(self, repo, user=None, name=None, tracking=False, alone=False, rw=True):
         '''Adding repository as remote
 
         :param repo: Name slug of the repository to add
@@ -252,16 +264,16 @@ class RepositoryService:
         if not alone:
             # if remote all does not exists
             if not all_remote:
-                self.repository.create_remote('all', self.format_path(repo, user, rw=True))
+                self.repository.create_remote('all', self.format_path(repo, user, rw=rw))
             else:
                 url = self.format_path(repo, user, rw=True)
                 # check if url not already in remote all
                 if url not in all_remote.list:
-                    all_remote.set_url(url=self.format_path(repo, user, rw=True), add=True)
+                    all_remote.set_url(url=self.format_path(repo, user, rw=rw), add=True)
 
         # adding "self" as the tracking remote
         if tracking:
-            remote = self.repository.create_remote(name, self.format_path(repo, user, rw=True))
+            remote = self.repository.create_remote(name, self.format_path(repo, user, rw=rw))
             # lookup tracking branch (usually master)
             for branch in self.repository.branches:
                 if tracking == branch.name:
@@ -270,7 +282,7 @@ class RepositoryService:
                     break
             return remote
         else:
-            return self.repository.create_remote(name, self.format_path(repo, user, rw=True))
+            return self.repository.create_remote(name, self.format_path(repo, user, rw=rw))
 
     def open(self, user=None, repo=None):
         '''Open the URL of a repository in the user's browser'''
@@ -304,6 +316,60 @@ class RepositoryService:
     def fork(self, user, repo, clone=False): #pragma: no cover
         '''Forks a new remote repository on the service
         and pulls commits from it
+
+        :param repo: name of the repository to create
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
+    def gist_list(self):
+        '''Lists gists
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
+    def gist_fetch(self, gist): #pragma: no cover
+        '''Fetches a published gist
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
+    def gist_clone(self, gist): #pragma: no cover
+        '''Clones a gist
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
+    def gist_create(self, gist_path, secret=False): #pragma: no cover
+        '''Pushes a new gist
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
+    def gist_delete(self, gist_path, secret=False): #pragma: no cover
+        '''Deletes a new gist
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
+    def request_list(self, user, repo): #pragma: no cover
+        '''Lists all available request for merging code
+        sent to the remote repository
+
+        :param repo: name of the repository to create
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
+    def request_fetch(self, user, repo, request, pull=False): #pragma: no cover
+        '''Fetches given request as a branch, and switch if pull is true
 
         :param repo: name of the repository to create
 

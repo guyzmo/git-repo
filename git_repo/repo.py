@@ -8,6 +8,13 @@ Usage:
     {self} [--path=<path>] [-v -v...] <target> create <user>/<repo> [--add]
     {self} [--path=<path>] [-v -v...] <target> delete <user>/<repo> [-f]
     {self} [--path=<path>] [-v -v...] <target> open [<user>/<repo>]
+    {self} [--path=<path>] [-v -v...] <target> request [<user>/<repo>] (list|ls)
+    {self} [--path=<path>] [-v -v...] <target> request [<user>/<repo>] fetch <request>
+    {self} [--path=<path>] [-v -v...] <target> gist (list|ls) [<gist>]
+    {self} [--path=<path>] [-v -v...] <target> gist clone <gist>
+    {self} [--path=<path>] [-v -v...] <target> gist fetch <gist> [<gist_file>]
+    {self} [--path=<path>] [-v -v...] <target> gist create [--secret] <description> [<gist_path> <gist_path>...]
+    {self} [--path=<path>] [-v -v...] <target> gist delete <gist> [-f]
     {self} --help
 
 Tool for managing remote repository services.
@@ -18,15 +25,13 @@ Commands:
     fork                     Fork (and clone) the repository from the service
     create                   Make this repository a new remote on the service
     delete                   Delete the remote repository
+    gist                     Manages gist files
+    request                  Handles requests for merge
     open                     Open the given or current repository in a browser
 
 Options:
     <user>/<repo>            Repository to work with
-    <branch>                 Branch to pull (when cloning) [default: master]
     -p,--path=<path>         Path to work on [default: .]
-    -f,--force               Do not ask for confirmation
-    --clone                  Clone locally after fork
-    --add                    Add to local repository after creation
     -v,--verbose             Makes it more chatty (repeat twice to see git commands)
     -h,--help                Shows this message
 
@@ -35,22 +40,41 @@ Options for add:
     -t,--tracking <branch>   Makes this remote tracking for the current branch
     -a,--alone               Does not add the remote to the 'all' remote
 
+Options for fork and clone:
+    <branch>                 Branch to pull (when cloning) [default: master]
+    --clone                  Clone locally after fork
+
+Options for create:
+    --add                    Add to local repository after creation
+
+Options for delete:
+    -f,--force               Do not ask for confirmation
+
+Options for gist:
+    <gist>                   Identifier of the gist to fetch
+    <gist_file>              Name of the file to fetch
+    <gist_path>              Name of the file or directory to use for a new gist.
+                             If path is a directory, all files directly within it
+                             will be pushed. If a list of path is given, all files
+                             from them will be pushed.
+    --secret                 Do not publicize gist when pushing
+
 Configuration options:
     alias                    Name to use for the git remote
     url                      URL of the repository
-    private-key              Private key to use for connecting to the service
+    fqdn                     URL of the repository
     type                     Name of the service to use (github, gitlab, bitbucket)
 
 Configuration example:
 
 [gitrepo "gitlab"]
-    private-key = YourSecretKey
+    token = yourapitoken
     alias = lab
 
 [gitrepo "personal"]
     type = gitlab
-    private-key = YourSecretKey
-    url = http://custom.org
+    token = yourapitoken
+    fqdn = custom.org
 
 {self} version {version}, Copyright ⓒ2016 Bernard `Guyzmo` Pratz
 {self} comes with ABSOLUTELY NO WARRANTY; for more informations
@@ -82,6 +106,19 @@ from .services.service import RepositoryService
 
 from git import Repo, Git
 from git.exc import InvalidGitRepositoryError, NoSuchPathError
+
+def confirm(what, where):
+    ans = input('Are you sure you want to delete the '
+                '{} {} from the service?\n[yN]> '.format(what, where))
+    if 'y' in ans:
+        ans = input('Are you really sure? there\'s no coming back!\n'
+                    '[type \'burn!\' to proceed]> ')
+        if 'burn!' != ans:
+            return False
+    else:
+        return False
+    return True
+
 
 def main(args):
     try:
@@ -116,7 +153,7 @@ def main(args):
         if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys(): #pragma: no cover
             del os.environ['GIT_WORK_TREE']
 
-        if '/' in args['<user>/<repo>']:
+        if args['<user>/<repo>'] and '/' in args['<user>/<repo>']:
             if len(args['<user>/<repo>'].split('/')) > 2:
                 raise ArgumentError('Too many slashes.'
                                     'Format of the parameter is <user>/<repo> or <repo>.')
@@ -125,7 +162,7 @@ def main(args):
             user = None
             repo = args['<user>/<repo>']
 
-        if args['create'] or args['add'] or args['delete'] or args['open']:
+        if args['create'] and not args['gist'] or args['add'] or args['delete'] and not args['gist'] or args['open'] or args['request']:
             # Try to resolve existing repository path
             try:
                 try:
@@ -156,14 +193,7 @@ def main(args):
 
             elif args['delete']:
                 if not args['--force']: # pragma: no cover
-                    ans = input('Are you sure you want to delete the repository '
-                                '{} from the server?\n[yN]> '.format(args['<user>/<repo>']))
-                    if 'y' in ans:
-                        ans = input('Are you really sure? there\'s no coming back!\n'
-                                    '[type \'burn!\' to proceed]> ')
-                        if 'burn!' != ans:
-                            return 0
-                    else:
+                    if not confirm('repository', args['<user>/<repo>']):
                         return 0
 
                 if user:
@@ -174,6 +204,20 @@ def main(args):
                     args['<user>/<repo>'],
                     service.name)
                 )
+
+            elif args['request']:
+                if args['list'] or args['ls']:
+                    log.info('List of open requests to merge:')
+                    log.info(" {}\t{}\t{}".format('id', 'title'.ljust(60), 'URL'))
+                    for pr in service.request_list(user, repo):
+                        print("{}\t{}\t{}".format(pr[0].rjust(3), pr[1][:60].ljust(60), pr[2]))
+                elif args['fetch'] and args['<request>']:
+                    new_branch = service.request_fetch(user, repo, args['<request>'])
+                    log.info('Successfully fetched request id `{}` of `{}` into `{}`!'.format(
+                        args['<request>'],
+                        args['<user>/<repo>'],
+                        new_branch)
+                    )
 
             elif args['open']:
                 RepositoryService.get_service(None, args['<target>']).open(user, repo)
@@ -196,7 +240,7 @@ def main(args):
                 raise FileExistsError('Cannot clone repository, '
                                       'a folder named {} already exists!'.format(repo))
 
-        elif args['clone']:
+        elif args['clone'] and not args['gist']:
             repo_path = os.path.join(args['--path'], repo)
             repository = Repo.init(repo_path)
             service = RepositoryService.get_service(repository, args['<target>'])
@@ -205,6 +249,38 @@ def main(args):
                 service.format_path(args['<user>/<repo>']),
                 repo_path)
             )
+            return 0
+
+        elif args['gist']:
+            service = RepositoryService.get_service(None, args['<target>'])
+            service.connect()
+            if args['list'] or args['ls']:
+                if args['<gist>']:
+                    log.info("{:15}\t{:>7}\t{}".format('language', 'size', 'name'))
+                    for gist_file in service.gist_list(args['<gist>']):
+                        print("{:15}\t{:7}\t{}".format(*gist_file))
+                else:
+                    log.info("{:56}\t{}".format('id', 'title'.ljust(60)))
+                    for gist in service.gist_list():
+                        print( "{:56}\t{}".format(gist[0], gist[1]))
+            elif args['fetch']:
+                # send gist to stdout, not using log.info on purpose here!
+                print(service.gist_fetch(args['<gist>'], args['<gist_file>']))
+            elif args['clone']:
+                repo_path = os.path.join(args['--path'], args['<gist>'].split('/')[-1])
+                service.repository = Repo.init(repo_path)
+                service.gist_clone(args['<gist>'])
+                log.info('Successfully cloned `{}` into `{}`!'.format( args['<gist>'], repo_path))
+            elif args['create']:
+                url = service.gist_create(args['<gist_path>'], args['<description>'], args['--secret'])
+                log.info('Successfully created gist `{}`!'.format(url))
+            elif args['delete']:
+                if not args['--force']: # pragma: no cover
+                    if not confirm('gist', args['<gist>']):
+                        return 0
+
+                service.gist_delete(args['<gist>'])
+                log.info('Successfully deleted gist!')
             return 0
 
         log.error('Unknown action.')
