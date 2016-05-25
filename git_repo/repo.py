@@ -104,10 +104,16 @@ if sys.version_info.major < 3: # pragma: no cover
 from .exceptions import ArgumentError
 from .services.service import RepositoryService
 
+from .kwargparse import KeywordArgumentParser, store_parameter, register_action
+
 from git import Repo, Git
 from git.exc import InvalidGitRepositoryError, NoSuchPathError
 
 def confirm(what, where):
+    '''
+    Method to show a CLI based confirmation message, waiting for a yes/no answer.
+    "what" and "where" are used to better define the message.
+    '''
     ans = input('Are you sure you want to delete the '
                 '{} {} from the service?\n[yN]> '.format(what, where))
     if 'y' in ans:
@@ -120,18 +126,42 @@ def confirm(what, where):
     return True
 
 
-def main(args):
-    try:
-        if args['--verbose'] >= 5:  # pragma: no cover
-            print(args)
-        if args['--verbose'] >= 4:  # pragma: no cover
+class GitRepoRunner(KeywordArgumentParser):
+
+    def init(self): # pragma: no cover
+        if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys():
+            del os.environ['GIT_WORK_TREE']
+
+    def get_service(self, resolve=True):
+        if not resolve:
+            service = RepositoryService.get_service(None, self.target)
+            service.connect()
+        else:
+            # Try to resolve existing repository path
+            try:
+                try:
+                    repository = Repo(os.path.join(self.path, self.repo_name))
+                except NoSuchPathError:
+                    repository = Repo(self.path)
+            except InvalidGitRepositoryError:
+                raise FileNotFoundError('Cannot find path to the repository.')
+            service = RepositoryService.get_service(repository, self.target)
+        return service
+
+    '''Argument storage'''
+
+    @store_parameter('--verbose')
+    def set_verbosity(self, verbose): # pragma: no cover
+        if verbose >= 5:
+            print(self.args)
+        if verbose >= 4:
             import http.client
             http.client.HTTPConnection.debuglevel = 1
             logging.getLogger("requests.packages.urllib3").setLevel(logging.DEBUG)
             logging.getLogger("requests.packages.urllib3").propagate = True
-        if args['--verbose'] >= 3: # pragma: no cover
+        if verbose >= 3:
             Git.GIT_PYTHON_TRACE = 'full'
-        if args['--verbose'] >= 2: # pragma: no cover
+        if verbose >= 2:
             Git.GIT_PYTHON_TRACE = True
             FORMAT = '> %(message)s'
             formatter = logging.Formatter(fmt=FORMAT)
@@ -139,158 +169,200 @@ def main(args):
             handler.setFormatter(formatter)
             logging.getLogger('git.cmd').removeHandler(logging.NullHandler())
             logging.getLogger('git.cmd').addHandler(handler)
-        if args['--verbose'] >= 1: # pragma: no cover
+        if verbose >= 1:
             log_root.setLevel(logging.DEBUG)
-        else: #pragma: no cover
+        else:
             log_root.setLevel(logging.INFO)
 
         log.addHandler(logging.StreamHandler())
 
-        # FIXME workaround for default value that is not correctly parsed in docopt
-        if args['<branch>'] == None:
-            args['<branch>'] = 'master'
-
-        if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys(): #pragma: no cover
-            del os.environ['GIT_WORK_TREE']
-
-        if args['<user>/<repo>'] and '/' in args['<user>/<repo>']:
-            if len(args['<user>/<repo>'].split('/')) > 2:
+    @store_parameter('<user>/<repo>')
+    def set_repo_slug(self, repo_slug):
+        self.repo_slug = repo_slug
+        if repo_slug and '/' in repo_slug:
+            self.user_name, self.repo_name, *overflow = repo_slug.split('/')
+            if len(overflow) != 0:
                 raise ArgumentError('Too many slashes.'
                                     'Format of the parameter is <user>/<repo> or <repo>.')
-            user, repo = args['<user>/<repo>'].split('/')
         else:
-            user = None
-            repo = args['<user>/<repo>']
+            self.user_name = None
+            self.repo_name = repo_slug
 
-        if args['create'] and not args['gist'] or args['add'] or args['delete'] and not args['gist'] or args['open'] or args['request']:
-            # Try to resolve existing repository path
-            try:
-                try:
-                    repository = Repo(os.path.join(args['--path'], repo))
-                except NoSuchPathError:
-                    repository = Repo(args['--path'])
-            except InvalidGitRepositoryError:
-                raise FileNotFoundError('Cannot find path to the repository.')
-            service = RepositoryService.get_service(repository, args['<target>'])
+    @store_parameter('<branch>')
+    def set_branch(self, branch):
+        # FIXME workaround for default value that is not correctly parsed in docopt
+        if branch == None:
+           branch = 'master'
 
-            if args['create']:
-                service.create(user, repo, add=args['--add'])
-                log.info('Successfully created remote repository `{}`, '
-                         'with local remote `{}`'.format(
-                    service.format_path(repo, namespace=user),
-                    service.name)
-                )
+        self.branch = branch
 
-            elif args['add']:
-                service.add(repo, user,
-                            name=args['<name>'],
-                            tracking=args['--tracking'],
-                            alone=args['--alone'])
-                log.info('Successfully added `{}` as remote named `{}`'.format(
-                    args['<user>/<repo>'],
-                    service.name)
-                )
+    @store_parameter('<name>')
+    def set_name(self, name):
+        self.remote_name = name
 
-            elif args['delete']:
-                if not args['--force']: # pragma: no cover
-                    if not confirm('repository', args['<user>/<repo>']):
-                        return 0
+    @store_parameter('<gist>')
+    def set_gist_ref(self, gist):
+        self.gist_ref = gist
 
-                if user:
-                    service.delete(repo, user)
-                else:
-                    service.delete(repo)
-                log.info('Successfully deleted remote `{}` from {}'.format(
-                    args['<user>/<repo>'],
-                    service.name)
-                )
+    '''Actions'''
 
-            elif args['request']:
-                if args['list'] or args['ls']:
-                    log.info('List of open requests to merge:')
-                    log.info(" {}\t{}\t{}".format('id', 'title'.ljust(60), 'URL'))
-                    for pr in service.request_list(user, repo):
-                        print("{}\t{}\t{}".format(pr[0].rjust(3), pr[1][:60].ljust(60), pr[2]))
-                elif args['fetch'] and args['<request>']:
-                    new_branch = service.request_fetch(user, repo, args['<request>'])
-                    log.info('Successfully fetched request id `{}` of `{}` into `{}`!'.format(
-                        args['<request>'],
-                        args['<user>/<repo>'],
-                        new_branch)
-                    )
+    @register_action('add')
+    def do_remote_add(self):
+        service = self.get_service()
+        service.add(self.repo_name, self.user_name,
+                    name=self.remote_name,
+                    tracking=self.tracking,
+                    alone=self.alone)
+        log.info('Successfully added `{}` as remote named `{}`'.format(
+            self.repo_slug,
+            service.name)
+        )
+        return 0
 
-            elif args['open']:
-                RepositoryService.get_service(None, args['<target>']).open(user, repo)
-
-            return 0
-
-        elif args['fork']:
-            if not os.path.exists(repo):
-                repo_path = os.path.join(args['--path'], repo)
-                repository = Repo.init(repo_path)
-                service = RepositoryService.get_service(repository, args['<target>'])
-                service.fork(user, repo, branch=args['<branch>'], clone=args['--clone'])
-                log.info('Successfully cloned repository {} in {}'.format(
-                    args['<user>/<repo>'],
-                    repo_path)
-                )
-
-                return 0
-            else:
-                raise FileExistsError('Cannot clone repository, '
-                                      'a folder named {} already exists!'.format(repo))
-
-        elif args['clone'] and not args['gist']:
-            repo_path = os.path.join(args['--path'], repo)
+    @register_action('fork')
+    def do_fork(self):
+        service = self.get_service(resolve=False)
+        if not os.path.exists(self.repo_name):
+            repo_path = os.path.join(self.path, self.repo_name)
             repository = Repo.init(repo_path)
-            service = RepositoryService.get_service(repository, args['<target>'])
-            service.clone(user, repo, args['<branch>'])
-            log.info('Successfully cloned `{}` into `{}`!'.format(
-                service.format_path(args['<user>/<repo>']),
+            service = RepositoryService.get_service(repository, self.target)
+            service.fork(self.user_name, self.repo_name, branch=self.branch, clone=self.clone)
+            log.info('Successfully cloned repository {} in {}'.format(
+                self.repo_slug,
                 repo_path)
             )
+
             return 0
+        else:
+            raise FileExistsError('Cannot clone repository, '
+                                  'a folder named {} already exists!'.format(self.repo_name))
 
-        elif args['gist']:
-            service = RepositoryService.get_service(None, args['<target>'])
-            service.connect()
-            if args['list'] or args['ls']:
-                if args['<gist>']:
-                    log.info("{:15}\t{:>7}\t{}".format('language', 'size', 'name'))
-                    for gist_file in service.gist_list(args['<gist>']):
-                        print("{:15}\t{:7}\t{}".format(*gist_file))
-                else:
-                    log.info("{:56}\t{}".format('id', 'title'.ljust(60)))
-                    for gist in service.gist_list():
-                        print( "{:56}\t{}".format(gist[0], gist[1]))
-            elif args['fetch']:
-                # send gist to stdout, not using log.info on purpose here!
-                print(service.gist_fetch(args['<gist>'], args['<gist_file>']))
-            elif args['clone']:
-                repo_path = os.path.join(args['--path'], args['<gist>'].split('/')[-1])
-                service.repository = Repo.init(repo_path)
-                service.gist_clone(args['<gist>'])
-                log.info('Successfully cloned `{}` into `{}`!'.format( args['<gist>'], repo_path))
-            elif args['create']:
-                url = service.gist_create(args['<gist_path>'], args['<description>'], args['--secret'])
-                log.info('Successfully created gist `{}`!'.format(url))
-            elif args['delete']:
-                if not args['--force']: # pragma: no cover
-                    if not confirm('gist', args['<gist>']):
-                        return 0
+    @register_action('clone')
+    def do_clone(self):
+        service = self.get_service(resolve=False)
+        repo_path = os.path.join(self.path, self.repo_name)
+        repository = Repo.init(repo_path)
+        service = RepositoryService.get_service(repository, self.target)
+        service.clone(self.user_name, self.repo_name, self.branch)
+        log.info('Successfully cloned `{}` into `{}`!'.format(
+            service.format_path(self.repo_slug),
+            repo_path)
+        )
+        return 0
 
-                service.gist_delete(args['<gist>'])
-                log.info('Successfully deleted gist!')
-            return 0
+    @register_action('create')
+    def do_create(self):
+        service = self.get_service()
+        service.create(self.user_name, self.repo_name, add=self.add)
+        log.info('Successfully created remote repository `{}`, '
+                 'with local remote `{}`'.format(
+            service.format_path(self.repo_name, namespace=self.user_name),
+            service.name)
+        )
+        return 0
 
-        log.error('Unknown action.')
-        log.error('Please consult help page (--help).')
-        return 1
+    @register_action('delete')
+    def do_delete(self):
+        service = self.get_service()
+        if not self.force: # pragma: no cover
+            if not confirm('repository', self.repo_slug):
+                return 0
+
+        if self.user_name:
+            service.delete(self.repo_name, self.user_name)
+        else:
+            service.delete(self.repo_name)
+        log.info('Successfully deleted remote `{}` from {}'.format(
+            self.repo_slug,
+            service.name)
+        )
+        return 0
+
+
+    @register_action('open')
+    def do_open(self):
+        RepositoryService.get_service(None, self.target).open(self.user_name, self.repo_name)
+        return 0
+
+    @register_action('request', 'ls')
+    @register_action('request', 'list')
+    def do_request_list(self):
+        service = self.get_service()
+        log.info('List of open requests to merge:')
+        log.info(" {}\t{}\t{}".format('id', 'title'.ljust(60), 'URL'))
+        for pr in service.request_list(self.user_name, self.repo_name):
+            print("{}\t{}\t{}".format(pr[0].rjust(3), pr[1][:60].ljust(60), pr[2]))
+        return 0
+
+    @register_action('request', 'fetch')
+    def do_request_fetch(self):
+        service = self.get_service()
+        new_branch = service.request_fetch(self.user_name, self.repo_name, self.request)
+        log.info('Successfully fetched request id `{}` of `{}` into `{}`!'.format(
+            self.request,
+            self.repo_slug,
+            new_branch)
+        )
+        return 0
+
+    @register_action('gist', 'ls')
+    @register_action('gist', 'list')
+    def do_gist_list(self):
+        service = self.get_service(resolve=False)
+        if self.gist_ref:
+            log.info("{:15}\t{:>7}\t{}".format('language', 'size', 'name'))
+            for gist_file in service.gist_list(self.gist_ref):
+                print("{:15}\t{:7}\t{}".format(*gist_file))
+        else:
+            log.info("{:56}\t{}".format('id', 'title'.ljust(60)))
+            for gist in service.gist_list():
+                print( "{:56}\t{}".format(gist[0], gist[1]))
+        return 0
+
+    @register_action('gist', 'clone')
+    def do_gist_clone(self):
+        service = self.get_service(resolve=False)
+        repo_path = os.path.join(self.path, self.gist_ref.split('/')[-1])
+        service.repository = Repo.init(repo_path)
+        service.gist_clone(self.gist_ref)
+        log.info('Successfully cloned `{}` into `{}`!'.format( self.gist_ref, repo_path))
+        return 0
+
+    @register_action('gist', 'fetch')
+    def do_gist_fetch(self):
+        service = self.get_service(resolve=False)
+        # send gist to stdout, not using log.info on purpose here!
+        print(service.gist_fetch(self.gist_ref, self.gist_file))
+        return 0
+
+    @register_action('gist', 'create')
+    def do_gist_create(self):
+        service = self.get_service(resolve=False)
+        url = service.gist_create(self.gist_path, self.description, self.secret)
+        log.info('Successfully created gist `{}`!'.format(url))
+        return 0
+
+    @register_action('gist', 'delete')
+    def do_gist_delete(self):
+        service = self.get_service(resolve=False)
+        if not self.force: # pragma: no cover
+            if not confirm('gist', self.gist_ref):
+                return 0
+
+        service.gist_delete(self.gist_ref)
+        log.info('Successfully deleted gist!')
+        return 0
+
+
+def main(args):
+    try:
+        return GitRepoRunner(args).run()
     except Exception as err:
         log.error('Fatal error: {}'.format(err))
         if log_root.level == logging.DEBUG:
             log.exception('------------------------------------')
         return 2
+
 
 
 def cli(): #pragma: no cover
