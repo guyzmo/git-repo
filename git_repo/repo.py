@@ -2,19 +2,22 @@
 
 '''
 Usage:
-    {self} [--path=<path>] [-v -v...] <target> add <user>/<repo> [<name>] [--tracking=<branch>] [-a]
-    {self} [--path=<path>] [-v -v...] <target> fork <user>/<repo> [<branch>] [--clone]
-    {self} [--path=<path>] [-v -v...] <target> clone <user>/<repo> [<branch>]
-    {self} [--path=<path>] [-v -v...] <target> create <user>/<repo> [--add]
-    {self} [--path=<path>] [-v -v...] <target> delete <user>/<repo> [-f]
-    {self} [--path=<path>] [-v -v...] <target> open [<user>/<repo>]
-    {self} [--path=<path>] [-v -v...] <target> request [<user>/<repo>] (list|ls)
-    {self} [--path=<path>] [-v -v...] <target> request [<user>/<repo>] fetch <request>
-    {self} [--path=<path>] [-v -v...] <target> gist (list|ls) [<gist>]
-    {self} [--path=<path>] [-v -v...] <target> gist clone <gist>
-    {self} [--path=<path>] [-v -v...] <target> gist fetch <gist> [<gist_file>]
-    {self} [--path=<path>] [-v -v...] <target> gist create [--secret] <description> [<gist_path> <gist_path>...]
-    {self} [--path=<path>] [-v -v...] <target> gist delete <gist> [-f]
+    {self} [--path=<path>] [-v...] <target> add <user>/<repo> [<name>] [--tracking=<branch>] [-a]
+    {self} [--path=<path>] [-v...] <target> fork <user>/<repo> [<branch>] [--clone]
+    {self} [--path=<path>] [-v...] <target> clone <user>/<repo> [<branch>]
+    {self} [--path=<path>] [-v...] <target> create <user>/<repo> [--add]
+    {self} [--path=<path>] [-v...] <target> delete <user>/<repo> [-f]
+    {self} [--path=<path>] [-v...] <target> open
+    {self} [--path=<path>] [-v...] <target> open [<user>/<repo>]
+    {self} [--path=<path>] [-v...] <target> request (list|ls)
+    {self} [--path=<path>] [-v...] <target> request fetch <request>
+    {self} [--path=<path>] [-v...] <target> request [<user>/<repo>] (list|ls)
+    {self} [--path=<path>] [-v...] <target> request [<user>/<repo>] fetch <request>
+    {self} [--path=<path>] [-v...] <target> gist (list|ls) [<gist>]
+    {self} [--path=<path>] [-v...] <target> gist clone <gist>
+    {self} [--path=<path>] [-v...] <target> gist fetch <gist> [<gist_file>]
+    {self} [--path=<path>] [-v...] <target> gist create [--secret] <description> [<gist_path> <gist_path>...]
+    {self} [--path=<path>] [-v...] <target> gist delete <gist> [-f]
     {self} --help
 
 Tool for managing remote repository services.
@@ -37,7 +40,7 @@ Options:
 
 Options for add:
     <name>                   Name to use for the remote (defaults to name of repo)
-    -t,--tracking <branch>   Makes this remote tracking for the current branch
+    -t,--tracking=<branch>   Makes this remote tracking for the current branch
     -a,--alone               Does not add the remote to the 'all' remote
 
 Options for fork and clone:
@@ -132,6 +135,21 @@ class GitRepoRunner(KeywordArgumentParser):
         if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys():
             del os.environ['GIT_WORK_TREE']
 
+    def _guess_repo_slug(self, repository, target):
+        config = repository.config_reader()
+        for section_name in config.sections():
+            if 'remote' in section_name:
+                section = dict(config.items(section_name))
+                if target in section['url']:
+                    if section['url'].startswith('https'):
+                        *_, user, name = section['url'].rstrip('.git').split('/')
+                        self.set_repo_slug('/'.join([user, name]))
+                        break
+                    elif section['url'].startswith('git@'):
+                        _, repo_slug = section['url'].rstrip('.git').split(':')
+                        self.set_repo_slug(repo_slug)
+                        break
+
     def get_service(self, resolve=True):
         if not resolve:
             service = RepositoryService.get_service(None, self.target)
@@ -140,12 +158,14 @@ class GitRepoRunner(KeywordArgumentParser):
             # Try to resolve existing repository path
             try:
                 try:
-                    repository = Repo(os.path.join(self.path, self.repo_name))
+                    repository = Repo(os.path.join(self.path, self.repo_name or ''))
                 except NoSuchPathError:
                     repository = Repo(self.path)
             except InvalidGitRepositoryError:
                 raise FileNotFoundError('Cannot find path to the repository.')
             service = RepositoryService.get_service(repository, self.target)
+            if not self.repo_slug:
+                self._guess_repo_slug(repository, service.name)
         return service
 
     '''Argument storage'''
@@ -179,7 +199,10 @@ class GitRepoRunner(KeywordArgumentParser):
     @store_parameter('<user>/<repo>')
     def set_repo_slug(self, repo_slug):
         self.repo_slug = repo_slug
-        if repo_slug and '/' in repo_slug:
+        if not repo_slug:
+            self.user_name = None
+            self.repo_name = None
+        elif '/' in repo_slug:
             self.user_name, self.repo_name, *overflow = repo_slug.split('/')
             if len(overflow) != 0:
                 raise ArgumentError('Too many slashes.'
@@ -192,7 +215,7 @@ class GitRepoRunner(KeywordArgumentParser):
     def set_branch(self, branch):
         # FIXME workaround for default value that is not correctly parsed in docopt
         if branch == None:
-           branch = 'master'
+            branch = 'master'
 
         self.branch = branch
 
@@ -281,7 +304,7 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('open')
     def do_open(self):
-        RepositoryService.get_service(None, self.target).open(self.user_name, self.repo_name)
+        self.get_service(resolve=self.repo_slug is None).open(self.user_name, self.repo_name)
         return 0
 
     @register_action('request', 'ls')

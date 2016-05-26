@@ -263,7 +263,7 @@ class GitRepoMainTestCase():
         }, args)), "Non {} result for gist delete".format(rc)
         return RepositoryService._current._did_gist_delete
 
-    def main_request_list(self, repo, rc=0, args={}):
+    def main_request_list(self, repo=None, rc=0, args={}):
         assert rc == main(self.setup_args({
             'request': True,
             'list': True,
@@ -273,7 +273,7 @@ class GitRepoMainTestCase():
         }, args)), "Non {} result for request list".format(rc)
         return RepositoryService._current._did_request_list
 
-    def main_request_fetch(self, repo, rc=0, args={}):
+    def main_request_fetch(self, repo=None, rc=0, args={}):
         assert rc == main(self.setup_args({
             'request': True,
             'fetch': True,
@@ -283,9 +283,7 @@ class GitRepoMainTestCase():
         }, args)), "Non {} result for request fetch".format(rc)
         return RepositoryService._current._did_request_fetch
 
-    def main_open(self, repo, rc=0, args={}):
-        os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
-        Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+    def main_open(self, repo=None, rc=0, args={}):
         assert rc == main(self.setup_args({
             'open': True,
             '<user>/<repo>': repo,
