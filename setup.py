@@ -67,7 +67,7 @@ setup(name='git-repo',
       include_package_data = True,
       install_requires=[
             'docopt',
-            'GitPython==2.0.3',
+            'GitPython==2.0.4',
             'progress==1.2',
             'python-gitlab==0.13',
             'github3.py==0.9.5',

@@ -6,41 +6,19 @@ log = logging.getLogger('git_repo.base')
 import os
 import sys
 
-from git import RemoteProgress
+from git import RemoteProgress, config as git_config
 from progress.bar import IncrementalBar as Bar
+
+from subprocess import call
 
 from ..exceptions import ArgumentError
 
 '''select open command'''
 
-from subprocess import call
-
 if 'mac' in sys.platform: #pragma: no cover
     OPEN_COMMAND = 'open'
 else: #pragma: no cover
     OPEN_COMMAND = 'xdg-open'
-
-'''monkey patching of git module'''
-
-# Monkey patching of missing command Remote.set_url
-# TODO make a PR on pythongit
-def set_url(self, url, **kwargs): # pragma: no cover
-    scmd = 'set-url'
-    kwargs['insert_kwargs_after'] = scmd
-    self.repo.git.remote(scmd, self.name, url, **kwargs)
-    return self
-
-def list_urls(self): # pragma: no cover
-    '''Return the list of all configured URL targets'''
-    remote_details = self.repo.git.remote("show", self.name)
-    for line in remote_details.split('\n'):
-        if '  Push  URL:' in line:
-            yield line.split(': ')[-1]
-
-
-import git
-git.remote.Remote.set_url = set_url
-git.remote.Remote.list = property(list_urls)
 
 
 class ProgressBar(RemoteProgress): # pragma: no cover
@@ -85,7 +63,7 @@ class RepositoryService:
         :return: instance for using the service
         '''
         if not repository:
-            config = git.config.GitConfigParser(os.path.join(os.environ['HOME'], '.gitconfig'))
+            config = git_config.GitConfigParser(os.path.join(os.environ['HOME'], '.gitconfig'))
         else:
             config = repository.config_reader()
         target = cls.command_map.get(command, command)
