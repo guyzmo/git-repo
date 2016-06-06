@@ -16,11 +16,12 @@ log = logging.getLogger('test.github')
 from tests.helpers import GitRepoTestCase
 
 from git_repo.services.service import github
-from git_repo.exceptions import ResourceExistsError, ResourceNotFoundError
+from git_repo.exceptions import ResourceExistsError, ResourceNotFoundError, ResourceError
 
 
 class Test_Github(GitRepoTestCase):
     log = log
+    namespace = os.environ['GITHUB_NAMESPACE']
 
     @property
     def local_namespace(self):
@@ -316,12 +317,47 @@ class Test_Github(GitRepoTestCase):
                 repository='git-repo',
                 request='2')
 
-    def test_32_request_fetch__bad_request(self):
+    def test_31_request_fetch__bad_request(self):
         with pytest.raises(ResourceNotFoundError):
             self.action_request_fetch(cassette_name=sys._getframe().f_code.co_name,
                 namespace='guyzmo',
                 repository='git-repo',
                 request='1')
+
+    def test_32_request_create(self):
+        r = self.action_request_create(cassette_name=sys._getframe().f_code.co_name,
+                namespace=self.namespace,
+                repository='test_create_requests',
+                branch='pr-test',
+                title='PR test',
+                description='PR description')
+        assert r == 1
+
+    def test_32_request_create__bad_branch(self):
+        with pytest.raises(ResourceError):
+            self.action_request_create(cassette_name=sys._getframe().f_code.co_name,
+                    namespace=self.namespace,
+                    repository='test_create_requests',
+                    branch='does_not_exists',
+                    title='PR test',
+                    description='PR description')
+
+    def test_32_request_create__bad_repo(self):
+        with pytest.raises(ResourceNotFoundError):
+            r = self.action_request_create(cassette_name=sys._getframe().f_code.co_name,
+                    namespace=self.namespace,
+                    repository='does_not_exists',
+                    branch='pr-test',
+                    title='PR test',
+                    description='PR description')
+
+    def test_32_request_create__guess_branch(self):
+        r = self.action_request_create(cassette_name=sys._getframe().f_code.co_name,
+                namespace=self.namespace,
+                repository='test_create_requests',
+                branch=None,
+                title='PR test',
+                description='PR description')
 
     def test_33_open(self):
         self.action_open(cassette_name=sys._getframe().f_code.co_name,

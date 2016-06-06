@@ -6,6 +6,8 @@ from git import Repo, Git
 from testfixtures import Replace, ShouldRaise, compare
 from testfixtures.popen import MockPopen
 
+from contextlib import contextmanager
+
 import os
 import logging
 import betamax
@@ -30,6 +32,7 @@ class RepositoryMockup(RepositoryService):
         self._did_gist_clone = None
         self._did_gist_create = None
         self._did_gist_delete = None
+        self._did_request_create = None
         self._did_request_list = None
         self._did_request_fetch = None
 
@@ -108,6 +111,12 @@ class RepositoryMockup(RepositoryService):
             raise Exception('bad request for merge!')
         return "pr/42"
 
+    def request_create(self, *args, **kwarg):
+        self._did_request_create = (args, kwarg)
+        if args[2] == 'bad':
+            raise Exception('bad branch to request!')
+        return 42
+
     @property
     def user(self):
         self._did_user = True
@@ -163,6 +172,7 @@ class GitRepoMainTestCase():
             'open': False,
             '--secret': False,
             '<description>': None,
+            '--message': None,
             '<gist>': None,
             '<gist_file>': None,
             '<gist_path>': [],
@@ -282,6 +292,15 @@ class GitRepoMainTestCase():
             '--path': self.tempdir.name
         }, args)), "Non {} result for request fetch".format(rc)
         return RepositoryService._current._did_request_fetch
+
+    def main_request_create(self, repo=None, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'request': True,
+            'create': True,
+            '<user>/<repo>': repo,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for request create".format(rc)
+        return RepositoryService._current._did_request_create
 
     def main_open(self, repo=None, rc=0, args={}):
         assert rc == main(self.setup_args({
@@ -543,6 +562,77 @@ class GitRepoTestCase():
             self.service.clone(namespace, repository, rw=False)
             self.service.request_fetch(repository, namespace, request)
             assert self.repository.branches[-1].name == 'request/{}'.format(request)
+
+    def action_request_create(self, cassette_name,
+            namespace, repository, branch,
+            title, description,
+            create_repository='test_create_requests',
+            create_branch='pr-test'):
+        '''
+        Here we are testing the subcommand 'request create'.
+
+        this test needs sensibly more preparation than other tests, because to create
+        a pull request, you need:
+
+        * a repository with commits on both the service and your workspace
+        * a new branch with new commits, that has been pushed on the service
+
+        So that's what we're doing below:
+            * create a test project on the service,
+            * populate the temporary git repository with it
+            * create a commit and push it to the service as master
+            * create a branch in the workspace
+            * create a commit and push it to the service as pr-test
+
+        Then we test the feature:
+            * using the branch create a pull request and check the pull request is there
+
+        Finally clean the remote repository
+
+        So all the contextual work is only done
+        '''
+        cassette_name = '_'.join(['test', self.service.name, cassette_name])
+        will_record = 'never' != self.recorder.config.default_cassette_options['record_mode'] \
+                and not os.path.exists(os.path.join(self.recorder.config.cassette_library_dir, cassette_name+'.json'))
+
+        @contextmanager
+        def prepare_project_for_test():
+            if will_record:
+                self.service.connect()
+                # let's create a project and add it to current repository
+                self.service.create(namespace, create_repository, add=True)
+                # make a modification, commit and push it
+                with open(os.path.join(self.repository.working_dir, 'first_file'), 'w') as test:
+                    test.write('he who makes a beast of himself gets rid of the pain of being a man. Dr Johnson')
+                self.repository.git.add('first_file')
+                self.repository.git.commit(message='First commit')
+                self.repository.git.push(self.service.name, 'master')
+                # create a new branch
+                new_branch = self.repository.create_head(create_branch, 'HEAD')
+                self.repository.head.reference = new_branch
+                self.repository.head.reset(index=True, working_tree=True)
+                # make a modification, commit and push it to that branch
+                with open(os.path.join(self.repository.working_dir, 'second_file'), 'w') as test:
+                    test.write('La meilleure façon de ne pas avancer est de suivre une idée fixe. J.Prévert')
+                self.repository.git.add('second_file')
+                self.repository.git.commit(message='Second commit')
+                self.repository.git.push('github', create_branch)
+            yield
+            if will_record:
+                self.service.delete(create_repository)
+
+        #self.service.repository = self.repository
+        with prepare_project_for_test():
+            with self.recorder.use_cassette(cassette_name):
+                self.service.connect()
+                request = self.service.request_create(
+                        namespace,
+                        repository,
+                        branch,
+                        title,
+                        description
+                )
+                return request
 
     def action_gist_list(self, cassette_name, gist=None, gist_list_data=[]):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
