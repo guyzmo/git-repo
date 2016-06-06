@@ -246,7 +246,7 @@ class RepositoryService:
             else:
                 url = self.format_path(repo, user, rw=True)
                 # check if url not already in remote all
-                if url not in all_remote.list:
+                if url not in all_remote.list_urls:
                     all_remote.set_url(url=self.format_path(repo, user, rw=rw), add=True)
 
         # adding "self" as the tracking remote
