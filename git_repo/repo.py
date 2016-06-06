@@ -25,6 +25,8 @@ Usage:
     {self} [--path=<path>] [-v...] <target> gist fetch <gist> [<gist_file>]
     {self} [--path=<path>] [-v...] <target> gist create [--secret] <description> [<gist_path> <gist_path>...]
     {self} [--path=<path>] [-v...] <target> gist delete <gist> [-f]
+    {self} [--path=<path>] [-v...] <target> config [--config=<gitconfig>]
+    {self} [-v...] config [--config=<gitconfig>]
     {self} --help
 
 Tool for managing remote repository services.
@@ -38,6 +40,7 @@ Commands:
     gist                     Manages gist files
     request                  Handles requests for merge
     open                     Open the given or current repository in a browser
+    config                   Run authentication process and configure the tool
 
 Options:
     <user>/<repo>            Repository to work with
@@ -239,6 +242,10 @@ class GitRepoRunner(KeywordArgumentParser):
     def set_gist_ref(self, gist):
         self.gist_ref = gist
 
+    @store_parameter('--config')
+    def store_gitconfig(self, val):
+        self.config = val or os.path.join(os.environ['HOME'], '.gitconfig')
+
     '''Actions'''
 
     @register_action('add')
@@ -408,6 +415,58 @@ class GitRepoRunner(KeywordArgumentParser):
 
         service.gist_delete(self.gist_ref)
         log.info('Successfully deleted gist!')
+        return 0
+
+    @register_action('config')
+    def do_config(self):
+        from getpass import getpass
+
+        def loop_input(*args, method=input, **kwarg):
+            out = ''
+            while len(out) == 0:
+                out = method(*args, **kwarg)
+            return out
+
+        def setup_service(service):
+            conf = service.get_config(self.config)
+            if 'token' in conf:
+                raise Exception('A token has been generated for this service. Please revoke and delete before proceeding.')
+
+            print('Please enter your credentials to connect to the service:')
+            username = loop_input('username> ')
+            password = loop_input('password> ', method=getpass)
+
+            token = service.get_auth_token(username, password)
+            print('Great! You\'ve been identified 🍻')
+
+            print('Do you want to give a custom name for this service\'s remote?')
+            if 'y' in input('    [yN]> ').lower():
+                print('Enter the remote\'s name:')
+                loop_input('[{}]> '.format(service.name))
+
+            print('Do you want to configure a git alias?')
+            print('N.B.: instead of typing `git repo {0}` you\'ll be able to type `git {0}`'.format(service.command))
+            if 'n' in input('    [Yn]> ').lower():
+                set_alias = False
+            else:
+                set_alias = True
+
+            service.store_config(self.config, token=token)
+            if set_alias:
+                service.set_alias(self.config)
+
+        if self.target:
+            services = [self.get_service(lookup_repository=False)]
+        else:
+            services = RepositoryService.service_map.values()
+
+        for service in services:
+            print('Do you want to configure the {} service?'.format(service.name))
+            if 'n' in input('    [Yn]> ').lower():
+                continue
+            setup_service(service)
+
+        print('🍻 The configuration is done!')
         return 0
 
 
