@@ -5,7 +5,7 @@
   * https://gitlab.com/guyzmo/git-repo
   * https://bitbucket.org/guyzmo/git-repo
 * Issues: https://github.com/guyzmo/git-repo/issues
-* [![Show Travis Build Status](https://travis-ci.org/guyzmo/git-repo.svg)](https://travis-ci.org/guyzmo/git-repo)
+* [![Issues in Ready](https://badge.waffle.io/guyzmo/git-repo.png?label=ready&title=Ready)](https://waffle.io/guyzmo/git-repo) [![Show Travis Build Status](https://travis-ci.org/guyzmo/git-repo.svg)](https://travis-ci.org/guyzmo/git-repo)
 * [![Pypi Version](https://img.shields.io/pypi/v/git-repo.svg) ![Pypi Downloads](https://img.shields.io/pypi/dm/git-repo.svg)](https://pypi.python.org/pypi/git-repo)
 
 ### Usage
