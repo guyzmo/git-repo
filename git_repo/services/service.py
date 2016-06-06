@@ -54,6 +54,33 @@ class RepositoryService:
     # this symbol is made available for testing purposes
     _current = None
 
+    config_options = ['type', 'token', 'alias', 'fqdn']
+
+    @classmethod
+    def get_config(cls, config):
+        out = {}
+        with git_config.GitConfigParser(config, read_only=True) as config:
+            section = 'gitrepo "{}"'.format(cls.name)
+            if config.has_section(section):
+                for option in cls.config_options:
+                    if config.has_option(section, option):
+                        out[option] = config.get(section, option)
+        return out
+
+    @classmethod
+    def store_config(cls, config, **kwarg):
+        with git_config.GitConfigParser(config, read_only=False) as config:
+            section = 'gitrepo "{}"'.format(cls.name)
+            for option, value in kwarg.items():
+                if option not in cls.config_options:
+                    raise ArgumentError('Option {} is invalid and cannot be setup.')
+                config.set_value(section, option, value)
+
+    @classmethod
+    def set_alias(cls, config):
+        with git_config.GitConfigParser(config, read_only=False) as config:
+            config.set_value('alias', cls.command, 'repo {}'.format(cls.command))
+
     @classmethod
     def get_service(cls, repository, command):
         '''Accessor for a repository given a command
@@ -93,6 +120,10 @@ class RepositoryService:
 
         cls._current = service(repository, config)
         return cls._current
+
+    @classmethod
+    def get_auth_token(cls, login, password):
+        raise NotImplementedError
 
     def __init__(self, r=None, c=None):
         '''

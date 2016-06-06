@@ -474,6 +474,16 @@ class Test_Main(GitRepoMainTestCase):
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/git-repo`, with id `42`!' in caplog.text
 
+    def test_config(self, capsys, caplog):
+        import sys, io, getpass
+        getpass.getpass = input
+        sys.stdin = io.StringIO('\n'.join(['y', 'user', 'pass', 'y', 'fubar', 'y']))
+        #
+        conf = self.main_config(target='hub', rc=0)
+        assert ['[gitrepo "github"]\n',
+                '\ttoken = user:pass\n',
+                '[alias]\n',
+                '\ttest_command = repo test_command\n'] == conf
 
     def test_z_noop(self):
         self.main_noop('guyzmo/git-repo', 1)

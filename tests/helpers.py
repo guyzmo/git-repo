@@ -15,6 +15,8 @@ import betamax
 from git_repo.repo import RepositoryService, main
 
 class RepositoryMockup(RepositoryService):
+    name = 'test_name'
+    command = 'test_command'
     fqdn = 'http://example.org'
     def __init__(self, *args, **kwarg):
         super(RepositoryMockup, self).__init__(*args, **kwarg)
@@ -116,6 +118,10 @@ class RepositoryMockup(RepositoryService):
         if args[2] == 'bad':
             raise Exception('bad branch to request!')
         return 42
+
+    @classmethod
+    def get_auth_token(cls, login, password):
+        return '{}:{}'.format(login, password)
 
     @property
     def user(self):
@@ -314,6 +320,14 @@ class GitRepoMainTestCase():
             '--path': self.tempdir.name
         }, args)), "Non {} result for open".format(rc)
         return RepositoryService._current._did_open
+
+    def main_config(self, target, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'config': True,
+            '--config': os.path.join(self.tempdir.name, 'gitconfig')
+        }, args)), "Non {} result for config".format(rc)
+        with open(os.path.join(self.tempdir.name, 'gitconfig')) as f:
+            return f.readlines()
 
     def main_noop(self, repo, rc=1, args={}):
         assert rc == main(self.setup_args({
@@ -695,5 +709,4 @@ class GitRepoTestCase():
         ])
         with Replace('subprocess.Popen', self.Popen):
             self.service.open(user=namespace, repo=repository)
-
 
