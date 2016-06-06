@@ -253,6 +253,7 @@ class GitRepoMainTestCase():
         assert rc == main(self.setup_args({
             'gist': True,
             'clone': True,
+            '--path': self.tempdir.name
         }, args)), "Non {} result for gist clone".format(rc)
         return RepositoryService._current._did_gist_clone
 
