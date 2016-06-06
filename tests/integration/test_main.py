@@ -197,7 +197,7 @@ class Test_Main(GitRepoMainTestCase):
         did_clone = self.main_gist_clone(0, args={'<gist>': '42'})
         assert did_clone == (('42',), {})
         assert 'git init' in caplog.text
-        assert 'Successfully cloned `42` into `./42`!' in caplog.text
+        assert 'Successfully cloned `42` into `{}/42`!'.format(self.tempdir.name) in caplog.text
 
     def test_gist_clone__with_bad_gist(self, caplog):
         did_clone = self.main_gist_clone(2, args={'<gist>': 'bad', '--verbose': 0})
