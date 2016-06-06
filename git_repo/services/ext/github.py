@@ -151,17 +151,18 @@ class GithubService(RepositoryService):
             raise ResourceNotFoundError('Could not find gist')
         gist.delete()
 
-    def request_create(self, user, repo, branch, title, description=None):
+    def request_create(self, user, repo, local_branch, remote_branch, title, description=None):
         repository = self.gh.repository(user, repo)
         if not repository:
             raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
-        if not branch:
-            branch = self.repository.active_branch.name
-        base = repository.master_branch if repository.master_branch else 'master'
+        if not local_branch:
+            remote_branch = self.repository.active_branch.name or self.repository.active_branch.name
+        if not remote_branch:
+            local_branch = repository.master_branch or 'master'
         try:
             request = repository.create_pull(title,
-                    base=base,
-                    head=':'.join([user, branch]),
+                    base=local_branch,
+                    head=':'.join([user, remote_branch]),
                     body=description)
         except github3.models.GitHubError as err:
             if err.code == 422:
@@ -175,7 +176,7 @@ class GithubService(RepositoryService):
                 raise ResourceError("Unhandled formatting error: {}".format(err.errors))
 
 
-        return request.number
+        return {'local': local_branch, 'remote': remote_branch, 'ref': request.number}
 
     def request_list(self, user, repo):
         repository = self.gh.repository(user, repo)

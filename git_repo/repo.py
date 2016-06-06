@@ -15,11 +15,13 @@ Usage:
     {self} [--path=<path>] [-v...] <target> request (list|ls)
     {self} [--path=<path>] [-v...] <target> request fetch <request>
     {self} [--path=<path>] [-v...] <target> request create <title> [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request create <branch> <title> [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request create <local_branch> <title> [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request create <remote_branch> <local_branch> <title> [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> (list|ls)
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> fetch <request>
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <title> [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <branch> <title> [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <title> [--branch=<remote>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <local_branch> <title> [--branch=<remote>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <remote_branch> <local_branch> <title> [--branch=<remote>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> gist (list|ls) [<gist>]
     {self} [--path=<path>] [-v...] <target> gist clone <gist>
     {self} [--path=<path>] [-v...] <target> gist fetch <gist> [<gist_file>]
@@ -348,13 +350,13 @@ class GitRepoRunner(KeywordArgumentParser):
         service = self.get_service()
         new_request = service.request_create(self.user_name,
                 self.repo_name,
-                self.branch,
+                self.local_branch,
+                self.remote_branch,
                 self.title,
                 self.message)
-        log.info('Successfully created request of `{}` onto `{}`, with id `{}`!'.format(
-            self.branch,
+        log.info('Successfully created request of `{local}` onto `{}:{remote}`, with id `{ref}`!'.format(
             '/'.join([self.user_name, self.repo_name]),
-            new_request)
+            **new_request)
         )
         return 0
 
