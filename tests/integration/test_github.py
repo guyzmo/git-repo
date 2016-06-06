@@ -331,7 +331,7 @@ class Test_Github(GitRepoTestCase):
                 branch='pr-test',
                 title='PR test',
                 description='PR description')
-        assert r == 1
+        assert r == {'local': 'pr-test', 'ref': 1, 'remote': 'PR test'}
 
     def test_32_request_create__bad_branch(self):
         with pytest.raises(ResourceError):

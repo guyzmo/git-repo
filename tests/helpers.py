@@ -115,9 +115,11 @@ class RepositoryMockup(RepositoryService):
 
     def request_create(self, *args, **kwarg):
         self._did_request_create = (args, kwarg)
-        if args[2] == 'bad':
+        if args[2] == 'bad' or args[3] == 'bad':
             raise Exception('bad branch to request!')
-        return 42
+        local = args[2] or 'pr-test'
+        remote = args[3] or 'base-test'
+        return {'local': local, 'remote': remote, 'ref': 42}
 
     @classmethod
     def get_auth_token(cls, login, password):
@@ -184,6 +186,8 @@ class GitRepoMainTestCase():
             '<gist_path>': [],
             'request': False,
             '<request>': None,
+            '<local_branch>': None,
+            '<remote_branch>': None,
             '<user>/<repo>': None,
         }
         cli_args.update(d)

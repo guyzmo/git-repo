@@ -361,44 +361,93 @@ class Test_Main(GitRepoMainTestCase):
         call(['git', 'init', '-q', self.tempdir.name])
         seen_args, extra_args = self.main_request_create('guyzmo/test', 0,
                 args={
-                    '<branch>': 'pr-test',
+                    '<local_branch>': 'pr-test',
+                    '<remote_branch>': 'base-test',
                     '<title>': 'This is a test',
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', 'pr-test', 'This is a test', 'This is a test') == seen_args
+        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', 'This is a test') == seen_args
         assert {} == extra_args
         assert out == ''
-        assert 'Successfully created request of `pr-test` onto `guyzmo/test`, with id `42`!' in caplog.text
+        assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
 
     def test_request_create__no_description(self, capsys, caplog):
         from subprocess import call
         call(['git', 'init', '-q', self.tempdir.name])
         seen_args, extra_args = self.main_request_create('guyzmo/test', 0,
                 args={
-                    '<branch>': 'pr-test',
+                    '<local_branch>': 'pr-test',
+                    '<remote_branch>': 'base-test',
                     '<title>': 'This is a test',
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', 'pr-test', 'This is a test', None) == seen_args
+        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', None) == seen_args
         assert {} == extra_args
         assert out == ''
-        assert 'Successfully created request of `pr-test` onto `guyzmo/test`, with id `42`!' in caplog.text
+        assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
 
-    def test_request_create__bad_branch(self, capsys, caplog):
+    def test_request_create__bad_local_branch(self, capsys, caplog):
         from subprocess import call
         call(['git', 'init', '-q', self.tempdir.name])
         seen_args, extra_args = self.main_request_create('guyzmo/test', 2,
                 args={
-                    '<branch>': 'bad',
+                    '<local_branch>': 'bad',
+                    '<remote_branch>': 'base-test',
                     '<title>': 'This is a test',
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', 'bad', 'This is a test', 'This is a test') == seen_args
+        assert ('guyzmo', 'test', 'bad', 'base-test', 'This is a test', 'This is a test') == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Fatal error: bad branch to request!' in caplog.text
+
+    def test_request_create__bad_remote_branch(self, capsys, caplog):
+        from subprocess import call
+        call(['git', 'init', '-q', self.tempdir.name])
+        seen_args, extra_args = self.main_request_create('guyzmo/test', 2,
+                args={
+                    '<local_branch>': 'pr-test',
+                    '<remote_branch>': 'bad',
+                    '<title>': 'This is a test',
+                    '--message': 'This is a test'
+                    })
+        out, err = capsys.readouterr()
+        assert ('guyzmo', 'test', 'pr-test', 'bad', 'This is a test', 'This is a test') == seen_args
+        assert {} == extra_args
+        assert out == ''
+        assert 'Fatal error: bad branch to request!' in caplog.text
+
+    def test_request_create__no_local_branch(self, capsys, caplog):
+        from subprocess import call
+        call(['git', 'init', '-q', self.tempdir.name])
+        seen_args, extra_args = self.main_request_create('guyzmo/test', 0,
+                args={
+                    '<remote_branch>': 'base-test',
+                    '<title>': 'This is a test',
+                    '--message': 'This is a test'
+                    })
+        out, err = capsys.readouterr()
+        assert ('guyzmo', 'test', None, 'base-test', 'This is a test', 'This is a test') == seen_args
+        assert {} == extra_args
+        assert out == ''
+        assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
+
+    def test_request_create__no_remote_branch(self, capsys, caplog):
+        from subprocess import call
+        call(['git', 'init', '-q', self.tempdir.name])
+        seen_args, extra_args = self.main_request_create('guyzmo/test', 0,
+                args={
+                    '<local_branch>': 'pr-test',
+                    '<title>': 'This is a test',
+                    '--message': 'This is a test'
+                    })
+        out, err = capsys.readouterr()
+        assert ('guyzmo', 'test', 'pr-test', None, 'This is a test', 'This is a test') == seen_args
+        assert {} == extra_args
+        assert out == ''
+        assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
 
     def test_open(self):
         repo_slug, seen_args = self.main_open('guyzmo/git-repo', 0)
@@ -464,15 +513,16 @@ class Test_Main(GitRepoMainTestCase):
         self._create_repository()
         seen_args, extra_args = self.main_request_create(rc=0,
                 args={
-                    '<branch>': 'pr-test',
+                    '<local_branch>': 'pr-test',
+                    '<remote_branch>': 'base-test',
                     '<title>': 'This is a test',
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'git-repo', 'pr-test', 'This is a test', 'This is a test') == seen_args
+        assert ('guyzmo', 'git-repo', 'pr-test', 'base-test', 'This is a test', 'This is a test') == seen_args
         assert {} == extra_args
         assert out == ''
-        assert 'Successfully created request of `pr-test` onto `guyzmo/git-repo`, with id `42`!' in caplog.text
+        assert 'Successfully created request of `pr-test` onto `guyzmo/git-repo:base-test`, with id `42`!' in caplog.text
 
     def test_config(self, capsys, caplog):
         import sys, io, getpass
