@@ -10,6 +10,8 @@
 
 ### Usage
 
+### main commands
+
 Control your remote git hosting services from the `git` commandline. The usage is
 very simple. To clone a new project, out of github, just issue:
 
@@ -48,6 +50,13 @@ and of course, you can delete it using:
 
     % git bb delete guyzmo/git-repo
 
+Also, you can open the repository's page, using the `open` command:
+
+    % git lab open guyzmo/git-repo
+    Successfully fetched branch `2` of `guyzmo/git-repo` into `request-2`!
+
+### Requests for merges *(aka Pull Requests aka Merge Requests)*
+
 Once you're all set with your repository, you can check requests to merge 
 (aka Pull Requests on github) using the `request` command:
 
@@ -60,10 +69,11 @@ And fetch it locally to check and/or amend it before merging:
 
     % git hub request guyzmo/git-repo fetch 2
 
-Finally, you can open the repository's page, using the `open` command:
+Or you can create a pull-request by doing a:
 
-    % git lab open guyzmo/git-repo
-    Successfully fetched branch `2` of `guyzmo/git-repo` into `request-2`!
+    % git hub request create guyzmo/git-repo myfeature master 'My neat feature' -m 'So much to say about that feature…'
+
+### Gists or snippets
 
 Finally, another extra feature you can play with is the gist handling:
 
@@ -119,8 +129,17 @@ or by getting the sources and running:
 
 ### Configuration
 
-To configure `git-repo` you need to tweak your `~/.gitconfig`. For each service
-you've got an account on, you have to make a section in the gitconfig:
+To configure `git-repo` you simply have to call the following command:
+
+    % git repo config
+
+and a wizard will run you through getting the authentication token for the
+service, add the command alias or the name of the remote. Though, configuring
+custom services is still not handled by the wizard…
+
+But if you prefer manual configuration you'll have to tweak your
+`~/.gitconfig`. For each service you've got an account on, you have to make a
+section in the gitconfig:
 
     [gitrepo "gitlab"]
         token = YourVerySecretKey
@@ -218,21 +237,23 @@ To use your own credentials, you can setup the following environment variables:
 * [x] refactor the code into multiple modules
 * [x] add regression tests (and actually find a smart way to implement them…)
 * [x] add travis build
+* [x] show a nice progress bar, while it's fetching (cf [#15](https://github.com/guyzmo/git-repo/issues/15))
 * [ ] add support for handling gists
   * [x] github support
-  * [ ] gitlab support
-  * [ ] bitbucket support
+  * [ ] gitlab support (cf [#12](https://github.com/guyzmo/git-repo/issues/12))
+  * [ ] bitbucket support (cf [#13](https://github.com/guyzmo/git-repo/issues/13))
 * [ ] add support for handling pull requests
   * [x] list them
   * [x] fetch them as local branches
   * [x] github support
-  * [ ] gitlab support
-  * [ ] bitbucket support
-* [ ] add OAuth support for bitbucket
-* [ ] show a nice progress bar, while it's fetching
-  * partly implemented: the issue looks like that gitpython expects output from git
-    on stderr, whereas it's outputing on stdout.
-* [ ] do what's needed to make a nice documentation (if possible in markdown !@#$)
+  * [ ] gitlab support (cf [#10](https://github.com/guyzmo/git-repo/issues/10))
+  * [ ] bitbucket support (cf [#11](https://github.com/guyzmo/git-repo/issues/11))
+* [ ] add OAuth support for bitbucket (cf [#14](https://github.com/guyzmo/git-repo/issues/14))
+* [ ] add support for managing SSH keys (cf [#22](https://github.com/guyzmo/git-repo/issues/15))
+* [ ] add support for issues?
+* [ ] add support for gogs (cf [#18](https://github.com/guyzmo/git-repo/issues/18))
+* [ ] add support for gerrit (cf [#19](https://github.com/guyzmo/git-repo/issues/19))
+* [ ] do what's needed to make a nice documentation — if possible in markdown !@#$
 * for more features, write an issue or, even better, a PR!
 
 ### License
