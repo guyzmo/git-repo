@@ -356,6 +356,50 @@ class Test_Main(GitRepoMainTestCase):
         assert out == ''
         assert 'Fatal error: bad request for merge!' in caplog.text
 
+    def test_request_create(self, capsys, caplog):
+        from subprocess import call
+        call(['git', 'init', '-q', self.tempdir.name])
+        seen_args, extra_args = self.main_request_create('guyzmo/test', 0,
+                args={
+                    '<branch>': 'pr-test',
+                    '<title>': 'This is a test',
+                    '--message': 'This is a test'
+                    })
+        out, err = capsys.readouterr()
+        assert ('guyzmo', 'test', 'pr-test', 'This is a test', 'This is a test') == seen_args
+        assert {} == extra_args
+        assert out == ''
+        assert 'Successfully created request of `pr-test` onto `guyzmo/test`, with id `42`!' in caplog.text
+
+    def test_request_create__no_description(self, capsys, caplog):
+        from subprocess import call
+        call(['git', 'init', '-q', self.tempdir.name])
+        seen_args, extra_args = self.main_request_create('guyzmo/test', 0,
+                args={
+                    '<branch>': 'pr-test',
+                    '<title>': 'This is a test',
+                    })
+        out, err = capsys.readouterr()
+        assert ('guyzmo', 'test', 'pr-test', 'This is a test', None) == seen_args
+        assert {} == extra_args
+        assert out == ''
+        assert 'Successfully created request of `pr-test` onto `guyzmo/test`, with id `42`!' in caplog.text
+
+    def test_request_create__bad_branch(self, capsys, caplog):
+        from subprocess import call
+        call(['git', 'init', '-q', self.tempdir.name])
+        seen_args, extra_args = self.main_request_create('guyzmo/test', 2,
+                args={
+                    '<branch>': 'bad',
+                    '<title>': 'This is a test',
+                    '--message': 'This is a test'
+                    })
+        out, err = capsys.readouterr()
+        assert ('guyzmo', 'test', 'bad', 'This is a test', 'This is a test') == seen_args
+        assert {} == extra_args
+        assert out == ''
+        assert 'Fatal error: bad branch to request!' in caplog.text
+
     def test_open(self):
         repo_slug, seen_args = self.main_open('guyzmo/git-repo', 0)
         assert ('guyzmo', 'git-repo') == repo_slug

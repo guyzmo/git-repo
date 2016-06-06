@@ -13,6 +13,8 @@ Usage:
     {self} [--path=<path>] [-v...] <target> request fetch <request>
     {self} [--path=<path>] [-v...] <target> request [<user>/<repo>] (list|ls)
     {self} [--path=<path>] [-v...] <target> request [<user>/<repo>] fetch <request>
+    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <title> [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <branch> <title> [--message=<message>]
     {self} [--path=<path>] [-v...] <target> gist (list|ls) [<gist>]
     {self} [--path=<path>] [-v...] <target> gist clone <gist>
     {self} [--path=<path>] [-v...] <target> gist fetch <gist> [<gist_file>]
@@ -61,6 +63,10 @@ Options for gist:
                              will be pushed. If a list of path is given, all files
                              from them will be pushed.
     --secret                 Do not publicize gist when pushing
+
+Options for request:
+    <title>                  Title to give to the request for merge
+    -m,--message=<message>   Description for the request for merge
 
 Configuration options:
     alias                    Name to use for the git remote
@@ -315,6 +321,21 @@ class GitRepoRunner(KeywordArgumentParser):
         log.info(" {}\t{}\t{}".format('id', 'title'.ljust(60), 'URL'))
         for pr in service.request_list(self.user_name, self.repo_name):
             print("{}\t{}\t{}".format(pr[0].rjust(3), pr[1][:60].ljust(60), pr[2]))
+        return 0
+
+    @register_action('request', 'create')
+    def do_request_create(self):
+        service = self.get_service()
+        new_request = service.request_create(self.user_name,
+                self.repo_name,
+                self.branch,
+                self.title,
+                self.message)
+        log.info('Successfully created request of `{}` onto `{}`, with id `{}`!'.format(
+            self.branch,
+            '/'.join([self.user_name, self.repo_name]),
+            new_request)
+        )
         return 0
 
     @register_action('request', 'fetch')
