@@ -299,7 +299,7 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('create')
     def do_create(self):
-        service = self.get_service()
+        service = self.get_service(lookup_repository=self.repo_slug == None or self.add)
         # if no repo_slug has been given, use the directory name as current project name
         if not self.user_name and not self.repo_name:
             self.set_repo_slug('/'.join([service.user,
@@ -314,7 +314,7 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('delete')
     def do_delete(self):
-        service = self.get_service()
+        service = self.get_service(lookup_repository=self.repo_slug == None)
         if not self.force: # pragma: no cover
             if not confirm('repository', self.repo_slug):
                 return 0
