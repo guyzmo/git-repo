@@ -389,7 +389,7 @@ def main(args):
 
 
 def cli(): #pragma: no cover
-    sys.exit(main(docopt(__doc__.format(self=sys.argv[0], version=__version__))))
+    sys.exit(main(docopt(__doc__.format(self=sys.argv[0].split('/')[-1], version=__version__))))
 
 if __name__ == '__main__': #pragma: no cover
     cli()
