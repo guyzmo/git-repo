@@ -202,9 +202,11 @@ class GitRepoMainTestCase():
         }, args)), "Non {} result for clone".format(rc)
         return RepositoryService._current._did_clone
 
-    def main_create(self, repo, rc=0, args={}):
-        os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
-        Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+    def main_create(self, repo=None, rc=0, args={}):
+        if repo:
+            repo_path = os.path.join(self.tempdir.name, repo.split('/')[-1])
+            os.mkdir(repo_path)
+            Repo.init(repo_path)
         assert rc == main(self.setup_args({
             'create': True,
             '<user>/<repo>': repo,
@@ -212,9 +214,11 @@ class GitRepoMainTestCase():
         }, args)), "Non {} result for create".format(rc)
         return RepositoryService._current._did_create
 
-    def main_delete(self, repo, rc=0, args={}):
-        os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
-        Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+    def main_delete(self, repo=None, rc=0, args={}):
+        if repo:
+            repo_path = os.path.join(self.tempdir.name, repo.split('/')[-1])
+            os.mkdir(repo_path)
+            Repo.init(repo_path)
         assert rc == main(self.setup_args({
             'delete': True,
             '<user>/<repo>': repo,
@@ -222,7 +226,7 @@ class GitRepoMainTestCase():
         }, args)), "Non {} result for delete".format(rc)
         return RepositoryService._current._did_delete
 
-    def main_fork(self, repo, rc=0, args={}):
+    def main_fork(self, repo=None, rc=0, args={}):
         assert rc == main(self.setup_args({
             'fork': True,
             '<user>/<repo>': repo,
