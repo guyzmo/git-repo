@@ -2,17 +2,22 @@
 
 '''
 Usage:
-    {self} [--path=<path>] [-v...] <target> add <user>/<repo> [<name>] [--tracking=<branch>] [-a]
+    {self} [--path=<path>] [-v...] <target> fork [<branch>] [--clone]
+    {self} [--path=<path>] [-v...] <target> create [--add]
+    {self} [--path=<path>] [-v...] <target> delete [-f]
+    {self} [--path=<path>] [-v...] <target> open
     {self} [--path=<path>] [-v...] <target> fork <user>/<repo> [<branch>] [--clone]
-    {self} [--path=<path>] [-v...] <target> clone <user>/<repo> [<branch>]
     {self} [--path=<path>] [-v...] <target> create <user>/<repo> [--add]
     {self} [--path=<path>] [-v...] <target> delete <user>/<repo> [-f]
-    {self} [--path=<path>] [-v...] <target> open
-    {self} [--path=<path>] [-v...] <target> open [<user>/<repo>]
+    {self} [--path=<path>] [-v...] <target> open <user>/<repo>
+    {self} [--path=<path>] [-v...] <target> clone <user>/<repo> [<branch>]
+    {self} [--path=<path>] [-v...] <target> add <user>/<repo> [<name>] [--tracking=<branch>] [-a]
     {self} [--path=<path>] [-v...] <target> request (list|ls)
     {self} [--path=<path>] [-v...] <target> request fetch <request>
-    {self} [--path=<path>] [-v...] <target> request [<user>/<repo>] (list|ls)
-    {self} [--path=<path>] [-v...] <target> request [<user>/<repo>] fetch <request>
+    {self} [--path=<path>] [-v...] <target> request create <title> [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request create <branch> <title> [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <user>/<repo> (list|ls)
+    {self} [--path=<path>] [-v...] <target> request <user>/<repo> fetch <request>
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <title> [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <branch> <title> [--message=<message>]
     {self} [--path=<path>] [-v...] <target> gist (list|ls) [<gist>]
@@ -141,8 +146,9 @@ class GitRepoRunner(KeywordArgumentParser):
         if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys():
             del os.environ['GIT_WORK_TREE']
 
-    def _guess_repo_slug(self, repository, target):
+    def _guess_repo_slug(self, repository, service):
         config = repository.config_reader()
+        target = service.name
         for section_name in config.sections():
             if 'remote' in section_name:
                 section = dict(config.items(section_name))
@@ -156,8 +162,8 @@ class GitRepoRunner(KeywordArgumentParser):
                         self.set_repo_slug(repo_slug)
                         break
 
-    def get_service(self, resolve=True):
-        if not resolve:
+    def get_service(self, lookup_repository=True):
+        if not lookup_repository:
             service = RepositoryService.get_service(None, self.target)
             service.connect()
         else:
@@ -171,7 +177,7 @@ class GitRepoRunner(KeywordArgumentParser):
                 raise FileNotFoundError('Cannot find path to the repository.')
             service = RepositoryService.get_service(repository, self.target)
             if not self.repo_slug:
-                self._guess_repo_slug(repository, service.name)
+                self._guess_repo_slug(repository, service)
         return service
 
     '''Argument storage'''
@@ -250,26 +256,29 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('fork')
     def do_fork(self):
-        service = self.get_service(resolve=False)
-        if not os.path.exists(self.repo_name):
-            repo_path = os.path.join(self.path, self.repo_name)
-            repository = Repo.init(repo_path)
-            service = RepositoryService.get_service(repository, self.target)
-            service.fork(self.user_name, self.repo_name, branch=self.branch, clone=self.clone)
-            log.info('Successfully cloned repository {} in {}'.format(
-                self.repo_slug,
-                repo_path)
-            )
+        service = self.get_service(lookup_repository=self.repo_slug == None)
+        if not self.repo_name and not self.user_name:
+            raise ArgumentError('Cannot clone repository, '
+                                'you shall provide the <user>/<repo> parameter '
+                                'or run the command from a git repository!')
+        repo_path = os.path.join(self.path, self.repo_name)
+        repository = Repo.init(repo_path)
+        service = RepositoryService.get_service(repository, self.target)
+        service.fork(self.user_name, self.repo_name, branch=self.branch, clone=self.clone)
+        log.info('Successfully cloned repository {} in {}'.format(
+            self.repo_slug,
+            repo_path)
+        )
 
-            return 0
-        else:
-            raise FileExistsError('Cannot clone repository, '
-                                  'a folder named {} already exists!'.format(self.repo_name))
+        return 0
 
     @register_action('clone')
     def do_clone(self):
-        service = self.get_service(resolve=False)
+        service = self.get_service(lookup_repository=False)
         repo_path = os.path.join(self.path, self.repo_name)
+        if os.path.exists(repo_path):
+            raise FileExistsError('Cannot clone repository, '
+                                  'a folder named {} already exists!'.format(repo_path))
         repository = Repo.init(repo_path)
         service = RepositoryService.get_service(repository, self.target)
         service.clone(self.user_name, self.repo_name, self.branch)
@@ -282,6 +291,10 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('create')
     def do_create(self):
         service = self.get_service()
+        # if no repo_slug has been given, use the directory name as current project name
+        if not self.user_name and not self.repo_name:
+            self.set_repo_slug('/'.join([service.user,
+                os.path.basename(os.path.abspath(self.path))]))
         service.create(self.user_name, self.repo_name, add=self.add)
         log.info('Successfully created remote repository `{}`, '
                  'with local remote `{}`'.format(
@@ -310,7 +323,7 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('open')
     def do_open(self):
-        self.get_service(resolve=self.repo_slug is None).open(self.user_name, self.repo_name)
+        self.get_service(lookup_repository=self.repo_slug is None).open(self.user_name, self.repo_name)
         return 0
 
     @register_action('request', 'ls')
@@ -352,7 +365,7 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('gist', 'ls')
     @register_action('gist', 'list')
     def do_gist_list(self):
-        service = self.get_service(resolve=False)
+        service = self.get_service(lookup_repository=False)
         if self.gist_ref:
             log.info("{:15}\t{:>7}\t{}".format('language', 'size', 'name'))
             for gist_file in service.gist_list(self.gist_ref):
@@ -365,7 +378,7 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('gist', 'clone')
     def do_gist_clone(self):
-        service = self.get_service(resolve=False)
+        service = self.get_service(lookup_repository=False)
         repo_path = os.path.join(self.path, self.gist_ref.split('/')[-1])
         service.repository = Repo.init(repo_path)
         service.gist_clone(self.gist_ref)
@@ -374,21 +387,21 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('gist', 'fetch')
     def do_gist_fetch(self):
-        service = self.get_service(resolve=False)
+        service = self.get_service(lookup_repository=False)
         # send gist to stdout, not using log.info on purpose here!
         print(service.gist_fetch(self.gist_ref, self.gist_file))
         return 0
 
     @register_action('gist', 'create')
     def do_gist_create(self):
-        service = self.get_service(resolve=False)
+        service = self.get_service(lookup_repository=False)
         url = service.gist_create(self.gist_path, self.description, self.secret)
         log.info('Successfully created gist `{}`!'.format(url))
         return 0
 
     @register_action('gist', 'delete')
     def do_gist_delete(self):
-        service = self.get_service(resolve=False)
+        service = self.get_service(lookup_repository=False)
         if not self.force: # pragma: no cover
             if not confirm('gist', self.gist_ref):
                 return 0

@@ -405,21 +405,75 @@ class Test_Main(GitRepoMainTestCase):
         assert ('guyzmo', 'git-repo') == repo_slug
         assert {} == seen_args
 
-    def test_open__no_repo_slug__git(self):
+    def _create_repository(self, ro=False):
         from subprocess import call
         call(['git', 'init', '-q', self.tempdir.name])
-        call(['git','--git-dir={}/.git'.format(self.tempdir.name), 'remote', 'add', 'github', 'git@github.com:guyzmo/git-repo'])
+        if ro:
+            call(['git','--git-dir={}/.git'.format(self.tempdir.name), 'remote', 'add', 'github', 'https://github.com/guyzmo/git-repo'])
+        else:
+            call(['git','--git-dir={}/.git'.format(self.tempdir.name), 'remote', 'add', 'github', 'git@github.com:guyzmo/git-repo'])
+
+    def test_open__no_repo_slug__https(self):
+        self._create_repository(ro=True)
         repo_slug, seen_args = self.main_open(rc=0)
         assert ('guyzmo', 'git-repo') == repo_slug
         assert {} == seen_args
 
-    def test_open__no_repo_slug__https(self):
-        from subprocess import call
-        call(['git', 'init', '-q', self.tempdir.name])
-        call(['git','--git-dir={}/.git'.format(self.tempdir.name), 'remote', 'add', 'github', 'https://github.com/guyzmo/git-repo'])
+    def test_open__no_repo_slug__git(self):
+        self._create_repository()
         repo_slug, seen_args = self.main_open(rc=0)
         assert ('guyzmo', 'git-repo') == repo_slug
         assert {} == seen_args
+
+    def test_create__no_repo_slug(self):
+        self._create_repository()
+        repo_slug, seen_args = self.main_create(rc=0)
+        assert ('guyzmo', 'git-repo') == repo_slug
+        assert {'add': False} == seen_args
+
+    def test_fork__no_repo_slug(self):
+        self._create_repository()
+        repo_slug, seen_args = self.main_fork(rc=0)
+        assert ('guyzmo', 'git-repo') == repo_slug
+        assert {'branch': 'master', 'clone': True} == seen_args
+
+    def test_delete__no_repo_slug(self):
+        self._create_repository()
+        repo_slug, seen_args = self.main_fork(rc=0)
+        assert ('guyzmo', 'git-repo') == repo_slug
+        assert {'branch': 'master', 'clone': True} == seen_args
+
+    def test_request_list__no_repo_slug(self, capsys, caplog):
+        self._create_repository()
+        repo_slug, seen_args = self.main_request_list(rc=0, args={})
+        out, err = capsys.readouterr()
+        assert out ==  '  1\tdesc1                                                       \thttp://request/1\n  2\tdesc2                                                       \thttp://request/2\n  3\tdesc3                                                       \thttp://request/3\n'
+        assert 'id' in caplog.text and 'title' in caplog.text and 'URL' in caplog.text
+
+    def test_request_fetch__no_repo_slug(self, capsys, caplog):
+        self._create_repository()
+        seen_args, extra_args = self.main_request_fetch(rc=0,
+                args={'<request>': '42'})
+        out, err = capsys.readouterr()
+        assert ('guyzmo', 'git-repo', '42') == seen_args
+        assert {} == extra_args
+        assert out == ''
+        assert 'Successfully fetched request id `42` of `guyzmo/git-repo` into `pr/42`!' in caplog.text
+
+    def test_request_create__no_repo_slug(self, capsys, caplog):
+        self._create_repository()
+        seen_args, extra_args = self.main_request_create(rc=0,
+                args={
+                    '<branch>': 'pr-test',
+                    '<title>': 'This is a test',
+                    '--message': 'This is a test'
+                    })
+        out, err = capsys.readouterr()
+        assert ('guyzmo', 'git-repo', 'pr-test', 'This is a test', 'This is a test') == seen_args
+        assert {} == extra_args
+        assert out == ''
+        assert 'Successfully created request of `pr-test` onto `guyzmo/git-repo`, with id `42`!' in caplog.text
+
 
     def test_z_noop(self):
         self.main_noop('guyzmo/git-repo', 1)
