@@ -1,0 +1,11 @@
+-r requirements.txt
+pytest
+pytest-cov
+pytest-sugar
+pytest-catchlog
+pytest-datadir-ng
+testfixtures
+mock
+betamax==0.5.1
+betamax-serializers
+git_repo

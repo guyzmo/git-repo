@@ -243,8 +243,6 @@ To use your own credentials, you can setup the following environment variables:
   * [ ] gitlab support (cf [#12](https://github.com/guyzmo/git-repo/issues/12))
   * [ ] bitbucket support (cf [#13](https://github.com/guyzmo/git-repo/issues/13))
 * [ ] add support for handling pull requests
-  * [x] list them
-  * [x] fetch them as local branches
   * [x] github support
   * [ ] gitlab support (cf [#10](https://github.com/guyzmo/git-repo/issues/10))
   * [ ] bitbucket support (cf [#11](https://github.com/guyzmo/git-repo/issues/11))
