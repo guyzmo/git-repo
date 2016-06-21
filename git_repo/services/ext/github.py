@@ -47,6 +47,11 @@ class GithubService(RepositoryService):
 
     def fork(self, user, repo, branch='master', clone=False):
         log.info("Forking repository {}/{}…".format(user, repo))
+        # checking for an 'upstream' remote.
+        upstream_remotes = list(filter(lambda x: x.name == 'upstream', self.repository.remotes))
+        if len(upstream_remotes) != 0:
+            raise ResourceExistsError('A remote named `upstream` already exists. Has this repo already been forked?')
+        # forking the repository on the service
         try:
             fork = self.gh.repository(user, repo).create_fork()
         except github3.models.GitHubError as err:
@@ -54,7 +59,16 @@ class GithubService(RepositoryService):
                 raise ResourceExistsError("Project already exists.") from err
             else: # pragma: no cover
                 raise ResourceError("Unhandled error: {}".format(err)) from err
-        self.add(user=user, repo=repo, name='upstream', alone=True)
+        # checking if a remote with the service's name already exists
+        service_remotes = list(filter(lambda x: x.name == self.name, self.repository.remotes))
+        if len(service_remotes) != 0:
+            # if it does, rename it to upstream
+            repo.delete(service_remotes[0])
+            repo.create_remote('upstream', service_remotes[0].url)
+        else:
+            # otherwise create an upstream remote with the source repository
+            self.add(user=user, repo=repo, name='upstream', alone=True)
+        # add the service named repository
         remote = self.add(repo=repo, user=self.username, tracking=self.name)
         if clone:
             self.pull(remote, branch)
