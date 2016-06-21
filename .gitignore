@@ -13,3 +13,6 @@ README.rst
 *.egg
 .cache/
 .coverage
+contrib
+docs
+.gitignore

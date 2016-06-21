@@ -6,41 +6,19 @@ log = logging.getLogger('git_repo.base')
 import os
 import sys
 
-from git import RemoteProgress
+from git import RemoteProgress, config as git_config
 from progress.bar import IncrementalBar as Bar
+
+from subprocess import call
 
 from ..exceptions import ArgumentError
 
 '''select open command'''
 
-from subprocess import call
-
 if 'mac' in sys.platform: #pragma: no cover
     OPEN_COMMAND = 'open'
 else: #pragma: no cover
     OPEN_COMMAND = 'xdg-open'
-
-'''monkey patching of git module'''
-
-# Monkey patching of missing command Remote.set_url
-# TODO make a PR on pythongit
-def set_url(self, url, **kwargs): # pragma: no cover
-    scmd = 'set-url'
-    kwargs['insert_kwargs_after'] = scmd
-    self.repo.git.remote(scmd, self.name, url, **kwargs)
-    return self
-
-def list_urls(self): # pragma: no cover
-    '''Return the list of all configured URL targets'''
-    remote_details = self.repo.git.remote("show", self.name)
-    for line in remote_details.split('\n'):
-        if '  Push  URL:' in line:
-            yield line.split(': ')[-1]
-
-
-import git
-git.remote.Remote.set_url = set_url
-git.remote.Remote.list = property(list_urls)
 
 
 class ProgressBar(RemoteProgress): # pragma: no cover
@@ -76,6 +54,33 @@ class RepositoryService:
     # this symbol is made available for testing purposes
     _current = None
 
+    config_options = ['type', 'token', 'alias', 'fqdn']
+
+    @classmethod
+    def get_config(cls, config):
+        out = {}
+        with git_config.GitConfigParser(config, read_only=True) as config:
+            section = 'gitrepo "{}"'.format(cls.name)
+            if config.has_section(section):
+                for option in cls.config_options:
+                    if config.has_option(section, option):
+                        out[option] = config.get(section, option)
+        return out
+
+    @classmethod
+    def store_config(cls, config, **kwarg):
+        with git_config.GitConfigParser(config, read_only=False) as config:
+            section = 'gitrepo "{}"'.format(cls.name)
+            for option, value in kwarg.items():
+                if option not in cls.config_options:
+                    raise ArgumentError('Option {} is invalid and cannot be setup.')
+                config.set_value(section, option, value)
+
+    @classmethod
+    def set_alias(cls, config):
+        with git_config.GitConfigParser(config, read_only=False) as config:
+            config.set_value('alias', cls.command, 'repo {}'.format(cls.command))
+
     @classmethod
     def get_service(cls, repository, command):
         '''Accessor for a repository given a command
@@ -85,7 +90,7 @@ class RepositoryService:
         :return: instance for using the service
         '''
         if not repository:
-            config = git.config.GitConfigParser(os.path.join(os.environ['HOME'], '.gitconfig'))
+            config = git_config.GitConfigParser(os.path.join(os.environ['HOME'], '.gitconfig'))
         else:
             config = repository.config_reader()
         target = cls.command_map.get(command, command)
@@ -115,6 +120,10 @@ class RepositoryService:
 
         cls._current = service(repository, config)
         return cls._current
+
+    @classmethod
+    def get_auth_token(cls, login, password):
+        raise NotImplementedError
 
     def __init__(self, r=None, c=None):
         '''
@@ -268,7 +277,7 @@ class RepositoryService:
             else:
                 url = self.format_path(repo, user, rw=True)
                 # check if url not already in remote all
-                if url not in all_remote.list:
+                if url not in all_remote.list_urls:
                     all_remote.set_url(url=self.format_path(repo, user, rw=rw), add=True)
 
         # adding "self" as the tracking remote

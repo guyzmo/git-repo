@@ -6,6 +6,8 @@ from git import Repo, Git
 from testfixtures import Replace, ShouldRaise, compare
 from testfixtures.popen import MockPopen
 
+from contextlib import contextmanager
+
 import os
 import logging
 import betamax
@@ -13,6 +15,8 @@ import betamax
 from git_repo.repo import RepositoryService, main
 
 class RepositoryMockup(RepositoryService):
+    name = 'test_name'
+    command = 'test_command'
     fqdn = 'http://example.org'
     def __init__(self, *args, **kwarg):
         super(RepositoryMockup, self).__init__(*args, **kwarg)
@@ -30,6 +34,7 @@ class RepositoryMockup(RepositoryService):
         self._did_gist_clone = None
         self._did_gist_create = None
         self._did_gist_delete = None
+        self._did_request_create = None
         self._did_request_list = None
         self._did_request_fetch = None
 
@@ -49,7 +54,7 @@ class RepositoryMockup(RepositoryService):
         self._did_connect = True
 
     def delete(self, *args, **kwarg):
-        self._did_delete = (args, kwarg)
+        self._did_delete = (tuple(reversed(args)), kwarg)
 
     def create(self, *args, **kwarg):
         self._did_create = (args, kwarg)
@@ -108,6 +113,18 @@ class RepositoryMockup(RepositoryService):
             raise Exception('bad request for merge!')
         return "pr/42"
 
+    def request_create(self, *args, **kwarg):
+        self._did_request_create = (args, kwarg)
+        if args[2] == 'bad' or args[3] == 'bad':
+            raise Exception('bad branch to request!')
+        local = args[2] or 'pr-test'
+        remote = args[3] or 'base-test'
+        return {'local': local, 'remote': remote, 'ref': 42}
+
+    @classmethod
+    def get_auth_token(cls, login, password):
+        return '{}:{}'.format(login, password)
+
     @property
     def user(self):
         self._did_user = True
@@ -146,6 +163,7 @@ class GitRepoMainTestCase():
             '--tracking': 'master',
             '--alone': False,
             '--add': False,
+            '--clone': False,
             '<name>': None,
             '<branch>': None,
             '<target>': self.target,
@@ -163,11 +181,14 @@ class GitRepoMainTestCase():
             'open': False,
             '--secret': False,
             '<description>': None,
+            '--message': None,
             '<gist>': None,
             '<gist_file>': None,
             '<gist_path>': [],
             'request': False,
             '<request>': None,
+            '<local_branch>': None,
+            '<remote_branch>': None,
             '<user>/<repo>': None,
         }
         cli_args.update(d)
@@ -192,9 +213,11 @@ class GitRepoMainTestCase():
         }, args)), "Non {} result for clone".format(rc)
         return RepositoryService._current._did_clone
 
-    def main_create(self, repo, rc=0, args={}):
-        os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
-        Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+    def main_create(self, repo=None, rc=0, args={}):
+        if repo:
+            repo_path = os.path.join(self.tempdir.name, repo.split('/')[-1])
+            os.mkdir(repo_path)
+            Repo.init(repo_path)
         assert rc == main(self.setup_args({
             'create': True,
             '<user>/<repo>': repo,
@@ -202,9 +225,11 @@ class GitRepoMainTestCase():
         }, args)), "Non {} result for create".format(rc)
         return RepositoryService._current._did_create
 
-    def main_delete(self, repo, rc=0, args={}):
-        os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
-        Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+    def main_delete(self, repo=None, rc=0, args={}):
+        if repo:
+            repo_path = os.path.join(self.tempdir.name, repo.split('/')[-1])
+            os.mkdir(repo_path)
+            Repo.init(repo_path)
         assert rc == main(self.setup_args({
             'delete': True,
             '<user>/<repo>': repo,
@@ -212,11 +237,10 @@ class GitRepoMainTestCase():
         }, args)), "Non {} result for delete".format(rc)
         return RepositoryService._current._did_delete
 
-    def main_fork(self, repo, rc=0, args={}):
+    def main_fork(self, repo=None, rc=0, args={}):
         assert rc == main(self.setup_args({
             'fork': True,
             '<user>/<repo>': repo,
-            '--clone': True,
             '--path': self.tempdir.name
         }, args)), "Non {} result for fork".format(rc)
         return RepositoryService._current._did_fork
@@ -239,6 +263,7 @@ class GitRepoMainTestCase():
         assert rc == main(self.setup_args({
             'gist': True,
             'clone': True,
+            '--path': self.tempdir.name
         }, args)), "Non {} result for gist clone".format(rc)
         return RepositoryService._current._did_gist_clone
 
@@ -263,7 +288,7 @@ class GitRepoMainTestCase():
         }, args)), "Non {} result for gist delete".format(rc)
         return RepositoryService._current._did_gist_delete
 
-    def main_request_list(self, repo, rc=0, args={}):
+    def main_request_list(self, repo=None, rc=0, args={}):
         assert rc == main(self.setup_args({
             'request': True,
             'list': True,
@@ -273,7 +298,7 @@ class GitRepoMainTestCase():
         }, args)), "Non {} result for request list".format(rc)
         return RepositoryService._current._did_request_list
 
-    def main_request_fetch(self, repo, rc=0, args={}):
+    def main_request_fetch(self, repo=None, rc=0, args={}):
         assert rc == main(self.setup_args({
             'request': True,
             'fetch': True,
@@ -283,15 +308,30 @@ class GitRepoMainTestCase():
         }, args)), "Non {} result for request fetch".format(rc)
         return RepositoryService._current._did_request_fetch
 
-    def main_open(self, repo, rc=0, args={}):
-        os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
-        Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+    def main_request_create(self, repo=None, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'request': True,
+            'create': True,
+            '<user>/<repo>': repo,
+            '--path': self.tempdir.name
+        }, args)), "Non {} result for request create".format(rc)
+        return RepositoryService._current._did_request_create
+
+    def main_open(self, repo=None, rc=0, args={}):
         assert rc == main(self.setup_args({
             'open': True,
             '<user>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for open".format(rc)
         return RepositoryService._current._did_open
+
+    def main_config(self, target, rc=0, args={}):
+        assert rc == main(self.setup_args({
+            'config': True,
+            '--config': os.path.join(self.tempdir.name, 'gitconfig')
+        }, args)), "Non {} result for config".format(rc)
+        with open(os.path.join(self.tempdir.name, 'gitconfig')) as f:
+            return f.readlines()
 
     def main_noop(self, repo, rc=1, args={}):
         assert rc == main(self.setup_args({
@@ -420,6 +460,10 @@ class GitRepoTestCase():
             with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
                 self.service.connect()
                 self.service.fork(remote_namespace, repository, clone=True)
+                # emulate the outcome of the git actions
+                self.service.repository.create_remote('upstream', url=remote_slug)
+                self.service.repository.create_remote('all', url=local_slug)
+                self.service.repository.create_remote(self.service.name, url=local_slug)
 
     def action_fork__no_clone(self, cassette_name, local_namespace, remote_namespace, repository):
         # hijack subprocess call
@@ -447,6 +491,10 @@ class GitRepoTestCase():
             with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
                 self.service.connect()
                 self.service.fork(remote_namespace, repository, clone=False)
+                # emulate the outcome of the git actions
+                self.service.repository.create_remote('upstream', url=remote_slug)
+                self.service.repository.create_remote('all', url=local_slug)
+                self.service.repository.create_remote(self.service.name, url=local_slug)
 
     def action_clone(self, cassette_name, namespace, repository):
         # hijack subprocess call
@@ -471,6 +519,8 @@ class GitRepoTestCase():
             with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
                 self.service.connect()
                 self.service.clone(namespace, repository)
+                self.service.repository.create_remote('all', url=local_slug)
+                self.service.repository.create_remote(self.service.name, url=local_slug)
 
     def action_create(self, cassette_name, namespace, repository):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
@@ -539,12 +589,128 @@ class GitRepoTestCase():
             for i, rq in enumerate(rq_list_data):
                 assert requests[i] == rq
 
-    def action_request_fetch(self, cassette_name, namespace, repository, request, pull=False):
+    def action_request_fetch(self, cassette_name, namespace, repository, request, pull=False, fail=False):
+        local_slug = self.service.format_path(namespace=namespace, repository=repository, rw=False)
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
-            self.service.connect()
-            self.service.clone(namespace, repository, rw=False)
-            self.service.request_fetch(repository, namespace, request)
-            assert self.repository.branches[-1].name == 'request/{}'.format(request)
+            with self.mockup_git(namespace, repository):
+                self.set_mock_popen_commands([
+                    ('git remote add all {}'.format(local_slug), b'', b'', 0),
+                    ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
+                    ('git version', b'git version 2.8.0', b'', 0),
+                    ('git pull --progress -v {} master'.format(self.service.name), b'', '\n'.join([
+                        'POST git-upload-pack (140 bytes)',
+                        'remote: Counting objects: 8318, done.',
+                        'remote: Compressing objects: 100% (3/3), done.',
+                        'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
+                        'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
+                        'Resolving deltas: 100% (5126/5126), done.',
+                        'From {}:{}/{}'.format(self.service.fqdn, namespace, repository),
+                        ' * branch            master     -> FETCH_HEAD',
+                        ' * [new branch]      master     -> {}/master'.format(self.service.name)]).encode('utf-8'),
+                    0),
+                    ('git version', b'git version 2.8.0', b'', 0),
+                    ('git fetch --progress -v {0} pull/{1}/head:request/{1}'.format(self.service.name, request), b'', '\n'.join([
+                        'POST git-upload-pack (140 bytes)',
+                        'remote: Counting objects: 8318, done.',
+                        'remote: Compressing objects: 100% (3/3), done.',
+                        'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
+                        'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
+                        'Resolving deltas: 100% (5126/5126), done.',
+                        'From {}:{}/{}'.format(self.service.fqdn, namespace, repository),
+                        ' * [new branch]      master     -> request/{}'.format(request)]).encode('utf-8'),
+                    0)
+                ])
+                self.service.connect()
+                self.service.clone(namespace, repository, rw=False)
+            if not fail:
+                self.service.repository.create_remote('all', url=local_slug)
+                self.service.repository.create_remote(self.service.name, url=local_slug)
+            with self.mockup_git(namespace, repository):
+                self.set_mock_popen_commands([
+                    ('git version', b'git version 2.8.0', b'', 0),
+                    ('git fetch --progress -v {0} pull/{1}/head:request/{1}'.format(self.service.name, request), b'', '\n'.join([
+                        'POST git-upload-pack (140 bytes)',
+                        'remote: Counting objects: 8318, done.',
+                        'remote: Compressing objects: 100% (3/3), done.',
+                        'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
+                        'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
+                        'Resolving deltas: 100% (5126/5126), done.',
+                        'From {}:{}/{}'.format(self.service.fqdn, namespace, repository),
+                        ' * [new branch]      master     -> request/{}'.format(request)]).encode('utf-8'),
+                    0)
+                ])
+                self.service.request_fetch(repository, namespace, request)
+
+    def action_request_create(self, cassette_name,
+            namespace, repository, branch,
+            title, description,
+            create_repository='test_create_requests',
+            create_branch='pr-test'):
+        '''
+        Here we are testing the subcommand 'request create'.
+
+        this test needs sensibly more preparation than other tests, because to create
+        a pull request, you need:
+
+        * a repository with commits on both the service and your workspace
+        * a new branch with new commits, that has been pushed on the service
+
+        So that's what we're doing below:
+            * create a test project on the service,
+            * populate the temporary git repository with it
+            * create a commit and push it to the service as master
+            * create a branch in the workspace
+            * create a commit and push it to the service as pr-test
+
+        Then we test the feature:
+            * using the branch create a pull request and check the pull request is there
+
+        Finally clean the remote repository
+
+        So all the contextual work is only done
+        '''
+        cassette_name = '_'.join(['test', self.service.name, cassette_name])
+        will_record = 'never' != self.recorder.config.default_cassette_options['record_mode'] \
+                and not os.path.exists(os.path.join(self.recorder.config.cassette_library_dir, cassette_name+'.json'))
+
+        @contextmanager
+        def prepare_project_for_test():
+            if will_record:
+                self.service.connect()
+                # let's create a project and add it to current repository
+                self.service.create(namespace, create_repository, add=True)
+                # make a modification, commit and push it
+                with open(os.path.join(self.repository.working_dir, 'first_file'), 'w') as test:
+                    test.write('he who makes a beast of himself gets rid of the pain of being a man. Dr Johnson')
+                self.repository.git.add('first_file')
+                self.repository.git.commit(message='First commit')
+                self.repository.git.push(self.service.name, 'master')
+                # create a new branch
+                new_branch = self.repository.create_head(create_branch, 'HEAD')
+                self.repository.head.reference = new_branch
+                self.repository.head.reset(index=True, working_tree=True)
+                # make a modification, commit and push it to that branch
+                with open(os.path.join(self.repository.working_dir, 'second_file'), 'w') as test:
+                    test.write('La meilleure façon de ne pas avancer est de suivre une idée fixe. J.Prévert')
+                self.repository.git.add('second_file')
+                self.repository.git.commit(message='Second commit')
+                self.repository.git.push('github', create_branch)
+            yield
+            if will_record:
+                self.service.delete(create_repository)
+
+        #self.service.repository = self.repository
+        with prepare_project_for_test():
+            with self.recorder.use_cassette(cassette_name):
+                self.service.connect()
+                request = self.service.request_create(
+                        namespace,
+                        repository,
+                        branch,
+                        title,
+                        description
+                )
+                return request
 
     def action_gist_list(self, cassette_name, gist=None, gist_list_data=[]):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
@@ -602,5 +768,4 @@ class GitRepoTestCase():
         ])
         with Replace('subprocess.Popen', self.Popen):
             self.service.open(user=namespace, repo=repository)
-
 

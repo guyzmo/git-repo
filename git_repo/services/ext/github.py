@@ -21,7 +21,7 @@ class GithubService(RepositoryService):
     def connect(self):
         try:
             self.gh.login(token=self._privatekey)
-            self.username = self.gh.user()
+            self.username = self.gh.user().name
         except github3.models.GitHubError as err:
             if err.code is 401:
                 if not self._privatekey:
@@ -33,6 +33,8 @@ class GithubService(RepositoryService):
                                           'Check your configuration and try again.') from err
 
     def create(self, user, repo, add=False):
+        if user != self.username:
+            raise NotImplementedError("Project creation supported for authentified user only!")
         try:
             self.gh.create_repo(repo)
         except github3.models.GitHubError as err:
@@ -41,10 +43,15 @@ class GithubService(RepositoryService):
             else: # pragma: no cover
                 raise ResourceError("Unhandled error.") from err
         if add:
-            self.add(user=user, repo=repo, tracking=self.name)
+            self.add(user=self.username, repo=repo, tracking=self.name)
 
     def fork(self, user, repo, branch='master', clone=False):
         log.info("Forking repository {}/{}…".format(user, repo))
+        # checking for an 'upstream' remote.
+        upstream_remotes = list(filter(lambda x: x.name == 'upstream', self.repository.remotes))
+        if len(upstream_remotes) != 0:
+            raise ResourceExistsError('A remote named `upstream` already exists. Has this repo already been forked?')
+        # forking the repository on the service
         try:
             fork = self.gh.repository(user, repo).create_fork()
         except github3.models.GitHubError as err:
@@ -52,7 +59,16 @@ class GithubService(RepositoryService):
                 raise ResourceExistsError("Project already exists.") from err
             else: # pragma: no cover
                 raise ResourceError("Unhandled error: {}".format(err)) from err
-        self.add(user=user, repo=repo, name='upstream', alone=True)
+        # checking if a remote with the service's name already exists
+        service_remotes = list(filter(lambda x: x.name == self.name, self.repository.remotes))
+        if len(service_remotes) != 0:
+            # if it does, rename it to upstream
+            repo.delete(service_remotes[0])
+            repo.create_remote('upstream', service_remotes[0].url)
+        else:
+            # otherwise create an upstream remote with the source repository
+            self.add(user=user, repo=repo, name='upstream', alone=True)
+        # add the service named repository
         remote = self.add(repo=repo, user=self.username, tracking=self.name)
         if clone:
             self.pull(remote, branch)
@@ -149,6 +165,33 @@ class GithubService(RepositoryService):
             raise ResourceNotFoundError('Could not find gist')
         gist.delete()
 
+    def request_create(self, user, repo, local_branch, remote_branch, title, description=None):
+        repository = self.gh.repository(user, repo)
+        if not repository:
+            raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
+        if not local_branch:
+            remote_branch = self.repository.active_branch.name or self.repository.active_branch.name
+        if not remote_branch:
+            local_branch = repository.master_branch or 'master'
+        try:
+            request = repository.create_pull(title,
+                    base=local_branch,
+                    head=':'.join([user, remote_branch]),
+                    body=description)
+        except github3.models.GitHubError as err:
+            if err.code == 422:
+                for error in err.errors:
+                    if 'message' in error:
+                        if 'No commits' in error['message']:
+                            raise ResourceError(error['message'])
+                else:
+                    if 'message' in error:
+                        raise ResourceError(error['message'])
+                raise ResourceError("Unhandled formatting error: {}".format(err.errors))
+
+
+        return {'local': local_branch, 'remote': remote_branch, 'ref': request.number}
+
     def request_list(self, user, repo):
         repository = self.gh.repository(user, repo)
         for pull in repository.iter_pulls():
@@ -173,6 +216,15 @@ class GithubService(RepositoryService):
             if 'Error when fetching: fatal: Couldn\'t find remote ref' in err.command[0]:
                 raise ResourceNotFoundError('Could not find opened request #{}'.format(request)) from err
             raise err
+
+    @classmethod
+    def get_auth_token(cls, login, password):
+        import platform
+        auth = github3.GitHub().authorize(login, password,
+                scopes=[ 'repo', 'delete_repo', 'gist' ],
+                note='git-repo token used on {}'.format(platform.node()),
+                note_url='https://github.com/guyzmo/git-repo')
+        return auth.token
 
     @property
     def user(self):
