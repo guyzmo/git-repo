@@ -1,0 +1,6 @@
+docopt
+GitPython==2.0.6
+progress==1.2
+python-gitlab==0.13
+github3.py==0.9.5
+bitbucket-api==0.5.0
