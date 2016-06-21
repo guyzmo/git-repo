@@ -154,18 +154,20 @@ class GitRepoRunner(KeywordArgumentParser):
     def _guess_repo_slug(self, repository, service):
         config = repository.config_reader()
         target = service.name
-        for section_name in config.sections():
-            if 'remote' in section_name:
-                section = dict(config.items(section_name))
-                if target in section['url']:
-                    if section['url'].startswith('https'):
-                        *_, user, name = section['url'].rstrip('.git').split('/')
-                        self.set_repo_slug('/'.join([user, name]))
-                        break
-                    elif section['url'].startswith('git@'):
-                        _, repo_slug = section['url'].rstrip('.git').split(':')
-                        self.set_repo_slug(repo_slug)
-                        break
+        for remote in repository.remotes:
+            for url in remote.urls:
+                if url.startswith('https'):
+                    if '.git' in url:
+                        url = url[:-4]
+                    *_, user, name = url.split('/')
+                    self.set_repo_slug('/'.join([user, name]))
+                    break
+                elif url.startswith('git@'):
+                    if '.git' in url:
+                        url = url[:-4]
+                    _, repo_slug = url.split(':')
+                    self.set_repo_slug(repo_slug)
+                    break
 
     def get_service(self, lookup_repository=True):
         if not lookup_repository:
@@ -181,7 +183,7 @@ class GitRepoRunner(KeywordArgumentParser):
             except InvalidGitRepositoryError:
                 raise FileNotFoundError('Cannot find path to the repository.')
             service = RepositoryService.get_service(repository, self.target)
-            if not self.repo_slug:
+            if not self.repo_name:
                 self._guess_repo_slug(repository, service)
         return service
 
