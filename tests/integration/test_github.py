@@ -322,7 +322,8 @@ class Test_Github(GitRepoTestCase):
             self.action_request_fetch(cassette_name=sys._getframe().f_code.co_name,
                 namespace='guyzmo',
                 repository='git-repo',
-                request='1')
+                request='1',
+                fail=True)
 
     def test_32_request_create(self):
         r = self.action_request_create(cassette_name=sys._getframe().f_code.co_name,

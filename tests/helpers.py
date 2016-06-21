@@ -54,7 +54,7 @@ class RepositoryMockup(RepositoryService):
         self._did_connect = True
 
     def delete(self, *args, **kwarg):
-        self._did_delete = (args, kwarg)
+        self._did_delete = (tuple(reversed(args)), kwarg)
 
     def create(self, *args, **kwarg):
         self._did_create = (args, kwarg)
@@ -163,6 +163,7 @@ class GitRepoMainTestCase():
             '--tracking': 'master',
             '--alone': False,
             '--add': False,
+            '--clone': False,
             '<name>': None,
             '<branch>': None,
             '<target>': self.target,
@@ -240,7 +241,6 @@ class GitRepoMainTestCase():
         assert rc == main(self.setup_args({
             'fork': True,
             '<user>/<repo>': repo,
-            '--clone': True,
             '--path': self.tempdir.name
         }, args)), "Non {} result for fork".format(rc)
         return RepositoryService._current._did_fork
@@ -460,6 +460,10 @@ class GitRepoTestCase():
             with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
                 self.service.connect()
                 self.service.fork(remote_namespace, repository, clone=True)
+                # emulate the outcome of the git actions
+                self.service.repository.create_remote('upstream', url=remote_slug)
+                self.service.repository.create_remote('all', url=local_slug)
+                self.service.repository.create_remote(self.service.name, url=local_slug)
 
     def action_fork__no_clone(self, cassette_name, local_namespace, remote_namespace, repository):
         # hijack subprocess call
@@ -487,6 +491,10 @@ class GitRepoTestCase():
             with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
                 self.service.connect()
                 self.service.fork(remote_namespace, repository, clone=False)
+                # emulate the outcome of the git actions
+                self.service.repository.create_remote('upstream', url=remote_slug)
+                self.service.repository.create_remote('all', url=local_slug)
+                self.service.repository.create_remote(self.service.name, url=local_slug)
 
     def action_clone(self, cassette_name, namespace, repository):
         # hijack subprocess call
@@ -511,6 +519,8 @@ class GitRepoTestCase():
             with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
                 self.service.connect()
                 self.service.clone(namespace, repository)
+                self.service.repository.create_remote('all', url=local_slug)
+                self.service.repository.create_remote(self.service.name, url=local_slug)
 
     def action_create(self, cassette_name, namespace, repository):
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
@@ -579,12 +589,57 @@ class GitRepoTestCase():
             for i, rq in enumerate(rq_list_data):
                 assert requests[i] == rq
 
-    def action_request_fetch(self, cassette_name, namespace, repository, request, pull=False):
+    def action_request_fetch(self, cassette_name, namespace, repository, request, pull=False, fail=False):
+        local_slug = self.service.format_path(namespace=namespace, repository=repository, rw=False)
         with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
-            self.service.connect()
-            self.service.clone(namespace, repository, rw=False)
-            self.service.request_fetch(repository, namespace, request)
-            assert self.repository.branches[-1].name == 'request/{}'.format(request)
+            with self.mockup_git(namespace, repository):
+                self.set_mock_popen_commands([
+                    ('git remote add all {}'.format(local_slug), b'', b'', 0),
+                    ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
+                    ('git version', b'git version 2.8.0', b'', 0),
+                    ('git pull --progress -v {} master'.format(self.service.name), b'', '\n'.join([
+                        'POST git-upload-pack (140 bytes)',
+                        'remote: Counting objects: 8318, done.',
+                        'remote: Compressing objects: 100% (3/3), done.',
+                        'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
+                        'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
+                        'Resolving deltas: 100% (5126/5126), done.',
+                        'From {}:{}/{}'.format(self.service.fqdn, namespace, repository),
+                        ' * branch            master     -> FETCH_HEAD',
+                        ' * [new branch]      master     -> {}/master'.format(self.service.name)]).encode('utf-8'),
+                    0),
+                    ('git version', b'git version 2.8.0', b'', 0),
+                    ('git fetch --progress -v {0} pull/{1}/head:request/{1}'.format(self.service.name, request), b'', '\n'.join([
+                        'POST git-upload-pack (140 bytes)',
+                        'remote: Counting objects: 8318, done.',
+                        'remote: Compressing objects: 100% (3/3), done.',
+                        'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
+                        'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
+                        'Resolving deltas: 100% (5126/5126), done.',
+                        'From {}:{}/{}'.format(self.service.fqdn, namespace, repository),
+                        ' * [new branch]      master     -> request/{}'.format(request)]).encode('utf-8'),
+                    0)
+                ])
+                self.service.connect()
+                self.service.clone(namespace, repository, rw=False)
+            if not fail:
+                self.service.repository.create_remote('all', url=local_slug)
+                self.service.repository.create_remote(self.service.name, url=local_slug)
+            with self.mockup_git(namespace, repository):
+                self.set_mock_popen_commands([
+                    ('git version', b'git version 2.8.0', b'', 0),
+                    ('git fetch --progress -v {0} pull/{1}/head:request/{1}'.format(self.service.name, request), b'', '\n'.join([
+                        'POST git-upload-pack (140 bytes)',
+                        'remote: Counting objects: 8318, done.',
+                        'remote: Compressing objects: 100% (3/3), done.',
+                        'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
+                        'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
+                        'Resolving deltas: 100% (5126/5126), done.',
+                        'From {}:{}/{}'.format(self.service.fqdn, namespace, repository),
+                        ' * [new branch]      master     -> request/{}'.format(request)]).encode('utf-8'),
+                    0)
+                ])
+                self.service.request_fetch(repository, namespace, request)
 
     def action_request_create(self, cassette_name,
             namespace, repository, branch,

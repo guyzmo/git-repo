@@ -267,19 +267,51 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('fork')
     def do_fork(self):
+        def clone_repo():
+            try:
+                repo_path = os.path.join(self.path, self.repo_name)
+                repository = Repo(repo_path)
+            except (InvalidGitRepositoryError, NoSuchPathError):
+                repo_path = os.path.join(self.path, self.repo_name)
+                repository = Repo.init(repo_path)
+            return repository, repo_path
+
+        def lookup_repo():
+            try:
+                repo_path = self.path
+                repository = Repo(repo_path)
+            except (InvalidGitRepositoryError, NoSuchPathError):
+                try:
+                    repo_path = os.path.join(self.path, self.repo_name)
+                    repository = Repo(repo_path)
+                except (InvalidGitRepositoryError, NoSuchPathError):
+                    return None, None
+            return repository, repo_path
+
         service = self.get_service(lookup_repository=self.repo_slug == None)
         if not self.repo_name and not self.user_name:
             raise ArgumentError('Cannot clone repository, '
                                 'you shall provide the <user>/<repo> parameter '
                                 'or run the command from a git repository!')
-        repo_path = os.path.join(self.path, self.repo_name)
-        repository = Repo.init(repo_path)
+        if not self.clone:
+            repository, repo_path = lookup_repo()
+            if repository == None:
+                repository, repo_path = clone_repo()
+                self.clone = True
+        else:
+            repository, repo_path = clone_repo()
         service = RepositoryService.get_service(repository, self.target)
         service.fork(self.user_name, self.repo_name, branch=self.branch, clone=self.clone)
-        log.info('Successfully cloned repository {} in {}'.format(
-            self.repo_slug,
-            repo_path)
-        )
+        if self.clone:
+            log.info('Successfully cloned repository {} in {}'.format(
+                self.repo_slug,
+                repo_path)
+            )
+        else:
+            log.info('Successfully added repository {} as a remote to {}'.format(
+                self.repo_slug,
+                repo_path)
+            )
 
         return 0
 
