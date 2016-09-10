@@ -217,7 +217,8 @@ setup(name='git-repo',
       author='Bernard `Guyzmo` Pratz',
       author_email='guyzmo+git-repo@m0g.net',
       setup_requires=[
-          'setuptools-markdown'
+          'setuptools-markdown',
+          'wheel>=0.25.0'
       ],
       long_description_markdown_filename='README.md',
       include_package_data = True,
