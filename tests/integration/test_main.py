@@ -92,6 +92,18 @@ class Test_Main(GitRepoMainTestCase):
                                                       args={'<branch>': 'foobar'})
         assert ('guyzmo', 'git-repo', 'foobar') == repo_slug_branch
 
+    def test_clone__full_url_http(self):
+        repo_slug_branch, seen_args = self.main_clone('http://service.com/guyzmo/git-repo', 0)
+        assert ('guyzmo', 'git-repo', 'master') == repo_slug_branch
+
+    def test_clone__full_url_https(self):
+        repo_slug_branch, seen_args = self.main_clone('https://service.com/guyzmo/git-repo', 0)
+        assert ('guyzmo', 'git-repo', 'master') == repo_slug_branch
+
+    def test_clone__full_url_git(self):
+        repo_slug_branch, seen_args = self.main_clone('git@service.com/guyzmo/git-repo', 0)
+        assert ('guyzmo', 'git-repo', 'master') == repo_slug_branch
+
     def test_clone__too_many_slashes(self):
         did_clone = self.main_clone('guyzmo/git/repo', 2)
         assert None is did_clone

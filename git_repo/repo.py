@@ -128,6 +128,10 @@ from .kwargparse import KeywordArgumentParser, store_parameter, register_action
 from git import Repo, Git
 from git.exc import InvalidGitRepositoryError, NoSuchPathError
 
+import re
+
+EXTRACT_URL_RE = re.compile('[^:]*(://|@)[^/]*/')
+
 def confirm(what, where):
     '''
     Method to show a CLI based confirmation message, waiting for a yes/no answer.
@@ -217,18 +221,19 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @store_parameter('<user>/<repo>')
     def set_repo_slug(self, repo_slug):
-        self.repo_slug = repo_slug
-        if not repo_slug:
+        self.repo_slug = EXTRACT_URL_RE.sub('', repo_slug) if repo_slug else repo_slug
+        if not self.repo_slug:
             self.user_name = None
             self.repo_name = None
-        elif '/' in repo_slug:
-            self.user_name, self.repo_name, *overflow = repo_slug.split('/')
+        elif '/' in self.repo_slug:
+            # in case a full URL is given as parameter, just extract the slug part.
+            self.user_name, self.repo_name, *overflow = self.repo_slug.split('/')
             if len(overflow) != 0:
                 raise ArgumentError('Too many slashes.'
                                     'Format of the parameter is <user>/<repo> or <repo>.')
         else:
             self.user_name = None
-            self.repo_name = repo_slug
+            self.repo_name = self.repo_slug
 
     @store_parameter('<branch>')
     def set_branch(self, branch):
