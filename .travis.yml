@@ -9,6 +9,7 @@ addons:
         - pandoc
 # command to install dependencies
 install:
+    - "pip install --upgrade pip" # upgrade to latest pip (needed on py3.4)
     - "pip install zc.buildout"
     - "buildout"
 # command to run tests
