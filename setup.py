@@ -63,8 +63,12 @@ class VersionInfo(type):
     def __str__(cls):
         return '.'.join(map(str, cls.info))
 
+# Hack for metaclass support in both Py2 and Py3
+class VersionInfo_metaclass(VersionInfo):
+	def __new__(cls, *bases):
+		return VersionInfo('version_info', bases, {})
 
-class Version(Command, metaclass=VersionInfo):
+class Version(VersionInfo_metaclass(Command)):
     description = 'Bump version number'
     user_options = [
             ('major', 'M', 'Bump major part of version number'),
@@ -213,7 +217,8 @@ setup(name='git-repo',
       author='Bernard `Guyzmo` Pratz',
       author_email='guyzmo+git-repo@m0g.net',
       setup_requires=[
-          'setuptools-markdown'
+          'setuptools-markdown',
+          'wheel>=0.25.0'
       ],
       long_description_markdown_filename='README.md',
       include_package_data = True,
