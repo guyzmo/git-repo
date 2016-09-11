@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2016-03-30T14:11:46",
+      "recorded_at": "2016-09-11T20:32:32",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -9,10 +9,10 @@
         },
         "headers": {
           "Accept": "*/*",
-          "Accept-Encoding": "gzip, deflate",
+          "Accept-Encoding": "identity",
           "Connection": "keep-alive",
-          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITHUB>",
-          "User-Agent": "python-requests/2.9.1"
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.10.0"
         },
         "method": "GET",
         "uri": "https://gitlab.com/api/v3/user"
@@ -20,19 +20,19 @@
       "response": {
         "body": {
           "encoding": null,
-          "string": "{\"name\":\"<GITHUB_NAMESPACE>\",\"username\":\"<GITHUB_NAMESPACE>\",\"id\":470686,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/59014873897ec9bf64471e4ddf61c8d5?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/<GITHUB_NAMESPACE>\",\"created_at\":\"2016-03-30T13:15:50.649Z\",\"is_admin\":false,\"bio\":\"\",\"skype\":\"\",\"linkedin\":\"\",\"twitter\":\"\",\"website_url\":\"\",\"last_sign_in_at\":\"2016-03-30T13:19:50.252Z\",\"confirmed_at\":\"2016-03-30T13:18:12.005Z\",\"email\":\"guyzmo+git-repo+projects+gitlab@m0g.net\",\"theme_id\":2,\"color_scheme_id\":1,\"projects_limit\":100000,\"current_sign_in_at\":\"2016-03-30T13:19:50.252Z\",\"identities\":[],\"can_create_group\":true,\"can_create_project\":true,\"two_factor_enabled\":false,\"external\":false,\"private_token\":\"<PRIVATE_KEY_GITHUB>\"}"
+          "string": "{\"name\":\"Guyzmo\",\"username\":\"<GITHUB_NAMESPACE>\",\"id\":459552,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/<GITHUB_NAMESPACE>\",\"created_at\":\"2016-03-21T12:52:59.859Z\",\"is_admin\":false,\"bio\":\"\\\\_o\\u003c\",\"location\":\"\",\"skype\":\"\",\"linkedin\":\"\",\"twitter\":\"\",\"website_url\":\"\",\"last_sign_in_at\":\"2016-09-10T14:02:13.834Z\",\"confirmed_at\":\"2016-03-21T13:48:05.234Z\",\"email\":\"<GITHUB_NAMESPACE>+gitlab@m0g.net\",\"theme_id\":4,\"color_scheme_id\":4,\"projects_limit\":100000,\"current_sign_in_at\":\"2016-09-11T16:56:59.552Z\",\"identities\":[],\"can_create_group\":true,\"can_create_project\":true,\"two_factor_enabled\":false,\"external\":false,\"private_token\":\"<PRIVATE_KEY_GITLAB>\"}"
         },
         "headers": {
           "Cache-Control": "max-age=0, private, must-revalidate",
-          "Content-Length": "744",
+          "Content-Length": "729",
           "Content-Type": "application/json",
-          "Date": "Wed, 30 Mar 2016 14:12:00 GMT",
-          "Etag": "W/\"76175f0e11cbbd54fc8475d86a9ab425\"",
+          "Date": "Sun, 11 Sep 2016 20:32:32 GMT",
+          "Etag": "W/\"664b3d69847cb9f053e3c94bd53b06c5\"",
           "Server": "nginx",
           "Status": "200 OK",
           "Vary": "Origin",
-          "X-Request-Id": "b2642c92-1a0e-43f7-8a4b-63f9dc981ab4",
-          "X-Runtime": "2.549070"
+          "X-Request-Id": "c34e2fe5-6395-44fe-acf1-31f80092161e",
+          "X-Runtime": "0.043705"
         },
         "status": {
           "code": 200,
@@ -42,7 +42,7 @@
       }
     },
     {
-      "recorded_at": "2016-03-30T14:11:51",
+      "recorded_at": "2016-09-11T20:32:32",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -50,10 +50,10 @@
         },
         "headers": {
           "Accept": "*/*",
-          "Accept-Encoding": "gzip, deflate",
+          "Accept-Encoding": "identity",
           "Connection": "keep-alive",
-          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITHUB>",
-          "User-Agent": "python-requests/2.9.1"
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.10.0"
         },
         "method": "GET",
         "uri": "https://gitlab.com/api/v3/projects/sigmavirus24%2Fgithub3-py"
@@ -61,19 +61,19 @@
       "response": {
         "body": {
           "encoding": null,
-          "string": "{\"id\":7817,\"description\":\"\",\"default_branch\":\"develop\",\"tag_list\":[],\"public\":true,\"archived\":false,\"visibility_level\":20,\"ssh_url_to_repo\":\"git@gitlab.com:sigmavirus24/github3-py.git\",\"http_url_to_repo\":\"https://gitlab.com/sigmavirus24/github3-py.git\",\"web_url\":\"https://gitlab.com/sigmavirus24/github3-py\",\"owner\":{\"name\":\"Ian Cordasco\",\"username\":\"sigmavirus24\",\"id\":6325,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/396e3de53320abf9855d912cd3d9431f?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/sigmavirus24\"},\"name\":\"github3.py\",\"name_with_namespace\":\"Ian Cordasco / github3.py\",\"path\":\"github3-py\",\"path_with_namespace\":\"sigmavirus24/github3-py\",\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"builds_enabled\":false,\"snippets_enabled\":false,\"created_at\":\"2013-07-07T04:31:48.000Z\",\"last_activity_at\":\"2014-12-21T15:58:17.464Z\",\"shared_runners_enabled\":true,\"creator_id\":6325,\"namespace\":{\"id\":6577,\"name\":\"sigmavirus24\",\"path\":\"sigmavirus24\",\"owner_id\":6325,\"created_at\":\"2013-07-07T04:31:15.000Z\",\"updated_at\":\"2014-04-25T07:48:18.000Z\",\"description\":\"\",\"avatar\":null,\"membership_lock\":false,\"share_with_group_lock\":false,\"visibility_level\":20,\"last_ldap_sync_at\":null},\"avatar_url\":null,\"star_count\":0,\"forks_count\":1,\"open_issues_count\":0,\"public_builds\":true,\"permissions\":{\"project_access\":null,\"group_access\":null}}"
+          "string": "{\"id\":7817,\"description\":\"\",\"default_branch\":\"develop\",\"tag_list\":[],\"public\":true,\"archived\":false,\"visibility_level\":20,\"ssh_url_to_repo\":\"git@gitlab.com:sigmavirus24/github3-py.git\",\"http_url_to_repo\":\"https://gitlab.com/sigmavirus24/github3-py.git\",\"web_url\":\"https://gitlab.com/sigmavirus24/github3-py\",\"owner\":{\"name\":\"Ian Cordasco\",\"username\":\"sigmavirus24\",\"id\":6325,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/396e3de53320abf9855d912cd3d9431f?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/sigmavirus24\"},\"name\":\"github3.py\",\"name_with_namespace\":\"Ian Cordasco / github3.py\",\"path\":\"github3-py\",\"path_with_namespace\":\"sigmavirus24/github3-py\",\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"builds_enabled\":false,\"snippets_enabled\":false,\"container_registry_enabled\":null,\"created_at\":\"2013-07-07T04:31:48.000Z\",\"last_activity_at\":\"2014-12-21T15:58:17.464Z\",\"shared_runners_enabled\":true,\"creator_id\":6325,\"namespace\":{\"id\":6577,\"name\":\"sigmavirus24\",\"path\":\"sigmavirus24\",\"owner_id\":6325,\"created_at\":\"2013-07-07T04:31:15.000Z\",\"updated_at\":\"2014-04-25T07:48:18.000Z\",\"description\":\"\",\"avatar\":null,\"membership_lock\":false,\"share_with_group_lock\":false,\"visibility_level\":20,\"request_access_enabled\":true,\"ldap_sync_status\":\"ready\",\"ldap_sync_error\":null,\"ldap_sync_last_update_at\":null,\"ldap_sync_last_successful_update_at\":null,\"ldap_sync_last_sync_at\":null,\"deleted_at\":null},\"avatar_url\":null,\"star_count\":1,\"forks_count\":1,\"open_issues_count\":0,\"public_builds\":true,\"shared_with_groups\":[],\"permissions\":{\"project_access\":null,\"group_access\":null}}"
         },
         "headers": {
           "Cache-Control": "max-age=0, private, must-revalidate",
-          "Content-Length": "1382",
+          "Content-Length": "1618",
           "Content-Type": "application/json",
-          "Date": "Wed, 30 Mar 2016 14:12:04 GMT",
-          "Etag": "W/\"197961aba84cfdcf1367ceb54f51c79e\"",
+          "Date": "Sun, 11 Sep 2016 20:32:32 GMT",
+          "Etag": "W/\"b62cab98d990464cc26ce91e513e9eaf\"",
           "Server": "nginx",
           "Status": "200 OK",
           "Vary": "Origin",
-          "X-Request-Id": "abe1122f-06e0-4eef-a277-67d6997475e7",
-          "X-Runtime": "4.196091"
+          "X-Request-Id": "ab96c937-179d-4dcc-8969-bd299562bd02",
+          "X-Runtime": "0.085586"
         },
         "status": {
           "code": 200,
@@ -83,7 +83,7 @@
       }
     },
     {
-      "recorded_at": "2016-03-30T14:11:57",
+      "recorded_at": "2016-09-11T20:32:35",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -91,12 +91,12 @@
         },
         "headers": {
           "Accept": "*/*",
-          "Accept-Encoding": "gzip, deflate",
+          "Accept-Encoding": "identity",
           "Connection": "keep-alive",
           "Content-Length": "2",
           "Content-type": "application/json",
-          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITHUB>",
-          "User-Agent": "python-requests/2.9.1"
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.10.0"
         },
         "method": "POST",
         "uri": "https://gitlab.com/api/v3/projects/fork/7817"
@@ -104,19 +104,19 @@
       "response": {
         "body": {
           "encoding": null,
-          "string": "{\"id\":1015165,\"description\":\"\",\"default_branch\":null,\"tag_list\":[],\"public\":true,\"archived\":false,\"visibility_level\":20,\"ssh_url_to_repo\":\"git@gitlab.com:<GITHUB_NAMESPACE>/github3-py.git\",\"http_url_to_repo\":\"https://gitlab.com/<GITHUB_NAMESPACE>/github3-py.git\",\"web_url\":\"https://gitlab.com/<GITHUB_NAMESPACE>/github3-py\",\"owner\":{\"name\":\"<GITHUB_NAMESPACE>\",\"username\":\"<GITHUB_NAMESPACE>\",\"id\":470686,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/59014873897ec9bf64471e4ddf61c8d5?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/<GITHUB_NAMESPACE>\"},\"name\":\"github3.py\",\"name_with_namespace\":\"<GITHUB_NAMESPACE> / github3.py\",\"path\":\"github3-py\",\"path_with_namespace\":\"<GITHUB_NAMESPACE>/github3-py\",\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"builds_enabled\":false,\"snippets_enabled\":false,\"created_at\":\"2016-03-30T14:12:08.617Z\",\"last_activity_at\":\"2016-03-30T14:12:10.723Z\",\"shared_runners_enabled\":true,\"creator_id\":470686,\"namespace\":{\"id\":554043,\"name\":\"<GITHUB_NAMESPACE>\",\"path\":\"<GITHUB_NAMESPACE>\",\"owner_id\":470686,\"created_at\":\"2016-03-30T13:15:50.947Z\",\"updated_at\":\"2016-03-30T13:36:53.588Z\",\"description\":\"\",\"avatar\":null,\"membership_lock\":false,\"share_with_group_lock\":false,\"visibility_level\":20,\"last_ldap_sync_at\":null},\"forked_from_project\":{\"id\":7817,\"name\":\"github3.py\",\"name_with_namespace\":\"Ian Cordasco / github3.py\",\"path\":\"github3-py\",\"path_with_namespace\":\"sigmavirus24/github3-py\"},\"avatar_url\":null,\"star_count\":0,\"forks_count\":0,\"open_issues_count\":0,\"runners_token\":\"ugvdcBE1ScMZPmFJjR43\",\"public_builds\":true}"
+          "string": "{\"id\":1654274,\"description\":\"\",\"default_branch\":null,\"tag_list\":[],\"public\":true,\"archived\":false,\"visibility_level\":20,\"ssh_url_to_repo\":\"git@gitlab.com:<GITHUB_NAMESPACE>/github3-py.git\",\"http_url_to_repo\":\"https://gitlab.com/<GITHUB_NAMESPACE>/github3-py.git\",\"web_url\":\"https://gitlab.com/<GITHUB_NAMESPACE>/github3-py\",\"owner\":{\"name\":\"Guyzmo\",\"username\":\"<GITHUB_NAMESPACE>\",\"id\":459552,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/<GITHUB_NAMESPACE>\"},\"name\":\"github3.py\",\"name_with_namespace\":\"Guyzmo / github3.py\",\"path\":\"github3-py\",\"path_with_namespace\":\"<GITHUB_NAMESPACE>/github3-py\",\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"builds_enabled\":false,\"snippets_enabled\":false,\"container_registry_enabled\":true,\"created_at\":\"2016-09-11T20:32:32.851Z\",\"last_activity_at\":\"2016-09-11T20:32:34.969Z\",\"shared_runners_enabled\":true,\"creator_id\":459552,\"namespace\":{\"id\":540439,\"name\":\"<GITHUB_NAMESPACE>\",\"path\":\"<GITHUB_NAMESPACE>\",\"owner_id\":459552,\"created_at\":\"2016-03-21T12:53:00.139Z\",\"updated_at\":\"2016-03-21T12:53:00.139Z\",\"description\":\"\",\"avatar\":null,\"membership_lock\":false,\"share_with_group_lock\":false,\"visibility_level\":20,\"request_access_enabled\":true,\"ldap_sync_status\":\"ready\",\"ldap_sync_error\":null,\"ldap_sync_last_update_at\":null,\"ldap_sync_last_successful_update_at\":null,\"ldap_sync_last_sync_at\":null,\"deleted_at\":null},\"forked_from_project\":{\"id\":7817,\"http_url_to_repo\":\"https://gitlab.com/sigmavirus24/github3-py.git\",\"web_url\":\"https://gitlab.com/sigmavirus24/github3-py\",\"name\":\"github3.py\",\"name_with_namespace\":\"Ian Cordasco / github3.py\",\"path\":\"github3-py\",\"path_with_namespace\":\"sigmavirus24/github3-py\"},\"avatar_url\":null,\"star_count\":0,\"forks_count\":0,\"open_issues_count\":0,\"runners_token\":\"_egD53P68gfRNPbeY-Eg\",\"public_builds\":true,\"shared_with_groups\":[]}"
         },
         "headers": {
           "Cache-Control": "max-age=0, private, must-revalidate",
-          "Content-Length": "1551",
+          "Content-Length": "1840",
           "Content-Type": "application/json",
-          "Date": "Wed, 30 Mar 2016 14:12:11 GMT",
-          "Etag": "W/\"b2d27d3c99bf29196001e2e2fd6d5b06\"",
+          "Date": "Sun, 11 Sep 2016 20:32:35 GMT",
+          "Etag": "W/\"2298ba6bba43ef61bc1076dd29ed95cc\"",
           "Server": "nginx",
           "Status": "201 Created",
           "Vary": "Origin",
-          "X-Request-Id": "f48025bd-a174-420a-9b0a-0c268f87cab0",
-          "X-Runtime": "2.793091"
+          "X-Request-Id": "f1668de1-6c64-4ec2-9eec-50f1e208d547",
+          "X-Runtime": "2.428569"
         },
         "status": {
           "code": 201,

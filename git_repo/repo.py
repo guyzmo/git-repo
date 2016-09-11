@@ -2,15 +2,16 @@
 
 '''
 Usage:
-    {self} [--path=<path>] [-v...] <target> fork [<branch>] [--clone]
+    {self} [--path=<path>] [-v...] <target> fork [--branch=<branch>]
     {self} [--path=<path>] [-v...] <target> create [--add]
     {self} [--path=<path>] [-v...] <target> delete [-f]
     {self} [--path=<path>] [-v...] <target> open
-    {self} [--path=<path>] [-v...] <target> fork <user>/<repo> [<branch>] [--clone]
+    {self} [--path=<path>] [-v...] <target> fork <user>/<repo> [--branch=<branch>]
+    {self} [--path=<path>] [-v...] <target> fork <user>/<repo> <repo> [--branch=<branch>]
     {self} [--path=<path>] [-v...] <target> create <user>/<repo> [--add]
     {self} [--path=<path>] [-v...] <target> delete <user>/<repo> [-f]
     {self} [--path=<path>] [-v...] <target> open <user>/<repo>
-    {self} [--path=<path>] [-v...] <target> clone <user>/<repo> [<branch>]
+    {self} [--path=<path>] [-v...] <target> clone <user>/<repo> [<repo> [<branch>]]
     {self} [--path=<path>] [-v...] <target> add <user>/<repo> [<name>] [--tracking=<branch>] [-a]
     {self} [--path=<path>] [-v...] <target> request (list|ls)
     {self} [--path=<path>] [-v...] <target> request fetch <request>
@@ -55,9 +56,14 @@ Options for add:
     -t,--tracking=<branch>   Makes this remote tracking for the current branch
     -a,--alone               Does not add the remote to the 'all' remote
 
-Options for fork and clone:
-    <branch>                 Branch to pull (when cloning) [default: master]
-    --clone                  Clone locally after fork
+Option for both clone and fork:
+    <repo>                   Name of the local workspace directory
+
+Options for clone:
+    <branch>                 Branch to pull [default: master]
+
+Options for fork:
+    --branch=<branch>        Branch to pull [default: master]
 
 Options for create:
     --add                    Add to local repository after creation
@@ -128,6 +134,10 @@ from .kwargparse import KeywordArgumentParser, store_parameter, register_action
 from git import Repo, Git
 from git.exc import InvalidGitRepositoryError, NoSuchPathError
 
+import re
+
+EXTRACT_URL_RE = re.compile('[^:]*(://|@)[^/]*/')
+
 def confirm(what, where):
     '''
     Method to show a CLI based confirmation message, waiting for a yes/no answer.
@@ -155,19 +165,20 @@ class GitRepoRunner(KeywordArgumentParser):
         config = repository.config_reader()
         target = service.name
         for remote in repository.remotes:
-            for url in remote.urls:
-                if url.startswith('https'):
-                    if '.git' in url:
-                        url = url[:-4]
-                    *_, user, name = url.split('/')
-                    self.set_repo_slug('/'.join([user, name]))
-                    break
-                elif url.startswith('git@'):
-                    if '.git' in url:
-                        url = url[:-4]
-                    _, repo_slug = url.split(':')
-                    self.set_repo_slug(repo_slug)
-                    break
+            if remote.name in (target, 'upstream', 'origin'):
+                for url in remote.urls:
+                    if url.startswith('https'):
+                        if '.git' in url:
+                            url = url[:-4]
+                        *_, user, name = url.split('/')
+                        self.set_repo_slug('/'.join([user, name]))
+                        break
+                    elif url.startswith('git@'):
+                        if '.git' in url:
+                            url = url[:-4]
+                        _, repo_slug = url.split(':')
+                        self.set_repo_slug(repo_slug)
+                        break
 
     def get_service(self, lookup_repository=True):
         if not lookup_repository:
@@ -217,18 +228,19 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @store_parameter('<user>/<repo>')
     def set_repo_slug(self, repo_slug):
-        self.repo_slug = repo_slug
-        if not repo_slug:
+        self.repo_slug = EXTRACT_URL_RE.sub('', repo_slug) if repo_slug else repo_slug
+        if not self.repo_slug:
             self.user_name = None
             self.repo_name = None
-        elif '/' in repo_slug:
-            self.user_name, self.repo_name, *overflow = repo_slug.split('/')
+        elif '/' in self.repo_slug:
+            # in case a full URL is given as parameter, just extract the slug part.
+            self.user_name, self.repo_name, *overflow = self.repo_slug.split('/')
             if len(overflow) != 0:
                 raise ArgumentError('Too many slashes.'
                                     'Format of the parameter is <user>/<repo> or <repo>.')
         else:
             self.user_name = None
-            self.repo_name = repo_slug
+            self.repo_name = self.repo_slug
 
     @store_parameter('<branch>')
     def set_branch(self, branch):
@@ -237,6 +249,19 @@ class GitRepoRunner(KeywordArgumentParser):
             branch = 'master'
 
         self.branch = branch
+
+    @store_parameter('<branch>')
+    @store_parameter('--branch')
+    def set_branch(self, branch):
+        # FIXME workaround for default value that is not correctly parsed in docopt
+        if branch == None:
+            branch = 'master'
+
+        self.branch = branch
+
+    @store_parameter('<repo>')
+    def set_target_repo(self, repo):
+        self.target_repo = repo
 
     @store_parameter('<name>')
     def set_name(self, name):
@@ -267,69 +292,61 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('fork')
     def do_fork(self):
-        def clone_repo():
-            try:
-                repo_path = os.path.join(self.path, self.repo_name)
-                repository = Repo(repo_path)
-            except (InvalidGitRepositoryError, NoSuchPathError):
-                repo_path = os.path.join(self.path, self.repo_name)
-                repository = Repo.init(repo_path)
-            return repository, repo_path
-
-        def lookup_repo():
+        if not self.repo_slug:
+            service = self.get_service(lookup_repository=True)
             try:
                 repo_path = self.path
                 repository = Repo(repo_path)
             except (InvalidGitRepositoryError, NoSuchPathError):
-                try:
-                    repo_path = os.path.join(self.path, self.repo_name)
-                    repository = Repo(repo_path)
-                except (InvalidGitRepositoryError, NoSuchPathError):
-                    return None, None
-            return repository, repo_path
+                raise ArgumentError('Path {} is not a git repository'.format(self.path))
 
-        service = self.get_service(lookup_repository=self.repo_slug == None)
-        if not self.repo_name and not self.user_name:
-            raise ArgumentError('Cannot clone repository, '
-                                'you shall provide the <user>/<repo> parameter '
-                                'or run the command from a git repository!')
-        if not self.clone:
-            repository, repo_path = lookup_repo()
-            if repository == None:
-                repository, repo_path = clone_repo()
-                self.clone = True
         else:
-            repository, repo_path = clone_repo()
-        service = RepositoryService.get_service(repository, self.target)
-        service.fork(self.user_name, self.repo_name, branch=self.branch, clone=self.clone)
-        if self.clone:
-            log.info('Successfully cloned repository {} in {}'.format(
-                self.repo_slug,
-                repo_path)
-            )
-        else:
-            log.info('Successfully added repository {} as a remote to {}'.format(
-                self.repo_slug,
-                repo_path)
-            )
+            # git <target> fork <user>/<repo>
+            if not self.target_repo:
+                if not self.user_name:
+                    raise ArgumentError('Cannot clone repository, '
+                                        'you shall provide either a <user>/<repo> parameter '
+                                        'or no parameters to fork current repository!')
+                service = self.get_service(None)
+
+            # git <target> fork <user>/<repo> <path>
+            else:
+                repo_path = os.path.join(self.path, self.target_repo)
+                try:
+                    service = RepositoryService.get_service(Repo(repo_path), self.target)
+                except (InvalidGitRepositoryError, NoSuchPathError):
+                    service = self.get_service(lookup_repository=False)
+                    # if the repository does not exists at given path, clone upstream into that path
+                    self.do_clone(service, repo_path)
+
+        service.run_fork(self.user_name, self.repo_name, branch=self.branch)
+
+        if not self.repo_slug or self.target_repo:
+            log.info('Successfully forked {} as {} within {}.'.format(
+                self.repo_slug, '/'.join([service.username, self.repo_name]), repo_path))
 
         return 0
 
     @register_action('clone')
-    def do_clone(self):
-        service = self.get_service(lookup_repository=False)
-        repo_path = os.path.join(self.path, self.repo_name)
+    def do_clone(self, service=None, repo_path=None):
+        service = service or self.get_service(lookup_repository=False)
+        repo_path = repo_path or os.path.join(self.path, self.target_repo or self.repo_name)
         if os.path.exists(repo_path):
             raise FileExistsError('Cannot clone repository, '
                                   'a folder named {} already exists!'.format(repo_path))
-        repository = Repo.init(repo_path)
-        service = RepositoryService.get_service(repository, self.target)
-        service.clone(self.user_name, self.repo_name, self.branch)
-        log.info('Successfully cloned `{}` into `{}`!'.format(
-            service.format_path(self.repo_slug),
-            repo_path)
-        )
-        return 0
+        try:
+            repository = Repo.init(repo_path)
+            service = RepositoryService.get_service(repository, self.target)
+            service.clone(self.user_name, self.repo_name, self.branch)
+            log.info('Successfully cloned `{}` into `{}`!'.format(
+                service.format_path(self.repo_slug),
+                repo_path)
+            )
+            return 0
+        except Exception as err:
+            if os.path.exists(repo_path):
+                os.removedirs(repo_path)
+            raise err from err
 
     @register_action('create')
     def do_create(self):

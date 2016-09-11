@@ -104,6 +104,7 @@ class BitbucketService(RepositoryService):
         if not ':' in self._privatekey:
             raise ConnectionError('Could not connect to BitBucket. Please setup your private key with login:password')
         self.bb.username, self.bb.password = self._privatekey.split(':')
+        self.username = self.bb.username
         result, _ = self.bb.get_user()
         if not result:
             raise ConnectionError('Could not connect to BitBucket. Not authorized, wrong credentials.')
@@ -117,21 +118,11 @@ class BitbucketService(RepositoryService):
         if add:
             self.add(user=user, repo=repo, tracking=self.name)
 
-    def fork(self, user, repo, branch='master', clone=False):
-        log.info("Forking repository {}/{}…".format(user, repo))
-        repositories = self.get_repository(user, repo)
-        if repo in repositories:
-            raise ResourceExistsError('Cannot fork repository as it already exists')
+    def fork(self, user, repo):
         success, result = self.bb.fork(user, repo)
         if not success:
             raise ResourceError("Couldn't complete fork: {message} (error #{code}: {reason})".format(**result))
-        fork = result
-        self.add(repo=repo, user=user, name='upstream', alone=True)
-        remote = self.add(repo=fork['slug'], user=fork['owner'], tracking=self.name)
-        if clone:
-            self.pull(remote, branch)
-        log.info("New forked repository available at {}".format(self.format_path(repository=fork['slug'],
-                                                                                 namespace=fork['owner'])))
+        return '/'.join([result['owner'], result['slug']])
 
     def delete(self, repo, user=None):
         if not user:
