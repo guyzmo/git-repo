@@ -22,6 +22,7 @@ class GitlabService(RepositoryService):
     def connect(self):
         self.gl.set_token(self._privatekey)
         self.gl.token_auth()
+        self.username = self.gl.user.username
 
     def create(self, user, repo, add=False):
         try:
@@ -38,20 +39,14 @@ class GitlabService(RepositoryService):
         if add:
             self.add(user=user, repo=repo, tracking=self.name)
 
-    def fork(self, user, repo, branch='master', clone=False):
+    def fork(self, user, repo):
         try:
-            fork = self.gl.projects.get('{}/{}'.format(user, repo)).forks.create({})
+            return self.gl.projects.get('{}/{}'.format(user, repo)).forks.create({}).path_with_namespace
         except GitlabCreateError as err:
             if json.loads(err.response_body.decode('utf-8'))['message']['name'][0] == 'has already been taken':
                 raise ResourceExistsError("Project already exists.") from err
             else:
                 raise ResourceError("Unhandled error: {}".format(err)) from err
-        self.add(user=user, repo=repo, name='upstream', alone=True)
-        remote = self.add(repo=fork.path, user=fork.namespace['path'], tracking=self.name)
-        if clone:
-            self.pull(remote, branch)
-        log.info("New forked repository available at {}/{}".format(self.url_ro,
-                                                                   fork.path_with_namespace))
 
     def delete(self, repo, user=None):
         if not user:

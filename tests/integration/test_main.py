@@ -145,26 +145,26 @@ class Test_Main(GitRepoMainTestCase):
     def test_fork(self):
         repo_slug, seen_args = self.main_fork('guyzmo/git-repo', 0)
         assert ('guyzmo', 'git-repo') == repo_slug
-        assert {'branch': 'master', 'clone': True} == seen_args
+        assert {} == seen_args
 
     def test_fork__branch(self):
         repo_slug, seen_args = self.main_fork('guyzmo/git-repo', 0,
                                               args={'<branch>': 'foobar'})
         assert ('guyzmo', 'git-repo') == repo_slug
-        assert {'branch': 'foobar', 'clone': True} == seen_args
+        assert {} == seen_args
 
     def test_fork__clone(self):
         repo_slug, seen_args = self.main_fork('guyzmo/git-repo', 0,
                                               args={'--clone': True})
         assert ('guyzmo', 'git-repo') == repo_slug
-        assert {'branch': 'master', 'clone': True} == seen_args
+        assert {} == seen_args
 
     def test_fork__branch_clone(self):
         repo_slug, seen_args = self.main_fork('guyzmo/git-repo', 0,
                                               args={'--clone': True,
                                                     '<branch>': 'foobar'})
         assert ('guyzmo', 'git-repo') == repo_slug
-        assert {'branch': 'foobar', 'clone': True} == seen_args
+        assert {} == seen_args
 
     def test_gist_list(self, capsys, caplog):
         did_list = self.main_gist_list(0, args={})
@@ -499,7 +499,7 @@ class Test_Main(GitRepoMainTestCase):
         self._create_repository(ro=True)
         repo_slug, seen_args = self.main_fork(rc=0)
         assert ('guyzmo', 'git-repo') == repo_slug
-        assert {'branch': 'master', 'clone': False} == seen_args
+        assert {} == seen_args
 
     def test_delete__no_repo_slug(self):
         self._create_repository(ro=True)

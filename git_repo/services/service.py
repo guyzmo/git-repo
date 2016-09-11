@@ -277,8 +277,8 @@ class RepositoryService:
             else:
                 url = self.format_path(repo, user, rw=True)
                 # check if url not already in remote all
-                if url not in all_remote.list_urls:
-                    all_remote.set_url(url=self.format_path(repo, user, rw=rw), add=True)
+                if url not in all_remote.urls:
+                    all_remote.set_url(new_url=self.format_path(repo, user, rw=rw), add=True)
 
         # adding "self" as the tracking remote
         if tracking:
@@ -292,6 +292,33 @@ class RepositoryService:
             return remote
         else:
             return self.repository.create_remote(name, self.format_path(repo, user, rw=rw))
+
+
+    def run_fork(self, user, repo, branch):
+        if user == self.user:
+        # forking the repository on the service
+            raise ResourceError("Cannot fork a project from yourself.")
+        log.info("Forking repository {}/{}…".format(user, repo))
+        # checking for an 'upstream' remote.
+        if self.repository:
+            upstream_remotes = list(filter(lambda x: x.name == 'upstream', self.repository.remotes))
+            if len(upstream_remotes) != 0:
+                raise ResourceExistsError('A remote named `upstream` already exists. Has this repo already been forked?')
+        fork_name = self.fork(user, repo)
+        # checking if a remote with the service's name already exists
+        if self.repository:
+            service_remotes = list(filter(lambda x: x.name == self.name, self.repository.remotes))
+            if len(service_remotes) != 0:
+                # if it does, rename it to upstream
+                self.repository.create_remote('upstream', service_remotes[0].url)
+                self.repository.delete_remote(service_remotes[0].name)
+            else:
+                # otherwise create an upstream remote with the source y
+                self.add(user=user, repo=repo, name='upstream', alone=True)
+            # add the service named repository
+            remote = self.add(repo=repo, user=self.user, tracking=self.name)
+        log.info("New forked repository available at {}/{}".format(self.url_ro,
+                                                                   fork_name))
 
     def open(self, user=None, repo=None):
         '''Open the URL of a repository in the user's browser'''
@@ -322,7 +349,7 @@ class RepositoryService:
         '''
         raise NotImplementedError
 
-    def fork(self, user, repo, clone=False): #pragma: no cover
+    def fork(self, user, repo): #pragma: no covr
         '''Forks a new remote repository on the service
         and pulls commits from it
 
