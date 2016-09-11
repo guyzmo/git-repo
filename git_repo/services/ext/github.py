@@ -22,6 +22,7 @@ class GithubService(RepositoryService):
         try:
             self.gh.login(token=self._privatekey)
             self.username = self.gh.user().name
+            self.username = self.gh.user().name
         except github3.models.GitHubError as err:
             if err.code is 401:
                 if not self._privatekey:
@@ -45,35 +46,14 @@ class GithubService(RepositoryService):
         if add:
             self.add(user=self.username, repo=repo, tracking=self.name)
 
-    def fork(self, user, repo, branch='master', clone=False):
-        log.info("Forking repository {}/{}…".format(user, repo))
-        # checking for an 'upstream' remote.
-        upstream_remotes = list(filter(lambda x: x.name == 'upstream', self.repository.remotes))
-        if len(upstream_remotes) != 0:
-            raise ResourceExistsError('A remote named `upstream` already exists. Has this repo already been forked?')
-        # forking the repository on the service
+    def fork(self, user, repo):
         try:
-            fork = self.gh.repository(user, repo).create_fork()
+            return self.gh.repository(user, repo).create_fork().full_name
         except github3.models.GitHubError as err:
             if err.message == 'name already exists on this account':
                 raise ResourceExistsError("Project already exists.") from err
             else: # pragma: no cover
                 raise ResourceError("Unhandled error: {}".format(err)) from err
-        # checking if a remote with the service's name already exists
-        service_remotes = list(filter(lambda x: x.name == self.name, self.repository.remotes))
-        if len(service_remotes) != 0:
-            # if it does, rename it to upstream
-            repo.delete(service_remotes[0])
-            repo.create_remote('upstream', service_remotes[0].url)
-        else:
-            # otherwise create an upstream remote with the source repository
-            self.add(user=user, repo=repo, name='upstream', alone=True)
-        # add the service named repository
-        remote = self.add(repo=repo, user=self.username, tracking=self.name)
-        if clone:
-            self.pull(remote, branch)
-        log.info("New forked repository available at {}/{}".format(self.url_ro,
-                                                                   fork.full_name))
 
     def delete(self, repo, user=None):
         if not user:

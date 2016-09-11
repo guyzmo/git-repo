@@ -167,6 +167,7 @@ class GitRepoMainTestCase():
             '<name>': None,
             '<branch>': None,
             '<target>': self.target,
+            '<target_repo>': None,
             '<user>/<repo>': '',
             'add': False,
             'clone': False,
@@ -459,7 +460,7 @@ class GitRepoTestCase():
             ])
             with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
                 self.service.connect()
-                self.service.fork(remote_namespace, repository, clone=True)
+                self.service.fork(remote_namespace, repository)
                 # emulate the outcome of the git actions
                 self.service.repository.create_remote('upstream', url=remote_slug)
                 self.service.repository.create_remote('all', url=local_slug)
@@ -490,7 +491,7 @@ class GitRepoTestCase():
             ])
             with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
                 self.service.connect()
-                self.service.fork(remote_namespace, repository, clone=False)
+                self.service.fork(remote_namespace, repository)
                 # emulate the outcome of the git actions
                 self.service.repository.create_remote('upstream', url=remote_slug)
                 self.service.repository.create_remote('all', url=local_slug)
