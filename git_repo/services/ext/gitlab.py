@@ -131,13 +131,115 @@ class GitlabService(RepositoryService):
             return self.gl.projects.get('{}/{}'.format(user, repo))
         except GitlabGetError as err:
             if err.response_code == 404:
-                raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo)) from err
+                raise ResourceNotFoundError("Cannot get: repository {}/{} does not exists.".format(user, repo)) from err
 
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):
         gl = gitlab.Gitlab(url='https://{}'.format(cls.fqdn), email=login, password=password)
         gl.auth()
         return gl.user.private_token
+
+    def _deconstruct_snippet_uri(self, uri):
+        path = uri.split('https://{}/'.format(self.fqdn))[-1]
+        path = path.split('/')
+        if 3 == len(path):
+            user, project_name, _, snippet_id = path
+        elif 4 == len(path):
+            user, _, snippet_id = path
+            project_name = None
+        else:
+            raise ResourceNotFoundError('URL is not of a snippet')
+        return (user, project_name, snippet_id)
+
+    def gist_list(self, project=None):
+        if not project:
+            raise NotImplementedError('Feature API implementation scheduled for gitlab 8.15')
+            for project in self.gl.snippets.list():
+                yield ('https://{}/{}/snippets/{}'.format(
+                        self.fqdn,
+                        snippet.author.username,
+                        snippet.id
+                    ), snippet.title)
+        else:
+            project = self.gl.projects.list(search=project)
+            if len(project):
+                project = project[0]
+            for snippet in project.snippets.list(per_page=100):
+                yield ('https://{}/{}/{}/snippets/{}'.format(
+                        self.fqdn,
+                        snippet.author.username,
+                        project.name,
+                        snippet.id
+                    ), 0, snippet.title)
+
+    def gist_fetch(self, snippet, fname=None):
+        if fname:
+            raise ArgumentError('Snippets contain only single file in gitlab.')
+        try:
+            _, project_name, snippet_id = self._deconstruct_snippet_uri(snippet)
+            if project_name:
+                project = self.gl.projects.list(search=project_name)[0]
+                snippet = self.gl.project_snippets.get(project_id=project.id, id=snippet_id)
+            else:
+                raise NotImplementedError('Feature API implementation scheduled for gitlab 8.15')
+                snippet = self.gl.snippets.get(id=snippet_id)
+        except Exception as err:
+            raise ResourceNotFoundError('Could not find snippet') from err
+
+        return snippet.Content().decode('utf-8')
+
+    def gist_clone(self, gist):
+        raise ArgumentError('Snippets cannot be cloned in gitlab.')
+
+    def gist_create(self, gist_pathes, description, secret=False):
+        def load_file(fname, path='.'):
+            with open(os.path.join(path, fname), 'r') as f:
+                return f.read()
+
+        if len(gist_pathes) > 2:
+            raise ArgumentError('Snippets contain only single file in gitlab.')
+
+        data = {
+            'title': description,
+            'visibility_level': 0 if secret else 20
+        }
+
+        if len(gist_pathes) == 2:
+            gist_proj = gist_pathes[0]
+            gist_path = gist_pathes[1]
+            data.update({
+                    'id': gist_proj,
+                    'code': load_file(gist_path),
+                    'file_name': os.path.basename(gist_path),
+                }
+            )
+            gist = self.gl.project_snippets.create(data)
+
+        elif len(gist_pathes) == 1:
+            raise NotImplementedError('Feature API implementation scheduled for gitlab 8.15')
+            gist_path = gist_pathes[0]
+            data.update({
+                    'content': load_file(gist_path),
+                    'file_name': os.path.basename(gist_path),
+                }
+            )
+            gist = self.gl.snippets.create(data)
+
+        return gist.html_url
+
+    def gist_delete(self, gist_id):
+        try:
+            _, project_name, snippet_id = self._deconstruct_snippet_uri(snippet)
+            if project_name:
+                project = self.gl.projects.list(search=project_name)[0]
+                snippet = self.gl.project_snippets.get(project_id=project.id, id=snippet_id)
+            else:
+                raise NotImplementedError('Pending feature')
+                snippet = self.gl.snippets.get(id=snippet_id)
+        except Exception as err:
+            raise ResourceNotFoundError('Could not find snippet') from err
+
+        return snippet.delete()
 
     @property
     def user(self):
