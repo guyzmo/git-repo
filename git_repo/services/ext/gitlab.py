@@ -241,6 +241,64 @@ class GitlabService(RepositoryService):
 
         return snippet.delete()
 
+    def request_create(self, user, repo, local_branch, remote_branch, title, description=None):
+        repository = self.gl.projects.list(search=repo)[0]
+        if not repository:
+            raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
+        if not local_branch:
+            remote_branch = self.repository.active_branch.name or self.repository.active_branch.name
+        if not remote_branch:
+            local_branch = repository.master_branch or 'master'
+        try:
+            request = self.gl.project_mergerequests.create(
+                    project_id=repository.id,
+                    data= {
+                        'source_branch':local_branch,
+                        'target_branch':remote_branch,
+                        'title':title,
+                        'description':description
+                        }
+                    )
+        except Exception as err:
+            raise ResourceError("Unhandled error: {}".format(err)) from err
+
+        return {'local': local_branch,
+                'remote': remote_branch,
+                'ref': request.iid}
+
+    def request_list(self, user, repo):
+        project = self.gl.projects.list(search=repo)[0]
+        for mr in self.gl.project_mergerequests.list(project_id=project.id):
+            yield ( str(mr.iid),
+                    mr.title,
+                    'https://{}/{}/{}/merge_requests/{}'.format(
+                        self.fqdn,
+                        project.namespace.name,
+                        project.name,
+                        mr.iid
+                        )
+                    )
+
+    def request_fetch(self, user, repo, request, pull=False):
+        if pull:
+            raise NotImplementedError('Pull operation on requests for merge are not yet supported')
+        try:
+            for remote in self.repository.remotes:
+                if remote.name == self.name:
+                    local_branch_name = 'request/{}'.format(request)
+                    self.fetch(
+                        remote,
+                       'merge-requests/{}/head'.format(request),
+                        local_branch_name
+                    )
+                    return local_branch_name
+            else:
+                raise ResourceNotFoundError('Could not find remote {}'.format(self.name))
+        except GitCommandError as err:
+            if 'Error when fetching: fatal: Couldn\'t find remote ref' in err.command[0]:
+                raise ResourceNotFoundError('Could not find opened request #{}'.format(request)) from err
+            raise err
+
     @property
     def user(self):
         return self.gl.user.username
