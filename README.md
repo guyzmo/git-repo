@@ -13,11 +13,11 @@
 ### main commands
 
 Control your remote git hosting services from the `git` commandline. The usage is
-very simple. To clone a new project, out of github, just issue:
+very simple. To clone a new project, out of GitHub, just issue:
 
     % git hub clone guyzmo/git-repo
 
-But that works also with a project from gitlab, bitbucket, or your own gitlab:
+But that works also with a project from GitLab, Bitbucket, or your own GitLab:
 
     % git lab clone guyzmo/git-repo
     % git bb clone guyzmo/git-repo
@@ -57,7 +57,7 @@ Also, you can open the repository's page, using the `open` command:
 
 ### Requests for merges *(aka Pull Requests aka Merge Requests)*
 
-Once you're all set with your repository, you can check requests to merge 
+Once you're all set with your repository, you can check requests to merge
 (aka Pull Requests on github) using the `request` command:
 
     % git hub request guyzmo/git-repo list
@@ -166,7 +166,7 @@ for the service you use:
 
     % git-repo bit clone guyzmo/git-repo
 
-Also, you can setup your own gitlab self-hosted server, using that configuration:
+Also, you can setup your own GitLab self-hosted server, using that configuration:
 
     [gitrepo "myprecious"]
         type = gitlab
@@ -188,7 +188,7 @@ So you can run the tool as a git subcommand:
 ### Development
 
 For development, I like to use `buildout`, and the repository is already configured
-for that. All you have to do, is install buildout, and then call it from the root of 
+for that. All you have to do, is install buildout, and then call it from the root of
 the repository:
 
     % pip install zc.buildout
@@ -214,19 +214,19 @@ and a real connection, when testing the API on minor changes. Those recordings a
 called cassettes, thanks to the [betamax](https://github.com/sigmavirus24/betamax) framework
 being in use in the test suites.
 
-When running existing tests, based on the provided cassettes, you don't need any 
+When running existing tests, based on the provided cassettes, you don't need any
 setting. Also, if you've got a configuration in `~/.gitconfig`, the tests will use
 them. Anyway, you can use environment variables for those settings (environment
 variables will have precedence over the configuration settings):
 
 To use your own credentials, you can setup the following environment variables:
 
-* `GITHUB_NAMESPACE` (which defaults to `not_configured`) is the name of the account to use on github
-* `GITLAB_NAMESPACE` (which defaults to `not_configured`) is the name of the account to use on gitlab 
-* `BITBUCKET_NAMESPACE` (which defaults to `not_configured`) is the name of the account to use on bitbucket
-* `PRIVATE_KEY_GITHUB` your private token you've setup on github for your account
-* `PRIVATE_KEY_GITLAB` your private token you've setup on gitlab for your account
-* `PRIVATE_KEY_BITBUCKET` your private token you've setup on bitbucket for your account
+* `GITHUB_NAMESPACE` (which defaults to `not_configured`) is the name of the account to use on GitHub
+* `GITLAB_NAMESPACE` (which defaults to `not_configured`) is the name of the account to use on GitLab
+* `BITBUCKET_NAMESPACE` (which defaults to `not_configured`) is the name of the account to use on Bitbucket
+* `PRIVATE_KEY_GITHUB` your private token you've setup on GitHub for your account
+* `PRIVATE_KEY_GITLAB` your private token you've setup on GitLab for your account
+* `PRIVATE_KEY_BITBUCKET` your private token you've setup on Bitbucket for your account
 
 ### TODO
 
