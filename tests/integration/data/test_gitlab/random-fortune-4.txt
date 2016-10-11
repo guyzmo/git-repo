@@ -1,0 +1,2 @@
+It's hard to tune heavily tuned code.  :-)
+		-- Larry Wall in <199801141725.JAA07555@wall.org>
