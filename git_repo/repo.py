@@ -532,10 +532,12 @@ def main(args):
             log.exception('------------------------------------')
         return 2
 
-
-
 def cli(): #pragma: no cover
-    sys.exit(main(docopt(__doc__.format(self=sys.argv[0].split('/')[-1], version=__version__))))
+    try:
+        sys.exit(main(docopt(__doc__.format(self=sys.argv[0].split('/')[-1], version=__version__))))
+    finally:
+        # Whatever happens, make sure that the cursor reappears with some ANSI voodoo
+        sys.stdout.write('\033[?25h')
 
 if __name__ == '__main__': #pragma: no cover
     cli()
