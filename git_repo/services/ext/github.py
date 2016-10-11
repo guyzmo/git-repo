@@ -149,9 +149,9 @@ class GithubService(RepositoryService):
         repository = self.gh.repository(user, repo)
         if not repository:
             raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
-        if not local_branch:
-            remote_branch = self.repository.active_branch.name or self.repository.active_branch.name
         if not remote_branch:
+            remote_branch =  self.repository.active_branch.name
+        if not local_branch:
             local_branch = repository.master_branch or 'master'
         try:
             request = repository.create_pull(title,
@@ -160,15 +160,12 @@ class GithubService(RepositoryService):
                     body=description)
         except github3.models.GitHubError as err:
             if err.code == 422:
-                for error in err.errors:
-                    if 'message' in error:
-                        if 'No commits' in error['message']:
+                if err.message == 'Validation Failed':
+                    for error in err.errors:
+                        if 'message' in error:
                             raise ResourceError(error['message'])
-                else:
-                    if 'message' in error:
-                        raise ResourceError(error['message'])
-                raise ResourceError("Unhandled formatting error: {}".format(err.errors))
-
+                    raise ResourceError("Unhandled formatting error: {}".format(err.errors))
+            raise ResourceError(err.message)
 
         return {'local': local_branch, 'remote': remote_branch, 'ref': request.number}
 
