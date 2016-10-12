@@ -355,6 +355,8 @@ class GitRepoRunner(KeywordArgumentParser):
         if not self.user_name and not self.repo_name:
             self.set_repo_slug('/'.join([service.user,
                 os.path.basename(os.path.abspath(self.path))]))
+        if not self.user_name:
+            self.user_name = service.user
         service.create(self.user_name, self.repo_name, add=self.add)
         log.info('Successfully created remote repository `{}`, '
                  'with local remote `{}`'.format(
@@ -532,10 +534,12 @@ def main(args):
             log.exception('------------------------------------')
         return 2
 
-
-
 def cli(): #pragma: no cover
-    sys.exit(main(docopt(__doc__.format(self=sys.argv[0].split('/')[-1], version=__version__))))
+    try:
+        sys.exit(main(docopt(__doc__.format(self=sys.argv[0].split('/')[-1], version=__version__))))
+    finally:
+        # Whatever happens, make sure that the cursor reappears with some ANSI voodoo
+        sys.stdout.write('\033[?25h')
 
 if __name__ == '__main__': #pragma: no cover
     cli()
