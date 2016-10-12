@@ -195,7 +195,7 @@ class RepositoryService:
         elif rw and '/' in repo:
             return '{}:{}'.format(self.url_rw, repo)
         else:
-            raise ArgumentError("Cannot tell how to handle this url: `{}/{}`!".format(user, repo_name))
+            raise ArgumentError("Cannot tell how to handle this url: `{}/{}`!".format(namespace, repo))
 
     def pull(self, remote, branch=None):
         '''Pull a repository
