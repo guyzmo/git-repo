@@ -109,7 +109,7 @@ And when you're done you just get rid of it:
     Successfully deleted gist!
 
 > *Nota Bene*: Thanks to `git` CLI flexibility, by installing `git-repo` you directly
-> have acces to the tool using `git-repo hub …` or `git repo hub …`. For the
+> have access to the tool using `git-repo hub …` or `git repo hub …`. For the
 > `git hub …` call, you have to set up aliases, see below how to configure that.
 
 And as a bonus, each time it's adding a new remote, it's updating the `all` remote,
@@ -207,7 +207,6 @@ You can use the following options for py.test to help you debug when tests fail:
 * `-v` will show more details upon errors
 * `-x` will stop upon the first failure
 * `--pdb` will launch the debugger where an exception has been launched
-
 
 The tests use recordings of exchanged HTTP data, so that we don't need real credentials
 and a real connection, when testing the API on minor changes. Those recordings are
