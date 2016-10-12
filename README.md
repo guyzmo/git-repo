@@ -198,6 +198,19 @@ and then you'll have the executable in `bin`:
 
     % bin/git-repo --help
 
+#### Verbose running
+
+You can repeat the `-v` argument several times to increase the level of verbosity
+of `git-repo`. The more arguments you give, the more details you'll have.
+
+* `-v` will set the debugging level to `DEBUG`, giving some execution info ;
+* `-vv` will print out all the git commands that are being executed ;
+* `-vvv` will give more verbose insight on the git layer ;
+* `-vvvv` will output all the HTTP exchanges with the different APIs ;
+* `-vvvvv` will printout how were parsed the arguments.
+
+##### Testing
+
 To run the tests:
 
     % bin/py.test
@@ -255,7 +268,7 @@ To use your own credentials, you can setup the following environment variables:
 
 ### License
 
-    Copyright ⓒ Bernard `Guyzmo` Pratz <guyzmo+git-repo@m0g.net>
+    Copyright © Bernard `Guyzmo` Pratz <guyzmo+git-repo@m0g.net>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
