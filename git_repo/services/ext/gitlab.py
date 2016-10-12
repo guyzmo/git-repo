@@ -20,6 +20,7 @@ class GitlabService(RepositoryService):
         super(GitlabService, self).__init__(*args, **kwarg)
 
     def connect(self):
+        self.gl.set_url(self.url_ro)
         self.gl.set_token(self._privatekey)
         self.gl.token_auth()
         self.username = self.gl.user.username
