@@ -21,8 +21,7 @@ class GithubService(RepositoryService):
     def connect(self):
         try:
             self.gh.login(token=self._privatekey)
-            self.username = self.gh.user().name
-            self.username = self.gh.user().name
+            self.username = self.gh.user().login
         except github3.models.GitHubError as err:
             if err.code is 401:
                 if not self._privatekey:
@@ -81,7 +80,7 @@ class GithubService(RepositoryService):
 
     def gist_list(self, gist=None):
         if not gist:
-            for gist in self.gh.iter_gists(self.gh.user().name):
+            for gist in self.gh.iter_gists(self.gh.user().login):
                 yield (gist.html_url, gist.description)
         else:
             gist = self.gh.gist(self._format_gist(gist))
@@ -205,5 +204,5 @@ class GithubService(RepositoryService):
 
     @property
     def user(self):
-        return self.gh.user().name
+        return self.gh.user().login
 
