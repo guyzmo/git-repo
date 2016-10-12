@@ -355,6 +355,8 @@ class GitRepoRunner(KeywordArgumentParser):
         if not self.user_name and not self.repo_name:
             self.set_repo_slug('/'.join([service.user,
                 os.path.basename(os.path.abspath(self.path))]))
+        if not self.user_name:
+            self.user_name = service.user
         service.create(self.user_name, self.repo_name, add=self.add)
         log.info('Successfully created remote repository `{}`, '
                  'with local remote `{}`'.format(
