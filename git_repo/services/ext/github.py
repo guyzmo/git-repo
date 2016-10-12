@@ -194,13 +194,15 @@ class GithubService(RepositoryService):
             raise err
 
     @classmethod
-    def get_auth_token(cls, login, password):
+    def get_auth_token(cls, login, password, prompt=None):
         import platform
-        auth = github3.GitHub().authorize(login, password,
+        gh = github3.GitHub()
+        gh.login(login, password, two_factor_callback=lambda: prompt('2FA code> '))
+        gh.authorize(login, password,
                 scopes=[ 'repo', 'delete_repo', 'gist' ],
                 note='git-repo token used on {}'.format(platform.node()),
                 note_url='https://github.com/guyzmo/git-repo')
-        return auth.token
+        return gh.token
 
     @property
     def user(self):

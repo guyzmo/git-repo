@@ -146,7 +146,7 @@ class BitbucketService(RepositoryService):
         #raise ResourceNotFoundError('Cannot retrieve repository: {}/{} does not exists.'.format(user, repo))
 
     @classmethod
-    def get_auth_token(cls, login, password):
+    def get_auth_token(cls, login, password, prompt=None):
         log.warn("/!\\ Due to API limitations, the bitbucket login/password is stored as plaintext in configuration.")
         return "{}:{}".format(login, password)
 
