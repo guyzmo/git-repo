@@ -198,11 +198,17 @@ class GithubService(RepositoryService):
         import platform
         gh = github3.GitHub()
         gh.login(login, password, two_factor_callback=lambda: prompt('2FA code> '))
-        auth = gh.authorize(login, password,
-                scopes=[ 'repo', 'delete_repo', 'gist' ],
-                note='git-repo2 token used on {}'.format(platform.node()),
-                note_url='https://github.com/guyzmo/git-repo')
-        return auth.token
+        try:
+            auth = gh.authorize(login, password,
+                    scopes=[ 'repo', 'delete_repo', 'gist' ],
+                    note='git-repo2 token used on {}'.format(platform.node()),
+                    note_url='https://github.com/guyzmo/git-repo')
+            return auth.token
+        except github3.models.GitHubError as err:
+            if len(err.args) > 0 and 422 == err.args[0].status_code:
+                raise ResourceExistsError("A token already exist for this machine on your github account.")
+            else:
+                raise err
 
     @property
     def user(self):
