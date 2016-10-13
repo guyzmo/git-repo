@@ -198,11 +198,11 @@ class GithubService(RepositoryService):
         import platform
         gh = github3.GitHub()
         gh.login(login, password, two_factor_callback=lambda: prompt('2FA code> '))
-        gh.authorize(login, password,
+        auth = gh.authorize(login, password,
                 scopes=[ 'repo', 'delete_repo', 'gist' ],
-                note='git-repo token used on {}'.format(platform.node()),
+                note='git-repo2 token used on {}'.format(platform.node()),
                 note_url='https://github.com/guyzmo/git-repo')
-        return gh.token
+        return auth.token
 
     @property
     def user(self):
