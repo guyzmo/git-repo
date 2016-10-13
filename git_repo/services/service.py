@@ -15,7 +15,7 @@ from ..exceptions import ArgumentError
 
 '''select open command'''
 
-if 'mac' in sys.platform: #pragma: no cover
+if 'darwin' in sys.platform: #pragma: no cover
     OPEN_COMMAND = 'open'
 else: #pragma: no cover
     OPEN_COMMAND = 'xdg-open'
