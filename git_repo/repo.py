@@ -243,14 +243,6 @@ class GitRepoRunner(KeywordArgumentParser):
             self.repo_name = self.repo_slug
 
     @store_parameter('<branch>')
-    def set_branch(self, branch):
-        # FIXME workaround for default value that is not correctly parsed in docopt
-        if branch == None:
-            branch = 'master'
-
-        self.branch = branch
-
-    @store_parameter('<branch>')
     @store_parameter('--branch')
     def set_branch(self, branch):
         # FIXME workaround for default value that is not correctly parsed in docopt
