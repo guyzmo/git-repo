@@ -74,7 +74,7 @@ class GitlabService(RepositoryService):
                 raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo)) from err
 
     @classmethod
-    def get_auth_token(cls, login, password):
+    def get_auth_token(cls, login, password, prompt=None):
         gl = gitlab.Gitlab(url='https://{}'.format(cls.fqdn), email=login, password=password)
         gl.auth()
         return gl.user.private_token

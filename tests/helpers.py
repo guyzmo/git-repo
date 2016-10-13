@@ -122,7 +122,7 @@ class RepositoryMockup(RepositoryService):
         return {'local': local, 'remote': remote, 'ref': 42}
 
     @classmethod
-    def get_auth_token(cls, login, password):
+    def get_auth_token(cls, login, password, prompt=None):
         return '{}:{}'.format(login, password)
 
     @property

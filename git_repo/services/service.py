@@ -122,7 +122,7 @@ class RepositoryService:
         return cls._current
 
     @classmethod
-    def get_auth_token(cls, login, password):
+    def get_auth_token(cls, login, password, prompt=None):
         raise NotImplementedError
 
     def __init__(self, r=None, c=None):

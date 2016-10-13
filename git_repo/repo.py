@@ -483,7 +483,7 @@ class GitRepoRunner(KeywordArgumentParser):
             username = loop_input('username> ')
             password = loop_input('password> ', method=getpass)
 
-            token = service.get_auth_token(username, password)
+            token = service.get_auth_token(username, password, prompt=loop_input)
             print('Great! You\'ve been identified 🍻')
 
             print('Do you want to give a custom name for this service\'s remote?')
