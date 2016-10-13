@@ -29,6 +29,7 @@ Usage:
     {self} [--path=<path>] [-v...] <target> gist create [--secret] <description> [<gist_path> <gist_path>...]
     {self} [--path=<path>] [-v...] <target> gist delete <gist> [-f]
     {self} [--path=<path>] [-v...] <target> config [--config=<gitconfig>]
+    {self} [--path=<path>] [-v...] add <user>/<repo> [<name>] [--tracking=<branch>] [-a]
     {self} [-v...] config [--config=<gitconfig>]
     {self} --help
 
@@ -193,6 +194,9 @@ class GitRepoRunner(KeywordArgumentParser):
                     repository = Repo(self.path)
             except InvalidGitRepositoryError:
                 raise FileNotFoundError('Cannot find path to the repository.')
+            # when there's no target, sets the target to None
+            if not self.target:
+                return RepositoryService(repository, None)
             service = RepositoryService.get_service(repository, self.target)
             if not self.repo_name:
                 self._guess_repo_slug(repository, service)
@@ -228,6 +232,7 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @store_parameter('<user>/<repo>')
     def set_repo_slug(self, repo_slug):
+        self.repo_slug_raw = repo_slug
         self.repo_slug = EXTRACT_URL_RE.sub('', repo_slug) if repo_slug else repo_slug
         if not self.repo_slug:
             self.user_name = None
@@ -272,13 +277,14 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('add')
     def do_remote_add(self):
         service = self.get_service()
-        service.add(self.repo_name, self.user_name,
+        repo_name = self.repo_name if hasattr(service, 'name') else self.repo_slug_raw
+        service.add(repo_name, self.user_name,
                     name=self.remote_name,
                     tracking=self.tracking,
                     alone=self.alone)
         log.info('Successfully added `{}` as remote named `{}`'.format(
             self.repo_slug,
-            service.name)
+            self.remote_name)
         )
         return 0
 

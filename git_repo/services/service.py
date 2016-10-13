@@ -145,6 +145,11 @@ class RepositoryService:
                     raise ValueError('Custom services SHALL have an URL setting.')
                 self.fqdn = c['fqdn']
                 self.name = name
+
+        # If a service does not have a name, then it's to expose the `git repo add` command.
+        # so let's return a very minimal and useless service
+        if not hasattr(self, 'name'):
+            return
         # if not in the configuration file, retrieve the private key from the
         # environment (useful for travis configuration), otherwise, make it None.
         # using "token" > "private_token" > "privatekey" in configuration file to avoid
@@ -256,9 +261,22 @@ class RepositoryService:
 
         if not user:
             if '/' in repo:
-                user, repo = repo.split('/')
+                # checking that we're being called as `git repo add …`
+                if not hasattr(self, 'name'):
+                    # for git repo add name is mandatory (cannot be guessed from the current service target
+                    if not name:
+                        raise ArgumentError('Please provide a name for the remote')
+                    # checks that the repository is not a read only one
+                    if repo.startswith('https') and not alone:
+                        raise ArgumentError('Please provide a writable URL we can push to')
+                    url = repo
+                else:
+                    user, repo = repo.split('/')
+                    url = self.format_path(repo, user, rw=rw)
             else:
                 raise ArgumentError('Unable to parse repository {}, missing path separator.'.format(repo))
+        else:
+            url = self.format_path(repo, user, rw=rw)
 
         # removing remote if it already exists
         # and extract all repository
@@ -273,16 +291,15 @@ class RepositoryService:
         if not alone:
             # if remote all does not exists
             if not all_remote:
-                self.repository.create_remote('all', self.format_path(repo, user, rw=rw))
+                self.repository.create_remote('all', url)
             else:
-                url = self.format_path(repo, user, rw=True)
                 # check if url not already in remote all
                 if url not in all_remote.urls:
-                    all_remote.set_url(new_url=self.format_path(repo, user, rw=rw), add=True)
+                    all_remote.set_url(new_url=url, add=True)
 
         # adding "self" as the tracking remote
         if tracking:
-            remote = self.repository.create_remote(name, self.format_path(repo, user, rw=rw))
+            remote = self.repository.create_remote(name, url)
             # lookup tracking branch (usually master)
             for branch in self.repository.branches:
                 if tracking == branch.name:
@@ -291,7 +308,7 @@ class RepositoryService:
                     break
             return remote
         else:
-            return self.repository.create_remote(name, self.format_path(repo, user, rw=rw))
+            return self.repository.create_remote(name, url)
 
 
     def run_fork(self, user, repo, branch):
