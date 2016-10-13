@@ -119,7 +119,7 @@ so that you can push your code to all your remote repositories in one command:
 
 ### Installation
 
-You can get the tool using pypi:
+You can get the tool using pypi (use `pip3` if you have both Python2 and Python3 installed):
 
     % pip install git-repo
 
