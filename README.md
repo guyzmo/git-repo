@@ -279,7 +279,7 @@ With code contributions coming from:
 
 ### License
 
-    Copyright © 
+    Copyright ©2016 Bernard `Guyzmo` Pratz <guyzmo+git-repo+pub@m0g.net>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
