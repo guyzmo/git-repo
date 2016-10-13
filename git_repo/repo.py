@@ -507,7 +507,7 @@ class GitRepoRunner(KeywordArgumentParser):
         else:
             services = RepositoryService.service_map.values()
 
-        for service in services:
+        for service in sorted(services, key=lambda s: s.name):
             print('Do you want to configure the {} service?'.format(service.name))
             if 'n' in input('    [Yn]> ').lower():
                 continue
