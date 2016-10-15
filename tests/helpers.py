@@ -9,6 +9,7 @@ from testfixtures.popen import MockPopen
 from contextlib import contextmanager
 
 import os
+import sys
 import logging
 import betamax
 
@@ -378,6 +379,17 @@ class GitRepoTestCase():
         self.log.info('GitRepoTestCase.teardown_method({})'.format(method))
         self.tempdir.cleanup()
 
+    '''cassette name helper'''
+
+    def _make_cassette_name(self):
+        # returns the name of the function calling the function calling this one
+        # in other words, when used in an helper function, returns the name of
+        # the test function calling the helper function, to make a cassette name.
+        test_function_name = sys._getframe(2).f_code.co_name
+        if test_function_name.startswith('test'):
+            return '_'.join(['test', self.service.name, test_function_name])
+        raise Exception("Helpers functions shall be used only within test functions!")
+
     '''popen helper'''
 
     def set_mock_popen_commands(self, cmd_list):
@@ -435,7 +447,7 @@ class GitRepoTestCase():
 
     '''test cases templates'''
 
-    def action_fork(self, cassette_name, local_namespace, remote_namespace, repository):
+    def action_fork(self, local_namespace, remote_namespace, repository):
         # hijack subprocess call
         with self.mockup_git(local_namespace, repository):
             # prepare output for git commands
@@ -458,7 +470,7 @@ class GitRepoTestCase():
                     ' * [new branch]      master     -> {}/master'.format(self.service.name)]).encode('utf-8'),
                 0)
             ])
-            with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            with self.recorder.use_cassette(self._make_cassette_name()):
                 self.service.connect()
                 self.service.fork(remote_namespace, repository)
                 # emulate the outcome of the git actions
@@ -466,7 +478,7 @@ class GitRepoTestCase():
                 self.service.repository.create_remote('all', url=local_slug)
                 self.service.repository.create_remote(self.service.name, url=local_slug)
 
-    def action_fork__no_clone(self, cassette_name, local_namespace, remote_namespace, repository):
+    def action_fork__no_clone(self, local_namespace, remote_namespace, repository):
         # hijack subprocess call
         with self.mockup_git(local_namespace, repository):
             # prepare output for git commands
@@ -489,7 +501,7 @@ class GitRepoTestCase():
                     ' * [new branch]      master     -> {}/master'.format(self.service.name)]).encode('utf-8'),
                 0)
             ])
-            with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            with self.recorder.use_cassette(self._make_cassette_name()):
                 self.service.connect()
                 self.service.fork(remote_namespace, repository)
                 # emulate the outcome of the git actions
@@ -497,7 +509,7 @@ class GitRepoTestCase():
                 self.service.repository.create_remote('all', url=local_slug)
                 self.service.repository.create_remote(self.service.name, url=local_slug)
 
-    def action_clone(self, cassette_name, namespace, repository):
+    def action_clone(self, namespace, repository):
         # hijack subprocess call
         with self.mockup_git(namespace, repository):
             local_slug = self.service.format_path(namespace=namespace, repository=repository, rw=True)
@@ -517,30 +529,30 @@ class GitRepoTestCase():
                     ' * [new branch]      master     -> {}/master'.format(self.service.name)]).encode('utf-8'),
                 0)
             ])
-            with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            with self.recorder.use_cassette(self._make_cassette_name()):
                 self.service.connect()
                 self.service.clone(namespace, repository)
                 self.service.repository.create_remote('all', url=local_slug)
                 self.service.repository.create_remote(self.service.name, url=local_slug)
 
-    def action_create(self, cassette_name, namespace, repository):
-        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+    def action_create(self, namespace, repository):
+        with self.recorder.use_cassette(self._make_cassette_name()):
             self.service.connect()
             self.service.create(namespace, repository, add=True)
             #
             self.assert_repository_exists(namespace, repository)
             self.assert_added_remote_defaults()
 
-    def action_create__no_add(self, cassette_name, namespace, repository):
-        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+    def action_create__no_add(self, namespace, repository):
+        with self.recorder.use_cassette(self._make_cassette_name()):
             self.service.connect()
             self.service.create(namespace, repository, add=False)
             #
             self.assert_repository_exists(namespace, repository)
             self.assert_added_remote_defaults()
 
-    def action_delete(self, cassette_name, repository, namespace=None):
-        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+    def action_delete(self, repository, namespace=None):
+        with self.recorder.use_cassette(self._make_cassette_name()):
             self.service.connect()
             if namespace:
                 self.service.delete(user=namespace, repo=repository)
@@ -551,8 +563,8 @@ class GitRepoTestCase():
                 namespace = self.service.user
             self.assert_repository_not_exists(namespace, repository)
 
-    def action_add(self, cassette_name, namespace, repository, alone=False, name=None, tracking='master'):
-        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+    def action_add(self, namespace, repository, alone=False, name=None, tracking='master'):
+        with self.recorder.use_cassette(self._make_cassette_name()):
             # init git in the repository's destination
             self.repository.init()
             self.service.connect()
@@ -583,16 +595,16 @@ class GitRepoTestCase():
                     self.assert_added_remote(name)
                     self.assert_tracking_remote(name, tracking)
 
-    def action_request_list(self, cassette_name, namespace, repository, rq_list_data=[]):
-        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+    def action_request_list(self, namespace, repository, rq_list_data=[]):
+        with self.recorder.use_cassette(self._make_cassette_name()):
             self.service.connect()
             requests = list(self.service.request_list(user=namespace, repo=repository))
             for i, rq in enumerate(rq_list_data):
                 assert requests[i] == rq
 
-    def action_request_fetch(self, cassette_name, namespace, repository, request, pull=False, fail=False):
+    def action_request_fetch(self, namespace, repository, request, pull=False, fail=False):
         local_slug = self.service.format_path(namespace=namespace, repository=repository, rw=False)
-        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+        with self.recorder.use_cassette(self._make_cassette_name()):
             with self.mockup_git(namespace, repository):
                 self.set_mock_popen_commands([
                     ('git remote add all {}'.format(local_slug), b'', b'', 0),
@@ -642,7 +654,7 @@ class GitRepoTestCase():
                 ])
                 self.service.request_fetch(repository, namespace, request)
 
-    def action_request_create(self, cassette_name,
+    def action_request_create(self,
             namespace, repository, branch,
             title, description,
             create_repository='test_create_requests',
@@ -670,7 +682,7 @@ class GitRepoTestCase():
 
         So all the contextual work is only done
         '''
-        cassette_name = '_'.join(['test', self.service.name, cassette_name])
+        cassette_name = self._make_cassette_name()
         will_record = 'never' != self.recorder.config.default_cassette_options['record_mode'] \
                 and not os.path.exists(os.path.join(self.recorder.config.cassette_library_dir, cassette_name+'.json'))
 
@@ -713,8 +725,8 @@ class GitRepoTestCase():
                 )
                 return request
 
-    def action_gist_list(self, cassette_name, gist=None, gist_list_data=[]):
-        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+    def action_gist_list(self, gist=None, gist_list_data=[]):
+        with self.recorder.use_cassette(self._make_cassette_name()):
             self.service.connect()
             if gist is None:
                 gists = list(self.service.gist_list())
@@ -725,7 +737,7 @@ class GitRepoTestCase():
                 for i, gf in enumerate(gist_list_data):
                     assert gist_files[i] == gf
 
-    def action_gist_clone(self, cassette_name, gist):
+    def action_gist_clone(self, gist):
         with self.mockup_git(None, None):
             self.set_mock_popen_commands([
                 ('git version', b'git version 2.8.0', b'', 0),
@@ -741,28 +753,28 @@ class GitRepoTestCase():
                     b' * branch            master     -> FETCH_HEAD']),
                 0),
             ])
-            with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+            with self.recorder.use_cassette(self._make_cassette_name()):
                 self.service.connect()
                 self.service.gist_clone(gist)
 
 
-    def action_gist_fetch(self, cassette_name, gist, gist_file=None):
-        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+    def action_gist_fetch(self, gist, gist_file=None):
+        with self.recorder.use_cassette(self._make_cassette_name()):
             self.service.connect()
             content = self.service.gist_fetch(gist, gist_file)
             return content
 
-    def action_gist_create(self, cassette_name, description, gist_files, secret):
-        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+    def action_gist_create(self, description, gist_files, secret):
+        with self.recorder.use_cassette(self._make_cassette_name()):
             self.service.connect()
             content = self.service.gist_create(gist_files, description, secret)
 
-    def action_gist_delete(self, cassette_name, gist):
-        with self.recorder.use_cassette('_'.join(['test', self.service.name, cassette_name])):
+    def action_gist_delete(self, gist):
+        with self.recorder.use_cassette(self._make_cassette_name()):
             self.service.connect()
             content = self.service.gist_delete(gist)
 
-    def action_open(self, cassette_name, namespace, repository):
+    def action_open(self, namespace, repository):
         self.set_mock_popen_commands([
             ('xdg-open {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),
             ('open {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),
