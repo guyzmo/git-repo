@@ -27,11 +27,11 @@ class GitlabService(RepositoryService):
 
     def create(self, user, repo, add=False):
         try:
-            self.gl.projects.create(data={
-                'name': repo,
-                # 'namespace_id': user, # TODO does not work, cannot create on
-                # another namespace yet
-            })
+            group = self.gl.groups.search(user)
+            data = {'name': repo}
+            if group:
+                data['namespace_id'] = group[0].id
+            self.gl.projects.create(data=data)
         except GitlabCreateError as err:
             if json.loads(err.response_body.decode('utf-8'))['message']['name'][0] == 'has already been taken':
                 raise ResourceExistsError("Project already exists.") from err

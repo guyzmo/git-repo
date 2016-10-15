@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2016-10-15T20:46:51",
+      "recorded_at": "2016-10-15T20:47:22",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -26,12 +26,12 @@
           "Cache-Control": "max-age=0, private, must-revalidate",
           "Content-Length": "775",
           "Content-Type": "application/json",
-          "Date": "Sat, 15 Oct 2016 20:46:51 GMT",
+          "Date": "Sat, 15 Oct 2016 20:47:22 GMT",
           "Etag": "W/\"677a046b34e34176cde8e128968cb26c\"",
           "Server": "nginx",
           "Vary": "Origin",
-          "X-Request-Id": "0d16804f-e0d9-4841-9beb-285fd7c9817a",
-          "X-Runtime": "0.038217"
+          "X-Request-Id": "27869e98-e4a7-45b5-ac0e-0f5b26b8f8af",
+          "X-Runtime": "0.043525"
         },
         "status": {
           "code": 200,
@@ -41,7 +41,7 @@
       }
     },
     {
-      "recorded_at": "2016-10-15T20:46:52",
+      "recorded_at": "2016-10-15T20:47:22",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -55,50 +55,50 @@
           "User-Agent": "python-requests/2.10.0"
         },
         "method": "GET",
-        "uri": "https://gitlab.com/api/v3/groups?search=<GITLAB_NAMESPACE>"
+        "uri": "https://gitlab.com/api/v3/groups?search=git-repo-test"
       },
       "response": {
         "body": {
           "encoding": null,
-          "string": "[]"
+          "string": "[{\"id\":938543,\"name\":\"git-repo-test\",\"path\":\"git-repo-test\",\"description\":\"\",\"visibility_level\":20,\"ldap_cn\":null,\"ldap_access\":null,\"lfs_enabled\":true,\"avatar_url\":null,\"web_url\":\"https://gitlab.com/git-repo-test\",\"request_access_enabled\":true}]"
         },
         "headers": {
           "Cache-Control": "max-age=0, private, must-revalidate",
-          "Content-Length": "2",
+          "Content-Length": "246",
           "Content-Type": "application/json",
-          "Date": "Sat, 15 Oct 2016 20:46:52 GMT",
-          "Etag": "W/\"d751713988987e9331980363e24189ce\"",
-          "Link": "<https://gitlab.com/api/v3/groups?page=1&per_page=20&search=<GITLAB_NAMESPACE>>; rel=\"first\", <https://gitlab.com/api/v3/groups?page=0&per_page=20&search=<GITLAB_NAMESPACE>>; rel=\"last\"",
+          "Date": "Sat, 15 Oct 2016 20:47:22 GMT",
+          "Etag": "W/\"cb8ff59be305e946e1ed2b7ae795a332\"",
+          "Link": "<https://gitlab.com/api/v3/groups?page=1&per_page=20&search=git-repo-test>; rel=\"first\", <https://gitlab.com/api/v3/groups?page=1&per_page=20&search=git-repo-test>; rel=\"last\"",
           "Server": "nginx",
           "Vary": "Origin",
           "X-Next-Page": "",
           "X-Page": "1",
           "X-Per-Page": "20",
           "X-Prev-Page": "",
-          "X-Request-Id": "b03eada5-dde3-47d7-973a-880905f9965b",
-          "X-Runtime": "0.024603",
-          "X-Total": "0",
-          "X-Total-Pages": "0"
+          "X-Request-Id": "3fcac8d9-9552-4785-9b69-ae53c8e4fd56",
+          "X-Runtime": "0.055753",
+          "X-Total": "1",
+          "X-Total-Pages": "1"
         },
         "status": {
           "code": 200,
           "message": "OK"
         },
-        "url": "https://gitlab.com/api/v3/groups?search=<GITLAB_NAMESPACE>"
+        "url": "https://gitlab.com/api/v3/groups?search=git-repo-test"
       }
     },
     {
-      "recorded_at": "2016-10-15T20:46:52",
+      "recorded_at": "2016-10-15T20:47:22",
       "request": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"name\": \"git-repo\"}"
+          "string": "{\"name\": \"git-repo\", \"namespace_id\": 938543}"
         },
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "identity",
           "Connection": "keep-alive",
-          "Content-Length": "20",
+          "Content-Length": "44",
           "Content-type": "application/json",
           "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
           "User-Agent": "python-requests/2.10.0"
@@ -115,11 +115,11 @@
           "Cache-Control": "no-cache",
           "Content-Length": "100",
           "Content-Type": "application/json",
-          "Date": "Sat, 15 Oct 2016 20:46:52 GMT",
+          "Date": "Sat, 15 Oct 2016 20:47:22 GMT",
           "Server": "nginx",
           "Vary": "Origin",
-          "X-Request-Id": "30d60bc8-de0c-45fa-abc5-b8547bdbe283",
-          "X-Runtime": "0.069274"
+          "X-Request-Id": "a873756e-02c1-4a20-809c-18eb9bdc9273",
+          "X-Runtime": "0.166853"
         },
         "status": {
           "code": 400,
