@@ -36,84 +36,70 @@ class Test_Github(GitRepoTestCase):
         return self.service.gh._session
 
     def test_00_fork(self):
-        self.action_fork(cassette_name=sys._getframe().f_code.co_name,
-                         local_namespace=self.local_namespace,
+        self.action_fork(local_namespace=self.local_namespace,
                          remote_namespace='sigmavirus24',
                          repository='github3.py')
 
     def test_01_create(self):
-        self.action_create(cassette_name=sys._getframe().f_code.co_name,
-                           namespace=self.local_namespace,
+        self.action_create(namespace=self.local_namespace,
                            repository='foobar')
 
     def test_01_create__already_exists(self):
         with pytest.raises(ResourceExistsError):
-            self.action_create(cassette_name=sys._getframe().f_code.co_name,
-                            namespace=self.local_namespace,
+            self.action_create(namespace=self.local_namespace,
                             repository='git-repo')
 
 
     def test_02_delete(self):
-        self.action_delete(cassette_name=sys._getframe().f_code.co_name,
-                           namespace=self.local_namespace,
+        self.action_delete(namespace=self.local_namespace,
                            repository='foobar')
 
     def test_03_delete_nouser(self):
-        self.action_delete(cassette_name=sys._getframe().f_code.co_name,
-                           repository='github3.py')
+        self.action_delete(repository='github3.py')
 
     def test_04_clone(self):
-        self.action_clone(cassette_name=sys._getframe().f_code.co_name,
-                          namespace='guyzmo',
+        self.action_clone(namespace='guyzmo',
                           repository='git-repo')
 
     def test_05_add(self):
-        self.action_add(cassette_name=sys._getframe().f_code.co_name,
-                        namespace='guyzmo',
+        self.action_add(namespace='guyzmo',
                         repository='git-repo')
 
     def test_06_add__name(self):
-        self.action_add(cassette_name=sys._getframe().f_code.co_name,
-                        namespace='guyzmo',
+        self.action_add(namespace='guyzmo',
                         repository='git-repo',
                         name='test0r')
 
     def test_07_add__alone(self):
-        self.action_add(cassette_name=sys._getframe().f_code.co_name,
-                        namespace='guyzmo',
+        self.action_add(namespace='guyzmo',
                         repository='git-repo',
                         alone=True)
 
     def test_08_add__alone_name(self):
-        self.action_add(cassette_name=sys._getframe().f_code.co_name,
-                        namespace='guyzmo',
+        self.action_add(namespace='guyzmo',
                         repository='git-repo',
                         name='test0r',
                         alone=True)
 
     def test_09_add__default(self):
-        self.action_add(cassette_name=sys._getframe().f_code.co_name,
-                        namespace='guyzmo',
+        self.action_add(namespace='guyzmo',
                         repository='git-repo',
                         tracking='github')
 
     def test_10_add__default_name(self):
-        self.action_add(cassette_name=sys._getframe().f_code.co_name,
-                        namespace='guyzmo',
+        self.action_add(namespace='guyzmo',
                         repository='git-repo',
                         name='test0r',
                         tracking='github')
 
     def test_11_add__alone_default(self):
-        self.action_add(cassette_name=sys._getframe().f_code.co_name,
-                        namespace='guyzmo',
+        self.action_add(namespace='guyzmo',
                         repository='git-repo',
                         alone=True,
                         tracking='github')
 
     def test_12_add__alone_default_name(self):
-        self.action_add(cassette_name=sys._getframe().f_code.co_name,
-                        namespace='guyzmo',
+        self.action_add(namespace='guyzmo',
                         repository='git-repo',
                         alone=True,
                         name='test0r',
@@ -144,27 +130,22 @@ class Test_Github(GitRepoTestCase):
             ("https://gist.github.com/3666086",              "z.sh patch for multiline quotes"),
             ("https://gist.github.com/2788003",              "A Tornado-based library that enables Event Source support !"),
         ]
-        self.action_gist_list(cassette_name=sys._getframe().f_code.co_name,
-                gist_list_data=g_list)
+        self.action_gist_list(gist_list_data=g_list)
 
     def test_14_gist_list_with_gist(self):
         g_list = [
             "C                 2542  i2c_scanner.c"
         ]
-        self.action_gist_list(cassette_name=sys._getframe().f_code.co_name,
-                gist='10118958')
+        self.action_gist_list(gist='10118958')
 
     def test_15_gist_list_with_bad_gist(self):
-        self.action_gist_list(cassette_name=sys._getframe().f_code.co_name,
-                gist='42')
+        self.action_gist_list(gist='42')
 
     def test_16_gist_clone_with_gist(self):
-        self.action_gist_clone(cassette_name=sys._getframe().f_code.co_name,
-                gist='https://gist.github.com/10118958')
+        self.action_gist_clone(gist='https://gist.github.com/10118958')
 
     def test_17_gist_fetch_with_gist(self):
-        content = self.action_gist_fetch(cassette_name=sys._getframe().f_code.co_name,
-                        gist='4170462', gist_file=None)
+        content = self.action_gist_fetch(gist='4170462', gist_file=None)
         assert content == '\n'.join([
             'diff --git a/platform/io.c b/platform/io.c',
             'index 209666a..0a6c2cf 100644',
@@ -191,12 +172,10 @@ class Test_Github(GitRepoTestCase):
 
     def test_18_gist_fetch_with_bad_gist(self):
         with pytest.raises(ResourceNotFoundError):
-            self.action_gist_fetch(cassette_name=sys._getframe().f_code.co_name,
-                    gist='42', gist_file=None)
+            self.action_gist_fetch(gist='42', gist_file=None)
 
     def test_19_gist_fetch_with_gist_file(self):
-        content = self.action_gist_fetch(cassette_name=sys._getframe().f_code.co_name,
-                gist='4170462', gist_file='freevpn0.029__platform__io.patch')
+        content = self.action_gist_fetch(gist='4170462', gist_file='freevpn0.029__platform__io.patch')
         assert content == '\n'.join([
             'diff --git a/platform/io.c b/platform/io.c',
             'index 209666a..0a6c2cf 100644',
@@ -223,13 +202,11 @@ class Test_Github(GitRepoTestCase):
 
     def test_20_gist_fetch_with_bad_gist_file(self):
         with pytest.raises(ResourceNotFoundError):
-            self.action_gist_fetch(cassette_name=sys._getframe().f_code.co_name,
-                    gist='4170462', gist_file='failed')
+            self.action_gist_fetch(gist='4170462', gist_file='failed')
 
     def test_21_gist_create_gist_file(self, datadir):
         test_file = str(datadir[ 'random-fortune-1.txt' ])
-        self.action_gist_create(cassette_name=sys._getframe().f_code.co_name,
-                description='this is a test.',
+        self.action_gist_create(description='this is a test.',
                 gist_files=[ test_file ],
                 secret=False)
 
@@ -240,8 +217,7 @@ class Test_Github(GitRepoTestCase):
                 str(datadir[ 'random-fortune-3.txt' ]),
                 str(datadir[ 'random-fortune-4.txt' ]),
         ]
-        self.action_gist_create(cassette_name=sys._getframe().f_code.co_name,
-                description='this is a test.',
+        self.action_gist_create(description='this is a test.',
                 gist_files=test_files,
                 secret=False)
 
@@ -249,15 +225,13 @@ class Test_Github(GitRepoTestCase):
         test_dir = [
                 str(datadir[ 'a_directory' ]),
         ]
-        self.action_gist_create(cassette_name=sys._getframe().f_code.co_name,
-                description='this is a test.',
+        self.action_gist_create(description='this is a test.',
                 gist_files=test_dir,
                 secret=False)
 
     def test_24_gist_create_gist_file(self, datadir):
         test_file = str(datadir[ 'random-fortune-1.txt' ])
-        self.action_gist_create(cassette_name=sys._getframe().f_code.co_name,
-                description='this is a secret test.',
+        self.action_gist_create(description='this is a secret test.',
                 gist_files=[ test_file ],
                 secret=True)
 
@@ -268,8 +242,7 @@ class Test_Github(GitRepoTestCase):
                 str(datadir[ 'random-fortune-3.txt' ]),
                 str(datadir[ 'random-fortune-4.txt' ]),
         ]
-        self.action_gist_create(cassette_name=sys._getframe().f_code.co_name,
-                description='this is a secret test.',
+        self.action_gist_create(description='this is a secret test.',
                 gist_files=test_files,
                 secret=True)
 
@@ -277,33 +250,28 @@ class Test_Github(GitRepoTestCase):
         test_dir = [
                 str(datadir[ 'a_directory' ]),
         ]
-        self.action_gist_create(cassette_name=sys._getframe().f_code.co_name,
-                description='this is a secret test.',
+        self.action_gist_create(description='this is a secret test.',
                 gist_files=test_dir,
                 secret=True)
 
     def test_27_gist_delete(self):
-        self.action_gist_delete(cassette_name=sys._getframe().f_code.co_name,
-                gist='7dcc495dda5e684cba94940a01f60e95')
+        self.action_gist_delete(gist='7dcc495dda5e684cba94940a01f60e95')
 
     def test_28_gist_delete__not_exist(self):
         with pytest.raises(ResourceNotFoundError):
-            self.action_gist_delete(cassette_name=sys._getframe().f_code.co_name,
-                    gist='7dcc495dda5e684cba94940a01f60e95')
+            self.action_gist_delete(gist='7dcc495dda5e684cba94940a01f60e95')
 
     def test_29_gist_create_gist__file_not_exist(self, datadir):
         with pytest.raises(FileNotFoundError):
             test_dir = [
                     'does_not_exists'
             ]
-            self.action_gist_create(cassette_name=sys._getframe().f_code.co_name,
-                    description='this is a secret test.',
+            self.action_gist_create(description='this is a secret test.',
                     gist_files=test_dir,
                     secret=False)
 
     def test_30_request_list(self):
         self.action_request_list(
-                cassette_name=sys._getframe().f_code.co_name,
                 namespace='guyzmo',
                 repository='git-repo',
                 rq_list_data=[
@@ -312,22 +280,19 @@ class Test_Github(GitRepoTestCase):
         ])
 
     def test_31_request_fetch(self):
-        self.action_request_fetch(cassette_name=sys._getframe().f_code.co_name,
-                namespace='guyzmo',
+        self.action_request_fetch(namespace='guyzmo',
                 repository='git-repo',
                 request='2')
 
     def test_31_request_fetch__bad_request(self):
         with pytest.raises(ResourceNotFoundError):
-            self.action_request_fetch(cassette_name=sys._getframe().f_code.co_name,
-                namespace='guyzmo',
+            self.action_request_fetch(namespace='guyzmo',
                 repository='git-repo',
                 request='1',
                 fail=True)
 
     def test_32_request_create(self):
-        r = self.action_request_create(cassette_name=sys._getframe().f_code.co_name,
-                namespace=self.namespace,
+        r = self.action_request_create(namespace=self.namespace,
                 repository='test_create_requests',
                 branch='pr-test',
                 title='PR test',
@@ -336,8 +301,7 @@ class Test_Github(GitRepoTestCase):
 
     def test_32_request_create__bad_branch(self):
         with pytest.raises(ResourceError):
-            self.action_request_create(cassette_name=sys._getframe().f_code.co_name,
-                    namespace=self.namespace,
+            self.action_request_create(namespace=self.namespace,
                     repository='test_create_requests',
                     branch='does_not_exists',
                     title='PR test',
@@ -345,24 +309,21 @@ class Test_Github(GitRepoTestCase):
 
     def test_32_request_create__bad_repo(self):
         with pytest.raises(ResourceNotFoundError):
-            r = self.action_request_create(cassette_name=sys._getframe().f_code.co_name,
-                    namespace=self.namespace,
+            r = self.action_request_create(namespace=self.namespace,
                     repository='does_not_exists',
                     branch='pr-test',
                     title='PR test',
                     description='PR description')
 
     def test_32_request_create__guess_branch(self):
-        r = self.action_request_create(cassette_name=sys._getframe().f_code.co_name,
-                namespace=self.namespace,
+        r = self.action_request_create(namespace=self.namespace,
                 repository='test_create_requests',
                 branch=None,
                 title='PR test',
                 description='PR description')
 
     def test_33_open(self):
-        self.action_open(cassette_name=sys._getframe().f_code.co_name,
-                         namespace='guyzmo',
+        self.action_open(namespace='guyzmo',
                          repository='git-repo')
 
 
