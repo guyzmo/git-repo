@@ -5,14 +5,14 @@ python:
     - "3.5-dev" # 3.5 development branch
     - "3.6-dev" # 3.6 development branch
     - "nightly" # 3.7 development branch
-    - "pypy" # 3.7 development branch
+    - "pypy3" # pypy3
 os:
     - "linux"
     - "osx"
 matrix:
   allow_failures:
       - python: "nightly"
-      - python: "pypy"
+      - python: "pypy3"
       - os: "osx"
 addons:
   apt:

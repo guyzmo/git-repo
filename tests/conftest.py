@@ -19,9 +19,9 @@ if os.environ.get('TRAVIS_GH3'):
         token_name = 'PRIVATE_KEY_{}'.format(service.upper())
         namespace_name = '{}_NAMESPACE'.format(service.upper())
         if token_name not in os.environ:
-            os.environ[token_name] = '_namespace_{}_:_private_'.format(s) # using a : for bitbucket's case
+            os.environ[token_name] = '_namespace_{}_:_private_'.format(service) # using a : for bitbucket's case
         if namespace_name not in os.environ:
-            os.environ[namespace_name] = '_namespace_{}_'.format(s)
+            os.environ[namespace_name] = '_namespace_{}_'.format(service)
 else:
     # if running tests "locally" and not in travis, let's try to extract the keys from
     # the local configuration if there is some local configuration. And exposes them as
