@@ -13,6 +13,7 @@ matrix:
   allow_failures:
       - python: "nightly"
       - python: "pypy"
+      - os: "osx"
 addons:
   apt:
     packages:
