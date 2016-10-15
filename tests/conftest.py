@@ -19,9 +19,9 @@ if os.environ.get('TRAVIS_GH3'):
         token_name = 'PRIVATE_KEY_{}'.format(service.upper())
         namespace_name = '{}_NAMESPACE'.format(service.upper())
         if token_name not in os.environ:
-            os.environ[token_name] = '_token_{}_:_private_'.format(s) # using a : for bitbucket's case
+            os.environ[token_name] = '_namespace_{}_:_private_'.format(s) # using a : for bitbucket's case
         if namespace_name not in os.environ:
-            os.environ[namespace_name] = '_not_a_namespace_'
+            os.environ[namespace_name] = '_namespace_{}_'.format(s)
 else:
     # if running tests "locally" and not in travis, let's try to extract the keys from
     # the local configuration if there is some local configuration. And exposes them as
@@ -34,8 +34,10 @@ else:
     get_token = lambda s: config.get_value(get_section(s), 'token',
                             config.get_value(get_section(s), 'private_token',
                                 config.get_value(get_section(s), 'privatekey',
-                                        '_token_{}_:_private_'.format(s) # using a : for bitbucket's case
+                                        '_namespace_{}_:_private_'.format(s) # using a : for bitbucket's case
                                     )))
+    # XXX temporary fix that should not be necessary when refactoring with pybitbucket
+    get_default_namespace = lambda s: os.environ[token_name].split(':')[0] if s == 'bitbucket' else '_namespace_{}_'.format(s)
 
     for service in services:
         token_name = 'PRIVATE_KEY_{}'.format(service.upper())
@@ -43,7 +45,7 @@ else:
         if token_name not in os.environ:
             os.environ[token_name] = get_token(service)
         if namespace_name not in os.environ:
-            os.environ[namespace_name] = os.environ.get('GITREPO_NAMESPACE', getpass.getuser())
+            os.environ[namespace_name] = os.environ.get('GITREPO_NAMESPACE', get_default_namespace(service))
 
 betamax.Betamax.register_serializer(pretty_json.PrettyJSONSerializer)
 
