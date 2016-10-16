@@ -1,12 +1,40 @@
 language: python
-python:
-    - "3.4"
-    - "3.5"
-    - "3.5-dev" # 3.5 development branch
+matrix:
+  include:
+    - os: linux
+      python: "3.4"
+    - os: linux
+      python: "3.5"
+    - os: linux
+      python: "3.5-dev"
+    - os: linux
+      python: "3.6-dev"
+    - os: linux
+      python: "nightly"
+    - os: linux
+      python: "pypy3"
+
+    - os: osx
+      sudo: required
+      language: generic
+
+  allow_failures:
+      - python: "3.6-dev"
+      - python: "nightly"
+      - python: "pypy3"
+      - os: "osx"
 addons:
   apt:
     packages:
         - pandoc
+before_install: |
+  if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
+      brew update;
+      brew install python3 pandoc;
+      python3 -m venv venv;
+      source venv/bin/activate;
+      pip install . test
+  fi
 # command to install dependencies
 install:
     - "pip install --upgrade pip" # upgrade to latest pip (needed on py3.4)

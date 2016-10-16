@@ -119,7 +119,7 @@ so that you can push your code to all your remote repositories in one command:
 
 ### Installation
 
-You can get the tool using pypi:
+You can get the tool using pypi (use `pip3` if you have both Python2 and Python3 installed):
 
     % pip install git-repo
 
@@ -276,10 +276,11 @@ With code contributions coming from:
 
 * [@guyhughes](https://github.com/guyhughes) [commits](https://github.com/guyzmo/git-repo/commits?author=guyhughes)
 * [@buaazp](https://github.com/buaazp) [commits](https://github.com/guyzmo/git-repo/commits?author=buaazp)
+* [@peterazmanov](https://github.com/peterazmanov) [commits](https://github.com/guyzmo/git-repo/commits?author=peterazmanov)
 
 ### License
 
-    Copyright © 
+    Copyright ©2016 Bernard `Guyzmo` Pratz <guyzmo+git-repo+pub@m0g.net>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License

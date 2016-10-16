@@ -1,0 +1,174 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-10-15T20:46:15",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.10.0"
+        },
+        "method": "GET",
+        "uri": "https://gitlab.com/api/v3/user"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "{\"name\":\"Guyzmo\",\"username\":\"<GITLAB_NAMESPACE>\",\"id\":459552,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80&d=identicon\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>\",\"created_at\":\"2016-03-21T12:52:59.859Z\",\"is_admin\":false,\"bio\":\": :(){ :|:& };:\",\"location\":\"Earth, Solar system, Milkyway, Universe\",\"skype\":\"\",\"linkedin\":\"\",\"twitter\":\"\",\"website_url\":\"http://i.got.nothing.to/blog\",\"organization\":null,\"last_sign_in_at\":\"2016-10-13T18:28:52.737Z\",\"confirmed_at\":\"2016-03-21T13:48:05.234Z\",\"email\":\"<GITLAB_NAMESPACE>+gitlab@m0g.net\",\"theme_id\":4,\"color_scheme_id\":4,\"projects_limit\":100000,\"current_sign_in_at\":\"2016-10-13T18:28:55.087Z\",\"identities\":[],\"can_create_group\":true,\"can_create_project\":true,\"two_factor_enabled\":false,\"external\":false}"
+        },
+        "headers": {
+          "Cache-Control": "max-age=0, private, must-revalidate",
+          "Content-Length": "775",
+          "Content-Type": "application/json",
+          "Date": "Sat, 15 Oct 2016 20:46:15 GMT",
+          "Etag": "W/\"677a046b34e34176cde8e128968cb26c\"",
+          "Server": "nginx",
+          "Vary": "Origin",
+          "X-Request-Id": "5e8cb85f-3b4a-476b-8ea6-84b0d614c4fa",
+          "X-Runtime": "0.042998"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://gitlab.com/api/v3/user"
+      }
+    },
+    {
+      "recorded_at": "2016-10-15T20:46:15",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.10.0"
+        },
+        "method": "GET",
+        "uri": "https://gitlab.com/api/v3/groups?search=git-repo-test"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "[{\"id\":938543,\"name\":\"git-repo-test\",\"path\":\"git-repo-test\",\"description\":\"\",\"visibility_level\":20,\"ldap_cn\":null,\"ldap_access\":null,\"lfs_enabled\":true,\"avatar_url\":null,\"web_url\":\"https://gitlab.com/git-repo-test\",\"request_access_enabled\":true}]"
+        },
+        "headers": {
+          "Cache-Control": "max-age=0, private, must-revalidate",
+          "Content-Length": "246",
+          "Content-Type": "application/json",
+          "Date": "Sat, 15 Oct 2016 20:46:15 GMT",
+          "Etag": "W/\"cb8ff59be305e946e1ed2b7ae795a332\"",
+          "Link": "<https://gitlab.com/api/v3/groups?page=1&per_page=20&search=git-repo-test>; rel=\"first\", <https://gitlab.com/api/v3/groups?page=1&per_page=20&search=git-repo-test>; rel=\"last\"",
+          "Server": "nginx",
+          "Vary": "Origin",
+          "X-Next-Page": "",
+          "X-Page": "1",
+          "X-Per-Page": "20",
+          "X-Prev-Page": "",
+          "X-Request-Id": "bcce9e0c-d2db-42c3-8748-604b3a9ab420",
+          "X-Runtime": "0.041868",
+          "X-Total": "1",
+          "X-Total-Pages": "1"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://gitlab.com/api/v3/groups?search=git-repo-test"
+      }
+    },
+    {
+      "recorded_at": "2016-10-15T20:46:20",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"name\": \"foobar\", \"namespace_id\": 938543}"
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "Content-Length": "42",
+          "Content-type": "application/json",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.10.0"
+        },
+        "method": "POST",
+        "uri": "https://gitlab.com/api/v3/projects"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "{\"id\":1848930,\"description\":null,\"default_branch\":null,\"tag_list\":[],\"public\":false,\"archived\":false,\"visibility_level\":0,\"ssh_url_to_repo\":\"git@gitlab.com:git-repo-test/foobar.git\",\"http_url_to_repo\":\"https://gitlab.com/git-repo-test/foobar.git\",\"web_url\":\"https://gitlab.com/git-repo-test/foobar\",\"name\":\"foobar\",\"name_with_namespace\":\"git-repo-test / foobar\",\"path\":\"foobar\",\"path_with_namespace\":\"git-repo-test/foobar\",\"container_registry_enabled\":true,\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"builds_enabled\":true,\"snippets_enabled\":true,\"created_at\":\"2016-10-15T20:46:16.023Z\",\"last_activity_at\":\"2016-10-15T20:46:16.023Z\",\"shared_runners_enabled\":true,\"lfs_enabled\":true,\"creator_id\":459552,\"namespace\":{\"id\":938543,\"name\":\"git-repo-test\",\"path\":\"git-repo-test\",\"owner_id\":null,\"created_at\":\"2016-10-15T20:32:52.148Z\",\"updated_at\":\"2016-10-15T20:32:52.148Z\",\"description\":\"\",\"avatar\":{\"url\":null},\"membership_lock\":false,\"share_with_group_lock\":false,\"visibility_level\":20,\"request_access_enabled\":true,\"ldap_sync_status\":\"ready\",\"ldap_sync_error\":null,\"ldap_sync_last_update_at\":null,\"ldap_sync_last_successful_update_at\":null,\"ldap_sync_last_sync_at\":null,\"deleted_at\":null,\"lfs_enabled\":null,\"repository_size_limit\":null},\"avatar_url\":null,\"star_count\":0,\"forks_count\":0,\"open_issues_count\":0,\"runners_token\":\"zbCRkRWBsw6y-UQy13st\",\"public_builds\":true,\"shared_with_groups\":[],\"only_allow_merge_if_build_succeeds\":false,\"request_access_enabled\":true}"
+        },
+        "headers": {
+          "Cache-Control": "max-age=0, private, must-revalidate",
+          "Content-Length": "1492",
+          "Content-Type": "application/json",
+          "Date": "Sat, 15 Oct 2016 20:46:20 GMT",
+          "Etag": "W/\"8d66fce306b8d437f71b3232a35dcf1d\"",
+          "Server": "nginx",
+          "Vary": "Origin",
+          "X-Request-Id": "2cd06d8d-4d6b-482e-949b-9c3b8045d1a8",
+          "X-Runtime": "4.116071"
+        },
+        "status": {
+          "code": 201,
+          "message": "Created"
+        },
+        "url": "https://gitlab.com/api/v3/projects"
+      }
+    },
+    {
+      "recorded_at": "2016-10-15T20:46:20",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.10.0"
+        },
+        "method": "GET",
+        "uri": "https://gitlab.com/api/v3/projects/git-repo-test%2Ffoobar"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "{\"id\":1848930,\"description\":null,\"default_branch\":null,\"tag_list\":[],\"public\":false,\"archived\":false,\"visibility_level\":0,\"ssh_url_to_repo\":\"git@gitlab.com:git-repo-test/foobar.git\",\"http_url_to_repo\":\"https://gitlab.com/git-repo-test/foobar.git\",\"web_url\":\"https://gitlab.com/git-repo-test/foobar\",\"name\":\"foobar\",\"name_with_namespace\":\"git-repo-test / foobar\",\"path\":\"foobar\",\"path_with_namespace\":\"git-repo-test/foobar\",\"container_registry_enabled\":true,\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"builds_enabled\":true,\"snippets_enabled\":true,\"created_at\":\"2016-10-15T20:46:16.023Z\",\"last_activity_at\":\"2016-10-15T20:46:16.023Z\",\"shared_runners_enabled\":true,\"lfs_enabled\":true,\"creator_id\":459552,\"namespace\":{\"id\":938543,\"name\":\"git-repo-test\",\"path\":\"git-repo-test\",\"owner_id\":null,\"created_at\":\"2016-10-15T20:32:52.148Z\",\"updated_at\":\"2016-10-15T20:32:52.148Z\",\"description\":\"\",\"avatar\":{\"url\":null},\"membership_lock\":false,\"share_with_group_lock\":false,\"visibility_level\":20,\"request_access_enabled\":true,\"ldap_sync_status\":\"ready\",\"ldap_sync_error\":null,\"ldap_sync_last_update_at\":null,\"ldap_sync_last_successful_update_at\":null,\"ldap_sync_last_sync_at\":null,\"deleted_at\":null,\"lfs_enabled\":null,\"repository_size_limit\":null},\"avatar_url\":null,\"star_count\":0,\"forks_count\":0,\"open_issues_count\":0,\"runners_token\":\"zbCRkRWBsw6y-UQy13st\",\"public_builds\":true,\"shared_with_groups\":[],\"only_allow_merge_if_build_succeeds\":false,\"request_access_enabled\":true,\"permissions\":{\"project_access\":null,\"group_access\":{\"access_level\":50,\"notification_level\":3}}}"
+        },
+        "headers": {
+          "Cache-Control": "max-age=0, private, must-revalidate",
+          "Content-Length": "1588",
+          "Content-Type": "application/json",
+          "Date": "Sat, 15 Oct 2016 20:46:20 GMT",
+          "Etag": "W/\"8305e8b534f11939cc51478a64f30304\"",
+          "Server": "nginx",
+          "Vary": "Origin",
+          "X-Request-Id": "7170ea4b-2de6-43a9-bfe2-6853b37def56",
+          "X-Runtime": "0.103249"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://gitlab.com/api/v3/projects/git-repo-test%2Ffoobar"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

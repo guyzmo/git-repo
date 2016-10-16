@@ -243,14 +243,6 @@ class GitRepoRunner(KeywordArgumentParser):
             self.repo_name = self.repo_slug
 
     @store_parameter('<branch>')
-    def set_branch(self, branch):
-        # FIXME workaround for default value that is not correctly parsed in docopt
-        if branch == None:
-            branch = 'master'
-
-        self.branch = branch
-
-    @store_parameter('<branch>')
     @store_parameter('--branch')
     def set_branch(self, branch):
         # FIXME workaround for default value that is not correctly parsed in docopt
@@ -491,7 +483,7 @@ class GitRepoRunner(KeywordArgumentParser):
             username = loop_input('username> ')
             password = loop_input('password> ', method=getpass)
 
-            token = service.get_auth_token(username, password)
+            token = service.get_auth_token(username, password, prompt=loop_input)
             print('Great! You\'ve been identified 🍻')
 
             print('Do you want to give a custom name for this service\'s remote?')
@@ -515,7 +507,7 @@ class GitRepoRunner(KeywordArgumentParser):
         else:
             services = RepositoryService.service_map.values()
 
-        for service in services:
+        for service in sorted(services, key=lambda s: s.name):
             print('Do you want to configure the {} service?'.format(service.name))
             if 'n' in input('    [Yn]> ').lower():
                 continue

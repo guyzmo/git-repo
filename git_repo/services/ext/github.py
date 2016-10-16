@@ -33,10 +33,15 @@ class GithubService(RepositoryService):
                                           'Check your configuration and try again.') from err
 
     def create(self, user, repo, add=False):
-        if user != self.username:
-            raise NotImplementedError("Project creation supported for authentified user only!")
         try:
-            self.gh.create_repo(repo)
+            if user != self.username:
+                org = self.gh.organization(user)
+                if org:
+                    org.create_repo(repo)
+                else:
+                    raise ResourceNotFoundError("Namespace {} neither an organization or current user.".format(user))
+            else:
+                self.gh.create_repo(repo)
         except github3.models.GitHubError as err:
             if err.code == 422 or err.message == 'name already exists on this account':
                 raise ResourceExistsError("Project already exists.") from err
@@ -194,13 +199,21 @@ class GithubService(RepositoryService):
             raise err
 
     @classmethod
-    def get_auth_token(cls, login, password):
+    def get_auth_token(cls, login, password, prompt=None):
         import platform
-        auth = github3.GitHub().authorize(login, password,
-                scopes=[ 'repo', 'delete_repo', 'gist' ],
-                note='git-repo token used on {}'.format(platform.node()),
-                note_url='https://github.com/guyzmo/git-repo')
-        return auth.token
+        gh = github3.GitHub()
+        gh.login(login, password, two_factor_callback=lambda: prompt('2FA code> '))
+        try:
+            auth = gh.authorize(login, password,
+                    scopes=[ 'repo', 'delete_repo', 'gist' ],
+                    note='git-repo2 token used on {}'.format(platform.node()),
+                    note_url='https://github.com/guyzmo/git-repo')
+            return auth.token
+        except github3.models.GitHubError as err:
+            if len(err.args) > 0 and 422 == err.args[0].status_code:
+                raise ResourceExistsError("A token already exist for this machine on your github account.")
+            else:
+                raise err
 
     @property
     def user(self):

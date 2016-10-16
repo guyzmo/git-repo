@@ -15,7 +15,7 @@ from ..exceptions import ArgumentError
 
 '''select open command'''
 
-if 'mac' in sys.platform: #pragma: no cover
+if 'darwin' in sys.platform: #pragma: no cover
     OPEN_COMMAND = 'open'
 else: #pragma: no cover
     OPEN_COMMAND = 'xdg-open'
@@ -122,7 +122,7 @@ class RepositoryService:
         return cls._current
 
     @classmethod
-    def get_auth_token(cls, login, password):
+    def get_auth_token(cls, login, password, prompt=None):
         raise NotImplementedError
 
     def __init__(self, r=None, c=None):
