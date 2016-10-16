@@ -33,10 +33,15 @@ class GithubService(RepositoryService):
                                           'Check your configuration and try again.') from err
 
     def create(self, user, repo, add=False):
-        if user != self.username:
-            raise NotImplementedError("Project creation supported for authentified user only!")
         try:
-            self.gh.create_repo(repo)
+            if user != self.username:
+                org = self.gh.organization(user)
+                if org:
+                    org.create_repo(repo)
+                else:
+                    raise ResourceNotFoundError("Namespace {} neither an organization or current user.".format(user))
+            else:
+                self.gh.create_repo(repo)
         except github3.models.GitHubError as err:
             if err.code == 422 or err.message == 'name already exists on this account':
                 raise ResourceExistsError("Project already exists.") from err

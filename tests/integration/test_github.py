@@ -40,13 +40,22 @@ class Test_Github(GitRepoTestCase):
                          remote_namespace='sigmavirus24',
                          repository='github3.py')
 
-    def test_01_create(self):
+    def test_01_create__new(self):
         self.action_create(namespace=self.local_namespace,
                            repository='foobar')
 
     def test_01_create__already_exists(self):
         with pytest.raises(ResourceExistsError):
             self.action_create(namespace=self.local_namespace,
+                            repository='git-repo')
+
+    def test_01_create_organization__new(self):
+        self.action_create(namespace='test-git-repo',
+                           repository='foobar')
+
+    def test_01_create_organization__already_exists(self):
+        with pytest.raises(ResourceExistsError):
+            self.action_create(namespace='test-git-repo',
                             repository='git-repo')
 
 

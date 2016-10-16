@@ -1,0 +1,172 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-10-16T00:15:54",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"login\":\"<GITLAB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITLAB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITLAB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITLAB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITLAB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITLAB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITLAB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITLAB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITLAB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITLAB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITLAB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITLAB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false,\"name\":\"<GITLAB_NAMESPACE>\",\"company\":null,\"blog\":\"http://<GITLAB_NAMESPACE>.got.nothing.to/blog/\",\"location\":\"Paris\",\"email\":null,\"hireable\":true,\"bio\":null,\"public_repos\":87,\"public_gists\":17,\"followers\":54,\"following\":15,\"created_at\":\"2010-04-27T14:04:09Z\",\"updated_at\":\"2016-09-03T19:19:47Z\"}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "1118",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sun, 16 Oct 2016 00:15:54 GMT",
+          "ETag": "\"552dda7fe01396d75e16d9003f4fd8d7\"",
+          "Last-Modified": "Sat, 03 Sep 2016 19:19:47 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:1598:D0AB657:5802C6B9",
+          "X-OAuth-Scopes": "repo, delete_repo, gist",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4984",
+          "X-RateLimit-Reset": "1476580399",
+          "X-Served-By": "7efb7ae49588ef0269c6a1c1bd3721d9",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/user"
+      }
+    },
+    {
+      "recorded_at": "2016-10-16T00:15:54",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/orgs/test-git-repo"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"login\":\"test-git-repo\",\"id\":22862172,\"url\":\"https://api.github.com/orgs/test-git-repo\",\"repos_url\":\"https://api.github.com/orgs/test-git-repo/repos\",\"events_url\":\"https://api.github.com/orgs/test-git-repo/events\",\"hooks_url\":\"https://api.github.com/orgs/test-git-repo/hooks\",\"issues_url\":\"https://api.github.com/orgs/test-git-repo/issues\",\"members_url\":\"https://api.github.com/orgs/test-git-repo/members{/member}\",\"public_members_url\":\"https://api.github.com/orgs/test-git-repo/public_members{/member}\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/22862172?v=3\",\"description\":null,\"public_repos\":2,\"public_gists\":0,\"followers\":0,\"following\":0,\"html_url\":\"https://github.com/test-git-repo\",\"created_at\":\"2016-10-16T00:09:22Z\",\"updated_at\":\"2016-10-16T00:09:22Z\",\"type\":\"Organization\",\"total_private_repos\":0,\"owned_private_repos\":0,\"private_gists\":0,\"disk_usage\":0,\"collaborators\":0,\"billing_email\":\"<GITLAB_NAMESPACE>+test-git-repo+git-repo+github@m0g.net\",\"plan\":{\"name\":\"free\",\"space\":976562499,\"private_repos\":0,\"filled_seats\":1,\"seats\":0}}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "1042",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sun, 16 Oct 2016 00:15:54 GMT",
+          "ETag": "\"5fecacb8e75f216471110d336947403d\"",
+          "Last-Modified": "Sun, 16 Oct 2016 00:09:22 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "admin:org, read:org, repo, user, write:org",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:1598:D0AB666:5802C6BA",
+          "X-OAuth-Scopes": "repo, delete_repo, gist",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4983",
+          "X-RateLimit-Reset": "1476580399",
+          "X-Served-By": "2d7a5e35115884240089368322196939",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/orgs/test-git-repo"
+      }
+    },
+    {
+      "recorded_at": "2016-10-16T00:15:54",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"name\": \"git-repo\", \"homepage\": \"\", \"private\": false, \"has_issues\": true, \"auto_init\": false, \"has_wiki\": true, \"has_downloads\": true, \"gitignore_template\": \"\", \"description\": \"\"}"
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Length": "180",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "POST",
+        "uri": "https://api.github.com/orgs/test-git-repo/repos"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"message\":\"Validation Failed\",\"errors\":[{\"resource\":\"Repository\",\"code\":\"custom\",\"field\":\"name\",\"message\":\"name already exists on this account\"}],\"documentation_url\":\"https://developer.github.com/v3/repos/#create\"}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Content-Length": "215",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sun, 16 Oct 2016 00:15:54 GMT",
+          "Server": "GitHub.com",
+          "Status": "422 Unprocessable Entity",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "X-Accepted-OAuth-Scopes": "public_repo, repo",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "4EC11365:1598:D0AB67F:5802C6BA",
+          "X-OAuth-Scopes": "repo, delete_repo, gist",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4982",
+          "X-RateLimit-Reset": "1476580399",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 422,
+          "message": "Unprocessable Entity"
+        },
+        "url": "https://api.github.com/orgs/test-git-repo/repos"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}
