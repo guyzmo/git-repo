@@ -74,6 +74,69 @@ class GithubService(RepositoryService):
                                               'Check the namespace or the private token\'s privileges') from err
             raise ResourceError('Unhandled exception: {}'.format(err)) from err
 
+    def list(self, user, _long=False):
+        import shutil, sys
+        from datetime import datetime
+        term_width = shutil.get_terminal_size((80, 20)).columns
+        def col_print(lines, indent=0, pad=2):
+            # prints a list of items in a fashion similar to the dir command
+            # borrowed from https://gist.github.com/critiqjo/2ca84db26daaeb1715e1
+            n_lines = len(lines)
+            if n_lines == 0:
+                return
+            col_width = max(len(line) for line in lines)
+            n_cols = int((term_width + pad - indent)/(col_width + pad))
+            n_cols = min(n_lines, max(1, n_cols))
+            col_len = int(n_lines/n_cols) + (0 if n_lines % n_cols == 0 else 1)
+            if (n_cols - 1) * col_len >= n_lines:
+                n_cols -= 1
+            cols = [lines[i*col_len : i*col_len + col_len] for i in range(n_cols)]
+            rows = list(zip(*cols))
+            rows_missed = zip(*[col[len(rows):] for col in cols[:-1]])
+            rows.extend(rows_missed)
+            for row in rows:
+                print(" "*indent + (" "*pad).join(line.ljust(col_width) for line in row))
+
+        if not self.gh.user(user):
+            raise ResourceNotFoundError("User {} does not exists.".format(user))
+
+        repositories = self.gh.iter_user_repos(user)
+        if not _long:
+            repositories = list(repositories)
+            col_print(["/".join([user, repo.name]) for repo in repositories])
+        else:
+            print('Status\tCommits\tReqs\tIssues\tForks\tCoders\tWatch\tLikes\tLang\tModif\t\tName', file=sys.stderr)
+            for repo in repositories:
+                if repo.updated_at.year < datetime.now().year:
+                    date_fmt = "%b %d %Y"
+                else:
+                    date_fmt = "%b %d %H:%M"
+
+                status = ''.join([
+                    'F' if repo.fork else ' ',               # is a fork?
+                    'P' if repo.private else ' ',            # is private?
+                ])
+                print('\t'.join([
+                    # status
+                    status,
+                    # stats
+                    str(len(list(repo.iter_commits()))),          # number of commits
+                    str(len(list(repo.iter_pulls()))),            # number of pulls
+                    str(len(list(repo.iter_issues()))),           # number of issues
+                    str(repo.forks),                              # number of forks
+                    str(len(list(repo.iter_contributors()))),     # number of contributors
+                    str(repo.watchers),                           # number of subscribers
+                    str(repo.stargazers or 0),                    # number of ♥
+                    # info
+                    repo.language or '?',                      # language
+                    repo.updated_at.strftime(date_fmt),      # date
+                    '/'.join([user, repo.name]),             # name
+                ]))
+
+
+
+
+
     def get_repository(self, user, repo):
         repository = self.gh.repository(user, repo)
         if not repository:
