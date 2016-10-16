@@ -276,6 +276,7 @@ With code contributions coming from:
 
 * [@guyhughes](https://github.com/guyhughes) [commits](https://github.com/guyzmo/git-repo/commits?author=guyhughes)
 * [@buaazp](https://github.com/buaazp) [commits](https://github.com/guyzmo/git-repo/commits?author=buaazp)
+* [@peterazmanov](https://github.com/peterazmanov) [commits](https://github.com/guyzmo/git-repo/commits?author=peterazmanov)
 
 ### License
 
