@@ -175,13 +175,13 @@ class GitRepoRunner(KeywordArgumentParser):
             if remote.name in (target, 'upstream', 'origin'):
                 for url in remote.urls:
                     if url.startswith('https'):
-                        if '.git' in url:
+                        if url.endswith('.git'):
                             url = url[:-4]
                         *_, user, name = url.split('/')
                         self.set_repo_slug('/'.join([user, name]))
                         break
                     elif url.startswith('git@'):
-                        if '.git' in url:
+                        if url.endswith('.git'):
                             url = url[:-4]
                         _, repo_slug = url.split(':')
                         self.set_repo_slug(repo_slug)
