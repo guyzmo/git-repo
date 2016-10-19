@@ -325,16 +325,21 @@ class Test_Main(GitRepoMainTestCase):
         assert out ==  '  1\tdesc1                                                       \thttp://request/1\n  2\tdesc2                                                       \thttp://request/2\n  3\tdesc3                                                       \thttp://request/3\n'
         assert 'id' in caplog.text and 'title' in caplog.text and 'URL' in caplog.text
 
-    def test_request_list__no_repo_slug__https_dot_git(self, capsys, caplog):
+    def test_request_list__no_repo_slug__https_dot_git_fix__issue55(self):
         from subprocess import call
         call(['git', 'init', '-q', self.tempdir.name])
         call(['git', '--git-dir={}/.git'.format(self.tempdir.name), 'remote', 'add', 'github', 'https://github.com/guyzmo/.git-repo'])
         repo_slug, seen_args = self.main_request_list(rc=0, args={})
         assert ('guyzmo', '.git-repo') == repo_slug
         assert dict() == seen_args
-        out, err = capsys.readouterr()
-        assert out ==  '  1\tdesc1                                                       \thttp://request/1\n  2\tdesc2                                                       \thttp://request/2\n  3\tdesc3                                                       \thttp://request/3\n'
-        assert 'id' in caplog.text and 'title' in caplog.text and 'URL' in caplog.text
+
+    def test_request_list__no_repo_slug__git_dot_git_fix__issue55(self):
+        from subprocess import call
+        call(['git', 'init', '-q', self.tempdir.name])
+        call(['git', '--git-dir={}/.git'.format(self.tempdir.name), 'remote', 'add', 'github', 'git@github.com:guyzmo/.git-repo'])
+        repo_slug, seen_args = self.main_request_list(rc=0, args={})
+        assert ('guyzmo', '.git-repo') == repo_slug
+        assert dict() == seen_args
 
     def test_request_fetch__request(self, capsys, caplog):
         from subprocess import call
