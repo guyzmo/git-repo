@@ -323,9 +323,10 @@ class GitRepoRunner(KeywordArgumentParser):
     def do_clone(self, service=None, repo_path=None):
         service = service or self.get_service(lookup_repository=False)
         repo_path = repo_path or os.path.join(self.path, self.target_repo or self.repo_name)
-        if os.path.exists(repo_path):
+        if os.path.exists(repo_path) and os.listdir(repo_path) != []:
             raise FileExistsError('Cannot clone repository, '
-                                  'a folder named {} already exists!'.format(repo_path))
+                                  'a folder named {} already exists and '
+                                  'is not an empty directory!'.format(repo_path))
         try:
             repository = Repo.init(repo_path)
             service = RepositoryService.get_service(repository, self.target)
