@@ -259,7 +259,7 @@ To use your own credentials, you can setup the following environment variables:
   * [ ] gitlab support (cf [#10](https://github.com/guyzmo/git-repo/issues/10))
   * [ ] bitbucket support (cf [#11](https://github.com/guyzmo/git-repo/issues/11))
 * [ ] add OAuth support for bitbucket (cf [#14](https://github.com/guyzmo/git-repo/issues/14))
-* [ ] add support for managing SSH keys (cf [#22](https://github.com/guyzmo/git-repo/issues/15))
+* [ ] add support for managing SSH keys (cf [#22](https://github.com/guyzmo/git-repo/issues/22))
 * [ ] add support for issues?
 * [ ] add support for gogs (cf [#18](https://github.com/guyzmo/git-repo/issues/18))
 * [ ] add support for gerrit (cf [#19](https://github.com/guyzmo/git-repo/issues/19))
