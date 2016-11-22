@@ -9,7 +9,6 @@ import pip
 from setuptools import setup, find_packages, dist
 from setuptools.command.test import test as TestCommand
 from distutils.core import Command
-from distutils.core import setup
 
 if sys.version_info.major < 3:
     print('Please install with python version 3')
