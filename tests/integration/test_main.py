@@ -15,12 +15,14 @@ class Test_Main(GitRepoMainTestCase):
     log = log
     target = 'hub'
 
-    def test_add(self):
+    def test_add(self, capsys):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0)
         assert ('git-repo', 'guyzmo') == repo_slug
         assert {'name': None,
                 'alone': False,
                 'tracking': 'master'} == seen_args
+        out, err = capsys.readouterr()
+        assert 'Successfully added `guyzmo/git-repo` as remote named `github`\n' == err
 
     def test_add__alone(self):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
@@ -47,13 +49,15 @@ class Test_Main(GitRepoMainTestCase):
                 'alone': True,
                 'tracking': 'foobar'} == seen_args
 
-    def test_add__name(self):
+    def test_add__name(self, capsys):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
                                              args={'<name>': 'foobar'})
         assert ('git-repo', 'guyzmo') == repo_slug
         assert {'name': 'foobar',
                 'alone': False,
                 'tracking': 'master'} == seen_args
+        out, err = capsys.readouterr()
+        assert 'Successfully added `guyzmo/git-repo` as remote named `foobar`\n' == err
 
     def test_add__name_tracking(self):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,

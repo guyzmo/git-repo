@@ -292,7 +292,7 @@ class GitRepoRunner(KeywordArgumentParser):
                     alone=self.alone)
         log.info('Successfully added `{}` as remote named `{}`'.format(
             self.repo_slug,
-            service.name)
+            self.remote_name or service.name)
         )
         return 0
 
