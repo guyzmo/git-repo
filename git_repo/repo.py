@@ -119,6 +119,7 @@ from docopt import docopt
 import os
 import sys
 import json
+import shutil
 import logging
 import pkg_resources
 
@@ -352,8 +353,8 @@ class GitRepoRunner(KeywordArgumentParser):
             return 0
         except Exception as err:
             if os.path.exists(repo_path):
-                os.removedirs(repo_path)
-            raise err from err
+                shutil.rmtree(repo_path)
+            raise ResourceNotFoundError(err.args[2].decode('utf-8')) from err
 
     @register_action('create')
     def do_create(self):
