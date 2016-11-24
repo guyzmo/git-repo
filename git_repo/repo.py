@@ -86,7 +86,6 @@ Options for request:
 
 Configuration options:
     alias                    Name to use for the git remote
-    url                      URL of the repository
     fqdn                     URL of the repository
     type                     Name of the service to use (github, gitlab, bitbucket)
 
