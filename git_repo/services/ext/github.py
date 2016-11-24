@@ -23,7 +23,7 @@ class GithubService(RepositoryService):
             self.gh.login(token=self._privatekey)
             self.username = self.gh.user().login
         except github3.models.GitHubError as err:
-            if err.code is 401:
+            if 401 == err.code:
                 if not self._privatekey:
                     raise ConnectionError('Could not connect to Github. '
                                           'Please configure .gitconfig '
