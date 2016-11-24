@@ -108,7 +108,7 @@ Configuration example:
     token = yourapitoken
     fqdn = custom.org
 
-{self} version {version}, Copyright ⓒ2016 Bernard `Guyzmo` Pratz
+{self} version {version}, Copyright ©2016 Bernard `Guyzmo` Pratz
 {self} comes with ABSOLUTELY NO WARRANTY; for more informations
 read the LICENSE file available in the sources, or check
 out: http://www.gnu.org/licenses/gpl-2.0.txt
