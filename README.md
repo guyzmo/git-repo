@@ -271,13 +271,14 @@ To use your own credentials, you can setup the following environment variables:
 
 The project and original idea has been brought and is maintained by:
 
-* Bernard [@guyzmo](https://github.com/guyzmo) Pratz [commits](https://github.com/guyzmo/git-repo/commits?author=guyzmo)
+* Bernard [@guyzmo](https://github.com/guyzmo) Pratz — [commits](https://github.com/guyzmo/git-repo/commits?author=guyzmo)
 
 With code contributions coming from:
 
-* [@guyhughes](https://github.com/guyhughes) [commits](https://github.com/guyzmo/git-repo/commits?author=guyhughes)
-* [@buaazp](https://github.com/buaazp) [commits](https://github.com/guyzmo/git-repo/commits?author=buaazp)
-* [@peterazmanov](https://github.com/peterazmanov) [commits](https://github.com/guyzmo/git-repo/commits?author=peterazmanov)
+* [@guyhughes](https://github.com/guyhughes) — [commits](https://github.com/guyzmo/git-repo/commits?author=guyhughes)
+* [@buaazp](https://github.com/buaazp) — [commits](https://github.com/guyzmo/git-repo/commits?author=buaazp)
+* [@peterazmanov](https://github.com/peterazmanov) — [commits](https://github.com/guyzmo/git-repo/commits?author=peterazmanov)
+* [@Crazybus](https://github.com/Crazybus) — [commits](https://github.com/guyzmo/git-repo/commits?author=Crazybus)
 
 ### License
 
