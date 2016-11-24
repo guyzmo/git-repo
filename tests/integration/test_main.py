@@ -57,7 +57,7 @@ class Test_Main(GitRepoMainTestCase):
                 'alone': False,
                 'tracking': 'master'} == seen_args
         out, err = capsys.readouterr()
-        assert 'Successfully added `guyzmo/git-repo` as remote named `foobar`\n' == err
+        assert 'Successfully added `guyzmo/git-repo` as remote named `foobar`\n' in err
 
     def test_add__name_tracking(self):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
