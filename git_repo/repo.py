@@ -6,6 +6,7 @@ Usage:
     {self} [--path=<path>] [-v...] <target> create [--add]
     {self} [--path=<path>] [-v...] <target> delete [-f]
     {self} [--path=<path>] [-v...] <target> open
+    {self} [--path=<path>] [-v...] <target> (list|ls) [-l] <user>
     {self} [--path=<path>] [-v...] <target> fork <user>/<repo> [--branch=<branch>]
     {self} [--path=<path>] [-v...] <target> fork <user>/<repo> <repo> [--branch=<branch>]
     {self} [--path=<path>] [-v...] <target> create <user>/<repo> [--add]
@@ -40,6 +41,7 @@ Commands:
     fork                     Fork (and clone) the repository from the service
     create                   Make this repository a new remote on the service
     delete                   Delete the remote repository
+    list                     Lists the repositories for a given user
     gist                     Manages gist files
     request                  Handles requests for merge
     open                     Open the given or current repository in a browser
@@ -50,6 +52,12 @@ Options:
     -p,--path=<path>         Path to work on [default: .]
     -v,--verbose             Makes it more chatty (repeat twice to see git commands)
     -h,--help                Shows this message
+
+Options for list:
+    <user>                   Name of the user whose repositories will be listed
+    -l,--long                Show one repository per line, when set show the results
+                             with the following columns:
+    STATUS, COMMITS, REQUESTS, ISSUES, FORKS, CONTRIBUTORS, WATCHERS, LIKES, LANGUAGE, MODIF, NAME
 
 Options for add:
     <name>                   Name to use for the remote (defaults to name of repo)
@@ -267,6 +275,13 @@ class GitRepoRunner(KeywordArgumentParser):
         self.config = val or os.path.join(os.environ['HOME'], '.gitconfig')
 
     '''Actions'''
+
+    @register_action('ls')
+    @register_action('list')
+    def do_list(self):
+        service = self.get_service(False)
+        service.list(self.user, self.long)
+        return 0
 
     @register_action('add')
     def do_remote_add(self):

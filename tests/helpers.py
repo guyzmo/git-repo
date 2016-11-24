@@ -595,6 +595,11 @@ class GitRepoTestCase():
                     self.assert_added_remote(name)
                     self.assert_tracking_remote(name, tracking)
 
+    def action_list(self, namespace, _long=False):
+        with self.recorder.use_cassette(self._make_cassette_name()):
+            self.service.connect()
+            self.service.list(namespace, _long=_long)
+
     def action_request_list(self, namespace, repository, rq_list_data=[]):
         with self.recorder.use_cassette(self._make_cassette_name()):
             self.service.connect()
