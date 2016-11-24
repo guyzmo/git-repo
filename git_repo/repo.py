@@ -24,11 +24,11 @@ Usage:
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <title> [--branch=<remote>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <local_branch> <title> [--branch=<remote>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <remote_branch> <local_branch> <title> [--branch=<remote>] [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> gist (list|ls) [<gist>]
-    {self} [--path=<path>] [-v...] <target> gist clone <gist>
-    {self} [--path=<path>] [-v...] <target> gist fetch <gist> [<gist_file>]
-    {self} [--path=<path>] [-v...] <target> gist create [--secret] <description> [<gist_path> <gist_path>...]
-    {self} [--path=<path>] [-v...] <target> gist delete <gist> [-f]
+    {self} [--path=<path>] [-v...] <target> (gist|snippet) (list|ls) [<gist>]
+    {self} [--path=<path>] [-v...] <target> (gist|snippet) clone <gist>
+    {self} [--path=<path>] [-v...] <target> (gist|snippet) fetch <gist> [<gist_file>]
+    {self} [--path=<path>] [-v...] <target> (gist|snippet) create [--secret] <description> [<gist_path> <gist_path>...]
+    {self} [--path=<path>] [-v...] <target> (gist|snippet) delete <gist> [-f]
     {self} [--path=<path>] [-v...] <target> config [--config=<gitconfig>]
     {self} [-v...] config [--config=<gitconfig>]
     {self} --help
@@ -434,6 +434,8 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('gist', 'ls')
     @register_action('gist', 'list')
+    @register_action('snippet', 'ls')
+    @register_action('snippet', 'list')
     def do_gist_list(self):
         service = self.get_service(lookup_repository=False)
         if self.gist_ref:
@@ -447,6 +449,7 @@ class GitRepoRunner(KeywordArgumentParser):
         return 0
 
     @register_action('gist', 'clone')
+    @register_action('snippet', 'clone')
     def do_gist_clone(self):
         service = self.get_service(lookup_repository=False)
         repo_path = os.path.join(self.path, self.gist_ref.split('/')[-1])
@@ -456,6 +459,7 @@ class GitRepoRunner(KeywordArgumentParser):
         return 0
 
     @register_action('gist', 'fetch')
+    @register_action('snippet', 'fetch')
     def do_gist_fetch(self):
         service = self.get_service(lookup_repository=False)
         # send gist to stdout, not using log.info on purpose here!
@@ -463,6 +467,7 @@ class GitRepoRunner(KeywordArgumentParser):
         return 0
 
     @register_action('gist', 'create')
+    @register_action('snippet', 'create')
     def do_gist_create(self):
         service = self.get_service(lookup_repository=False)
         url = service.gist_create(self.gist_path, self.description, self.secret)
@@ -470,10 +475,11 @@ class GitRepoRunner(KeywordArgumentParser):
         return 0
 
     @register_action('gist', 'delete')
+    @register_action('snippet', 'delete')
     def do_gist_delete(self):
         service = self.get_service(lookup_repository=False)
         if not self.force: # pragma: no cover
-            if not confirm('gist', self.gist_ref):
+            if not confirm('snippet', self.gist_ref):
                 return 0
 
         service.gist_delete(self.gist_ref)
