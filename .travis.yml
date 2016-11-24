@@ -26,6 +26,7 @@ matrix:
 addons:
   apt:
     packages:
+        - git
         - pandoc
 before_install: |
   if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
