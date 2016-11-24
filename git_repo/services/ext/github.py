@@ -164,7 +164,9 @@ class GithubService(RepositoryService):
         try:
             gist = self.gh.gist(self._format_gist(gist))
         except Exception as err:
-            raise ResourceNotFoundError('Could not find gist') from err
+            raise ResourceNotFoundError('Error while fetching gist') from err
+        if not gist:
+            raise ResourceNotFoundError('Could not find gist')
         if gist.files == 1 and not fname:
             gist_file = list(gist.iter_files())[0]
         else:

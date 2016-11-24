@@ -181,7 +181,7 @@ class Test_Github(GitRepoTestCase):
 
     def test_18_gist_fetch_with_bad_gist(self):
         with pytest.raises(ResourceNotFoundError):
-            self.action_gist_fetch(gist='42', gist_file=None)
+            self.action_gist_fetch(gist='69', gist_file=None)
 
     def test_19_gist_fetch_with_gist_file(self):
         content = self.action_gist_fetch(gist='4170462', gist_file='freevpn0.029__platform__io.patch')
