@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2016-05-12T18:40:11",
+      "recorded_at": "2016-11-24T21:29:46",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -22,36 +22,43 @@
       "response": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"message\":\"Bad credentials\",\"documentation_url\":\"https://developer.github.com/v3\"}"
+          "string": "{\"login\":\"<BITBUCKET_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>\",\"html_url\":\"https://github.com/<BITBUCKET_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false,\"name\":\"<BITBUCKET_NAMESPACE>\",\"company\":null,\"blog\":\"http://<BITBUCKET_NAMESPACE>.got.nothing.to/blog/\",\"location\":\"Paris\",\"email\":null,\"hireable\":true,\"bio\":null,\"public_repos\":87,\"public_gists\":17,\"followers\":54,\"following\":15,\"created_at\":\"2010-04-27T14:04:09Z\",\"updated_at\":\"2016-09-03T19:19:47Z\"}"
         },
         "headers": {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
-          "Content-Length": "83",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "1118",
           "Content-Security-Policy": "default-src 'none'",
           "Content-Type": "application/json; charset=utf-8",
-          "Date": "Thu, 12 May 2016 18:40:20 GMT",
+          "Date": "Thu, 24 Nov 2016 21:29:45 GMT",
+          "ETag": "\"552dda7fe01396d75e16d9003f4fd8d7\"",
+          "Last-Modified": "Sat, 03 Sep 2016 19:19:47 GMT",
           "Server": "GitHub.com",
-          "Status": "401 Unauthorized",
+          "Status": "200 OK",
           "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "deny",
           "X-GitHub-Media-Type": "github.v3; param=full; format=json",
-          "X-GitHub-Request-Id": "4EC11365:B215:13F135:5734CE14",
-          "X-RateLimit-Limit": "60",
-          "X-RateLimit-Remaining": "59",
-          "X-RateLimit-Reset": "1463082020",
+          "X-GitHub-Request-Id": "4EC11365:62A2:12BC52F2:58375BC9",
+          "X-OAuth-Scopes": "repo, delete_repo, gist",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4955",
+          "X-RateLimit-Reset": "1480023785",
+          "X-Served-By": "a7f8a126c9ed3f1c4715a34c0ddc7290",
           "X-XSS-Protection": "1; mode=block"
         },
         "status": {
-          "code": 401,
-          "message": "Unauthorized"
+          "code": 200,
+          "message": "OK"
         },
         "url": "https://api.github.com/user"
       }
     },
     {
-      "recorded_at": "2016-05-12T18:40:11",
+      "recorded_at": "2016-11-24T21:29:46",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -72,30 +79,37 @@
       "response": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"message\":\"Bad credentials\",\"documentation_url\":\"https://developer.github.com/v3\"}"
+          "string": "{\"url\":\"https://api.github.com/gists/42\",\"forks_url\":\"https://api.github.com/gists/42/forks\",\"commits_url\":\"https://api.github.com/gists/42/commits\",\"id\":\"42\",\"git_pull_url\":\"https://gist.github.com/42.git\",\"git_push_url\":\"https://gist.github.com/42.git\",\"html_url\":\"https://gist.github.com/42\",\"files\":{\"hint.txt\":{\"filename\":\"hint.txt\",\"type\":\"text/plain\",\"language\":\"Text\",\"raw_url\":\"https://gist.githubusercontent.com/voodootikigod/42/raw/4bca8f9e22a79722555a7d88760751635b0adb1c/hint.txt\",\"size\":26,\"truncated\":false,\"content\":\"The answer to everything.\\n\"}},\"public\":true,\"created_at\":\"2008-07-21T01:45:23Z\",\"updated_at\":\"2015-08-29T13:44:40Z\",\"description\":null,\"comments\":1,\"user\":null,\"comments_url\":\"https://api.github.com/gists/42/comments\",\"owner\":{\"login\":\"voodootikigod\",\"id\":459,\"avatar_url\":\"https://avatars.githubusercontent.com/u/459?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/voodootikigod\",\"html_url\":\"https://github.com/voodootikigod\",\"followers_url\":\"https://api.github.com/users/voodootikigod/followers\",\"following_url\":\"https://api.github.com/users/voodootikigod/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/voodootikigod/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/voodootikigod/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/voodootikigod/subscriptions\",\"organizations_url\":\"https://api.github.com/users/voodootikigod/orgs\",\"repos_url\":\"https://api.github.com/users/voodootikigod/repos\",\"events_url\":\"https://api.github.com/users/voodootikigod/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/voodootikigod/received_events\",\"type\":\"User\",\"site_admin\":false},\"forks\":[],\"history\":[{\"user\":{\"login\":\"defunkt\",\"id\":2,\"avatar_url\":\"https://avatars.githubusercontent.com/u/2?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/defunkt\",\"html_url\":\"https://github.com/defunkt\",\"followers_url\":\"https://api.github.com/users/defunkt/followers\",\"following_url\":\"https://api.github.com/users/defunkt/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/defunkt/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/defunkt/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/defunkt/subscriptions\",\"organizations_url\":\"https://api.github.com/users/defunkt/orgs\",\"repos_url\":\"https://api.github.com/users/defunkt/repos\",\"events_url\":\"https://api.github.com/users/defunkt/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/defunkt/received_events\",\"type\":\"User\",\"site_admin\":true},\"version\":\"3d46fc78188853f358c9e82544173aad560ebd48\",\"committed_at\":\"2011-07-22T17:20:02Z\",\"change_status\":{\"total\":1,\"additions\":1,\"deletions\":0},\"url\":\"https://api.github.com/gists/42/3d46fc78188853f358c9e82544173aad560ebd48\"}],\"truncated\":false}"
         },
         "headers": {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
-          "Content-Length": "83",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "2811",
           "Content-Security-Policy": "default-src 'none'",
           "Content-Type": "application/json; charset=utf-8",
-          "Date": "Thu, 12 May 2016 18:40:20 GMT",
+          "Date": "Thu, 24 Nov 2016 21:29:46 GMT",
+          "ETag": "\"8f1147ffc3085377c5e2810d72e48a59\"",
+          "Last-Modified": "Mon, 14 Nov 2016 21:21:05 GMT",
           "Server": "GitHub.com",
-          "Status": "401 Unauthorized",
+          "Status": "200 OK",
           "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "deny",
           "X-GitHub-Media-Type": "github.v3; param=full; format=json",
-          "X-GitHub-Request-Id": "4EC11365:B215:13F189:5734CE14",
-          "X-RateLimit-Limit": "60",
-          "X-RateLimit-Remaining": "58",
-          "X-RateLimit-Reset": "1463082020",
+          "X-GitHub-Request-Id": "4EC11365:62A2:12BC530A:58375BC9",
+          "X-OAuth-Scopes": "repo, delete_repo, gist",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4954",
+          "X-RateLimit-Reset": "1480023785",
+          "X-Served-By": "cee4c0729c8e9147e7abcb45b9d69689",
           "X-XSS-Protection": "1; mode=block"
         },
         "status": {
-          "code": 401,
-          "message": "Unauthorized"
+          "code": 200,
+          "message": "OK"
         },
         "url": "https://api.github.com/gists/42"
       }

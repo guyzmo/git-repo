@@ -181,7 +181,7 @@ class Test_Github(GitRepoTestCase):
 
     def test_18_gist_fetch_with_bad_gist(self):
         with pytest.raises(ResourceNotFoundError):
-            self.action_gist_fetch(gist='42', gist_file=None)
+            self.action_gist_fetch(gist='69', gist_file=None)
 
     def test_19_gist_fetch_with_gist_file(self):
         content = self.action_gist_fetch(gist='4170462', gist_file='freevpn0.029__platform__io.patch')
@@ -335,5 +335,17 @@ class Test_Github(GitRepoTestCase):
         self.action_open(namespace='guyzmo',
                          repository='git-repo')
 
+    def test_34_list__short(self, capsys, caplog):
+        self.action_list(namespace='git-repo-test')
+        out, err = capsys.readouterr()
+        assert out ==  'git-repo-test/git-repo\n'
+        assert 'GET https://api.github.com/users/git-repo-test/repos' in caplog.text
+
+    def test_34_list__long(self, capsys, caplog):
+        self.action_list(namespace='git-repo-test', _long=True)
+        out, err = capsys.readouterr()
+        assert err.replace('\t', ' ') == "Status Commits Reqs Issues Forks Coders Watch Likes Lang Modif  Name\n"
+        assert out.replace('\t', ' ') ==  "F  92 0 0 0 1 0 0 Python Mar 30 13:32 git-repo-test/git-repo\n"
+        assert 'GET https://api.github.com/users/git-repo-test/repos' in caplog.text
 
 

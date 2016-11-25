@@ -15,12 +15,14 @@ class Test_Main(GitRepoMainTestCase):
     log = log
     target = 'hub'
 
-    def test_add(self):
+    def test_add(self, capsys):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0)
         assert ('git-repo', 'guyzmo') == repo_slug
         assert {'name': None,
                 'alone': False,
                 'tracking': 'master'} == seen_args
+        out, err = capsys.readouterr()
+        assert 'Successfully added `guyzmo/git-repo` as remote named `github`\n' == err
 
     def test_add__alone(self):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
@@ -47,13 +49,15 @@ class Test_Main(GitRepoMainTestCase):
                 'alone': True,
                 'tracking': 'foobar'} == seen_args
 
-    def test_add__name(self):
+    def test_add__name(self, capsys):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
                                              args={'<name>': 'foobar'})
         assert ('git-repo', 'guyzmo') == repo_slug
         assert {'name': 'foobar',
                 'alone': False,
                 'tracking': 'master'} == seen_args
+        out, err = capsys.readouterr()
+        assert 'Successfully added `guyzmo/git-repo` as remote named `foobar`\n' in err
 
     def test_add__name_tracking(self):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
@@ -324,6 +328,30 @@ class Test_Main(GitRepoMainTestCase):
         out, err = capsys.readouterr()
         assert out ==  '  1\tdesc1                                                       \thttp://request/1\n  2\tdesc2                                                       \thttp://request/2\n  3\tdesc3                                                       \thttp://request/3\n'
         assert 'id' in caplog.text and 'title' in caplog.text and 'URL' in caplog.text
+
+    def test_request_list__no_repo_slug__https_dot_git_fix__issue55(self):
+        from subprocess import call
+        call(['git', 'init', '-q', self.tempdir.name])
+        call(['git', '--git-dir={}/.git'.format(self.tempdir.name), 'remote', 'add', 'github', 'https://github.com/guyzmo/.git-repo'])
+        with self.mockup_git('guyzmo', '.git-repo', 'https://github.com/guyzmo/.git-repo'):
+            self.set_mock_popen_commands([
+                ('git remote get-url --all github', b'https://github.com/guyzmo/.git-repo\n', b'', 0),
+            ])
+            repo_slug, seen_args = self.main_request_list(rc=0, args={})
+            assert ('guyzmo', '.git-repo') == repo_slug
+            assert dict() == seen_args
+
+    def test_request_list__no_repo_slug__git_dot_git_fix__issue55(self):
+        from subprocess import call
+        call(['git', 'init', '-q', self.tempdir.name])
+        call(['git', '--git-dir={}/.git'.format(self.tempdir.name), 'remote', 'add', 'github', 'git@github.com:guyzmo/.git-repo'])
+        with self.mockup_git('guyzmo', '.git-repo', 'git@github.com:guyzmo/.git-repo'):
+            self.set_mock_popen_commands([
+                ('git remote get-url --all github', b'git@github.com:guyzmo/.git-repo', b'', 0),
+            ])
+            repo_slug, seen_args = self.main_request_list(rc=0, args={})
+            assert ('guyzmo', '.git-repo') == repo_slug
+            assert dict() == seen_args
 
     def test_request_fetch__request(self, capsys, caplog):
         from subprocess import call

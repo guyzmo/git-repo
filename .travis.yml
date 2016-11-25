@@ -1,4 +1,6 @@
 language: python
+# Don't use the Travis Container-Based Infrastructure
+sudo: true
 matrix:
   include:
     - os: linux
@@ -26,6 +28,7 @@ matrix:
 addons:
   apt:
     packages:
+        - git
         - pandoc
 before_install: |
   if [[ $TRAVIS_OS_NAME == 'osx' ]]; then

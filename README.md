@@ -5,6 +5,7 @@
   * https://gitlab.com/guyzmo/git-repo
   * https://bitbucket.org/guyzmo/git-repo
 * Issues: https://github.com/guyzmo/git-repo/issues
+* Chat on IRC: [#git-repo @freenode](irc://irc.freenode.org/git-repo)
 * [![Issues in Ready](https://badge.waffle.io/guyzmo/git-repo.png?label=ready&title=Ready)](https://waffle.io/guyzmo/git-repo) [![Issues in Progress](https://badge.waffle.io/guyzmo/git-repo.png?label=in%20progress&title=Progress)](https://waffle.io/guyzmo/git-repo) [![Show Travis Build Status](https://travis-ci.org/guyzmo/git-repo.svg)](https://travis-ci.org/guyzmo/git-repo)
 * [![Pypi Version](https://img.shields.io/pypi/v/git-repo.svg) ![Pypi Downloads](https://img.shields.io/pypi/dm/git-repo.svg)](https://pypi.python.org/pypi/git-repo)
 
@@ -259,7 +260,7 @@ To use your own credentials, you can setup the following environment variables:
   * [ ] gitlab support (cf [#10](https://github.com/guyzmo/git-repo/issues/10))
   * [ ] bitbucket support (cf [#11](https://github.com/guyzmo/git-repo/issues/11))
 * [ ] add OAuth support for bitbucket (cf [#14](https://github.com/guyzmo/git-repo/issues/14))
-* [ ] add support for managing SSH keys (cf [#22](https://github.com/guyzmo/git-repo/issues/15))
+* [ ] add support for managing SSH keys (cf [#22](https://github.com/guyzmo/git-repo/issues/22))
 * [ ] add support for issues?
 * [ ] add support for gogs (cf [#18](https://github.com/guyzmo/git-repo/issues/18))
 * [ ] add support for gerrit (cf [#19](https://github.com/guyzmo/git-repo/issues/19))
@@ -270,13 +271,14 @@ To use your own credentials, you can setup the following environment variables:
 
 The project and original idea has been brought and is maintained by:
 
-* Bernard [@guyzmo](https://github.com/guyzmo) Pratz [commits](https://github.com/guyzmo/git-repo/commits?author=guyzmo)
+* Bernard [@guyzmo](https://github.com/guyzmo) Pratz — [commits](https://github.com/guyzmo/git-repo/commits?author=guyzmo)
 
 With code contributions coming from:
 
-* [@guyhughes](https://github.com/guyhughes) [commits](https://github.com/guyzmo/git-repo/commits?author=guyhughes)
-* [@buaazp](https://github.com/buaazp) [commits](https://github.com/guyzmo/git-repo/commits?author=buaazp)
-* [@peterazmanov](https://github.com/peterazmanov) [commits](https://github.com/guyzmo/git-repo/commits?author=peterazmanov)
+* [@guyhughes](https://github.com/guyhughes) — [commits](https://github.com/guyzmo/git-repo/commits?author=guyhughes)
+* [@buaazp](https://github.com/buaazp) — [commits](https://github.com/guyzmo/git-repo/commits?author=buaazp)
+* [@peterazmanov](https://github.com/peterazmanov) — [commits](https://github.com/guyzmo/git-repo/commits?author=peterazmanov)
+* [@Crazybus](https://github.com/Crazybus) — [commits](https://github.com/guyzmo/git-repo/commits?author=Crazybus)
 
 ### License
 

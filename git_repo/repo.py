@@ -6,6 +6,7 @@ Usage:
     {self} [--path=<path>] [-v...] <target> create [--add]
     {self} [--path=<path>] [-v...] <target> delete [-f]
     {self} [--path=<path>] [-v...] <target> open
+    {self} [--path=<path>] [-v...] <target> (list|ls) [-l] <user>
     {self} [--path=<path>] [-v...] <target> fork <user>/<repo> [--branch=<branch>]
     {self} [--path=<path>] [-v...] <target> fork <user>/<repo> <repo> [--branch=<branch>]
     {self} [--path=<path>] [-v...] <target> create <user>/<repo> [--add]
@@ -23,11 +24,11 @@ Usage:
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <title> [--branch=<remote>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <local_branch> <title> [--branch=<remote>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <remote_branch> <local_branch> <title> [--branch=<remote>] [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> gist (list|ls) [<gist>]
-    {self} [--path=<path>] [-v...] <target> gist clone <gist>
-    {self} [--path=<path>] [-v...] <target> gist fetch <gist> [<gist_file>]
-    {self} [--path=<path>] [-v...] <target> gist create [--secret] <description> [<gist_path> <gist_path>...]
-    {self} [--path=<path>] [-v...] <target> gist delete <gist> [-f]
+    {self} [--path=<path>] [-v...] <target> (gist|snippet) (list|ls) [<gist>]
+    {self} [--path=<path>] [-v...] <target> (gist|snippet) clone <gist>
+    {self} [--path=<path>] [-v...] <target> (gist|snippet) fetch <gist> [<gist_file>]
+    {self} [--path=<path>] [-v...] <target> (gist|snippet) create [--secret] <description> [<gist_path> <gist_path>...]
+    {self} [--path=<path>] [-v...] <target> (gist|snippet) delete <gist> [-f]
     {self} [--path=<path>] [-v...] <target> config [--config=<gitconfig>]
     {self} [-v...] config [--config=<gitconfig>]
     {self} --help
@@ -40,6 +41,7 @@ Commands:
     fork                     Fork (and clone) the repository from the service
     create                   Make this repository a new remote on the service
     delete                   Delete the remote repository
+    list                     Lists the repositories for a given user
     gist                     Manages gist files
     request                  Handles requests for merge
     open                     Open the given or current repository in a browser
@@ -50,6 +52,12 @@ Options:
     -p,--path=<path>         Path to work on [default: .]
     -v,--verbose             Makes it more chatty (repeat twice to see git commands)
     -h,--help                Shows this message
+
+Options for list:
+    <user>                   Name of the user whose repositories will be listed
+    -l,--long                Show one repository per line, when set show the results
+                             with the following columns:
+    STATUS, COMMITS, REQUESTS, ISSUES, FORKS, CONTRIBUTORS, WATCHERS, LIKES, LANGUAGE, MODIF, NAME
 
 Options for add:
     <name>                   Name to use for the remote (defaults to name of repo)
@@ -86,7 +94,6 @@ Options for request:
 
 Configuration options:
     alias                    Name to use for the git remote
-    url                      URL of the repository
     fqdn                     URL of the repository
     type                     Name of the service to use (github, gitlab, bitbucket)
 
@@ -101,7 +108,7 @@ Configuration example:
     token = yourapitoken
     fqdn = custom.org
 
-{self} version {version}, Copyright ⓒ2016 Bernard `Guyzmo` Pratz
+{self} version {version}, Copyright ©2016 Bernard `Guyzmo` Pratz
 {self} comes with ABSOLUTELY NO WARRANTY; for more informations
 read the LICENSE file available in the sources, or check
 out: http://www.gnu.org/licenses/gpl-2.0.txt
@@ -112,6 +119,7 @@ from docopt import docopt
 import os
 import sys
 import json
+import shutil
 import logging
 import pkg_resources
 
@@ -168,13 +176,13 @@ class GitRepoRunner(KeywordArgumentParser):
             if remote.name in (target, 'upstream', 'origin'):
                 for url in remote.urls:
                     if url.startswith('https'):
-                        if '.git' in url:
+                        if url.endswith('.git'):
                             url = url[:-4]
                         *_, user, name = url.split('/')
                         self.set_repo_slug('/'.join([user, name]))
                         break
                     elif url.startswith('git@'):
-                        if '.git' in url:
+                        if url.endswith('.git'):
                             url = url[:-4]
                         _, repo_slug = url.split(':')
                         self.set_repo_slug(repo_slug)
@@ -269,6 +277,13 @@ class GitRepoRunner(KeywordArgumentParser):
 
     '''Actions'''
 
+    @register_action('ls')
+    @register_action('list')
+    def do_list(self):
+        service = self.get_service(False)
+        service.list(self.user, self.long)
+        return 0
+
     @register_action('add')
     def do_remote_add(self):
         service = self.get_service()
@@ -278,7 +293,7 @@ class GitRepoRunner(KeywordArgumentParser):
                     alone=self.alone)
         log.info('Successfully added `{}` as remote named `{}`'.format(
             self.repo_slug,
-            service.name)
+            self.remote_name or service.name)
         )
         return 0
 
@@ -323,9 +338,10 @@ class GitRepoRunner(KeywordArgumentParser):
     def do_clone(self, service=None, repo_path=None):
         service = service or self.get_service(lookup_repository=False)
         repo_path = repo_path or os.path.join(self.path, self.target_repo or self.repo_name)
-        if os.path.exists(repo_path):
+        if os.path.exists(repo_path) and os.listdir(repo_path) != []:
             raise FileExistsError('Cannot clone repository, '
-                                  'a folder named {} already exists!'.format(repo_path))
+                                  'a folder named {} already exists and '
+                                  'is not an empty directory!'.format(repo_path))
         try:
             repository = Repo.init(repo_path)
             service = RepositoryService.get_service(repository, self.target)
@@ -337,8 +353,8 @@ class GitRepoRunner(KeywordArgumentParser):
             return 0
         except Exception as err:
             if os.path.exists(repo_path):
-                os.removedirs(repo_path)
-            raise err from err
+                shutil.rmtree(repo_path)
+            raise ResourceNotFoundError(err.args[2].decode('utf-8')) from err
 
     @register_action('create')
     def do_create(self):
@@ -418,6 +434,8 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('gist', 'ls')
     @register_action('gist', 'list')
+    @register_action('snippet', 'ls')
+    @register_action('snippet', 'list')
     def do_gist_list(self):
         service = self.get_service(lookup_repository=False)
         if self.gist_ref:
@@ -431,6 +449,7 @@ class GitRepoRunner(KeywordArgumentParser):
         return 0
 
     @register_action('gist', 'clone')
+    @register_action('snippet', 'clone')
     def do_gist_clone(self):
         service = self.get_service(lookup_repository=False)
         repo_path = os.path.join(self.path, self.gist_ref.split('/')[-1])
@@ -440,6 +459,7 @@ class GitRepoRunner(KeywordArgumentParser):
         return 0
 
     @register_action('gist', 'fetch')
+    @register_action('snippet', 'fetch')
     def do_gist_fetch(self):
         service = self.get_service(lookup_repository=False)
         # send gist to stdout, not using log.info on purpose here!
@@ -447,6 +467,7 @@ class GitRepoRunner(KeywordArgumentParser):
         return 0
 
     @register_action('gist', 'create')
+    @register_action('snippet', 'create')
     def do_gist_create(self):
         service = self.get_service(lookup_repository=False)
         url = service.gist_create(self.gist_path, self.description, self.secret)
@@ -454,10 +475,11 @@ class GitRepoRunner(KeywordArgumentParser):
         return 0
 
     @register_action('gist', 'delete')
+    @register_action('snippet', 'delete')
     def do_gist_delete(self):
         service = self.get_service(lookup_repository=False)
         if not self.force: # pragma: no cover
-            if not confirm('gist', self.gist_ref):
+            if not confirm('snippet', self.gist_ref):
                 return 0
 
         service.gist_delete(self.gist_ref)

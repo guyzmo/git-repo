@@ -15,6 +15,34 @@ import betamax
 
 from git_repo.repo import RepositoryService, main
 
+
+class TestGitPopenMockupMixin:
+    def setup_git_popen(self):
+        # repository mockup (in a temporary place)
+        self.repository = Repo.init(self.tempdir.name)
+        # setup git command mockup
+        self.Popen = MockPopen()
+        self.Popen.mock.Popen_instance.stdin = None
+        self.Popen.mock.Popen_instance.wait = lambda *a, **k: self.Popen.wait()
+        self.Popen.mock.Popen_instance.__enter__ = lambda self: self
+        self.Popen.mock.Popen_instance.__exit__ = lambda self, *a, **k: None
+
+    def set_mock_popen_commands(self, cmd_list):
+        for cmd, out, err, rc in cmd_list:
+            self.Popen.set_command(cmd, out, err, returncode=rc)
+
+    def mockup_git(self, namespace, repository, url=None):
+        # disable refspec check
+        from git import remote
+        remote.Remote._assert_refspec = lambda self: None
+        # write FETCH_HEAD ref
+        with open(os.path.join(self.repository.git_dir, 'FETCH_HEAD'), 'w') as f:
+            url = url or "{}:{}/{}".format(self.service.fqdn, namespace, repository)
+            f.write("749656b8b3b282d11a4221bb84e48291ca23ecc6" \
+                    "		branch 'master' of {}".format(url))
+        return Replace('git.cmd.Popen', self.Popen)
+
+
 class RepositoryMockup(RepositoryService):
     name = 'test_name'
     command = 'test_command'
@@ -134,7 +162,8 @@ class RepositoryMockup(RepositoryService):
     def get_repository(self, *args, **kwarg):
         return {}
 
-class GitRepoMainTestCase():
+
+class GitRepoMainTestCase(TestGitPopenMockupMixin):
     def setup_method(self, method):
         self.log.info('GitRepoMainTestCase.setup_method({})'.format(method))
         self.tempdir = TemporaryDirectory()
@@ -148,6 +177,8 @@ class GitRepoMainTestCase():
             'lab': 'gitlab',
             'bb': 'bitbucket',
         }
+        # setup git command mockup
+        self.setup_git_popen()
 
     def teardown_method(self, method):
         self.log.info('GitRepoMainTestCase.teardown_method({})'.format(method))
@@ -341,25 +372,21 @@ class GitRepoMainTestCase():
             '--path': self.tempdir.name
         }, args)), "Non {} result for no-action".format(rc)
 
-class GitRepoTestCase():
+
+class GitRepoTestCase(TestGitPopenMockupMixin):
     def setup_method(self, method):
         self.log.info('GitRepoTestCase.setup_method({})'.format(method))
         # build temporary directory
         self.tempdir = TemporaryDirectory()
-        # repository mockup (in a temporary place)
-        self.repository = Repo.init(self.tempdir.name)
-        # setup git command mockup
-        self.Popen = MockPopen()
-        self.Popen.mock.Popen_instance.stdin = None
-        self.Popen.mock.Popen_instance.wait = lambda *a, **k: self.Popen.wait()
-        self.Popen.mock.Popen_instance.__enter__ = lambda self: self
-        self.Popen.mock.Popen_instance.__exit__ = lambda self, *a, **k: None
         # when initiating service with no repository, the connection is not triggered
         self.service = self.get_service()
-        self.service.repository = self.repository
         # setup http api mockup
         self.recorder = betamax.Betamax(self.get_requests_session())
         self.get_requests_session().headers['Accept-Encoding'] = 'identity'
+        # setup git command mockup
+        self.setup_git_popen()
+        # when initiating service with no repository, the connection is not triggered
+        self.service.repository = self.repository
         # have git commands logged
         Git.GIT_PYTHON_TRACE = True
         FORMAT = '> %(message)s'
@@ -389,22 +416,6 @@ class GitRepoTestCase():
         if test_function_name.startswith('test'):
             return '_'.join(['test', self.service.name, test_function_name])
         raise Exception("Helpers functions shall be used only within test functions!")
-
-    '''popen helper'''
-
-    def set_mock_popen_commands(self, cmd_list):
-        for cmd, out, err, rc in cmd_list:
-            self.Popen.set_command(cmd, out, err, returncode=rc)
-
-    def mockup_git(self, namespace, repository):
-        # disable refspec check
-        from git import remote
-        remote.Remote._assert_refspec = lambda self: None
-        # write FETCH_HEAD ref
-        with open(os.path.join(self.repository.git_dir, 'FETCH_HEAD'), 'w') as f:
-            f.write("749656b8b3b282d11a4221bb84e48291ca23ecc6" \
-                    "		branch 'master' of git@{}/{}/{}".format(self.service.fqdn, namespace, repository))
-        return Replace('git.cmd.Popen', self.Popen)
 
     '''assertion helpers'''
 
@@ -594,6 +605,11 @@ class GitRepoTestCase():
                 elif alone and name:
                     self.assert_added_remote(name)
                     self.assert_tracking_remote(name, tracking)
+
+    def action_list(self, namespace, _long=False):
+        with self.recorder.use_cassette(self._make_cassette_name()):
+            self.service.connect()
+            self.service.list(namespace, _long=_long)
 
     def action_request_list(self, namespace, repository, rq_list_data=[]):
         with self.recorder.use_cassette(self._make_cassette_name()):
