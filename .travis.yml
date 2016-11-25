@@ -1,4 +1,6 @@
 language: python
+# Don't use the Travis Container-Based Infrastructure
+sudo: true
 matrix:
   include:
     - os: linux

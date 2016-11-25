@@ -333,17 +333,25 @@ class Test_Main(GitRepoMainTestCase):
         from subprocess import call
         call(['git', 'init', '-q', self.tempdir.name])
         call(['git', '--git-dir={}/.git'.format(self.tempdir.name), 'remote', 'add', 'github', 'https://github.com/guyzmo/.git-repo'])
-        repo_slug, seen_args = self.main_request_list(rc=0, args={})
-        assert ('guyzmo', '.git-repo') == repo_slug
-        assert dict() == seen_args
+        with self.mockup_git('guyzmo', '.git-repo', 'https://github.com/guyzmo/.git-repo'):
+            self.set_mock_popen_commands([
+                ('git remote get-url --all github', b'https://github.com/guyzmo/.git-repo\n', b'', 0),
+            ])
+            repo_slug, seen_args = self.main_request_list(rc=0, args={})
+            assert ('guyzmo', '.git-repo') == repo_slug
+            assert dict() == seen_args
 
     def test_request_list__no_repo_slug__git_dot_git_fix__issue55(self):
         from subprocess import call
         call(['git', 'init', '-q', self.tempdir.name])
         call(['git', '--git-dir={}/.git'.format(self.tempdir.name), 'remote', 'add', 'github', 'git@github.com:guyzmo/.git-repo'])
-        repo_slug, seen_args = self.main_request_list(rc=0, args={})
-        assert ('guyzmo', '.git-repo') == repo_slug
-        assert dict() == seen_args
+        with self.mockup_git('guyzmo', '.git-repo', 'git@github.com:guyzmo/.git-repo'):
+            self.set_mock_popen_commands([
+                ('git remote get-url --all github', b'git@github.com:guyzmo/.git-repo', b'', 0),
+            ])
+            repo_slug, seen_args = self.main_request_list(rc=0, args={})
+            assert ('guyzmo', '.git-repo') == repo_slug
+            assert dict() == seen_args
 
     def test_request_fetch__request(self, capsys, caplog):
         from subprocess import call
