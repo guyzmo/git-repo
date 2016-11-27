@@ -186,6 +186,20 @@ So you can run the tool as a git subcommand:
 
     git hub clone guyzmo/git-repo
 
+For those who like to keep all dotfiles in a git repository, it'd be horrendous to
+store tokens that offer access to your social accounts in a repository… And I'm not
+even talking about those who want to share your dotfiles. But don't worry, once
+it's all configured, you can fire up your [favorite editor](http://www.vim.org) and
+move all the `[gitrepo …]` sections into a new file, like `~/.gitconfig-repos`.
+
+Your can run the following command to do this automagically:
+
+    python -m git_repo.extract_config
+
+if you want to use another path, you can change the defaults:
+
+    python -m git_repo.extract_config ~/.gitconfig-repos ~/.gitconfig
+
 ### Development
 
 For development, I like to use `buildout`, and the repository is already configured
