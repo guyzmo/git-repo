@@ -16,8 +16,8 @@ class GitlabService(RepositoryService):
     fqdn = 'gitlab.com'
 
     def __init__(self, *args, **kwarg):
-        self.gl = gitlab.Gitlab(self.url_ro)
-        super(GitlabService, self).__init__(*args, **kwarg)
+        super().__init__(*args, **kwarg)
+        self.gl = gitlab.Gitlab(self.url_ro, ssl_verify=not self.insecure)
 
     def connect(self):
         self.gl.set_url(self.url_ro)
