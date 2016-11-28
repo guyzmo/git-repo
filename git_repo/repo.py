@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env pytho
 
 '''
 Usage:
@@ -134,7 +134,7 @@ if sys.version_info.major < 3: # pragma: no cover
     print('Please use with python version 3')
     sys.exit(1)
 
-from .exceptions import ArgumentError
+from .exceptions import ArgumentError, ResourceNotFoundError
 from .services.service import RepositoryService
 
 from .kwargparse import KeywordArgumentParser, store_parameter, register_action
