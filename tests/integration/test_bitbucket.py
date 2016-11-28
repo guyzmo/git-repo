@@ -11,6 +11,7 @@ log = logging.getLogger('test.bitbucket')
 
 import os
 import sys
+import pytest
 
 from tests.helpers import GitRepoTestCase
 
@@ -32,9 +33,10 @@ class Test_BitBucket(GitRepoTestCase):
         return self.service.bb.session
 
     def test_00_fork(self):
-        self.action_fork(local_namespace=self.local_namespace,
-                         remote_namespace='abdo2015',
-                         repository='git_tutorial')
+        with pytest.raises(NotImplementedError):
+            self.action_fork(local_namespace=self.local_namespace,
+                            remote_namespace='abdo2015',
+                            repository='git_tutorial')
 
     def test_01_create(self):
         self.action_create(namespace=self.local_namespace,
