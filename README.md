@@ -173,6 +173,8 @@ Also, you can setup your own GitLab self-hosted server, using that configuration
         type = gitlab
         token = YourSuperPrivateKey
         fqdn = gitlab.example.org
+        # Set this only if you use a self-signed certificate and experience problems
+        insecure = true
 
 Finally, to make it really cool, you can make a few aliases in your gitconfig:
 
