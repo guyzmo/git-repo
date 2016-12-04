@@ -156,7 +156,7 @@ class RepositoryService:
                                                       c.get('privatekey', None))))
         self._alias = c.get('alias', self.name)
         self.fqdn = c.get('fqdn', self.fqdn)
-        self.insecure = c.get('insecure', False)
+        self.insecure = c.get('insecure', 'false').lower() in ('on', 'true', 'yes', '1')
 
         # if service has a repository configured, connect
         if r:
