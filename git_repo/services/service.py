@@ -341,6 +341,16 @@ class RepositoryService:
         '''
         raise NotImplementedError
 
+    def list(self, user, _long=False):
+        '''List an user's repositories on the service
+
+        :param user: name of the user
+        :param _long: format of the listing
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
     def create(self, user, repo, add=False): #pragma: no cover
         '''Create a new remote repository on the service
 
