@@ -11,7 +11,12 @@ from progress.bar import IncrementalBar as Bar
 
 from subprocess import call
 
-from ..exceptions import ArgumentError
+from ..exceptions import (
+        ArgumentError,
+        ResourceError,
+        ResourceNotFoundError,
+        ResourceExistsError
+)
 
 '''select open command'''
 
