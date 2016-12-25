@@ -1,4 +1,151 @@
 {
-  "http_interactions": [],
+  "http_interactions": [
+    {
+      "recorded_at": "2016-12-24T13:35:58",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOkpKNHRsNHNzMTRuLmMwbQ==",
+          "Connection": "keep-alive",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.11.2 python-requests/2.12.4"
+        },
+        "method": "GET",
+        "uri": "https://api.bitbucket.org/2.0/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"username\": \"<BITBUCKET_NAMESPACE>\", \"website\": \"http://i.got.nothing.to/blog\", \"display_name\": \"Guyzmo\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"hooks\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>/hooks\"}, \"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>\"}, \"repositories\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>\"}, \"html\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/\"}, \"followers\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>/followers\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/<BITBUCKET_NAMESPACE>/avatar/32/\"}, \"following\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>/following\"}, \"snippets\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/<BITBUCKET_NAMESPACE>\"}}, \"created_on\": \"2008-09-20T15:08:53.695316+00:00\", \"location\": null, \"type\": \"user\"}"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "801",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 24 Dec 2016 13:35:58 GMT",
+          "ETag": "\"321b3bdea810843db96c90951905a5e3\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Authorization",
+          "X-Accepted-OAuth-Scopes": "account",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Render-Time": "0.0269320011139",
+          "X-Request-Count": "176",
+          "X-Served-By": "app-142",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.bitbucket.org/2.0/user"
+      }
+    },
+    {
+      "recorded_at": "2016-12-24T13:35:59",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"is_private\": false, \"fork_policy\": \"allow_forks\"}"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOkpKNHRsNHNzMTRuLmMwbQ==",
+          "Connection": "keep-alive",
+          "Content-Length": "51",
+          "Content-Type": "application/json",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.11.2 python-requests/2.12.4"
+        },
+        "method": "POST",
+        "uri": "https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"scm\": \"git\", \"website\": \"\", \"has_wiki\": false, \"name\": \"foobar\", \"links\": {\"watchers\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/watchers\"}, \"branches\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/refs/branches\"}, \"tags\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/refs/tags\"}, \"commits\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/commits\"}, \"clone\": [{\"href\": \"https://<BITBUCKET_NAMESPACE>@bitbucket.org/<BITBUCKET_NAMESPACE>/foobar.git\", \"name\": \"https\"}, {\"href\": \"ssh://git@bitbucket.org/<BITBUCKET_NAMESPACE>/foobar.git\", \"name\": \"ssh\"}], \"self\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar\"}, \"html\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/foobar\"}, \"avatar\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/foobar/avatar/32/\"}, \"hooks\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/hooks\"}, \"forks\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/forks\"}, \"downloads\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/downloads\"}, \"pullrequests\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/pullrequests\"}}, \"fork_policy\": \"allow_forks\", \"uuid\": \"{64c6cfbe-b355-4d0f-84be-002310ae7d6b}\", \"language\": \"\", \"created_on\": \"2016-12-24T13:35:58.863827+00:00\", \"full_name\": \"<BITBUCKET_NAMESPACE>/foobar\", \"has_issues\": false, \"owner\": {\"username\": \"<BITBUCKET_NAMESPACE>\", \"display_name\": \"Guyzmo\", \"type\": \"user\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>\"}, \"html\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/<BITBUCKET_NAMESPACE>/avatar/32/\"}}}, \"updated_on\": \"2016-12-24T13:35:59.137210+00:00\", \"size\": 0, \"type\": \"repository\", \"slug\": \"foobar\", \"is_private\": false, \"description\": \"\"}"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "1826",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 24 Dec 2016 13:35:59 GMT",
+          "ETag": "\"f5e658ad46f7090b63d38275f569b9d2\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Authorization",
+          "X-Accepted-OAuth-Scopes": "repository:admin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Render-Time": "0.44657087326",
+          "X-Request-Count": "193",
+          "X-Served-By": "app-143",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar"
+      }
+    },
+    {
+      "recorded_at": "2016-12-24T13:35:59",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOkpKNHRsNHNzMTRuLmMwbQ==",
+          "Connection": "keep-alive",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.11.2 python-requests/2.12.4"
+        },
+        "method": "GET",
+        "uri": "https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"scm\": \"git\", \"website\": \"\", \"has_wiki\": false, \"name\": \"foobar\", \"links\": {\"watchers\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/watchers\"}, \"branches\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/refs/branches\"}, \"tags\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/refs/tags\"}, \"commits\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/commits\"}, \"clone\": [{\"href\": \"https://<BITBUCKET_NAMESPACE>@bitbucket.org/<BITBUCKET_NAMESPACE>/foobar.git\", \"name\": \"https\"}, {\"href\": \"ssh://git@bitbucket.org/<BITBUCKET_NAMESPACE>/foobar.git\", \"name\": \"ssh\"}], \"self\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar\"}, \"html\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/foobar\"}, \"avatar\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/foobar/avatar/32/\"}, \"hooks\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/hooks\"}, \"forks\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/forks\"}, \"downloads\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/downloads\"}, \"pullrequests\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar/pullrequests\"}}, \"fork_policy\": \"allow_forks\", \"uuid\": \"{64c6cfbe-b355-4d0f-84be-002310ae7d6b}\", \"language\": \"\", \"created_on\": \"2016-12-24T13:35:58.863827+00:00\", \"full_name\": \"<BITBUCKET_NAMESPACE>/foobar\", \"has_issues\": false, \"owner\": {\"username\": \"<BITBUCKET_NAMESPACE>\", \"display_name\": \"Guyzmo\", \"type\": \"user\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>\"}, \"html\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/<BITBUCKET_NAMESPACE>/avatar/32/\"}}}, \"updated_on\": \"2016-12-24T13:35:59.137210+00:00\", \"size\": 33348, \"type\": \"repository\", \"slug\": \"foobar\", \"is_private\": false, \"description\": \"\"}"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "1830",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 24 Dec 2016 13:35:59 GMT",
+          "ETag": "\"078ed2186201df578e1d58c735cc592a\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Authorization",
+          "X-Accepted-OAuth-Scopes": "repository",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Render-Time": "0.0289149284363",
+          "X-Request-Count": "364",
+          "X-Served-By": "app-143",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/foobar"
+      }
+    }
+  ],
   "recorded_with": "betamax/0.5.1"
 }

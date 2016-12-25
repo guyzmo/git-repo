@@ -8,12 +8,17 @@ from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundEr
 
 from pybitbucket.bitbucket import Client, Bitbucket
 from pybitbucket.auth import BasicAuthenticator
-from pybitbucket.repository import Repository, RepositoryForkPolicy
-from pybitbucket.snippet import Snippet
+from pybitbucket.pullrequest import PullRequest, PullRequestPayload
+from pybitbucket.repository import (
+        Repository, RepositoryPayload, RepositoryForkPayload,
+        RepositoryForkPolicy, RepositoryType
+)
+from pybitbucket.snippet import Snippet, SnippetPayload
+from pybitbucket.user import User
 
 from requests import Request, Session
 from requests.exceptions import HTTPError
-import json
+import os, json
 
 
 @register_target('bb', 'bitbucket')
@@ -21,8 +26,7 @@ class BitbucketService(RepositoryService):
     fqdn = 'bitbucket.org'
 
     def __init__(self, *args, **kwarg):
-        self.bb_client = Client()
-        self.bb = Bitbucket(self.bb_client)
+        self.bb = Bitbucket(Client())
         super(BitbucketService, self).__init__(*args, **kwarg)
 
     def connect(self):
@@ -30,34 +34,45 @@ class BitbucketService(RepositoryService):
             raise ConnectionError('Could not connect to BitBucket. Please configure .gitconfig with your bitbucket credentials.')
         if not ':' in self._privatekey:
             raise ConnectionError('Could not connect to BitBucket. Please setup your private key with login:password')
-        self.bb_client.config = BasicAuthenticator(*self._privatekey.split(':')+['z+git-repo+pub@m0g.net'])
-        self.bb_client.session = self.bb_client.config.session
+        auth = BasicAuthenticator(*self._privatekey.split(':')+['z+git-repo+pub@m0g.net'])
+        self.bb.client.config = auth
+        self.bb.client.session = self.bb.client.config.session = auth.start_http_session(self.bb.client.session)
         try:
-            self.user
+            _ = self.bb.client.config.who_am_i()
         except ResourceError as err:
             raise ConnectionError('Could not connect to BitBucket. Not authorized, wrong credentials.') from err
 
     def create(self, user, repo, add=False):
         try:
             repo = Repository.create(
-                    repo,
-                    fork_policy=RepositoryForkPolicy.ALLOW_FORKS,
-                    is_private=False,
-                    client=self.bb_client
+                    RepositoryPayload(dict(
+                        fork_policy=RepositoryForkPolicy.ALLOW_FORKS,
+                        is_private=False
+                    )),
+                    repository_name=repo,
+                    owner=user,
+                    client=self.bb.client
             )
             if add:
-                self.add(user=user, repo=repo, tracking=self.name)
+                self.add(user=user, repo=repo.name, tracking=self.name)
         except HTTPError as err:
             if '400' in err.args[0].split(' '):
                 raise ResourceExistsError('Project {} already exists on this account.'.format(repo)) from err
             raise ResourceError("Couldn't complete creation: {}".format(err)) from err
 
     def fork(self, user, repo):
-        raise NotImplementedError('No support yet by the underlying library.')
-        try:
-            self.get_repository(user, repo).fork()
-        except HTTPError as err:
-            raise ResourceError("Couldn't complete fork: {}".format(err)) from err
+        # result = self.get_repository(user, repo).fork(
+        #     RepositoryForkPayload(dict(name=repo)),
+        #     owner=user)
+        resp = self.bb.client.session.post(
+            'https://api.bitbucket.org/1.0/repositories/{}/{}/fork'.format(user, repo),
+            data={'name': repo}
+        )
+        if 404 == resp.status_code:
+            raise ResourceNotFoundError("Couldn't complete fork: {}".format(resp.content.decode('utf-8')))
+        elif 200 != resp.status_code:
+            raise ResourceError("Couldn't complete fork: {}".format(resp.content.decode('utf-8')))
+        result = resp.json()
         return '/'.join([result['owner'], result['slug']])
 
     def delete(self, repo, user=None):
@@ -174,7 +189,7 @@ class BitbucketService(RepositoryService):
             else:
                 raise ResourceNotFoundError('Could not find file within gist.')
 
-        return self.bb_client.session.get(
+        return self.bb.client.session.get(
                     'https://bitbucket.org/!api/2.0/snippets/{}/{}/files/{}'.format(user, gist, gist_file)
                 ).content.decode('utf-8')
 
@@ -198,8 +213,7 @@ class BitbucketService(RepositoryService):
 
     def gist_create(self, gist_pathes, description, secret=False):
         def load_file(fname, path='.'):
-            with open(os.path.join(path, fname), 'r') as f:
-                return {'content': f.read()}
+            return open(os.path.join(path, fname), 'r')
 
         gist_files = dict()
         for gist_path in gist_pathes:
@@ -210,66 +224,130 @@ class BitbucketService(RepositoryService):
                     if not os.path.isdir(os.path.join(gist_path, gist_file)) and not gist_file.startswith('.'):
                         gist_files[gist_file] = load_file(gist_file, gist_path)
 
-        gist = self.gh.create_gist(
-                description=description,
+        try:
+            snippet = Snippet.create(
                 files=gist_files,
-                public=not secret # isn't it obvious? ☺
+                payload=SnippetPayload(
+                    payload=dict(
+                        title=description,
+                        scm=RepositoryType.GIT,
+                        is_private=secret
+                    )
+                ),
+                client=self.bb.client
             )
 
-        return gist.html_url
+            return snippet.links['html']['href']
+        except HTTPError as err:
+            raise ResourceError("Couldn't create snippet: {}".format(err)) from err
 
     def gist_delete(self, gist_id):
-        gist = self.gh.gist(self._format_gist(gist_id))
-        if not gist:
-            raise ResourceNotFoundError('Could not find gist')
-        gist.delete()
+        try:
+            snippet = next(self.bb.snippetByOwnerAndSnippetId(owner=self.user, snippet_id=gist_id)).delete()
+        except HTTPError as err:
+            if '404' in err.args[0].split(' '):
+                raise ResourceNotFoundError("Could not find snippet {}.".format(gist_id)) from err
+            raise ResourceError("Couldn't delete snippet: {}".format(err)) from err
 
     def request_create(self, user, repo, local_branch, remote_branch, title, description=None):
-        repository = self.gh.repository(user, repo)
-        if not repository:
-            raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
-        if not remote_branch:
-            remote_branch =  self.repository.active_branch.name
-        if not local_branch:
-            local_branch = repository.master_branch or 'master'
         try:
-            request = repository.create_pull(title,
-                    base=local_branch,
-                    head=':'.join([user, remote_branch]),
-                    body=description)
-        except github3.models.GitHubError as err:
-            if err.code == 422:
-                if err.message == 'Validation Failed':
-                    for error in err.errors:
-                        if 'message' in error:
-                            raise ResourceError(error['message'])
-                    raise ResourceError("Unhandled formatting error: {}".format(err.errors))
-            raise ResourceError(err.message)
+            repository = next(self.bb.repositoryByOwnerAndRepositoryName(owner=user, repository_name=repo))
+            if not repository:
+                raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
+            if not remote_branch:
+                try:
+                    remote_branch = next(repository.branches()).name
+                except StopIteration:
+                    remote_branch = 'master'
+            if not local_branch:
+                local_branch = self.repository.active_branch.name
+            request = PullRequest.create(
+                        PullRequestPayload(
+                            payload=dict(
+                                title=title,
+                                description=description or '',
+                                destination=dict(
+                                    branch=dict(name=remote_branch)
+                                ),
+                                source=dict(
+                                    repository=dict(full_name='/'.join([self.user, repo])),
+                                    branch=dict(name=local_branch)
+                                )
+                            )
+                        ),
+                        repository_name=repo,
+                        owner=user,
+                        client=self.bb.client
+                    )
+        except HTTPError as err:
+            status_code = hasattr(err, 'code') and err.code or err.response.status_code
+            if 404 == status_code:
+                raise ResourceNotFoundError("Couldn't create request, project not found: {}".format(repo)) from err
+            elif 400 == status_code and 'branch not found' in err.format_message():
+                raise ResourceNotFoundError("Couldn't create request, branch not found: {}".format(local_branch)) from err
+            raise ResourceError("Couldn't create request: {}".format(err)) from err
 
-        return {'local': local_branch, 'remote': remote_branch, 'ref': request.number}
+        return {'local': local_branch, 'remote': remote_branch, 'ref': str(request.id)}
 
     def request_list(self, user, repo):
-        repository = self.gh.repository(user, repo)
-        for pull in repository.iter_pulls():
-            yield ( str(pull.number), pull.title, pull.links['issue'] )
+        requests = set(
+            (
+                str(r.id),
+                r.title,
+                r.links['html']['href']
+            ) for r in self.bb.repositoryPullRequestsInState(
+                owner=user,
+                repository_name=repo,
+                state='open'
+            ) if not isinstance(r, dict) # if no PR is empty, result is a dict
+        )
+        for pull in sorted(requests):
+            try:
+                yield pull
+            except Exception as err:
+                log.warn('Error while fetching request information: {}'.format(pull))
 
     def request_fetch(self, user, repo, request, pull=False):
+        log.warn('Bitbucket does not support fetching of PR using git. Use this command at your own risk.')
+        if 'y' not in input('Are you sure to continue? [yN]> '):
+            raise ResourceError('Command aborted.')
         if pull:
             raise NotImplementedError('Pull operation on requests for merge are not yet supported')
         try:
-            for remote in self.repository.remotes:
-                if remote.name == self.name:
-                    local_branch_name = 'request/{}'.format(request)
-                    self.fetch(
-                        remote,
-                        'pull/{}/head'.format(request),
-                        local_branch_name
-                    )
-                    return local_branch_name
-            else:
-                raise ResourceNotFoundError('Could not find remote {}'.format(self.name))
+            repository = self.get_repository(user, repo)
+            if self.repository.is_dirty():
+                raise ResourceError('Please use this command after stashing your changes.')
+            local_branch_name = 'requests/bitbucket/{}'.format(request)
+            index = self.repository.index
+            log.info('» Fetching pull request {}'.format(request))
+            request = next(bb.repositoryPullRequestByPullRequestId(
+                owner=user,
+                repository_name=repo,
+                pullrequest_id=request
+            ))
+            commit = self.repository.rev_parse(request['destination']['commit']['hash'])
+            self.repository.head.reference = commit
+            log.info('» Creation of requests branch {}'.format(local_branch_name))
+            # create new branch
+            head = self.repository.create_head(local_branch_name)
+            head.checkout()
+            # fetch and apply patch
+            log.info('» Fetching and writing the patch in current directory')
+            patch = bb.client.session.get(request['links']['diff']['href']).content.decode('utf-8')
+            with open('.tmp.patch', 'w') as f:
+                f.write(patch)
+            log.info('» Applying the patch')
+            git.cmd.Git().apply('.tmp.patch', stat=True)
+            os.unlink('.tmp.patch')
+            log.info('» Going back to original branch')
+            index.checkout() # back to former branch
+            return local_branch_name
+        except HTTPError as err:
+            if '404' in err.args[0].split(' '):
+                raise ResourceNotFoundError("Could not find snippet {}.".format(gist_id)) from err
+            raise ResourceError("Couldn't delete snippet: {}".format(err)) from err
         except GitCommandError as err:
-            if 'Error when fetching: fatal: Couldn\'t find remote ref' in err.command[0]:
+            if 'Error when fetching: fatal: ' in err.command[0]:
                 raise ResourceNotFoundError('Could not find opened request #{}'.format(request)) from err
             raise err
 
