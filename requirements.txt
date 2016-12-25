@@ -4,4 +4,5 @@ GitPython>=2.1.0
 uritemplate.py==2.0.0
 github3.py==0.9.5
 python-gitlab>=0.13
-pybitbucket>=0.12.0
+# pybitbucket>=0.12.0
+-e git+https://bitbucket.org/guyzmo/python-bitbucket@master#egg=pybitbucket
