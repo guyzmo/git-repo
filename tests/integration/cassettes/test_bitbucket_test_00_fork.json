@@ -1,4 +1,103 @@
 {
-  "http_interactions": [],
+  "http_interactions": [
+    {
+      "recorded_at": "2016-12-24T13:35:53",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOkpKNHRsNHNzMTRuLmMwbQ==",
+          "Connection": "keep-alive",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.11.2 python-requests/2.12.4"
+        },
+        "method": "GET",
+        "uri": "https://api.bitbucket.org/2.0/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"username\": \"<BITBUCKET_NAMESPACE>\", \"website\": \"http://i.got.nothing.to/blog\", \"display_name\": \"Guyzmo\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"hooks\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>/hooks\"}, \"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>\"}, \"repositories\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>\"}, \"html\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/\"}, \"followers\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>/followers\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/<BITBUCKET_NAMESPACE>/avatar/32/\"}, \"following\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>/following\"}, \"snippets\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/<BITBUCKET_NAMESPACE>\"}}, \"created_on\": \"2008-09-20T15:08:53.695316+00:00\", \"location\": null, \"type\": \"user\"}"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "801",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 24 Dec 2016 13:35:53 GMT",
+          "ETag": "\"321b3bdea810843db96c90951905a5e3\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Authorization",
+          "X-Accepted-OAuth-Scopes": "account",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Render-Time": "0.0154750347137",
+          "X-Request-Count": "647",
+          "X-Served-By": "app-143",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.bitbucket.org/2.0/user"
+      }
+    },
+    {
+      "recorded_at": "2016-12-24T13:35:54",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "name=git_tutorial"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOkpKNHRsNHNzMTRuLmMwbQ==",
+          "Connection": "keep-alive",
+          "Content-Length": "17",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.11.2 python-requests/2.12.4"
+        },
+        "method": "POST",
+        "uri": "https://api.bitbucket.org/1.0/repositories/abdo2015/git_tutorial/fork"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2016-12-24T14:35:53.817\", \"no_forks\": false, \"created_on\": \"2016-12-24T14:35:53.772\", \"owner\": \"<BITBUCKET_NAMESPACE>\", \"logo\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/git_tutorial/avatar/32/?ts=1482586553\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 0, \"read_only\": false, \"fork_of\": {\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2016-11-07T18:42:50.347\", \"no_forks\": false, \"created_on\": \"2015-10-13T19:41:25.948\", \"owner\": \"abdo2015\", \"logo\": \"https://bitbucket.org/abdo2015/git_tutorial/avatar/32/?ts=1478540570\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 75213, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2015-10-13 17:41:25+00:00\", \"website\": \"\", \"description\": \"a repository to show git features\", \"has_issues\": false, \"is_fork\": false, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2016-11-07 17:42:50+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/abdo2015/git_tutorial\"}, \"mq_of\": {\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2016-11-07T18:42:50.347\", \"no_forks\": false, \"created_on\": \"2015-10-13T19:41:25.948\", \"owner\": \"abdo2015\", \"logo\": \"https://bitbucket.org/abdo2015/git_tutorial/avatar/32/?ts=1478540570\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 75213, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2015-10-13 17:41:25+00:00\", \"website\": \"\", \"description\": \"a repository to show git features\", \"has_issues\": false, \"is_fork\": false, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2016-11-07 17:42:50+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/abdo2015/git_tutorial\"}, \"state\": \"creating\", \"utc_created_on\": \"2016-12-24 13:35:53+00:00\", \"website\": null, \"description\": \"\", \"has_issues\": false, \"is_fork\": true, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2016-12-24 13:35:53+00:00\", \"no_public_forks\": false, \"creator\": null, \"resource_uri\": \"/1.0/repositories/<BITBUCKET_NAMESPACE>/git_tutorial\"}"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "2213",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 24 Dec 2016 13:35:53 GMT",
+          "ETag": "\"f6b793bcedca90dc158fa94faf86c164\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Authorization",
+          "X-Accepted-OAuth-Scopes": "repository:admin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Render-Time": "0.212947845459",
+          "X-Request-Count": "111",
+          "X-Served-By": "app-139",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.bitbucket.org/1.0/repositories/abdo2015/git_tutorial/fork"
+      }
+    }
+  ],
   "recorded_with": "betamax/0.5.1"
 }

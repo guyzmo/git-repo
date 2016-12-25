@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2016-12-24T13:36:46",
+      "recorded_at": "2016-12-24T15:23:03",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -27,7 +27,7 @@
           "Connection": "keep-alive",
           "Content-Length": "801",
           "Content-Type": "application/json; charset=utf-8",
-          "Date": "Sat, 24 Dec 2016 13:36:46 GMT",
+          "Date": "Sat, 24 Dec 2016 15:23:04 GMT",
           "ETag": "\"321b3bdea810843db96c90951905a5e3\"",
           "Server": "nginx",
           "Strict-Transport-Security": "max-age=31536000",
@@ -35,8 +35,8 @@
           "X-Accepted-OAuth-Scopes": "account",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
-          "X-Render-Time": "0.0195748806",
-          "X-Request-Count": "548",
+          "X-Render-Time": "0.0216529369354",
+          "X-Request-Count": "322",
           "X-Served-By": "app-141",
           "X-Static-Version": "e72177d765d6",
           "X-Version": "e72177d765d6"
@@ -46,6 +46,54 @@
           "message": "OK"
         },
         "url": "https://api.bitbucket.org/2.0/user"
+      }
+    },
+    {
+      "recorded_at": "2016-12-24T15:23:03",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOkpKNHRsNHNzMTRuLmMwbQ==",
+          "Connection": "keep-alive",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.11.2 python-requests/2.12.4"
+        },
+        "method": "GET",
+        "uri": "https://api.bitbucket.org/2.0/repositories/guyzmo/git-repo/pullrequests?state=open"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"pagelen\": 10, \"values\": [], \"page\": 1, \"size\": 0}"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "51",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 24 Dec 2016 15:23:04 GMT",
+          "ETag": "\"e671435b14693e94f294247ac6f96b5f\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Authorization",
+          "X-Accepted-OAuth-Scopes": "pullrequest",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Render-Time": "0.0645658969879",
+          "X-Request-Count": "486",
+          "X-Served-By": "app-139",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.bitbucket.org/2.0/repositories/guyzmo/git-repo/pullrequests?state=open"
       }
     }
   ],

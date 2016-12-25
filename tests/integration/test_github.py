@@ -311,7 +311,8 @@ class Test_Github(GitRepoTestCase):
     def test_32_request_create(self):
         r = self.action_request_create(namespace=self.namespace,
                 repository='test_create_requests',
-                branch='pr-test',
+                source_branch='pr-test',
+                target_branch='master',
                 title='PR test',
                 description='PR description',
                 service='github')
@@ -326,27 +327,27 @@ class Test_Github(GitRepoTestCase):
         with pytest.raises(ResourceError):
             self.action_request_create(namespace=self.namespace,
                     repository='test_create_requests',
-                    branch='does_not_exists',
+                    source_branch='does_not_exists',
+                    target_branch='master',
                     title='PR test',
-                    description='PR description',
-                    service='github')
+                    description='PR description')
 
     def test_32_request_create__bad_repo(self):
         with pytest.raises(ResourceNotFoundError):
             r = self.action_request_create(namespace=self.namespace,
                     repository='does_not_exists',
-                    branch='pr-test',
+                    source_branch='pr-test',
+                    target_branch='master',
                     title='PR test',
-                    description='PR description',
-                    service='github')
+                    description='PR description')
 
     def test_32_request_create__guess_branch(self):
         r = self.action_request_create(namespace=self.namespace,
                 repository='test_create_requests',
-                branch=None,
+                source_branch=None,
+                target_branch=None,
                 title='PR test',
-                description='PR description',
-                service='github')
+                description='PR description')
 
     def test_33_open(self):
         self.action_open(namespace='guyzmo',
