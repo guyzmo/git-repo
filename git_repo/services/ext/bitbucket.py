@@ -18,7 +18,8 @@ from pybitbucket.user import User
 
 from requests import Request, Session
 from requests.exceptions import HTTPError
-import os, json
+from lxml import html
+import os, json, platform
 
 
 @register_target('bb', 'bitbucket')
@@ -30,11 +31,16 @@ class BitbucketService(RepositoryService):
         super(BitbucketService, self).__init__(*args, **kwarg)
 
     def connect(self):
-        if not self._privatekey:
+        if self._privatekey and ':' in self._privatekey:
+            login, password = self._privatekey.split(':')
+        else:
+            login = self._username
+            password = self._privatekey
+
+        if not login or not password:
             raise ConnectionError('Could not connect to BitBucket. Please configure .gitconfig with your bitbucket credentials.')
-        if not ':' in self._privatekey:
-            raise ConnectionError('Could not connect to BitBucket. Please setup your private key with login:password')
-        auth = BasicAuthenticator(*self._privatekey.split(':')+['z+git-repo+pub@m0g.net'])
+
+        auth = BasicAuthenticator(login, password, 'z+git-repo+pub@m0g.net')
         self.bb.client.config = auth
         self.bb.client.session = self.bb.client.config.session = auth.start_http_session(self.bb.client.session)
         try:
@@ -353,8 +359,96 @@ class BitbucketService(RepositoryService):
 
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):
-        log.warn("/!\\ Due to API limitations, the bitbucket login/password is stored as plaintext in configuration.")
-        return "{}:{}".format(login, password)
+        session = Session()
+
+        key_name = 'git-repo@{}'.format(platform.node())
+
+        # get login page
+        log.info('» Login to bitbucket…')
+
+        login_url = "https://bitbucket.org/account/signin/?next=/".format(login)
+
+        session.headers.update({
+            "User-Agent":"Mozilla/5.0 (X11; Linux x86_64) " \
+            "AppleWebKit/537.36 (KHTML, like Gecko) " \
+            "Chrome/52.0.2743.82 Safari/537.36"
+        })
+
+        result = session.get(login_url)
+        tree = html.fromstring(result.text)
+
+        # extract CSRF token
+
+        authenticity_token = list(set(tree.xpath("//input[@name='csrfmiddlewaretoken']/@value")))[0]
+
+        # do login
+
+        payload = {
+            'username': login,
+            'password': password,
+            'csrfmiddlewaretoken': authenticity_token
+        }
+
+        result = session.post(
+            login_url,
+            data = payload,
+            headers = dict(referer=login_url)
+        )
+        tree = html.fromstring(result.text)
+
+        # extract username
+
+        try:
+            username = json.loads(tree.xpath('//meta/@data-current-user')[0])['username']
+        except KeyError:
+            raise ResourceNotFoundError('Invalid login. Please make sure you\'re using your bitbucket email address as username!')
+
+        app_password_url ='https://bitbucket.org/account/user/{}/app-passwords/new'.format(username)
+
+        # load app password page
+        log.info('» Generating app password…')
+
+        result = session.get(
+            app_password_url,
+            headers=dict(referer=app_password_url)
+        )
+        tree = html.fromstring(result.content)
+
+        if 'git-repo@{}'.format(platform.node()) in result:
+            log.warn("A duplicate key is being created!")
+
+        # generate app password
+        log.info('» App password is setup with following scopes:')
+        log.info('»     account, team, project:write, repository:admin, repository:delete')
+        log.info('»     pullrequest:write, snippet, snippet:write')
+
+        authenticity_token = list(set(tree.xpath("//input[@name='csrfmiddlewaretoken']/@value")))[0]
+
+        payload = dict(
+            name=key_name,
+            scope=['account',
+                    'team',
+                    'project',
+                    'project:write',
+                    'repository',
+                    'pullrequest:write',
+                    'repository:admin',
+                    'repository:delete',
+                    'snippet',
+                    'snippet:write'
+                    ],
+            csrfmiddlewaretoken=authenticity_token
+        )
+        result = session.post(
+            app_password_url,
+            data=payload,
+            headers=dict(referer=app_password_url)
+        )
+        tree = html.fromstring(result.content)
+
+        password = json.loads(tree.xpath('//section/@data-app-password')[0])['password']
+
+        return password, username
 
     @property
     def user(self):
@@ -363,5 +457,4 @@ class BitbucketService(RepositoryService):
             return user
         except (HTTPError, AttributeError) as err:
             raise ResourceError("Couldn't find the current user: {}".format(err)) from err
-
 
