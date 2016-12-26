@@ -16,10 +16,13 @@ if os.environ.get('TRAVIS_GH3'):
     # also if an environment variable is not set, then we don't want to record cassettes
     record_mode = 'never'
     for service in services:
+        user_name = 'USERNAME_{}'.format(service.upper())
         token_name = 'PRIVATE_KEY_{}'.format(service.upper())
         namespace_name = '{}_NAMESPACE'.format(service.upper())
+        if user_name not in os.environ:
+            os.environ[user_name] = '_username_'.format(service)
         if token_name not in os.environ:
-            os.environ[token_name] = '_namespace_{}_:_private_'.format(service) # using a : for bitbucket's case
+            os.environ[token_name] = '_token_{}_'.format(service)
         if namespace_name not in os.environ:
             os.environ[namespace_name] = '_namespace_{}_'.format(service)
 else:
@@ -31,21 +34,25 @@ else:
 
     # handle the different forms of token configuration item (yup, technical debt bites here)
     get_section = lambda s: 'gitrepo "{}"'.format(s)
+    get_username = lambda s: config.get_value(get_section(s), 'username',
+                                    '_username_{}'.format(s)
+                                )
     get_token = lambda s: config.get_value(get_section(s), 'token',
                             config.get_value(get_section(s), 'private_token',
                                 config.get_value(get_section(s), 'privatekey',
-                                        '_namespace_{}_:_private_'.format(s) # using a : for bitbucket's case
+                                        '_namespace_{}_'.format(s)
                                     )))
-    # XXX temporary fix that should not be necessary when refactoring with pybitbucket
-    get_default_namespace = lambda s: os.environ[token_name].split(':')[0] if s == 'bitbucket' else '_namespace_{}_'.format(s)
 
     for service in services:
+        user_name = 'USERNAME_{}'.format(service.upper())
         token_name = 'PRIVATE_KEY_{}'.format(service.upper())
         namespace_name = '{}_NAMESPACE'.format(service.upper())
+        if user_name not in os.environ:
+            os.environ[user_name] = get_username(service)
         if token_name not in os.environ:
             os.environ[token_name] = get_token(service)
         if namespace_name not in os.environ:
-            os.environ[namespace_name] = os.environ.get('GITREPO_NAMESPACE', get_default_namespace(service))
+            os.environ[namespace_name] = os.environ.get('GITREPO_NAMESPACE', '_namespace_{}_'.format(service))
 
 betamax.Betamax.register_serializer(pretty_json.PrettyJSONSerializer)
 

@@ -1,6 +1,7 @@
 docopt
 progress
 python-dateutil
+lxml
 GitPython>=2.1.0
 uritemplate.py==2.0.0
 github3.py==0.9.5
