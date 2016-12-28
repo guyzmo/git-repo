@@ -415,11 +415,11 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
 
     '''cassette name helper'''
 
-    def _make_cassette_name(self):
+    def _make_cassette_name(self, frame_level=2):
         # returns the name of the function calling the function calling this one
         # in other words, when used in an helper function, returns the name of
         # the test function calling the helper function, to make a cassette name.
-        test_function_name = sys._getframe(2).f_code.co_name
+        test_function_name = sys._getframe(frame_level).f_code.co_name
         if test_function_name.startswith('test'):
             return '_'.join(['test', self.service.name, test_function_name])
         raise Exception("Helpers functions shall be used only within test functions!")
@@ -683,7 +683,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                         ' * [new branch]      master     -> {1}/{0}'.format(request, local_branch)]).encode('utf-8'),
                     0)
                 ])
-                self.service.request_fetch(repository, namespace, request)
+                self.service.request_fetch(repo=repository, user=namespace, request=request)
 
     def action_request_create(self,
             namespace, repository,

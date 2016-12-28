@@ -225,18 +225,74 @@ class Test_BitBucket(GitRepoTestCase):
                 repository='git-repo',
                 rq_list_data=[ ])
 
-    # TODO
-    # def test_31_request_fetch(self):
-    #     self.action_request_fetch(namespace='atlassian',
-    #             repository='python-bitbucket',
-    #             request='2')
+    def test_31_request_fetch__good(self):
+        namespace='atlassian'
+        repository='python-bitbucket'
+        request='2'
+        local_branch='requests/bitbucket'
+        local_slug = self.service.format_path(namespace=namespace, repository=repository, rw=False)
+        remote_branch='repo_create_bugfix_again'
+        remote_name='requests-bitbucket-Mekk-python-bitbucket'
+        with self.recorder.use_cassette(self._make_cassette_name(1)):
+            with self.mockup_git(namespace, repository):
+                self.set_mock_popen_commands([
+                    ('git remote add all {}'.format(local_slug), b'', b'', 0),
+                    ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
+                    ('git remote add requests-bitbucket-Mekk-python-bitbucket https://bitbucket.org/Mekk/python-bitbucket', b'', b'', 0),
+                    ('git version', b'git version 2.8.0', b'', 0),
+                    ('git pull --progress -v {} master'.format(self.service.name), b'', '\n'.join([
+                        'POST git-upload-pack (140 bytes)',
+                        'remote: Counting objects: 8318, done.',
+                        'remote: Compressing objects: 100% (3/3), done.',
+                        'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
+                        'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
+                        'Resolving deltas: 100% (5126/5126), done.',
+                        'From {}:{}/{}'.format(self.service.fqdn, namespace, repository),
+                        ' * branch            master     -> FETCH_HEAD',
+                        ' * [new branch]      master     -> {1}/{0}'.format(request, local_branch)]).encode('utf-8'),
+                    0),
+                    ('git fetch --progress -v {0} {2}/{1}/head:{3}/{1}'.format(
+                            self.service.name,
+                            request,
+                            remote_branch,
+                            local_branch), b'', '\n'.join([
+                        'POST git-upload-pack (140 bytes)',
+                        'remote: Counting objects: 8318, done.',
+                        'remote: Compressing objects: 100% (3/3), done.',
+                        'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
+                        'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
+                        'Resolving deltas: 100% (5126/5126), done.',
+                        'From {}:{}/{}'.format(self.service.fqdn, namespace, repository),
+                        ' * [new branch]      master     -> request/{}'.format(request)]).encode('utf-8'),
+                    0),
+                    ('git fetch --progress -v {} {}:{}/{}'.format(
+                            remote_name,
+                            remote_branch,
+                            local_branch, request), b'', '\n'.join([
+                        'POST git-upload-pack (140 bytes)',
+                        'remote: Counting objects: 8318, done.',
+                        'remote: Compressing objects: 100% (3/3), done.',
+                        'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
+                        'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
+                        'Resolving deltas: 100% (5126/5126), done.',
+                        'From {}:{}/{}'.format(self.service.fqdn, namespace, repository),
+                        ' * [new branch]      {}     -> {}/{}'.format(remote_branch, local_branch, request),
+                        ' * [new branch]      {}     -> {}/{}'.format(remote_branch, remote_name, remote_branch),
+                        ]).encode('utf-8'),
+                    0)
+                    ])
+                self.service.connect()
+                self.service.clone(namespace, repository, rw=False)
+                self.service.repository.create_remote('all', url=local_slug)
+                self.service.repository.create_remote(self.service.name, url=local_slug)
+                self.service.request_fetch(repo=repository, user=namespace, request=request)
 
-    # def test_31_request_fetch__bad_request(self):
-    #     with pytest.raises(ResourceNotFoundError):
-    #         self.action_request_fetch(namespace='atlassian',
-    #             repository='python-bitbucket',
-    #             request='42',
-    #             fail=True)
+    def test_31_request_fetch__bad_request(self):
+        with pytest.raises(ResourceNotFoundError):
+            self.action_request_fetch(namespace='atlassian',
+                repository='python-bitbucket',
+                request='42',
+                fail=True)
 
     def test_32_request_create__good(self):
         r = self.action_request_create(namespace='guyzmo',
@@ -278,19 +334,18 @@ class Test_BitBucket(GitRepoTestCase):
         self.action_open(namespace='guyzmo',
                          repository='git-repo')
 
-    def test_34_list__short(self, capsys, caplog):
-        import http.client
-        http.client.HTTPConnection.debuglevel = 0
-        self.action_list(namespace='git-repo-test')
-        out, err = capsys.readouterr()
-        assert out ==  'git-repo-test/git-repo\n'
+    def test_34_list__short(self, caplog):
+        projects = self.action_list(namespace='git-repo-test')
+        assert projects == ['{}', ('Total repositories: 1',), ['git-repo-test/git-repo']]
+        assert 'GET /2.0/users/git-repo-test' in caplog.text
+        assert 'GET /2.0/repositories/git-repo-test HTTP/1.1' in caplog.text
 
-    def test_34_list__long(self, capsys, caplog):
-        import http.client
-        http.client.HTTPConnection.debuglevel = 0
-        self.action_list(namespace='git-repo-test', _long=True)
-        out, err = capsys.readouterr()
-        assert err.replace('\t', ' ') == "Status Commits Reqs Issues Forks Coders Watch Likes Lang Modif  Name\n"
-        assert out.replace('\t', ' ') ==  "F  92 1 N.A. 1 N.A. 1 N.A. python 2016-03-30T13:30:15.637449+00:00 git-repo-test/git-repo\n"
+    def test_34_list__long(self, caplog):
+        projects = self.action_list(namespace='git-repo-test', _long=True)
+        assert projects == ['{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{:12}\t{}',
+                ['Status', 'Commits', 'Reqs', 'Issues', 'Forks', 'Coders', 'Watch', 'Likes', 'Lang', 'Modif', 'Name'],
+                ['F ', '92', '1', 'N.A.', '1', 'N.A.', '1', 'N.A.', 'python', '2016-03-30T13:30:15.637449+00:00', 'git-repo-test/git-repo']]
+        assert 'GET /2.0/users/git-repo-test' in caplog.text
+        assert 'GET /2.0/repositories/git-repo-test HTTP/1.1' in caplog.text
 
 

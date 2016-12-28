@@ -1,0 +1,103 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-12-29T00:47:07",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOlF0WmpzZVFMaGE4NFBMZnRwaGJF",
+          "Connection": "keep-alive",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.12.0 python-requests/2.12.4"
+        },
+        "method": "GET",
+        "uri": "https://api.bitbucket.org/2.0/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"username\": \"guyzmo\", \"website\": \"http://i.got.nothing.to/blog\", \"display_name\": \"Guyzmo\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"hooks\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo/hooks\"}, \"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo\"}, \"repositories\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo\"}, \"html\": {\"href\": \"https://bitbucket.org/guyzmo/\"}, \"followers\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo/followers\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/guyzmo/avatar/32/\"}, \"following\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo/following\"}, \"snippets\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo\"}}, \"created_on\": \"2008-09-20T15:08:53.695316+00:00\", \"location\": null, \"type\": \"user\"}"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "801",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Thu, 29 Dec 2016 00:47:07 GMT",
+          "ETag": "\"321b3bdea810843db96c90951905a5e3\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Authorization",
+          "X-Accepted-OAuth-Scopes": "account",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-OAuth-Scopes": "snippet:write, snippet, repository:delete, repository:admin, pullrequest:write, repository, project:write, project, team, account",
+          "X-Render-Time": "0.0573170185089",
+          "X-Request-Count": "317",
+          "X-Served-By": "app-141",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.bitbucket.org/2.0/user"
+      }
+    },
+    {
+      "recorded_at": "2016-12-29T00:47:08",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOlF0WmpzZVFMaGE4NFBMZnRwaGJF",
+          "Connection": "keep-alive",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.12.0 python-requests/2.12.4"
+        },
+        "method": "GET",
+        "uri": "https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/pullrequests/2"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"merge_commit\": {\"hash\": \"3f4db57adcb4\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/commit/3f4db57adcb4\"}}}, \"description\": \"Attempt to fix #9. On Py2 it works.\", \"links\": {\"decline\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/pullrequests/2/decline\"}, \"commits\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/pullrequests/2/commits\"}, \"self\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/pullrequests/2\"}, \"comments\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/pullrequests/2/comments\"}, \"merge\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/pullrequests/2/merge\"}, \"html\": {\"href\": \"https://bitbucket.org/atlassian/python-bitbucket/pull-requests/2\"}, \"activity\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/pullrequests/2/activity\"}, \"diff\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/pullrequests/2/diff\"}, \"approve\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/pullrequests/2/approve\"}, \"statuses\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/pullrequests/2/statuses\"}}, \"title\": \"Attempt to fix bitbucket_create crash again, this time py3k compatible\", \"close_source_branch\": true, \"reviewers\": [], \"destination\": {\"commit\": {\"hash\": \"7ef9006715ae\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/commit/7ef9006715ae\"}}}, \"repository\": {\"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket\"}, \"html\": {\"href\": \"https://bitbucket.org/atlassian/python-bitbucket\"}, \"avatar\": {\"href\": \"https://bitbucket.org/atlassian/python-bitbucket/avatar/32/\"}}, \"type\": \"repository\", \"name\": \"python-bitbucket\", \"full_name\": \"atlassian/python-bitbucket\", \"uuid\": \"{677bb9b7-473d-4934-96bd-5810f8a0d153}\"}, \"branch\": {\"name\": \"master\"}}, \"state\": \"MERGED\", \"closed_by\": {\"username\": \"ian_buchanan\", \"display_name\": \"Ian Buchanan\", \"type\": \"user\", \"uuid\": \"{27e49bd2-9ecb-4a41-8387-033c972d1399}\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/ian_buchanan\"}, \"html\": {\"href\": \"https://bitbucket.org/ian_buchanan/\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/ian_buchanan/avatar/32/\"}}}, \"source\": {\"commit\": {\"hash\": \"0368092708b6\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/Mekk/python-bitbucket/commit/0368092708b6\"}}}, \"repository\": {\"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/Mekk/python-bitbucket\"}, \"html\": {\"href\": \"https://bitbucket.org/Mekk/python-bitbucket\"}, \"avatar\": {\"href\": \"https://bitbucket.org/Mekk/python-bitbucket/avatar/32/\"}}, \"type\": \"repository\", \"name\": \"python-bitbucket\", \"full_name\": \"Mekk/python-bitbucket\", \"uuid\": \"{50f0f2c8-6ea2-4574-b5e5-5bd9c097f1fd}\"}, \"branch\": {\"name\": \"repo_create_bugfix_again\"}}, \"comment_count\": 0, \"author\": {\"username\": \"Mekk\", \"display_name\": \"Marcin Kasperski\", \"type\": \"user\", \"uuid\": \"{d94fe134-1231-487d-9854-07b78282c3b8}\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/Mekk\"}, \"html\": {\"href\": \"https://bitbucket.org/Mekk/\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/Mekk/avatar/32/\"}}}, \"created_on\": \"2015-12-01T16:23:06.605945+00:00\", \"participants\": [{\"role\": \"PARTICIPANT\", \"type\": \"participant\", \"user\": {\"username\": \"ian_buchanan\", \"display_name\": \"Ian Buchanan\", \"type\": \"user\", \"uuid\": \"{27e49bd2-9ecb-4a41-8387-033c972d1399}\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/ian_buchanan\"}, \"html\": {\"href\": \"https://bitbucket.org/ian_buchanan/\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/ian_buchanan/avatar/32/\"}}}, \"approved\": true}], \"reason\": \"\", \"updated_on\": \"2015-12-01T16:55:06.104427+00:00\", \"type\": \"pullrequest\", \"id\": 2, \"task_count\": 0}"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "4026",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Thu, 29 Dec 2016 00:47:08 GMT",
+          "ETag": "\"583375e7669b1bf81f5e2e723977cba0\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Authorization",
+          "X-Accepted-OAuth-Scopes": "pullrequest",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-OAuth-Scopes": "snippet:write, snippet, repository:delete, repository:admin, pullrequest:write, repository, project:write, project, team, account",
+          "X-Render-Time": "0.113313913345",
+          "X-Request-Count": "32",
+          "X-Served-By": "app-140",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/pullrequests/2"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

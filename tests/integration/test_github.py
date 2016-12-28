@@ -314,12 +314,11 @@ class Test_Github(GitRepoTestCase):
                 source_branch='pr-test',
                 target_branch='master',
                 title='PR test',
-                description='PR description',
-                service='github')
+                description='PR description')
         assert r == {
                 'local': 'pr-test',
                 'ref': 1,
-                'remote': 'PR test',
+                'remote': 'master',
                 'url': 'https://github.com/{}/test_create_requests/pull/1'.format(self.namespace),
                 }
 

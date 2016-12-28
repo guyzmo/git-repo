@@ -3,8 +3,9 @@
 import logging
 log = logging.getLogger('git_repo.bitbucket')
 
-from ..service import register_target, RepositoryService
+from ..service import register_target, RepositoryService, ProgressBar
 from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
+from ...tools import columnize
 
 from pybitbucket.bitbucket import Client, Bitbucket
 from pybitbucket.auth import BasicAuthenticator
@@ -18,6 +19,9 @@ from pybitbucket.user import User
 
 from requests import Request, Session
 from requests.exceptions import HTTPError
+
+from git.exc import GitCommandError
+
 from lxml import html
 import os, json, platform
 
@@ -92,28 +96,6 @@ class BitbucketService(RepositoryService):
             raise ResourceError("Couldn't complete deletion: {}".format(err)) from err
 
     def list(self, user, _long=False):
-        import shutil, sys
-        from datetime import datetime
-        term_width = shutil.get_terminal_size((80, 20)).columns
-        def col_print(lines, indent=0, pad=2):
-            # prints a list of items in a fashion similar to the dir command
-            # borrowed from https://gist.github.com/critiqjo/2ca84db26daaeb1715e1
-            n_lines = len(lines)
-            if n_lines == 0:
-                return
-            col_width = max(len(line) for line in lines)
-            n_cols = int((term_width + pad - indent)/(col_width + pad))
-            n_cols = min(n_lines, max(1, n_cols))
-            col_len = int(n_lines/n_cols) + (0 if n_lines % n_cols == 0 else 1)
-            if (n_cols - 1) * col_len >= n_lines:
-                n_cols -= 1
-            cols = [lines[i*col_len : i*col_len + col_len] for i in range(n_cols)]
-            rows = list(zip(*cols))
-            rows_missed = zip(*[col[len(rows):] for col in cols[:-1]])
-            rows.extend(rows_missed)
-            for row in rows:
-                print(" "*indent + (" "*pad).join(line.ljust(col_width) for line in row))
-
         try:
             user = User.find_user_by_username(user)
         except HTTPError as err:
@@ -121,10 +103,13 @@ class BitbucketService(RepositoryService):
 
         repositories = user.repositories()
         if not _long:
+            yield "{}"
             repositories = list(repositories)
-            col_print(["/".join([user.username, repo.name]) for repo in repositories])
+            yield ("Total repositories: {}".format(len(repositories)),)
+            yield from columnize(["/".join([user.username, repo.name]) for repo in repositories])
         else:
-            print('Status\tCommits\tReqs\tIssues\tForks\tCoders\tWatch\tLikes\tLang\tModif\t\tName', file=sys.stderr)
+            yield "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{:12}\t{}"
+            yield ['Status', 'Commits', 'Reqs', 'Issues', 'Forks', 'Coders', 'Watch', 'Likes', 'Lang', 'Modif', 'Name']
             for repo in repositories:
                 # if repo.updated_at.year < datetime.now().year:
                 #     date_fmt = "%b %d %Y"
@@ -132,25 +117,25 @@ class BitbucketService(RepositoryService):
                 #     date_fmt = "%b %d %H:%M"
 
                 status = ''.join([
-                    'F' if getattr(repo, 'parent', None) else ' ',               # is a fork?
-                    'P' if repo.is_private else ' ',            # is private?
+                    'F' if getattr(repo, 'parent', None) else ' ', # is a fork?
+                    'P' if repo.is_private else ' ',               # is private?
                 ])
-                print('\t'.join([
+                yield [
                     # status
                     status,
                     # stats
-                    str(len(list(repo.commits()))),          # number of commits
-                    str(len(list(repo.pullrequests()))),            # number of pulls
-                    str('N.A.'),           # number of issues
-                    str(len(list(repo.forks()))),                              # number of forks
-                    str('N.A.'),     # number of contributors
-                    str(len(list(repo.watchers()))),                           # number of subscribers
-                    str('N.A.'),                    # number of ♥
+                    str(len(list(repo.commits()))),       # number of commits
+                    str(len(list(repo.pullrequests()))),  # number of pulls
+                    str('N.A.'),                          # number of issues
+                    str(len(list(repo.forks()))),         # number of forks
+                    str('N.A.'),                          # number of contributors
+                    str(len(list(repo.watchers()))),      # number of subscribers
+                    str('N.A.'),                          # number of ♥
                     # info
-                    repo.language or '?',                      # language
-                    repo.updated_on,      # date
-                    '/'.join([user.username, repo.name]),             # name
-                ]))
+                    repo.language or '?',                 # language
+                    repo.updated_on,                      # date
+                    '/'.join([user.username, repo.name]), # name
+                ]
 
     def get_repository(self, user, repo):
         try:
@@ -314,43 +299,36 @@ class BitbucketService(RepositoryService):
                 log.warn('Error while fetching request information: {}'.format(pull))
 
     def request_fetch(self, user, repo, request, pull=False):
-        log.warn('Bitbucket does not support fetching of PR using git. Use this command at your own risk.')
-        if 'y' not in input('Are you sure to continue? [yN]> '):
-            raise ResourceError('Command aborted.')
         if pull:
             raise NotImplementedError('Pull operation on requests for merge are not yet supported')
+
+        pb = ProgressBar()
+        pb.setup(self.name)
+
         try:
-            repository = self.get_repository(user, repo)
-            if self.repository.is_dirty():
-                raise ResourceError('Please use this command after stashing your changes.')
             local_branch_name = 'requests/bitbucket/{}'.format(request)
-            index = self.repository.index
-            log.info('» Fetching pull request {}'.format(request))
-            request = next(bb.repositoryPullRequestByPullRequestId(
+            pr = next(self.bb.repositoryPullRequestByPullRequestId(
                 owner=user,
                 repository_name=repo,
                 pullrequest_id=request
             ))
-            commit = self.repository.rev_parse(request['destination']['commit']['hash'])
-            self.repository.head.reference = commit
-            log.info('» Creation of requests branch {}'.format(local_branch_name))
-            # create new branch
-            head = self.repository.create_head(local_branch_name)
-            head.checkout()
-            # fetch and apply patch
-            log.info('» Fetching and writing the patch in current directory')
-            patch = bb.client.session.get(request['links']['diff']['href']).content.decode('utf-8')
-            with open('.tmp.patch', 'w') as f:
-                f.write(patch)
-            log.info('» Applying the patch')
-            git.cmd.Git().apply('.tmp.patch', stat=True)
-            os.unlink('.tmp.patch')
-            log.info('» Going back to original branch')
-            index.checkout() # back to former branch
+            source_branch = pr.source['branch']['name']
+            source_slug = pr.source['repository']['full_name']
+            source_url = pr.source['repository']['links']['html']['href']
+            remote_name = 'requests/bitbucket/{}'.format(source_slug).replace('/', '-')
+            try:
+                remote = self.repository.remote(name=remote_name)
+            except ValueError:
+                remote = self.repository.create_remote(name=remote_name, url=source_url)
+            refspec = '{}:{}'.format(source_branch, local_branch_name)
+            refs = remote.fetch(refspec, progress=pb)
+            for branch in self.repository.branches:
+                if branch.name == local_branch_name:
+                    branch.set_tracking_branch(remote.refs[0])
             return local_branch_name
         except HTTPError as err:
             if '404' in err.args[0].split(' '):
-                raise ResourceNotFoundError("Could not find snippet {}.".format(gist_id)) from err
+                raise ResourceNotFoundError('Could not find opened request #{}'.format(request)) from err
             raise ResourceError("Couldn't delete snippet: {}".format(err)) from err
         except GitCommandError as err:
             if 'Error when fetching: fatal: ' in err.command[0]:
