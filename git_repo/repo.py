@@ -438,12 +438,14 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('snippet', 'list')
     def do_gist_list(self):
         service = self.get_service(lookup_repository=False)
-        if self.gist_ref:
+        if 'github' == service.name and self.gist_ref:
             log.info("{:15}\t{:>7}\t{}".format('language', 'size', 'name'))
+        else:
+            log.info("{:56}\t{}".format('id', 'title'.ljust(60)))
+        if self.gist_ref:
             for gist_file in service.gist_list(self.gist_ref):
                 print("{:15}\t{:7}\t{}".format(*gist_file))
         else:
-            log.info("{:56}\t{}".format('id', 'title'.ljust(60)))
             for gist in service.gist_list():
                 print( "{:56}\t{}".format(gist[0], gist[1]))
         return 0

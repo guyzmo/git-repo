@@ -266,7 +266,7 @@ class GithubService(RepositoryService):
         try:
             for remote in self.repository.remotes:
                 if remote.name == self.name:
-                    local_branch_name = 'request/{}'.format(request)
+                    local_branch_name = 'requests/github/{}'.format(request)
                     self.fetch(
                         remote,
                         'pull/{}/head'.format(request),
