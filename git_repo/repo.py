@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env pytho
 
 '''
 Usage:
@@ -520,7 +520,7 @@ class GitRepoRunner(KeywordArgumentParser):
             else:
                 set_alias = True
 
-            service.store_config(self.config, token=token)
+            service.store_config(self.config, token=token, username=username)
             if set_alias:
                 service.set_alias(self.config)
 

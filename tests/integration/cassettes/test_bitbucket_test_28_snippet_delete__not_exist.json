@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2016-12-24T13:36:46",
+      "recorded_at": "2016-12-24T14:08:35",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -27,7 +27,7 @@
           "Connection": "keep-alive",
           "Content-Length": "801",
           "Content-Type": "application/json; charset=utf-8",
-          "Date": "Sat, 24 Dec 2016 13:36:46 GMT",
+          "Date": "Sat, 24 Dec 2016 14:08:35 GMT",
           "ETag": "\"321b3bdea810843db96c90951905a5e3\"",
           "Server": "nginx",
           "Strict-Transport-Security": "max-age=31536000",
@@ -35,9 +35,9 @@
           "X-Accepted-OAuth-Scopes": "account",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
-          "X-Render-Time": "0.0195748806",
-          "X-Request-Count": "548",
-          "X-Served-By": "app-141",
+          "X-Render-Time": "0.0196130275726",
+          "X-Request-Count": "242",
+          "X-Served-By": "app-143",
           "X-Static-Version": "e72177d765d6",
           "X-Version": "e72177d765d6"
         },
@@ -46,6 +46,53 @@
           "message": "OK"
         },
         "url": "https://api.bitbucket.org/2.0/user"
+      }
+    },
+    {
+      "recorded_at": "2016-12-24T14:08:35",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOkpKNHRsNHNzMTRuLmMwbQ==",
+          "Connection": "keep-alive",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.11.2 python-requests/2.12.4"
+        },
+        "method": "GET",
+        "uri": "https://api.bitbucket.org/2.0/snippets/<BITBUCKET_NAMESPACE>/p4RzX"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"type\": \"error\", \"error\": {\"message\": \"Resource not found\"}}"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "61",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sat, 24 Dec 2016 14:08:35 GMT",
+          "ETag": "\"8444fd24a9fa2d5097fdf9363f70d40d\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Authorization",
+          "X-Accepted-OAuth-Scopes": "snippet",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Render-Time": "0.0281958580017",
+          "X-Request-Count": "10",
+          "X-Served-By": "app-140",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
+        },
+        "status": {
+          "code": 404,
+          "message": "NOT FOUND"
+        },
+        "url": "https://api.bitbucket.org/2.0/snippets/<BITBUCKET_NAMESPACE>/p4RzX"
       }
     }
   ],

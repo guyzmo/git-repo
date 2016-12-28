@@ -59,7 +59,7 @@ class RepositoryService:
     # this symbol is made available for testing purposes
     _current = None
 
-    config_options = ['type', 'token', 'alias', 'fqdn']
+    config_options = ['type', 'token', 'alias', 'fqdn', 'username']
 
     @classmethod
     def get_config(cls, config):
@@ -159,6 +159,8 @@ class RepositoryService:
                                           c.get('token',
                                                 c.get('private_token',
                                                       c.get('privatekey', None))))
+        self._username = os.environ.get('USERNAME_{}'.format(self.name.upper()),
+                                          c.get('username', None))
         self._alias = c.get('alias', self.name)
         self.fqdn = c.get('fqdn', self.fqdn)
         self.insecure = c.get('insecure', 'false').lower() in ('on', 'true', 'yes', '1')

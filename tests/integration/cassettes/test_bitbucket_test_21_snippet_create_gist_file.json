@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2016-12-24T13:35:53",
+      "recorded_at": "2016-12-24T14:06:53",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -27,7 +27,7 @@
           "Connection": "keep-alive",
           "Content-Length": "801",
           "Content-Type": "application/json; charset=utf-8",
-          "Date": "Sat, 24 Dec 2016 13:35:53 GMT",
+          "Date": "Sat, 24 Dec 2016 14:06:52 GMT",
           "ETag": "\"321b3bdea810843db96c90951905a5e3\"",
           "Server": "nginx",
           "Strict-Transport-Security": "max-age=31536000",
@@ -35,9 +35,9 @@
           "X-Accepted-OAuth-Scopes": "account",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
-          "X-Render-Time": "0.0154750347137",
-          "X-Request-Count": "647",
-          "X-Served-By": "app-143",
+          "X-Render-Time": "0.0161828994751",
+          "X-Request-Count": "164",
+          "X-Served-By": "app-142",
           "X-Static-Version": "e72177d765d6",
           "X-Version": "e72177d765d6"
         },
@@ -49,53 +49,54 @@
       }
     },
     {
-      "recorded_at": "2016-12-24T13:35:54",
+      "recorded_at": "2016-12-24T14:06:53",
       "request": {
         "body": {
           "encoding": "utf-8",
-          "string": "name=git_tutorial"
+          "string": "--442c9b049b6b4fa6b298b481675c17b8\r\nContent-Disposition: form-data; name=\"random-fortune-1.txt\"; filename=\"random-fortune-1.txt\"\r\n\r\nYour best consolation is the hope that the things you failed to get weren't\nreally worth having.\n\r\n--442c9b049b6b4fa6b298b481675c17b8--\r\n"
         },
         "headers": {
           "Accept": "application/json",
           "Accept-Encoding": "identity",
           "Authorization": "Basic Z3V5em1vOkpKNHRsNHNzMTRuLmMwbQ==",
           "Connection": "keep-alive",
-          "Content-Length": "17",
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Length": "269",
+          "Content-Type": "multipart/form-data; boundary=442c9b049b6b4fa6b298b481675c17b8",
           "From": "z+git-repo+pub@m0g.net",
           "User-Agent": "pybitbucket/0.11.2 python-requests/2.12.4"
         },
         "method": "POST",
-        "uri": "https://api.bitbucket.org/1.0/repositories/abdo2015/git_tutorial/fork"
+        "uri": "https://api.bitbucket.org/2.0/snippets"
       },
       "response": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2016-12-24T14:35:53.817\", \"no_forks\": false, \"created_on\": \"2016-12-24T14:35:53.772\", \"owner\": \"<BITBUCKET_NAMESPACE>\", \"logo\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/git_tutorial/avatar/32/?ts=1482586553\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 0, \"read_only\": false, \"fork_of\": {\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2016-11-07T18:42:50.347\", \"no_forks\": false, \"created_on\": \"2015-10-13T19:41:25.948\", \"owner\": \"abdo2015\", \"logo\": \"https://bitbucket.org/abdo2015/git_tutorial/avatar/32/?ts=1478540570\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 75213, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2015-10-13 17:41:25+00:00\", \"website\": \"\", \"description\": \"a repository to show git features\", \"has_issues\": false, \"is_fork\": false, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2016-11-07 17:42:50+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/abdo2015/git_tutorial\"}, \"mq_of\": {\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2016-11-07T18:42:50.347\", \"no_forks\": false, \"created_on\": \"2015-10-13T19:41:25.948\", \"owner\": \"abdo2015\", \"logo\": \"https://bitbucket.org/abdo2015/git_tutorial/avatar/32/?ts=1478540570\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 75213, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2015-10-13 17:41:25+00:00\", \"website\": \"\", \"description\": \"a repository to show git features\", \"has_issues\": false, \"is_fork\": false, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2016-11-07 17:42:50+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/abdo2015/git_tutorial\"}, \"state\": \"creating\", \"utc_created_on\": \"2016-12-24 13:35:53+00:00\", \"website\": null, \"description\": \"\", \"has_issues\": false, \"is_fork\": true, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2016-12-24 13:35:53+00:00\", \"no_public_forks\": false, \"creator\": null, \"resource_uri\": \"/1.0/repositories/<BITBUCKET_NAMESPACE>/git_tutorial\"}"
+          "string": "{\"scm\": \"git\", \"files\": {}, \"links\": {\"watchers\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo/z498z/watchers\"}, \"commits\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo/z498z/commits\"}, \"self\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo/z498z\"}, \"comments\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo/z498z/comments\"}, \"patch\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo/z498z/05273e773659c67ac0871565bcaf1dedebb1065b/patch\"}, \"html\": {\"href\": \"https://bitbucket.org/snippets/guyzmo/z498z\"}, \"diff\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo/z498z/05273e773659c67ac0871565bcaf1dedebb1065b/diff\"}, \"clone\": [{\"href\": \"https://<BITBUCKET_NAMESPACE>@bitbucket.org/snippets/guyzmo/z498z/untitled-snippet.git\", \"name\": \"https\"}, {\"href\": \"ssh://git@bitbucket.org/snippets/guyzmo/z498z/untitled-snippet.git\", \"name\": \"ssh\"}]}, \"creator\": {\"username\": \"<BITBUCKET_NAMESPACE>\", \"type\": \"user\", \"display_name\": \"Guyzmo\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>\"}, \"html\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/<BITBUCKET_NAMESPACE>/avatar/32/\"}}}, \"title\": \"\", \"created_on\": \"2016-12-24T14:06:53.639898+00:00\", \"owner\": {\"username\": \"<BITBUCKET_NAMESPACE>\", \"type\": \"user\", \"display_name\": \"Guyzmo\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>\"}, \"html\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/<BITBUCKET_NAMESPACE>/avatar/32/\"}}}, \"updated_on\": \"2016-12-24T14:06:53.639917+00:00\", \"type\": \"snippet\", \"id\": \"z498z\", \"is_private\": false}"
         },
         "headers": {
           "Connection": "keep-alive",
-          "Content-Length": "2213",
+          "Content-Length": "1694",
           "Content-Type": "application/json; charset=utf-8",
-          "Date": "Sat, 24 Dec 2016 13:35:53 GMT",
-          "ETag": "\"f6b793bcedca90dc158fa94faf86c164\"",
+          "Date": "Sat, 24 Dec 2016 14:06:53 GMT",
+          "ETag": "\"b0a46cd023eb6b7bae6a42c18a09cec6\"",
+          "Location": "https://api.bitbucket.org/2.0/snippets/guyzmo/z498z",
           "Server": "nginx",
           "Strict-Transport-Security": "max-age=31536000",
           "Vary": "Authorization",
-          "X-Accepted-OAuth-Scopes": "repository:admin",
+          "X-Accepted-OAuth-Scopes": "snippet:write",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
-          "X-Render-Time": "0.212947845459",
-          "X-Request-Count": "111",
+          "X-Render-Time": "0.400623083115",
+          "X-Request-Count": "239",
           "X-Served-By": "app-139",
           "X-Static-Version": "e72177d765d6",
           "X-Version": "e72177d765d6"
         },
         "status": {
-          "code": 200,
-          "message": "OK"
+          "code": 201,
+          "message": "CREATED"
         },
-        "url": "https://api.bitbucket.org/1.0/repositories/abdo2015/git_tutorial/fork"
+        "url": "https://api.bitbucket.org/2.0/snippets"
       }
     }
   ],

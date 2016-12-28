@@ -671,8 +671,10 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                 self.service.request_fetch(repository, namespace, request)
 
     def action_request_create(self,
-            namespace, repository, branch,
+            namespace, repository,
             title, description,
+            source_branch='pr-test',
+            target_branch='master',
             create_repository='test_create_requests',
             create_branch='pr-test'):
         '''
@@ -709,21 +711,25 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                 # let's create a project and add it to current repository
                 self.service.create(namespace, create_repository, add=True)
                 # make a modification, commit and push it
-                with open(os.path.join(self.repository.working_dir, 'first_file'), 'w') as test:
-                    test.write('he who makes a beast of himself gets rid of the pain of being a man. Dr Johnson')
-                self.repository.git.add('first_file')
-                self.repository.git.commit(message='First commit')
+            with open(os.path.join(self.repository.working_dir, 'first_file'), 'w') as test:
+                test.write('he who makes a beast of himself gets rid of the pain of being a man. Dr Johnson')
+            self.repository.git.config('user.name', 'travis')
+            self.repository.git.config('user.email', 'travis@fake.host')
+            self.repository.git.add('first_file')
+            self.repository.git.commit(message='First commit')
+            if will_record:
                 self.repository.git.push(self.service.name, 'master')
-                # create a new branch
-                new_branch = self.repository.create_head(create_branch, 'HEAD')
-                self.repository.head.reference = new_branch
-                self.repository.head.reset(index=True, working_tree=True)
-                # make a modification, commit and push it to that branch
-                with open(os.path.join(self.repository.working_dir, 'second_file'), 'w') as test:
-                    test.write('La meilleure façon de ne pas avancer est de suivre une idée fixe. J.Prévert')
-                self.repository.git.add('second_file')
-                self.repository.git.commit(message='Second commit')
-                self.repository.git.push('github', create_branch)
+            # create a new branch
+            new_branch = self.repository.create_head(create_branch, 'HEAD')
+            self.repository.head.reference = new_branch
+            self.repository.head.reset(index=True, working_tree=True)
+            # make a modification, commit and push it to that branch
+            with open(os.path.join(self.repository.working_dir, 'second_file'), 'w') as test:
+                test.write('La meilleure façon de ne pas avancer est de suivre une idée fixe. J.Prévert')
+            self.repository.git.add('second_file')
+            self.repository.git.commit(message='Second commit')
+            if will_record:
+                self.repository.git.push(self.service.name, create_branch)
             yield
             if will_record:
                 self.service.delete(create_repository)
@@ -735,7 +741,8 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                 request = self.service.request_create(
                         namespace,
                         repository,
-                        branch,
+                        source_branch,
+                        target_branch,
                         title,
                         description
                 )
@@ -753,11 +760,11 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                 for i, gf in enumerate(gist_list_data):
                     assert gist_files[i] == gf
 
-    def action_gist_clone(self, gist):
+    def action_gist_clone(self, gist, clone_url=None):
         with self.mockup_git(None, None):
             self.set_mock_popen_commands([
                 ('git version', b'git version 2.8.0', b'', 0),
-                ('git remote add gist {}.git'.format(gist), b'', b'', 0),
+                ('git remote add gist {}.git'.format(clone_url or gist), b'', b'', 0),
                 ('git pull --progress -v gist master', b'', b'\n'.join([
                     b'POST git-upload-pack (140 bytes)',
                     b'remote: Counting objects: 8318, done.',
@@ -765,7 +772,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                     b'remote: Total 8318 (delta 0), reused 0 (delta 0), pack-reused 8315',
                     b'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
                     b'Resolving deltas: 100% (5126/5126), done.',
-                    bytes('From {}'.format(gist), 'utf-8'),
+                    bytes('From {}'.format(clone_url or gist), 'utf-8'),
                     b' * branch            master     -> FETCH_HEAD']),
                 0),
             ])
