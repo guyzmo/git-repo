@@ -107,35 +107,52 @@ class GithubService(RepositoryService):
         else:
             print('Status\tCommits\tReqs\tIssues\tForks\tCoders\tWatch\tLikes\tLang\tModif\t\tName', file=sys.stderr)
             for repo in repositories:
-                if repo.updated_at.year < datetime.now().year:
-                    date_fmt = "%b %d %Y"
-                else:
-                    date_fmt = "%b %d %H:%M"
+                try:
+                    if repo.updated_at.year < datetime.now().year:
+                        date_fmt = "%b %d %Y"
+                    else:
+                        date_fmt = "%b %d %H:%M"
 
-                status = ''.join([
-                    'F' if repo.fork else ' ',               # is a fork?
-                    'P' if repo.private else ' ',            # is private?
-                ])
-                print('\t'.join([
-                    # status
-                    status,
-                    # stats
-                    str(len(list(repo.iter_commits()))),          # number of commits
-                    str(len(list(repo.iter_pulls()))),            # number of pulls
-                    str(len(list(repo.iter_issues()))),           # number of issues
-                    str(repo.forks),                              # number of forks
-                    str(len(list(repo.iter_contributors()))),     # number of contributors
-                    str(repo.watchers),                           # number of subscribers
-                    str(repo.stargazers or 0),                    # number of ♥
-                    # info
-                    repo.language or '?',                      # language
-                    repo.updated_at.strftime(date_fmt),      # date
-                    '/'.join([user, repo.name]),             # name
-                ]))
-
-
-
-
+                    status = ''.join([
+                        'F' if repo.fork else ' ',               # is a fork?
+                        'P' if repo.private else ' ',            # is private?
+                    ])
+                    print('\t'.join([
+                        # status
+                        status,
+                        # stats
+                        str(len(list(repo.iter_commits()))),          # number of commits
+                        str(len(list(repo.iter_pulls()))),            # number of pulls
+                        str(len(list(repo.iter_issues()))),           # number of issues
+                        str(repo.forks),                              # number of forks
+                        str(len(list(repo.iter_contributors()))),     # number of contributors
+                        str(repo.watchers),                           # number of subscribers
+                        str(repo.stargazers or 0),                    # number of ♥
+                        # info
+                        repo.language or '?',                      # language
+                        repo.updated_at.strftime(date_fmt),      # date
+                        '/'.join([user, repo.name]),             # name
+                    ]))
+                except Exception as err:
+                    if 'Git Repository is empty.' == err.args[0].json()['message']:
+                        print('\t'.join([
+                            # status
+                            'E',
+                            # stats
+                            'ø',          # number of commits
+                            'ø',            # number of pulls
+                            'ø',           # number of issues
+                            'ø',                              # number of forks
+                            'ø',     # number of contributors
+                            'ø',                           # number of subscribers
+                            'ø',                    # number of ♥
+                            # info
+                            '?',                      # language
+                            repo.updated_at.strftime(date_fmt),      # date
+                            '/'.join([user, repo.name]),             # name
+                        ]))
+                    else:
+                        print("Cannot show repository {}: {}".format('/'.join([user, repo.name]), err))
 
     def get_repository(self, user, repo):
         repository = self.gh.repository(user, repo)
@@ -249,7 +266,7 @@ class GithubService(RepositoryService):
         try:
             for remote in self.repository.remotes:
                 if remote.name == self.name:
-                    local_branch_name = 'request/{}'.format(request)
+                    local_branch_name = 'requests/github/{}'.format(request)
                     self.fetch(
                         remote,
                         'pull/{}/head'.format(request),

@@ -291,13 +291,17 @@ class Test_Github(GitRepoTestCase):
     def test_31_request_fetch(self):
         self.action_request_fetch(namespace='guyzmo',
                 repository='git-repo',
-                request='2')
+                request='2',
+                remote_branch='pull',
+                local_branch='requests/github')
 
     def test_31_request_fetch__bad_request(self):
         with pytest.raises(ResourceNotFoundError):
             self.action_request_fetch(namespace='guyzmo',
                 repository='git-repo',
                 request='1',
+                remote_branch='pull',
+                local_branch='requests/github',
                 fail=True)
 
     def test_32_request_create(self):
@@ -305,7 +309,8 @@ class Test_Github(GitRepoTestCase):
                 repository='test_create_requests',
                 branch='pr-test',
                 title='PR test',
-                description='PR description')
+                description='PR description',
+                service='github')
         assert r == {'local': 'pr-test', 'ref': 1, 'remote': 'PR test'}
 
     def test_32_request_create__bad_branch(self):
@@ -314,7 +319,8 @@ class Test_Github(GitRepoTestCase):
                     repository='test_create_requests',
                     branch='does_not_exists',
                     title='PR test',
-                    description='PR description')
+                    description='PR description',
+                    service='github')
 
     def test_32_request_create__bad_repo(self):
         with pytest.raises(ResourceNotFoundError):
@@ -322,14 +328,16 @@ class Test_Github(GitRepoTestCase):
                     repository='does_not_exists',
                     branch='pr-test',
                     title='PR test',
-                    description='PR description')
+                    description='PR description',
+                    service='github')
 
     def test_32_request_create__guess_branch(self):
         r = self.action_request_create(namespace=self.namespace,
                 repository='test_create_requests',
                 branch=None,
                 title='PR test',
-                description='PR description')
+                description='PR description',
+                service='github')
 
     def test_33_open(self):
         self.action_open(namespace='guyzmo',

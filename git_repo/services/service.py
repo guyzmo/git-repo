@@ -11,7 +11,12 @@ from progress.bar import IncrementalBar as Bar
 
 from subprocess import call
 
-from ..exceptions import ArgumentError
+from ..exceptions import (
+        ArgumentError,
+        ResourceError,
+        ResourceNotFoundError,
+        ResourceExistsError
+)
 
 '''select open command'''
 
@@ -156,6 +161,7 @@ class RepositoryService:
                                                       c.get('privatekey', None))))
         self._alias = c.get('alias', self.name)
         self.fqdn = c.get('fqdn', self.fqdn)
+        self.insecure = c.get('insecure', 'false').lower() in ('on', 'true', 'yes', '1')
 
         # if service has a repository configured, connect
         if r:
@@ -335,6 +341,16 @@ class RepositoryService:
         '''Delete a remote repository on the service
 
         :param repo: name of the remote repository to delete
+
+        Meant to be implemented by subclasses
+        '''
+        raise NotImplementedError
+
+    def list(self, user, _long=False):
+        '''List an user's repositories on the service
+
+        :param user: name of the user
+        :param _long: format of the listing
 
         Meant to be implemented by subclasses
         '''

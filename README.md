@@ -173,6 +173,8 @@ Also, you can setup your own GitLab self-hosted server, using that configuration
         type = gitlab
         token = YourSuperPrivateKey
         fqdn = gitlab.example.org
+        # Set this only if you use a self-signed certificate and experience problems
+        insecure = true
 
 Finally, to make it really cool, you can make a few aliases in your gitconfig:
 
@@ -185,6 +187,20 @@ Finally, to make it really cool, you can make a few aliases in your gitconfig:
 So you can run the tool as a git subcommand:
 
     git hub clone guyzmo/git-repo
+
+For those who like to keep all dotfiles in a git repository, it'd be horrendous to
+store tokens that offer access to your social accounts in a repository… And I'm not
+even talking about those who want to share your dotfiles. But don't worry, once
+it's all configured, you can fire up your [favorite editor](http://www.vim.org) and
+move all the `[gitrepo …]` sections into a new file, like `~/.gitconfig-repos`.
+
+Your can run the following command to do this automagically:
+
+    python -m git_repo.extract_config
+
+if you want to use another path, you can change the defaults:
+
+    python -m git_repo.extract_config ~/.gitconfig-repos ~/.gitconfig
 
 ### Development
 
@@ -253,13 +269,13 @@ To use your own credentials, you can setup the following environment variables:
 * [x] show a nice progress bar, while it's fetching (cf [#15](https://github.com/guyzmo/git-repo/issues/15))
 * [ ] add support for handling gists
   * [x] github support
-  * [ ] gitlab support (cf [#12](https://github.com/guyzmo/git-repo/issues/12))
+  * [x] gitlab support (cf [#12](https://github.com/guyzmo/git-repo/issues/12))
   * [ ] bitbucket support (cf [#13](https://github.com/guyzmo/git-repo/issues/13))
 * [ ] add support for handling pull requests
   * [x] github support
-  * [ ] gitlab support (cf [#10](https://github.com/guyzmo/git-repo/issues/10))
+  * [x] gitlab support (cf [#10](https://github.com/guyzmo/git-repo/issues/10))
   * [ ] bitbucket support (cf [#11](https://github.com/guyzmo/git-repo/issues/11))
-* [ ] add OAuth support for bitbucket (cf [#14](https://github.com/guyzmo/git-repo/issues/14))
+* [ ] add application token support for bitbucket (cf [#14](https://github.com/guyzmo/git-repo/issues/14))
 * [ ] add support for managing SSH keys (cf [#22](https://github.com/guyzmo/git-repo/issues/22))
 * [ ] add support for issues?
 * [ ] add support for gogs (cf [#18](https://github.com/guyzmo/git-repo/issues/18))
@@ -279,6 +295,7 @@ With code contributions coming from:
 * [@buaazp](https://github.com/buaazp) — [commits](https://github.com/guyzmo/git-repo/commits?author=buaazp)
 * [@peterazmanov](https://github.com/peterazmanov) — [commits](https://github.com/guyzmo/git-repo/commits?author=peterazmanov)
 * [@Crazybus](https://github.com/Crazybus) — [commits](https://github.com/guyzmo/git-repo/commits?author=Crazybus)
+* [@rnestler](https://github.com/rnestler) — [commits](https://github.com/guyzmo/git-repo/commits/devel?author=rnestler)
 
 ### License
 

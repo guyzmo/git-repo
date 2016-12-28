@@ -618,7 +618,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
             for i, rq in enumerate(rq_list_data):
                 assert requests[i] == rq
 
-    def action_request_fetch(self, namespace, repository, request, pull=False, fail=False):
+    def action_request_fetch(self, namespace, repository, request, pull=False, fail=False, remote_branch='pull', local_branch='requests'):
         local_slug = self.service.format_path(namespace=namespace, repository=repository, rw=False)
         with self.recorder.use_cassette(self._make_cassette_name()):
             with self.mockup_git(namespace, repository):
@@ -635,10 +635,14 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                         'Resolving deltas: 100% (5126/5126), done.',
                         'From {}:{}/{}'.format(self.service.fqdn, namespace, repository),
                         ' * branch            master     -> FETCH_HEAD',
-                        ' * [new branch]      master     -> {}/master'.format(self.service.name)]).encode('utf-8'),
+                        ' * [new branch]      master     -> {1}/{0}'.format(request, local_branch)]).encode('utf-8'),
                     0),
                     ('git version', b'git version 2.8.0', b'', 0),
-                    ('git fetch --progress -v {0} pull/{1}/head:request/{1}'.format(self.service.name, request), b'', '\n'.join([
+                    ('git fetch --progress -v {0} {2}/{1}/head:{3}/{1}'.format(
+                            self.service.name,
+                            request,
+                            remote_branch,
+                            local_branch), b'', '\n'.join([
                         'POST git-upload-pack (140 bytes)',
                         'remote: Counting objects: 8318, done.',
                         'remote: Compressing objects: 100% (3/3), done.',
@@ -657,7 +661,11 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
             with self.mockup_git(namespace, repository):
                 self.set_mock_popen_commands([
                     ('git version', b'git version 2.8.0', b'', 0),
-                    ('git fetch --progress -v {0} pull/{1}/head:request/{1}'.format(self.service.name, request), b'', '\n'.join([
+                    ('git fetch --progress -v {0} {2}/{1}/head:{3}/{1}'.format(
+                            self.service.name,
+                            request,
+                            remote_branch,
+                            local_branch), b'', '\n'.join([
                         'POST git-upload-pack (140 bytes)',
                         'remote: Counting objects: 8318, done.',
                         'remote: Compressing objects: 100% (3/3), done.',
@@ -665,14 +673,14 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                         'Receiving objects: 100% (8318/8318), 3.59 MiB | 974.00 KiB/s, done.',
                         'Resolving deltas: 100% (5126/5126), done.',
                         'From {}:{}/{}'.format(self.service.fqdn, namespace, repository),
-                        ' * [new branch]      master     -> request/{}'.format(request)]).encode('utf-8'),
+                        ' * [new branch]      master     -> {1}/{0}'.format(request, local_branch)]).encode('utf-8'),
                     0)
                 ])
                 self.service.request_fetch(repository, namespace, request)
 
     def action_request_create(self,
             namespace, repository, branch,
-            title, description,
+            title, description, service,
             create_repository='test_create_requests',
             create_branch='pr-test'):
         '''
@@ -723,7 +731,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                     test.write('La meilleure façon de ne pas avancer est de suivre une idée fixe. J.Prévert')
                 self.repository.git.add('second_file')
                 self.repository.git.commit(message='Second commit')
-                self.repository.git.push('github', create_branch)
+                self.repository.git.push(service, create_branch)
             yield
             if will_record:
                 self.service.delete(create_repository)
@@ -749,7 +757,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                 for i, g in enumerate(gist_list_data):
                     assert gists[i] == g
             else:
-                gist_files = list(self.service.gist_list())
+                gist_files = list(self.service.gist_list(gist))
                 for i, gf in enumerate(gist_list_data):
                     assert gist_files[i] == gf
 
