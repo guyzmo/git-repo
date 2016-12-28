@@ -269,13 +269,13 @@ To use your own credentials, you can setup the following environment variables:
 * [x] show a nice progress bar, while it's fetching (cf [#15](https://github.com/guyzmo/git-repo/issues/15))
 * [ ] add support for handling gists
   * [x] github support
-  * [ ] gitlab support (cf [#12](https://github.com/guyzmo/git-repo/issues/12))
+  * [x] gitlab support (cf [#12](https://github.com/guyzmo/git-repo/issues/12))
   * [ ] bitbucket support (cf [#13](https://github.com/guyzmo/git-repo/issues/13))
 * [ ] add support for handling pull requests
   * [x] github support
-  * [ ] gitlab support (cf [#10](https://github.com/guyzmo/git-repo/issues/10))
+  * [x] gitlab support (cf [#10](https://github.com/guyzmo/git-repo/issues/10))
   * [ ] bitbucket support (cf [#11](https://github.com/guyzmo/git-repo/issues/11))
-* [ ] add OAuth support for bitbucket (cf [#14](https://github.com/guyzmo/git-repo/issues/14))
+* [ ] add application token support for bitbucket (cf [#14](https://github.com/guyzmo/git-repo/issues/14))
 * [ ] add support for managing SSH keys (cf [#22](https://github.com/guyzmo/git-repo/issues/22))
 * [ ] add support for issues?
 * [ ] add support for gogs (cf [#18](https://github.com/guyzmo/git-repo/issues/18))
@@ -295,6 +295,7 @@ With code contributions coming from:
 * [@buaazp](https://github.com/buaazp) — [commits](https://github.com/guyzmo/git-repo/commits?author=buaazp)
 * [@peterazmanov](https://github.com/peterazmanov) — [commits](https://github.com/guyzmo/git-repo/commits?author=peterazmanov)
 * [@Crazybus](https://github.com/Crazybus) — [commits](https://github.com/guyzmo/git-repo/commits?author=Crazybus)
+* [@rnestler](https://github.com/rnestler) — [commits](https://github.com/guyzmo/git-repo/commits/devel?author=rnestler)
 
 ### License
 
