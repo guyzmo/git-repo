@@ -19,10 +19,11 @@ class GitlabService(RepositoryService):
     fqdn = 'gitlab.com'
 
     def __init__(self, *args, **kwarg):
+        self.gl = gitlab.Gitlab(self.url_ro)
         super().__init__(*args, **kwarg)
-        self.gl = gitlab.Gitlab(self.url_ro, ssl_verify=not self.insecure)
 
     def connect(self):
+        self.gl.ssl_verify = not self.insecure
         self.gl.set_url(self.url_ro)
         self.gl.set_token(self._privatekey)
         self.gl.token_auth()
