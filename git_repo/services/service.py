@@ -429,6 +429,9 @@ class RepositoryService:
         '''
         raise NotImplementedError
 
+    def request_create(self, user, repo, from_branch, onto_branch, title, description=None, auto_slug=False):
+        raise NotImplementedError
+
     @property
     def user(self): #pragma: no cover
         raise NotImplementedError

@@ -267,7 +267,7 @@ class GitlabService(RepositoryService):
 
         return snippet.delete()
 
-    def request_create(self, user, repo, local_branch, remote_branch, title, description=None):
+    def request_create(self, user, repo, local_branch, remote_branch, title, description=None, auto_slug=False):
         try:
             repository = self.gl.projects.get('/'.join([user, repo]))
             if not repository:

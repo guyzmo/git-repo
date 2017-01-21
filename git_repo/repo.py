@@ -169,26 +169,29 @@ class GitRepoRunner(KeywordArgumentParser):
         if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys():
             del os.environ['GIT_WORK_TREE']
 
-    def _guess_repo_slug(self, repository, service):
+    def _guess_repo_slug(self, repository, service, resolve_targets=None):
         config = repository.config_reader()
-        target = service.name
+        if resolve_targets:
+            targets = [target.format(service=service.name) for target in resolve_targets]
+        else:
+            targets = (service.name, 'upstream', 'origin')
         for remote in repository.remotes:
-            if remote.name in (target, 'upstream', 'origin'):
+            if remote.name in targets:
                 for url in remote.urls:
                     if url.startswith('https'):
                         if url.endswith('.git'):
                             url = url[:-4]
                         *_, user, name = url.split('/')
                         self.set_repo_slug('/'.join([user, name]))
-                        break
+                        return
                     elif url.startswith('git@'):
                         if url.endswith('.git'):
                             url = url[:-4]
                         _, repo_slug = url.split(':')
                         self.set_repo_slug(repo_slug)
-                        break
+                        return
 
-    def get_service(self, lookup_repository=True):
+    def get_service(self, lookup_repository=True, resolve_targets=None):
         if not lookup_repository:
             service = RepositoryService.get_service(None, self.target)
             service.connect()
@@ -203,7 +206,7 @@ class GitRepoRunner(KeywordArgumentParser):
                 raise FileNotFoundError('Cannot find path to the repository.')
             service = RepositoryService.get_service(repository, self.target)
             if not self.repo_name:
-                self._guess_repo_slug(repository, service)
+                self._guess_repo_slug(repository, service, resolve_targets)
         return service
 
     '''Argument storage'''
@@ -408,13 +411,14 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('request', 'create')
     def do_request_create(self):
-        service = self.get_service()
+        service = self.get_service(resolve_targets=('upstream', '{service}', 'origin'))
         new_request = service.request_create(self.user_name,
                 self.repo_name,
                 self.local_branch,
                 self.remote_branch,
                 self.title,
-                self.message)
+                self.message,
+                self.repo_slug != None)
         log.info('Successfully created request of `{local}` onto `{}:{remote}`, with id `{ref}`!'.format(
             '/'.join([self.user_name, self.repo_name]),
             **new_request)
