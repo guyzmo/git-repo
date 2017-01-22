@@ -78,7 +78,7 @@ class RepositoryService:
             section = 'gitrepo "{}"'.format(cls.name)
             for option, value in kwarg.items():
                 if option not in cls.config_options:
-                    raise ArgumentError('Option {} is invalid and cannot be setup.')
+                    raise ArgumentError('Option {} is invalid and cannot be setup.'.format(option))
                 config.set_value(section, option, value)
 
     @classmethod
@@ -120,7 +120,7 @@ class RepositoryService:
             if 'type' not in config:
                 raise ValueError('Missing service type for custom service.')
             if config['type'] not in cls.service_map:
-                raise ValueError('Service type {} does not exists.')
+                raise ValueError('Service type {} does not exists.'.format(config['type']))
             service = cls.service_map.get(config['type'], cls)
 
         cls._current = service(repository, config)
@@ -427,6 +427,9 @@ class RepositoryService:
 
         Meant to be implemented by subclasses
         '''
+        raise NotImplementedError
+
+    def request_create(self, user, repo, from_branch, onto_branch, title, description=None, auto_slug=False):
         raise NotImplementedError
 
     @property

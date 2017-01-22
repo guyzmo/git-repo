@@ -19,10 +19,11 @@ class GitlabService(RepositoryService):
     fqdn = 'gitlab.com'
 
     def __init__(self, *args, **kwarg):
+        self.gl = gitlab.Gitlab(self.url_ro)
         super().__init__(*args, **kwarg)
-        self.gl = gitlab.Gitlab(self.url_ro, ssl_verify=not self.insecure)
 
     def connect(self):
+        self.gl.ssl_verify = not self.insecure
         self.gl.set_url(self.url_ro)
         self.gl.set_token(self._privatekey)
         self.gl.token_auth()
@@ -266,7 +267,7 @@ class GitlabService(RepositoryService):
 
         return snippet.delete()
 
-    def request_create(self, user, repo, local_branch, remote_branch, title, description=None):
+    def request_create(self, user, repo, local_branch, remote_branch, title, description=None, auto_slug=False):
         try:
             repository = self.gl.projects.get('/'.join([user, repo]))
             if not repository:

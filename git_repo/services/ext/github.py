@@ -231,18 +231,32 @@ class GithubService(RepositoryService):
             raise ResourceNotFoundError('Could not find gist')
         gist.delete()
 
-    def request_create(self, user, repo, local_branch, remote_branch, title, description=None):
+    def request_create(self, user, repo, from_branch, onto_branch, title, description=None, auto_slug=False):
         repository = self.gh.repository(user, repo)
         if not repository:
             raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
-        if not remote_branch:
-            remote_branch =  self.repository.active_branch.name
-        if not local_branch:
-            local_branch = repository.master_branch or 'master'
+        # when no repo slug has been given to `git-repo X request create`
+        if auto_slug:
+            # then chances are current repository is a fork of the target
+            # repository we want to push to
+            if repository.fork:
+                user = repository.parent.owner.login
+                repo = repository.parent.name
+                from_branch = from_branch or repository.parent.default_branch
+        # if no onto branch has been defined, take the default one
+        # with a fallback on master
+        if not from_branch:
+            from_branch = self.repository.active_branch.name
+        # if no from branch has been defined, chances are we want to push
+        # the branch we're currently working on
+        if not onto_branch:
+            onto_branch = repository.default_branch or 'master'
+        if self.username != repository.owner.login:
+            from_branch = ':'.join([self.username, from_branch])
         try:
             request = repository.create_pull(title,
-                    base=local_branch,
-                    head=':'.join([user, remote_branch]),
+                    base=onto_branch,
+                    head=from_branch,
                     body=description)
         except github3.models.GitHubError as err:
             if err.code == 422:
@@ -250,10 +264,17 @@ class GithubService(RepositoryService):
                     for error in err.errors:
                         if 'message' in error:
                             raise ResourceError(error['message'])
+                        if error.get('code', '') == 'invalid':
+                            if error.get('field', '') == 'head':
+                                raise ResourceError(
+                                        'Invalid source branch. ' \
+                                        'Check it has been pushed first.')
+                            if error.get('field', '') == 'base':
+                                raise ResourceError( 'Invalid target branch.')
                     raise ResourceError("Unhandled formatting error: {}".format(err.errors))
             raise ResourceError(err.message)
 
-        return {'local': local_branch, 'remote': remote_branch, 'ref': request.number}
+        return {'local': from_branch, 'remote': onto_branch, 'ref': request.number}
 
     def request_list(self, user, repo):
         repository = self.gh.repository(user, repo)

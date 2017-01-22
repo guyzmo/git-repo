@@ -409,7 +409,7 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', 'This is a test') == seen_args
+        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -424,7 +424,7 @@ class Test_Main(GitRepoMainTestCase):
                     '<title>': 'This is a test',
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', None) == seen_args
+        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', None, True) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -440,7 +440,7 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', 'bad', 'base-test', 'This is a test', 'This is a test') == seen_args
+        assert ('guyzmo', 'test', 'bad', 'base-test', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Fatal error: bad branch to request!' in caplog.text
@@ -456,7 +456,7 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', 'pr-test', 'bad', 'This is a test', 'This is a test') == seen_args
+        assert ('guyzmo', 'test', 'pr-test', 'bad', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Fatal error: bad branch to request!' in caplog.text
@@ -471,7 +471,7 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', None, 'base-test', 'This is a test', 'This is a test') == seen_args
+        assert ('guyzmo', 'test', None, 'base-test', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -486,7 +486,7 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', 'pr-test', None, 'This is a test', 'This is a test') == seen_args
+        assert ('guyzmo', 'test', 'pr-test', None, 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -562,7 +562,7 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'git-repo', 'pr-test', 'base-test', 'This is a test', 'This is a test') == seen_args
+        assert ('guyzmo', 'git-repo', 'pr-test', 'base-test', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/git-repo:base-test`, with id `42`!' in caplog.text
