@@ -117,13 +117,15 @@ class GithubService(RepositoryService):
                         'F' if repo.fork else ' ',               # is a fork?
                         'P' if repo.private else ' ',            # is private?
                     ])
+                    nb_pulls = len(list(repo.iter_pulls()))
+                    nb_issues = len(list(repo.iter_issues())) - nb_pulls
                     print('\t'.join([
                         # status
                         status,
                         # stats
                         str(len(list(repo.iter_commits()))),          # number of commits
-                        str(len(list(repo.iter_pulls()))),            # number of pulls
-                        str(len(list(repo.iter_issues()))),           # number of issues
+                        str(nb_pulls),                                # number of pulls
+                        str(nb_issues),                               # number of issues
                         str(repo.forks),                              # number of forks
                         str(len(list(repo.iter_contributors()))),     # number of contributors
                         str(repo.watchers),                           # number of subscribers
@@ -139,15 +141,15 @@ class GithubService(RepositoryService):
                             # status
                             'E',
                             # stats
-                            'ø',          # number of commits
-                            'ø',            # number of pulls
-                            'ø',           # number of issues
-                            'ø',                              # number of forks
+                            'ø',     # number of commits
+                            'ø',     # number of pulls
+                            'ø',     # number of issues
+                            'ø',     # number of forks
                             'ø',     # number of contributors
-                            'ø',                           # number of subscribers
-                            'ø',                    # number of ♥
+                            'ø',     # number of subscribers
+                            'ø',     # number of ♥
                             # info
-                            '?',                      # language
+                            '?',     # language
                             repo.updated_at.strftime(date_fmt),      # date
                             '/'.join([user, repo.name]),             # name
                         ]))
