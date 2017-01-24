@@ -402,7 +402,7 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('request', 'ls')
     @register_action('request', 'list')
     def do_request_list(self):
-        service = self.get_service()
+        service = self.get_service(lookup_repository=self.repo_slug == None)
         log.info('List of open requests to merge:')
         log.info(" {}\t{}\t{}".format('id', 'title'.ljust(60), 'URL'))
         for pr in service.request_list(self.user_name, self.repo_name):
