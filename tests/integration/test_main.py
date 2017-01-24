@@ -306,6 +306,12 @@ class Test_Main(GitRepoMainTestCase):
         assert out ==  '  1\tdesc1                                                       \thttp://request/1\n  2\tdesc2                                                       \thttp://request/2\n  3\tdesc3                                                       \thttp://request/3\n'
         assert 'id' in caplog.text and 'title' in caplog.text and 'URL' in caplog.text
 
+    def test_request_list__with_repo_slug__no_repo(self, capsys, caplog):
+        repo_slug, seen_args = self.main_request_list('guyzmo/git-repo', 0, args={})
+        out, err = capsys.readouterr()
+        assert out ==  '  1\tdesc1                                                       \thttp://request/1\n  2\tdesc2                                                       \thttp://request/2\n  3\tdesc3                                                       \thttp://request/3\n'
+        assert 'id' in caplog.text and 'title' in caplog.text and 'URL' in caplog.text
+
     # Commented out because this does not work on travis CI
     # def test_request_list__no_repo_slug__git(self, capsys, caplog):
     #     from subprocess import call
