@@ -216,14 +216,15 @@ class RepositoryService:
             remote.pull(progress=pb)
         print()
 
-    def fetch(self, remote, remote_branch, local_branch):
+    def fetch(self, remote, remote_branch, local_branch, force=False):
         '''Pull a repository
         :param remote: git-remote instance
         :param branch: name of the branch to pull
         '''
         pb = ProgressBar()
         pb.setup(self.name)
-        remote.fetch(':'.join([remote_branch, local_branch]), progress=pb)
+        remote.fetch(':'.join([remote_branch, local_branch]),
+                update_head_ok=True, force=force, progress=pb)
         print()
 
     def clone(self, user, repo, branch='master', rw=True):
@@ -420,7 +421,7 @@ class RepositoryService:
         '''
         raise NotImplementedError
 
-    def request_fetch(self, user, repo, request, pull=False): #pragma: no cover
+    def request_fetch(self, user, repo, request, pull=False, force=False): #pragma: no cover
         '''Fetches given request as a branch, and switch if pull is true
 
         :param repo: name of the repository to create

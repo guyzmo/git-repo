@@ -283,7 +283,7 @@ class GithubService(RepositoryService):
         for pull in repository.iter_pulls():
             yield ( str(pull.number), pull.title, pull.links['html'] )
 
-    def request_fetch(self, user, repo, request, pull=False):
+    def request_fetch(self, user, repo, request, pull=False, force=False):
         if pull:
             raise NotImplementedError('Pull operation on requests for merge are not yet supported')
         try:
@@ -293,7 +293,8 @@ class GithubService(RepositoryService):
                     self.fetch(
                         remote,
                         'pull/{}/head'.format(request),
-                        local_branch_name
+                        local_branch_name,
+                        force=force
                     )
                     return local_branch_name
             else:

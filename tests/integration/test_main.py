@@ -366,7 +366,7 @@ class Test_Main(GitRepoMainTestCase):
                 args={'<request>': '42'})
         out, err = capsys.readouterr()
         assert ('guyzmo', 'git-repo', '42') == seen_args
-        assert {} == extra_args
+        assert {'force': False} == extra_args
         assert out == ''
         assert 'Successfully fetched request id `42` of `guyzmo/git-repo` into `pr/42`!' in caplog.text
 
@@ -378,7 +378,7 @@ class Test_Main(GitRepoMainTestCase):
     #     seen_args, extra_args = self.main_request_fetch(rc=0, args={'<request>': '42'})
     #     out, err = capsys.readouterr()
     #     assert ('guyzmo', 'git-repo', '42') == seen_args
-    #     assert {} == extra_args
+    #     assert {'force': False} == extra_args
     #     assert out == ''
     #     assert 'Successfully fetched request id `42` of `guyzmo/git-repo` into `pr/42`!' in caplog.text
 
@@ -389,7 +389,7 @@ class Test_Main(GitRepoMainTestCase):
         seen_args, extra_args = self.main_request_fetch(rc=0, args={'<request>': '42'})
         out, err = capsys.readouterr()
         assert ('guyzmo', 'git-repo', '42') == seen_args
-        assert {} == extra_args
+        assert {'force': False} == extra_args
         assert out == ''
         assert 'Successfully fetched request id `42` of `guyzmo/git-repo` into `pr/42`!' in caplog.text
 
@@ -400,7 +400,7 @@ class Test_Main(GitRepoMainTestCase):
                 args={'<request>': 'bad', '--verbose': 0})
         out, err = capsys.readouterr()
         assert ('guyzmo', 'git-repo', 'bad') == seen_args
-        assert {} == extra_args
+        assert {'force': False} == extra_args
         assert out == ''
         assert 'Fatal error: bad request for merge!' in caplog.text
 
@@ -554,7 +554,7 @@ class Test_Main(GitRepoMainTestCase):
                 args={'<request>': '42'})
         out, err = capsys.readouterr()
         assert ('guyzmo', 'git-repo', '42') == seen_args
-        assert {} == extra_args
+        assert {'force': False} == extra_args
         assert out == ''
         assert 'Successfully fetched request id `42` of `guyzmo/git-repo` into `pr/42`!' in caplog.text
 
