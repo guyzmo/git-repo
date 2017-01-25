@@ -661,7 +661,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
             with self.mockup_git(namespace, repository):
                 self.set_mock_popen_commands([
                     ('git version', b'git version 2.8.0', b'', 0),
-                    ('git fetch --progress -v {0} {2}/{1}/head:{3}/{1}'.format(
+                    ('git fetch --progress --update-head-ok -v {0} {2}/{1}/head:{3}/{1}'.format(
                             self.service.name,
                             request,
                             remote_branch,

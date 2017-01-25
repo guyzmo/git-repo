@@ -15,12 +15,12 @@ Usage:
     {self} [--path=<path>] [-v...] <target> clone <user>/<repo> [<repo> [<branch>]]
     {self} [--path=<path>] [-v...] <target> add <user>/<repo> [<name>] [--tracking=<branch>] [-a]
     {self} [--path=<path>] [-v...] <target> request (list|ls)
-    {self} [--path=<path>] [-v...] <target> request fetch <request>
+    {self} [--path=<path>] [-v...] <target> request fetch <request> [-f]
     {self} [--path=<path>] [-v...] <target> request create <title> [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request create <local_branch> <title> [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request create <remote_branch> <local_branch> <title> [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> (list|ls)
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> fetch <request>
+    {self} [--path=<path>] [-v...] <target> request <user>/<repo> fetch <request> [-f]
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <title> [--branch=<remote>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <local_branch> <title> [--branch=<remote>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <remote_branch> <local_branch> <title> [--branch=<remote>] [--message=<message>]
@@ -428,7 +428,7 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('request', 'fetch')
     def do_request_fetch(self):
         service = self.get_service()
-        new_branch = service.request_fetch(self.user_name, self.repo_name, self.request)
+        new_branch = service.request_fetch(self.user_name, self.repo_name, self.request, force=self.force)
         log.info('Successfully fetched request id `{}` of `{}` into `{}`!'.format(
             self.request,
             self.repo_slug,

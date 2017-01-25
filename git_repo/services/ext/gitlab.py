@@ -307,7 +307,7 @@ class GitlabService(RepositoryService):
                         )
                     )
 
-    def request_fetch(self, user, repo, request, pull=False):
+    def request_fetch(self, user, repo, request, pull=False, force=False):
         if pull:
             raise NotImplementedError('Pull operation on requests for merge are not yet supported')
         try:
@@ -317,7 +317,8 @@ class GitlabService(RepositoryService):
                     self.fetch(
                         remote,
                        'merge_requests/{}/head'.format(request),
-                        local_branch_name
+                        local_branch_name,
+                        force
                     )
                     return local_branch_name
             else:
