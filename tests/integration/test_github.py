@@ -16,7 +16,7 @@ log = logging.getLogger('test.github')
 from tests.helpers import GitRepoTestCase
 
 from git_repo.services.service import github
-from git_repo.exceptions import ResourceExistsError, ResourceNotFoundError, ResourceError
+from git_repo.exceptions import ResourceExistsError, ResourceNotFoundError, ResourceError, ArgumentError
 
 
 class Test_Github(GitRepoTestCase):
@@ -33,6 +33,7 @@ class Test_Github(GitRepoTestCase):
         return github.GithubService(c=dict())
 
     def get_requests_session(self):
+        self.service.gh._session.HIJACKED=True
         return self.service.gh._session
 
     def test_00_fork(self):
@@ -364,4 +365,336 @@ class Test_Github(GitRepoTestCase):
                 ['F ', '92', '0', '0', '0', '1', '0', '0', 'Python', 'Mar 30 2016', 'git-repo-test/git-repo']]
         assert 'GET https://api.github.com/users/git-repo-test/repos' in caplog.text
 
+    def test_35_issue_label_list(self):
+        content = self.action_issue_label_list('guyzmo', 'git-repo')
+        assert content == [
+                'Name',
+                'backlog',
+                'blocking',
+                'bug',
+                'design',
+                'duplicate',
+                'enhancement',
+                'help wanted',
+                'in progress',
+                'invalid',
+                'question',
+                'ready',
+                'wontfix',
+                ]
+
+    def test_36_issue_milestone_list(self):
+        content = self.action_issue_milestone_list('guyzmo', 'git-repo')
+        assert content == [
+                'Name',
+                '1.8',
+                '∞',
+                '2.0',
+                '1.9',
+                '1.10',
+                ]
+
+    def test_37_issue_list(self):
+        content = self.action_issue_list('git-services', 'git-repo-test')
+        assert content == [
+            (None, 'Id', 'Labels', 'Title', 'URL', ''),
+            (True, '7', 'bug,enhancement', 'This is a test', 'https://github.com/git-services/git-repo-test/issues/7', None),
+            (True, '6', '', 'test pr #6', 'https://github.com/git-services/git-repo-test/pull/6', {'diff_url': 'https://github.com/git-services/git-repo-test/pull/6.diff', 'html_url': 'https://github.com/git-services/git-repo-test/pull/6', 'patch_url': 'https://github.com/git-services/git-repo-test/pull/6.patch', 'url': 'https://api.github.com/repos/git-services/git-repo-test/pulls/6'}),
+            (True, '5', '', 'test pr #5', 'https://github.com/git-services/git-repo-test/pull/5', {'diff_url': 'https://github.com/git-services/git-repo-test/pull/5.diff', 'html_url': 'https://github.com/git-services/git-repo-test/pull/5', 'patch_url': 'https://github.com/git-services/git-repo-test/pull/5.patch', 'url': 'https://api.github.com/repos/git-services/git-repo-test/pulls/5'}),
+            (True, '4', '', 'test pr #4', 'https://github.com/git-services/git-repo-test/pull/4', {'diff_url': 'https://github.com/git-services/git-repo-test/pull/4.diff', 'html_url': 'https://github.com/git-services/git-repo-test/pull/4', 'patch_url': 'https://github.com/git-services/git-repo-test/pull/4.patch', 'url': 'https://api.github.com/repos/git-services/git-repo-test/pulls/4'}),
+            (True, '3', '', 'test pr #3', 'https://github.com/git-services/git-repo-test/pull/3', {'diff_url': 'https://github.com/git-services/git-repo-test/pull/3.diff', 'html_url': 'https://github.com/git-services/git-repo-test/pull/3', 'patch_url': 'https://github.com/git-services/git-repo-test/pull/3.patch', 'url': 'https://api.github.com/repos/git-services/git-repo-test/pulls/3'}),
+            (True, '2', '', 'test pr #2', 'https://github.com/git-services/git-repo-test/pull/2', {'diff_url': 'https://github.com/git-services/git-repo-test/pull/2.diff', 'html_url': 'https://github.com/git-services/git-repo-test/pull/2', 'patch_url': 'https://github.com/git-services/git-repo-test/pull/2.patch', 'url': 'https://api.github.com/repos/git-services/git-repo-test/pulls/2'}),
+            (True, '1', '', 'test pr #1', 'https://github.com/git-services/git-repo-test/pull/1', {'diff_url': 'https://github.com/git-services/git-repo-test/pull/1.diff', 'html_url': 'https://github.com/git-services/git-repo-test/pull/1', 'patch_url': 'https://github.com/git-services/git-repo-test/pull/1.patch', 'url': 'https://api.github.com/repos/git-services/git-repo-test/pulls/1'})
+        ]
+
+    def test_38_issue_grab(self):
+        content = self.action_issue_grab('git-services', 'git-repo-test', '7')
+        assert content == {
+            'assignee': None,
+            'body': 'How successful is that test?',
+            'closed_at': None,
+            'closed_by': 'guyzmo',
+            'creation': '2017-01-27T14:49:52+00:00',
+            'id': 7,
+            'labels': ['bug', 'enhancement'],
+            'milestone': None,
+            'poster': 'guyzmo',
+            'repository': 'git-services/git-repo-test',
+            'state': 'open',
+            'title': 'This is a test',
+            'uri': 'https://github.com/git-services/git-repo-test/issues/7'
+        }
+
+    def test_39_issue_edit(self):
+        def edit_cb(title, body):
+            assert title == 'coin 🦆'
+            assert body == 'meuh ♥👍\n\n'
+            return {
+                'title': 'This is a test',
+                'body': 'How successful is that test?'
+            }
+        assert self.action_issue_edit('git-services', 'git-repo-test', '7', edit_cb)
+
+    '''Testing issue labels'''
+
+    def test_40_1_issue_get__label_one(self):
+        content = self.action_issue_get(
+                'git-services', 'git-repo-test',
+                'labels', '', ['4'])
+        assert content == [
+                'Id\tValue',
+                '4\thelp wanted,invalid,question',
+                ]
+
+    def test_40_1_issue_get__label_multiple(self):
+        content = self.action_issue_get(
+                'git-services', 'git-repo-test',
+                'labels', '', ['2', '3', '4'])
+        assert content == [
+                'Id\tValue',
+                '4\thelp wanted,invalid,question',
+                '3\thelp wanted,invalid,question',
+                '2\thelp wanted,invalid,question',
+                ]
+
+    def test_40_1_issue_get__label_none(self):
+        content = self.action_issue_get(
+                'git-services', 'git-repo-test',
+                'labels', '', [])
+        assert content == [
+                'Id\tValue',
+                '7\tenhancement,question',
+                '6\tbug,help wanted,invalid,question',
+                '5\tbug,help wanted,invalid,question',
+                '4\thelp wanted,invalid,question',
+                '3\thelp wanted,invalid,question',
+                '2\thelp wanted,invalid,question',
+                '1\thelp wanted,invalid,question'
+                ]
+
+    def test_40_1_issue_get__label_missing(self):
+        content = self.action_issue_get(
+                'git-services', 'git-repo-test',
+                'labels', '', ['42'])
+        assert content == ['Id\tValue']
+
+    def test_40_1_issue_set__label_single__one_issue(self):
+        assert self.action_issue_set(
+                'git-services', 'git-repo-test',
+                'label', 'question', '', ['7'])
+
+    def test_40_1_issue_set__label_single__two_issues(self):
+        assert self.action_issue_set(
+                'git-services', 'git-repo-test',
+                'label', 'question', '', ['5', '6'])
+
+    def test_40_1_issue_set__label_multiple__one_issue(self):
+        assert self.action_issue_set(
+                'git-services', 'git-repo-test',
+                'label', 'question,bug', '', ['7'])
+
+    def test_40_1_issue_set__label_multiple__two_issues(self):
+        assert self.action_issue_set(
+                'git-services', 'git-repo-test',
+                'label', 'question,bug', '', ['5', '6'])
+
+    def test_40_1_issue_set__label_not_exists(self):
+        assert self.action_issue_set(
+                'git-services', 'git-repo-test',
+                'label', 'invalid', '', [])
+
+    def test_40_1_issue_set__label_multiple_w_not_exists(self):
+        assert self.action_issue_set(
+                'git-services', 'git-repo-test',
+                'label', 'bug,invalid,question', '', ['7'])
+
+    def test_40_1_issue_set__label_with_spaces(self):
+        assert self.action_issue_set(
+                'git-services', 'git-repo-test',
+                'label', 'help wanted', '', ['7'])
+
+    def test_40_2_issue_unset__label_single(self):
+        assert self.action_issue_unset(
+                'git-services', 'git-repo-test',
+                'label', 'question', '', ['7'])
+
+    def test_40_2_issue_unset__label_multiple(self):
+        assert self.action_issue_unset(
+                'git-services', 'git-repo-test',
+                'label', 'question,bug', '', ['7'])
+
+    def test_40_2_issue_unset__label_not_exists(self):
+        assert self.action_issue_unset(
+                'git-services', 'git-repo-test',
+                'label', 'invalid', '', ['7'])
+
+    def test_40_2_issue_unset__label_multiple_w_not_exists(self):
+        assert self.action_issue_unset(
+                'git-services', 'git-repo-test',
+                'label', 'bug,invalid,question', '', ['7'])
+
+    def test_40_2_issue_unset__label_with_spaces(self):
+        assert self.action_issue_unset(
+                'git-services', 'git-repo-test',
+                'label', 'help wanted', '', ['7'])
+
+    def test_40_3_issue_toggle__label_single(self):
+        assert self.action_issue_toggle(
+                'git-services', 'git-repo-test',
+                'label', 'question', '', ['7'])
+
+    def test_40_3_issue_toggle__label_multiple(self):
+        assert self.action_issue_toggle(
+                'git-services', 'git-repo-test',
+                'label', 'question,bug', '', ['7'])
+
+    def test_40_3_issue_toggle__label_not_exists(self):
+        assert self.action_issue_toggle(
+                'git-services', 'git-repo-test',
+                'label', 'invalid', '', ['7'])
+
+    def test_40_3_issue_toggle__label_multiple_w_not_exists(self):
+        assert self.action_issue_toggle(
+                'git-services', 'git-repo-test',
+                'label', 'bug,invalid,question', '', ['7'])
+
+    def test_40_3_issue_toggle__label_with_spaces(self):
+        assert self.action_issue_toggle(
+                'git-services', 'git-repo-test',
+                'label', 'help wanted', '', ['7'])
+
+    def test_40_3_issue_toggle__label__filter(self):
+        assert self.action_issue_toggle(
+                'git-services', 'git-repo-test',
+                'label', 'help wanted', 'label:question', [])
+
+    '''Testing issue milestones'''
+
+    def test_41_issue_get__milestone(self):
+        assert self.action_issue_get(
+                'git-services', 'git-repo-test',
+                'milestone', '', ['4']) == ['Id\tValue', '4\tpigs can fly']
+
+    def test_41_issue_set__milestone(self):
+        assert self.action_issue_set(
+                'git-services', 'git-repo-test',
+                'milestone', 'pigs can fly', '', ['7'])
+
+    def test_41_issue_unset__milestone(self):
+        assert self.action_issue_unset(
+                'git-services', 'git-repo-test',
+                'milestone', None, '', ['7'])
+
+    def test_41_issue_toggle__milestone(self):
+        assert self.action_issue_toggle(
+                'git-services', 'git-repo-test',
+                'milestone', 'pigs can fly', '', ['7'])
+
+    def test_41_1_issue_set__milestone_not_exists(self):
+        with pytest.raises(ArgumentError):
+            assert self.action_issue_set(
+                    'git-services', 'git-repo-test',
+                    'milestone', 'invalid', '', ['7'])
+
+    def test_41_1_issue_unset__milestone_not_exists(self):
+        with pytest.raises(ArgumentError):
+            assert self.action_issue_unset(
+                    'git-services', 'git-repo-test',
+                    'milestone', 'invalid', '', ['7'])
+
+    def test_41_3_issue_toggle__milestone_not_exists(self):
+        with pytest.raises(ArgumentError):
+            assert self.action_issue_toggle(
+                    'git-services', 'git-repo-test',
+                    'milestone', 'invalid', '', ['7'])
+
+    '''Testing issue open'''
+
+    def test_42_0_issue_get__open(self):
+        assert self.action_issue_get(
+                'git-services', 'git-repo-test',
+                'open', '', ['7']) == ['Id\tValue', '7\tTrue']
+
+    def test_42_1_issue_set__open(self):
+        assert self.action_issue_set(
+                'git-services', 'git-repo-test',
+                'open', None, '', ['7'])
+
+    def test_42_2_issue_unset__open(self):
+        assert self.action_issue_unset(
+                'git-services', 'git-repo-test',
+                'open', None, '', ['7'])
+
+    def test_42_3_issue_toggle__open(self):
+        assert self.action_issue_toggle(
+                'git-services', 'git-repo-test',
+                'open', None, '', ['7'])
+
+    '''testing set closed'''
+
+    def test_43_0_issue_get__close(self):
+        assert self.action_issue_get(
+                'git-services', 'git-repo-test',
+                'close', '', ['7']) == ['Id\tValue', '7\tFalse']
+
+    def test_43_1_issue_set__close(self):
+        assert self.action_issue_set(
+                'git-services', 'git-repo-test',
+                'close', None, '', ['7'])
+
+    def test_43_2_issue_unset__close(self):
+        assert self.action_issue_unset(
+                'git-services', 'git-repo-test',
+                'close', None, '', ['7'])
+
+    def test_43_3_issue_toggle__close(self):
+        assert self.action_issue_toggle(
+                'git-services', 'git-repo-test',
+                'close', None, '', ['7'])
+
+    '''testing set read'''
+
+    def test_44_0_issue_get__read(self):
+        assert self.action_issue_get(
+                'git-services', 'git-repo-test',
+                'read', '',  ['7']) == ['Id\tValue', '7\tTrue']
+
+    def test_44_1_issue_set__read(self):
+        assert self.action_issue_set(
+                'git-services', 'git-repo-test',
+                'read', None, '', ['7'])
+
+    def test_44_2_issue_unset__read(self):
+        assert self.action_issue_unset(
+                'git-services', 'git-repo-test',
+                'read', None, '', ['7'])
+
+    def test_44_3_issue_toggle__read(self):
+        assert self.action_issue_toggle(
+                'git-services', 'git-repo-test',
+                'read', None, '', ['7'])
+
+    '''testing set subscription'''
+
+    def test_45_0_issue_get__subscription(self):
+        assert self.action_issue_get(
+                'git-services', 'git-repo-test',
+                'subscription', '', ['5', '6', '7']) == [
+                        'Id\tValue', '7\t?', '6\t?', '5\t?'
+                        ]
+
+    def test_45_1_issue_set__subscription(self):
+        assert self.action_issue_set(
+                'git-services', 'git-repo-test',
+                'subscription', None, '', ['7'])
+
+    def test_45_2_issue_unset__subscription(self):
+        assert self.action_issue_unset(
+                'git-services', 'git-repo-test',
+                'subscription', None, '', ['7'])
+
+    def test_45_3_issue_toggle__subscription(self):
+        assert self.action_issue_toggle(
+                'git-services', 'git-repo-test',
+                'subscription', None, '', ['7'])
 

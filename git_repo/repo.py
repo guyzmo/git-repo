@@ -29,6 +29,22 @@ Usage:
     {self} [--path=<path>] [-v...] <target> (gist|snippet) fetch <gist> [<gist_file>]
     {self} [--path=<path>] [-v...] <target> (gist|snippet) create [--secret] <description> [<gist_path> <gist_path>...]
     {self} [--path=<path>] [-v...] <target> (gist|snippet) delete <gist> [-f]
+    {self} [--path=<path>] [-v...] <target> issue (list|ls) [--filter=<filter>]
+    {self} [--path=<path>] [-v...] <target> issue (list|ls) [<action>|<issue_id>]
+    {self} [--path=<path>] [-v...] <target> issue get <action> [--filter=<filter>] [<issue_id> <issue_id>...]
+    {self} [--path=<path>] [-v...] <target> issue set <action> <value> [--filter=<filter>] [<issue_id> <issue_id>...]
+    {self} [--path=<path>] [-v...] <target> issue unset <action> [--filter=<filter>] [<issue_id> <issue_id>...]
+    {self} [--path=<path>] [-v...] <target> issue toggle <action> <value> [--filter=<filter>] [<issue_id> <issue_id>...]
+    {self} [--path=<path>] [-v...] <target> issue edit [<issue_id>]
+    {self} [--path=<path>] [-v...] <target> issue <user>/<repo> (list|ls) [--filter=<filter>]
+    {self} [--path=<path>] [-v...] <target> issue <user>/<repo> (list|ls) [<action>|<issue_id>]
+    {self} [--path=<path>] [-v...] <target> issue <user>/<repo> get <action> [--filter=<filter>] [<issue_id> <issue_id>...]
+    {self} [--path=<path>] [-v...] <target> issue <user>/<repo> set <action> [<value>] [--filter=<filter>] [<issue_id> <issue_id>...]
+    {self} [--path=<path>] [-v...] <target> issue <user>/<repo> unset <action> [<value>] [--filter=<filter>] [<issue_id> <issue_id>...]
+    {self} [--path=<path>] [-v...] <target> issue <user>/<repo> toggle <action> [<value>] [--filter=<filter>] [<issue_id> <issue_id>...]
+    {self} [--path=<path>] [-v...] <target> issue <user>/<repo> edit [<issue_id>]
+    {self} [--path=<path>] [-v...] <target> issue <user>/<repo> add <action> <value>
+    {self} [--path=<path>] [-v...] <target> issue <user>/<repo> delete [-f] <action>
     {self} [--path=<path>] [-v...] <target> config [--config=<gitconfig>]
     {self} [-v...] config [--config=<gitconfig>]
     {self} --help
@@ -44,6 +60,7 @@ Commands:
     list                     Lists the repositories for a given user
     gist                     Manages gist files
     request                  Handles requests for merge
+    issue                    Handles issues
     open                     Open the given or current repository in a browser
     config                   Run authentication process and configure the tool
 
@@ -91,6 +108,16 @@ Options for gist:
 Options for request:
     -t,--title=<title>       Title to give to the request for merge
     -m,--message=<message>   Description for the request for merge
+
+Options for issues:
+    get                      Gets a value for the given action listed below
+    set                      Sets a value for the given action listed below
+    unset                    Unsets a value for the given action listed below
+    toggle                   Toggles a value for the given action listed below
+    <action>                 Action: label, milestone or mark
+    <value>                  Value for what shall be set
+    --filter=<filter>        Filters the list of issues [Default: ]
+    <issue_id>               Issue's number
 
 Configuration options:
     alias                    Name to use for the git remote
@@ -146,6 +173,29 @@ from git.exc import InvalidGitRepositoryError, NoSuchPathError, BadName
 import re
 
 EXTRACT_URL_RE = re.compile('[^:]*(://|@)[^/]*/')
+
+def blue(s):
+    return '\033[94m{}\033[0m'.format(s)
+def green(s):
+    return '\033[92m{}\033[0m'.format(s)
+def red(s):
+    return '\033[91m{}\033[0m'.format(s)
+
+def confirm(what, where):
+    '''
+    Method to show a CLI based confirmation message, waiting for a yes/no answer.
+    "what" and "where" are used to better define the message.
+    '''
+    ans = input('Are you sure you want to delete the '
+                '{} {} from the service?\n[yN]> '.format(what, where))
+    if 'y' in ans:
+        ans = input('Are you really sure? there\'s no coming back!\n'
+                    '[type \'burn!\' to proceed]> ')
+        if 'burn!' != ans:
+            return False
+    else:
+        return False
+    return True
 
 
 class GitRepoRunner(KeywordArgumentParser):
@@ -246,6 +296,14 @@ class GitRepoRunner(KeywordArgumentParser):
             branch = 'master'
 
         self.branch = branch
+
+    @store_parameter('<action>')
+    def set_action(self, action):
+        self.action = action
+
+    @store_parameter('<issue_id>')
+    def set_issue_action(self, issue_id):
+        self.issues = issue_id
 
     @store_parameter('<repo>')
     def set_target_repo(self, repo):
@@ -510,6 +568,185 @@ class GitRepoRunner(KeywordArgumentParser):
         service.gist_delete(self.gist_ref)
         log.info('Successfully deleted gist!')
         return 0
+
+    '''Issues'''
+
+    @register_action('issue', 'ls')
+    @register_action('issue', 'list')
+    def do_issue_list(self):
+        service = self.get_service()
+        if self.action:
+            if self.action in ('milestones', 'milestone', 'm'):
+                milestones = service.issue_milestone_list(self.user_name, self.repo_name)
+                print(blue(next(milestones)), file=sys.stderr)
+                for milestone in milestones:
+                    print(milestone)
+                return 0
+            elif self.action in ('labels', 'label', 'l'):
+                labels = service.issue_label_list(self.user_name, self.repo_name)
+                print(blue(next(labels)), file=sys.stderr)
+                for label in labels:
+                    print(label)
+                return 0
+            elif self.action in ('mark', 'm'):
+                print('opened\nclosed\nread')
+                return 0
+            else:
+                issue = service.issue_grab(self.user_name, self.repo_name, self.action)
+                print('\n'.join([
+                        'Issue #{} ({}) by @{}'.format(
+                            issue['id'],
+                            green(issue['state']) if issue['state'] == 'open' else red(issue['state']),
+                            issue['poster']),
+                        'Created at:\t{} {}'.format(
+                            issue['creation'],
+                            '' if not issue['state'] == 'closed' else 'and closed at: {} by @{}'.format(
+                                issue['closed_at'], issue['closed_by']
+                            )
+                        ),
+                        'Assigned:\t{}'.format('@{}'.format(issue['assignee']) or 'ø'),
+                        'Milestone:\t{}'.format(issue['milestone']),
+                        'Labels:\t\t{}'.format(', '.join(issue['labels'])),
+                        'URI:\t\t{}'.format(issue['uri']),
+                        'Title:\t\t{}'.format(issue['title']),
+                        'Body:', '',
+                        issue['body'],
+                    ])
+                )
+        else:
+
+
+            def format_issue(issue):
+                if issue[0] == None:
+                    status_icon = ' '
+                elif not issue[5]:
+                    status_icon = green('📖') if issue[0] else red('📕')
+                else:
+                    status_icon = green('📦') if issue[0] else red('📦')
+                number = issue[1].rjust(3)
+                labels = issue[2][:20].ljust(20) + ("…" if len(issue[2]) > 20 else "")
+                title = issue[3][:60].ljust(60) + ("…" if len(issue[3]) > 60 else "")
+                uri = issue[4]
+                return '{} {}\t{}\t{}\t{}'.format(status_icon, number, labels, title, uri)
+
+            issues = service.issue_list(self.user_name, self.repo_name, self.filter or '')
+            print(blue(format_issue(next(issues))), file=sys.stderr)
+            for issue in issues:
+                print(format_issue(issue))
+            return 0
+
+    def check_issues_parameter(self):
+        if self.issues == [] and self.filter == '':
+            if self.value:
+                self.issues = [self.value]
+                self.value = None
+            else:
+                raise ArgumentError("Need at least one issue or a --filter parameter")
+        if len(self.issues) == 1 and self.issues[0] in ('*', 'all'):
+            self.issues = []
+
+    @register_action('issue', 'get')
+    def do_issue_get(self):
+        service = self.get_service()
+        if len(self.issues) == 1 and self.issues[0] == '-':
+            self.user_name, self.repo_name, self.issues = service.issue_extract_from_file(sys.stdin)
+        issue_data = service.issue_get(self.user_name, self.repo_name, self.action, self.filter or '', self.issues)
+        print(blue(next(issue_data)), file=sys.stderr)
+        for data in issue_data:
+            print('{}'.format(data))
+
+    @register_action('issue', 'set')
+    def do_issue_set(self):
+        self.check_issues_parameter()
+        service = self.get_service()
+        if len(self.issues) == 1 and self.issues[0] == '-':
+            self.user_name, self.repo_name, self.issues = service.issue_extract_from_file(sys.stdin)
+        rv = 1
+        if all(service.issue_set(self.user_name, self.repo_name, self.action, self.value, self.filter or '', self.issues)):
+            rv = 0
+        self.do_issue_get()
+        return rv
+
+    @register_action('issue', 'unset')
+    def do_issue_unset(self):
+        self.check_issues_parameter()
+        service = self.get_service()
+        if len(self.issues) == 1 and self.issues[0] == '-':
+            self.user_name, self.repo_name, self.issues = service.issue_extract_from_file(sys.stdin)
+        rv = 1
+        if all(service.issue_unset(self.user_name, self.repo_name, self.action, self.value, self.filter or '', self.issues)):
+            rv = 0
+        self.do_issue_get()
+        return rv
+
+    @register_action('issue', 'toggle')
+    def do_issue_toggle(self):
+        self.check_issues_parameter()
+        service = self.get_service()
+        if len(self.issues) == 1 and self.issues[0] == '-':
+            self.user_name, self.repo_name, self.issues = service.issue_extract_from_file(sys.stdin)
+        rv = 1
+        if all(service.issue_toggle(self.user_name, self.repo_name, self.action, self.value, self.filter or '', self.issues)):
+            rv = 0
+        self.do_issue_get()
+        return rv
+
+    @register_action('issue', 'edit')
+    def do_issue_edit(self):
+        do_ask=False
+        if len(self.issues) == 1 and self.issues[0] == '-':
+            self.user_name, self.repo_name, self.issues = service.issue_extract_from_file(sys.stdin)
+            do_ask=True
+
+        def edit_issue(title, body):
+            from tempfile import NamedTemporaryFile
+            from subprocess import call
+            with NamedTemporaryFile(
+                    prefix='git-repo-issue-',
+                    suffix='.md',
+                    mode='w+b') as issue_file:
+                issue_file.write('Title: {}\n\nBody:\n{}\n'.format(title, body).encode('utf-8'))
+                issue_file.flush()
+                call("{} {}".format(os.environ['EDITOR'], issue_file.name), shell=True)
+                issue_file.seek(0)
+                updated_issue = issue_file.read().decode('utf-8')
+                try:
+                    _, updated_issue = updated_issue.split('Title: ')
+                    title, body, *tail = updated_issue.split('\n\nBody:\n')
+                    body = ''.join([body]+tail)
+                except Exception:
+                    raise ResourceError("Format of the modified issue cannot be parsed.")
+
+                print('New issue\'s details:')
+                print('Title: {}'.format(title))
+                print('Body:\n{}'.format(body))
+                if do_ask and input('Do you confirm it\'s ok? [Yn] ').lower().startswith('n'):
+                    return None
+                return {'title': title, 'body': body}
+
+        service = self.get_service()
+        if service.issue_edit(self.user_name, self.repo_name, self.issues[0], edit_issue):
+            return 0
+        return 1
+
+    @register_action('issue', 'add')
+    def do_issue_action_add(self):
+        service = self.get_service()
+        if service.issue_action_add(self.user_name, self.repo_name, self.action, self.value):
+            return 0
+        return 1
+
+    @register_action('issue', 'del')
+    def do_issue_action_delete(self):
+        service = self.get_service()
+        if not self.force: # pragma: no cover
+            if not confirm('Action {} will be removed'.format(self.action), self.repo_slug):
+                return 0
+        if service.issue_action_del(self.user_name, self.repo_name, self.action, self.value):
+            return 0
+        return 1
+
+    '''Configuration'''
 
     @register_action('config')
     def do_config(self):
