@@ -18,11 +18,12 @@ very simple. To clone a new project, out of GitHub, just issue:
 
     % git hub clone guyzmo/git-repo
 
-But that works also with a project from GitLab, Bitbucket, or your own GitLab:
+But that works also with a project from GitLab, Bitbucket, your own GitLab or Gogs:
 
     % git lab clone guyzmo/git-repo
     % git bb clone guyzmo/git-repo
     % git myprecious clone guyzmo/git-repo
+    % git gg clone guyzmo/git-repo
 
 If you want to can choose the default branch to clone:
 
@@ -151,6 +152,10 @@ section in the gitconfig:
     [gitrepo "bitbucket"]
         token = username:password
 
+    [gitrepo "gogs"]
+        fqdn = UrlOfYourGogs
+        token = YourVerySecretKey
+
 Here, we're setting the basics: just the private token. You'll notice that for bitbucket
 the private token is your username and password seperated by a column. That's because
 bitbucket does not offer throw away private tokens for tools (I might implement BB's OAuth
@@ -253,9 +258,11 @@ To use your own credentials, you can setup the following environment variables:
 * `GITHUB_NAMESPACE` (which defaults to `not_configured`) is the name of the account to use on GitHub
 * `GITLAB_NAMESPACE` (which defaults to `not_configured`) is the name of the account to use on GitLab
 * `BITBUCKET_NAMESPACE` (which defaults to `not_configured`) is the name of the account to use on Bitbucket
+* `GOGS_NAMESPACE` (which defaults to `not_configured`) is the name of the account to use on Gogs
 * `PRIVATE_KEY_GITHUB` your private token you've setup on GitHub for your account
 * `PRIVATE_KEY_GITLAB` your private token you've setup on GitLab for your account
 * `PRIVATE_KEY_BITBUCKET` your private token you've setup on Bitbucket for your account
+* `PRIVATE_KEY_GOGS` your private token you've setup on Gogs for your account
 
 ### TODO
 
@@ -278,7 +285,7 @@ To use your own credentials, you can setup the following environment variables:
 * [ ] add application token support for bitbucket (cf [#14](https://github.com/guyzmo/git-repo/issues/14))
 * [ ] add support for managing SSH keys (cf [#22](https://github.com/guyzmo/git-repo/issues/22))
 * [ ] add support for issues?
-* [ ] add support for gogs (cf [#18](https://github.com/guyzmo/git-repo/issues/18))
+* [x] add support for gogs (cf [#18](https://github.com/guyzmo/git-repo/issues/18))
 * [ ] add support for gerrit (cf [#19](https://github.com/guyzmo/git-repo/issues/19))
 * [ ] do what's needed to make a nice documentation — if possible in markdown !@#$
 * for more features, write an issue or, even better, a PR!
