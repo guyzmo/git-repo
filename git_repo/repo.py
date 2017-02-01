@@ -276,7 +276,7 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @store_parameter('--config')
     def store_gitconfig(self, val):
-        self.config = val or os.path.join(os.environ['HOME'], '.gitconfig')
+        self.config = val or RepositoryService.get_config_path()
 
     '''Actions'''
 

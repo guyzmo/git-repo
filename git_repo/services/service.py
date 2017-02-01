@@ -62,6 +62,16 @@ class RepositoryService:
     config_options = ['type', 'token', 'alias', 'fqdn']
 
     @classmethod
+    def get_config_path(cls):
+        home_dir = os.environ['HOME']
+        home_conf = os.path.join(home_dir, '.gitconfig')
+        xdg_conf = os.path.join(home_dir, '.git', 'config')
+        if not os.path.exists(xdg_conf):
+            if os.path.exists(home_conf):
+                return home_conf
+        return xdg_conf
+
+    @classmethod
     def get_config(cls, config):
         out = {}
         with git_config.GitConfigParser(config, read_only=True) as config:
@@ -95,7 +105,7 @@ class RepositoryService:
         :return: instance for using the service
         '''
         if not repository:
-            config = git_config.GitConfigParser(os.path.join(os.environ['HOME'], '.gitconfig'))
+            config = git_config.GitConfigParser(self.get_config_path())
         else:
             config = repository.config_reader()
         target = cls.command_map.get(command, command)
