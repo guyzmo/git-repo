@@ -656,4 +656,3 @@ class Test_Main(GitRepoMainTestCase):
     def test_z_noop(self):
         self.main_noop('guyzmo/git-repo', 1)
 
-
