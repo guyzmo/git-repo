@@ -23,7 +23,10 @@ class GitlabService(RepositoryService):
         super().__init__(*args, **kwarg)
 
     def connect(self):
-        self.gl.ssl_verify = not self.insecure
+        self.gl.ssl_verify = self.session_certificate or not self.session_insecure
+        if self.session_proxy:
+            self.gl.session.proxies.update(self.session_proxy)
+
         self.gl.set_url(self.url_ro)
         self.gl.set_token(self._privatekey)
         self.gl.token_auth()
