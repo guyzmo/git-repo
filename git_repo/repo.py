@@ -503,21 +503,54 @@ class GitRepoRunner(KeywordArgumentParser):
             return out
 
         def setup_service(service):
+            new_conf = dict(
+                    fqdn=None,
+                    remote=None,
+                    )
             conf = service.get_config(self.config)
             if 'token' in conf:
                 raise Exception('A token has been generated for this service. Please revoke and delete before proceeding.')
+
+            print('Is your service self-hosted?')
+            if 'y' in input('    [yN]> ').lower():
+                new_conf['type'] = service.name
+                print('What name do you want to give this service?')
+                new_conf['name'] = input('[{}]> '.format(service.name))
+                new_conf['command'] = new_conf['name']
+                service.name, service.command = new_conf['name'], new_conf['command']
+                print('Enter the service\'s domain name:')
+                new_conf['fqdn'] = input('[{}]> '.format(service.fqdn))
+                print('Enter the service\'s port:')
+                new_conf['port'] = input('[443]> ') or 443
+                print('Are you connecting using HTTPS? (you should):')
+                if 'n' in input('    [Yn]> ').lower():
+                    new_conf['scheme'] = 'http'
+                else:
+                    new_conf['scheme'] = 'https'
+                    print('Do you need to use an insecure connection? (you shouldn\'t):')
+                    new_conf['insecure'] = 'y' in input('    [yN]> ').lower()
+                    service.session_insecure = new_conf['insecure']
+                    if not new_conf['insecure']:
+                        print('Do you want to setup the path to custom certificate?:')
+                        if 'y' in input('    [yN]> ').lower():
+                            new_conf['server-cert'] = loop_input('/path/to/certbundle.pem []> ')
+                            service.session_certificate = new_conf['server-cert']
+
+                service.fqdn = new_conf['fqdn']
+                service.port = new_conf['port']
+                service.scheme = new_conf['scheme']
 
             print('Please enter your credentials to connect to the service:')
             username = loop_input('username> ')
             password = loop_input('password> ', method=getpass)
 
-            token = service.get_auth_token(username, password, prompt=loop_input)
+            new_conf['token'] = service.get_auth_token(username, password, prompt=loop_input)
             print('Great! You\'ve been identified 🍻')
 
             print('Do you want to give a custom name for this service\'s remote?')
             if 'y' in input('    [yN]> ').lower():
                 print('Enter the remote\'s name:')
-                loop_input('[{}]> '.format(service.name))
+                new_conf['remote'] = loop_input('[{}]> '.format(service.name))
 
             print('Do you want to configure a git alias?')
             print('N.B.: instead of typing `git repo {0}` you\'ll be able to type `git {0}`'.format(service.command))
@@ -526,7 +559,7 @@ class GitRepoRunner(KeywordArgumentParser):
             else:
                 set_alias = True
 
-            service.store_config(self.config, token=token)
+            service.store_config(self.config, **new_conf)
             if set_alias:
                 service.set_alias(self.config)
 

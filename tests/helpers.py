@@ -46,7 +46,7 @@ class TestGitPopenMockupMixin:
 class RepositoryMockup(RepositoryService):
     name = 'test_name'
     command = 'test_command'
-    fqdn = 'http://example.org'
+    fqdn = 'example.org'
     def __init__(self, *args, **kwarg):
         super(RepositoryMockup, self).__init__(*args, **kwarg)
         self._did_pull = None
@@ -359,6 +359,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
         return RepositoryService._current._did_open
 
     def main_config(self, target, rc=0, args={}):
+        self.target = target
         assert rc == main(self.setup_args({
             'config': True,
             '--config': os.path.join(self.tempdir.name, 'gitconfig')

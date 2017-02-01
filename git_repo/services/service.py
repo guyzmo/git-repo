@@ -61,7 +61,8 @@ class RepositoryService:
 
     config_options = [
             'type', 'token', 'alias', 'fqdn', 'remote',
-            'port', 'scheme', 'insecure',
+            'port', 'scheme', 'insecure', 'name', 'command',
+            'server-cert'
             ]
 
     @classmethod
@@ -88,7 +89,7 @@ class RepositoryService:
     @classmethod
     def store_config(cls, config, **kwarg):
         with git_config.GitConfigParser(config, read_only=False) as config:
-            section = 'gitrepo "{}"'.format(cls.name)
+            section = 'gitrepo "{}"'.format(kwarg.get('name', cls.name))
             for option, value in kwarg.items():
                 if option not in cls.config_options:
                     raise ArgumentError('Option {} is invalid and cannot be setup.'.format(option))
@@ -109,13 +110,13 @@ class RepositoryService:
         :return: instance for using the service
         '''
         if not repository:
-            config = git_config.GitConfigParser(self.get_config_path())
+            config = git_config.GitConfigParser(cls.get_config_path())
         else:
             config = repository.config_reader()
         target = cls.command_map.get(command, command)
         conf_section = list(filter(lambda n: 'gitrepo' in n and target in n, config.sections()))
 
-        http_section = [config._sections[scheme] for scheme in ('http', 'https')]
+        http_section = [config._sections[scheme] for scheme in ('http', 'https') if scheme in config.sections()]
 
         # check configuration constraints
         if len(conf_section) == 0:
@@ -146,7 +147,7 @@ class RepositoryService:
     def get_auth_token(cls, login, password, prompt=None):
         raise NotImplementedError
 
-    def load_configuration(self, c, hc):
+    def load_configuration(self, c, hc=[]):
         CONFIG_TRUE=('on', 'true', 'yes', '1')
         # if there's a configuration file, update the names accordingly
         if c:
@@ -167,19 +168,18 @@ class RepositoryService:
                                                       c.get('privatekey', None))))
         self._alias = c.get('alias', self.name)
 
-        self.fqdn, port = c.get('fqdn', self.fqdn).split(':')
-        self.port = port or None
+        self.fqdn = c.get('fqdn', self.fqdn)
+        self.scheme = c.get('scheme', 'https')
+        self.port = c.get('port', '443')
 
-        self.default_create_private = c.get('default-create-private', 'false').lower() in CONFIG_TRUE
-        self.ssh_url = c.get('ssh-url', None) or self.fqdn
+        self.default_create_private = c.get('default-create-private', 'n').lower() in CONFIG_TRUE
+        self.ssh_url = c.get('ssh-url', self.fqdn)
 
         self.session_insecure = c.get('insecure', 'false').lower() in CONFIG_TRUE
         self.session_certificate = c.get('certificate', None)
         self.session_proxy = {cf['__name__']: cf['proxy'] for cf in hc if cf.get('proxy', None)}
 
-
-
-    def __init__(self, r=None, c=None, hc=None):
+    def __init__(self, r=None, c=None, hc=[]):
         '''
         :param r: git-python repository instance
         :param c: configuration data
