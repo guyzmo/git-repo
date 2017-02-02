@@ -1,0 +1,111 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2017-01-21T14:04:12",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "User-Agent": "python-requests/2.12.4"
+        },
+        "method": "GET",
+        "uri": "<GOGS_URL>/api/v1/user?token=<PRIVATE_KEY_GOGS>"
+      },
+      "response": {
+        "body": {
+          "encoding": "UTF-8",
+          "string": "{\"id\":3,\"login\":\"<GOGS_NAMESPACE>\",\"full_name\":\"\",\"email\":\"guyzmo@gogs.loopback\",\"avatar_url\":\"<GOGS_URL>/avatars/3\",\"username\":\"<GOGS_NAMESPACE>\"}"
+        },
+        "headers": {
+          "Content-Length": "152",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 21 Jan 2017 14:04:12 GMT",
+          "Proxy-Connection": "keep-alive",
+          "Set-Cookie": "lang=en-US; Path=/; Max-Age=2147483647",
+          "X-Frame-Options": "SAMEORIGIN"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "<GOGS_URL>/api/v1/user?token=<PRIVATE_KEY_GOGS>"
+      }
+    },
+    {
+      "recorded_at": "2017-01-21T14:04:13",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "Content-Length": "0",
+          "Cookie": "i_like_gogits=b5cab1c9d5e1def0; _csrf=fDp3VZsDXGVPx8B-9H_QXSn6epk6MTQ4NTAwNzQ1MjMzMDk0OTYwMA%3D%3D; lang=en-US",
+          "User-Agent": "python-requests/2.12.4"
+        },
+        "method": "DELETE",
+        "uri": "<GOGS_URL>/api/v1/repos/guyzmo/foobar?token=<PRIVATE_KEY_GOGS>"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": ""
+        },
+        "headers": {
+          "Date": "Sat, 21 Jan 2017 14:04:13 GMT",
+          "X-Frame-Options": "SAMEORIGIN"
+        },
+        "status": {
+          "code": 204,
+          "message": "No Content"
+        },
+        "url": "<GOGS_URL>/api/v1/repos/guyzmo/foobar?token=<PRIVATE_KEY_GOGS>"
+      }
+    },
+    {
+      "recorded_at": "2017-01-21T14:04:13",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "Cookie": "i_like_gogits=b5cab1c9d5e1def0; _csrf=fDp3VZsDXGVPx8B-9H_QXSn6epk6MTQ4NTAwNzQ1MjMzMDk0OTYwMA%3D%3D; lang=en-US",
+          "User-Agent": "python-requests/2.12.4"
+        },
+        "method": "GET",
+        "uri": "<GOGS_URL>/api/v1/repos/guyzmo/foobar?token=<PRIVATE_KEY_GOGS>"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Content-Length": "0",
+          "Content-Type": "text/plain; charset=utf-8",
+          "Date": "Sat, 21 Jan 2017 14:04:13 GMT",
+          "Proxy-Connection": "keep-alive",
+          "X-Frame-Options": "SAMEORIGIN"
+        },
+        "status": {
+          "code": 404,
+          "message": "Not Found"
+        },
+        "url": "<GOGS_URL>/api/v1/repos/guyzmo/foobar?token=<PRIVATE_KEY_GOGS>"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

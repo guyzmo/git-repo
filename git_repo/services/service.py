@@ -9,6 +9,7 @@ import sys
 from git import RemoteProgress, config as git_config
 from progress.bar import IncrementalBar as Bar
 
+from urllib.parse import ParseResult
 from subprocess import call
 
 from ..exceptions import (
@@ -59,7 +60,21 @@ class RepositoryService:
     # this symbol is made available for testing purposes
     _current = None
 
-    config_options = ['type', 'token', 'alias', 'fqdn']
+    config_options = [
+            'type', 'token', 'alias', 'fqdn', 'remote',
+            'port', 'scheme', 'insecure', 'name', 'command',
+            'server-cert'
+            ]
+
+    @classmethod
+    def get_config_path(cls):
+        home_dir = os.environ['HOME']
+        home_conf = os.path.join(home_dir, '.gitconfig')
+        xdg_conf = os.path.join(home_dir, '.git', 'config')
+        if not os.path.exists(xdg_conf):
+            if os.path.exists(home_conf):
+                return home_conf
+        return xdg_conf
 
     @classmethod
     def get_config(cls, config):
@@ -75,11 +90,12 @@ class RepositoryService:
     @classmethod
     def store_config(cls, config, **kwarg):
         with git_config.GitConfigParser(config, read_only=False) as config:
-            section = 'gitrepo "{}"'.format(cls.name)
+            section = 'gitrepo "{}"'.format(kwarg.get('name', cls.name))
             for option, value in kwarg.items():
                 if option not in cls.config_options:
                     raise ArgumentError('Option {} is invalid and cannot be setup.'.format(option))
-                config.set_value(section, option, value)
+                if value != None:
+                    config.set_value(section, option, value)
 
     @classmethod
     def set_alias(cls, config):
@@ -95,11 +111,13 @@ class RepositoryService:
         :return: instance for using the service
         '''
         if not repository:
-            config = git_config.GitConfigParser(os.path.join(os.environ['HOME'], '.gitconfig'))
+            config = git_config.GitConfigParser(cls.get_config_path())
         else:
             config = repository.config_reader()
         target = cls.command_map.get(command, command)
         conf_section = list(filter(lambda n: 'gitrepo' in n and target in n, config.sections()))
+
+        http_section = [config._sections[scheme] for scheme in ('http', 'https') if scheme in config.sections()]
 
         # check configuration constraints
         if len(conf_section) == 0:
@@ -123,25 +141,15 @@ class RepositoryService:
                 raise ValueError('Service type {} does not exists.'.format(config['type']))
             service = cls.service_map.get(config['type'], cls)
 
-        cls._current = service(repository, config)
+        cls._current = service(repository, config, http_section)
         return cls._current
 
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):
         raise NotImplementedError
 
-    def __init__(self, r=None, c=None):
-        '''
-        :param r: git-python repository instance
-        :param c: configuration data
-
-        Build a repository service instance, store configuration and parameters
-        And launch the connection to the service
-        '''
-
-        self.repository = r
-        self.config = c
-
+    def load_configuration(self, c, hc=[]):
+        CONFIG_TRUE=('on', 'true', 'yes', '1')
         # if there's a configuration file, update the names accordingly
         if c:
             name = ' '.join(c['__name__'].replace('"', '').split(' ')[1:])
@@ -160,8 +168,31 @@ class RepositoryService:
                                                 c.get('private_token',
                                                       c.get('privatekey', None))))
         self._alias = c.get('alias', self.name)
+
         self.fqdn = c.get('fqdn', self.fqdn)
-        self.insecure = c.get('insecure', 'false').lower() in ('on', 'true', 'yes', '1')
+        self.scheme = c.get('scheme', 'https')
+        self.port = c.get('port', '443')
+
+        self.default_create_private = c.get('default-create-private', 'n').lower() in CONFIG_TRUE
+        self.ssh_url = c.get('ssh-url', self.fqdn)
+
+        self.session_insecure = c.get('insecure', 'false').lower() in CONFIG_TRUE
+        self.session_certificate = c.get('certificate', None)
+        self.session_proxy = {cf['__name__']: cf['proxy'] for cf in hc if cf.get('proxy', None)}
+
+    def __init__(self, r=None, c=None, hc=[]):
+        '''
+        :param r: git-python repository instance
+        :param c: configuration data
+
+        Build a repository service instance, store configuration and parameters
+        And launch the connection to the service
+        '''
+
+        self.repository = r
+        self.config = c
+
+        self.load_configuration(c, hc)
 
         # if service has a repository configured, connect
         if r:
@@ -172,14 +203,22 @@ class RepositoryService:
     '''name of the git user to use for SSH remotes'''
     git_user = 'git'
 
+    @classmethod
+    def build_url(cls):
+        netloc = cls.fqdn if not getattr(cls, 'port', None) else ':'.join([cls.fqdn, cls.port])
+        if not getattr(cls, 'scheme', None):
+            cls.scheme = 'https'
+        return ParseResult(cls.scheme, netloc, *['']*4).geturl()
+
     @property
     def url_ro(self):
         '''Property that returns the HTTP URL of the service'''
-        return 'https://{}'.format(self.fqdn)
+        return self.build_url()
 
     @property
     def url_rw(self):
-        return '{}@{}'.format(self.git_user, self.fqdn)
+        url = self.ssh_url
+        return url if '@' in url else '@'.join([self.git_user, url])
 
     def format_path(self, repository, namespace=None, rw=False):
         '''format the repository's URL

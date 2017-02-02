@@ -576,15 +576,83 @@ class Test_Main(GitRepoMainTestCase):
     def test_config(self, capsys, caplog):
         import sys, io, getpass
         getpass.getpass = input
-        sys.stdin = io.StringIO('\n'.join(['y', 'user', 'pass', 'y', 'fubar', 'y']))
+        sys.stdin = io.StringIO('\n'.join(['y', 'n', 'user', 'pass', 'y', 'fubar', 'y']))
         #
         conf = self.main_config(target='hub', rc=0)
-        assert ['[gitrepo "github"]\n',
+        assert sorted(['[gitrepo "github"]\n',
+                '\tremote = fubar\n',
                 '\ttoken = user:pass\n',
                 '[alias]\n',
-                '\ttest_command = repo test_command\n'] == conf
+                '\ttest_command = repo test_command\n']) == sorted(conf)
+        last_conf = conf
+
+        sys.stdin = io.StringIO('\n'.join([
+            'y', 'y', 'frama', 'framagit.org', '', '', '', '', 'user', 'pass', 'y', 'framagit', 'y']))
+        #
+        conf = self.main_config(target='lab', rc=0)
+        assert sorted(last_conf+[
+                '[gitrepo "frama"]\n',
+                '\tfqdn = framagit.org\n',
+                '\tremote = framagit\n',
+                '\ttype = gitlab\n',
+                '\tname = frama\n',
+                '\tcommand = frama\n',
+                '\tport = 443\n',
+                '\tscheme = https\n',
+                '\tinsecure = False\n',
+                '\ttoken = user:pass\n', ]) == sorted(conf)
+        last_conf = conf
+
+        sys.stdin = io.StringIO('\n'.join([
+            'y', 'y', 'test0r', 'localhost', '8080', 'n', 'user', 'pass', 'y', 'test', 'y']))
+        #
+        conf = self.main_config(target='lab', rc=0)
+        assert sorted(last_conf+[
+                '[gitrepo "test0r"]\n',
+                '\tfqdn = localhost\n',
+                '\tremote = test\n',
+                '\ttype = gitlab\n',
+                '\tname = test0r\n',
+                '\tcommand = test0r\n',
+                '\tport = 8080\n',
+                '\tscheme = http\n',
+                '\ttoken = user:pass\n', ]) == sorted(conf)
+        last_conf = conf
+
+        sys.stdin = io.StringIO('\n'.join([
+            'y', 'y', 'selfsigned', 'server.local', '8443',
+            '', '', 'y', '/etc/server.pem', 'user', 'pass', 'y', 'self', 'y']))
+        #
+        conf = self.main_config(target='lab', rc=0)
+        assert sorted(last_conf+['[gitrepo "selfsigned"]\n',
+                '\tfqdn = server.local\n',
+                '\tremote = self\n',
+                '\ttype = gitlab\n',
+                '\tname = selfsigned\n',
+                '\tcommand = selfsigned\n',
+                '\tport = 8443\n',
+                '\tscheme = https\n',
+                '\tinsecure = False\n',
+                '\tserver-cert = /etc/server.pem\n',
+                '\ttoken = user:pass\n', ]) == sorted(conf)
+        last_conf = conf
+
+        sys.stdin = io.StringIO('\n'.join([
+            'y', 'y', 'lamer', 'pwnme.com', '',
+            '', 'y', 'user', 'pass', 'y', 'l', 'y']))
+        #
+        conf = self.main_config(target='lab', rc=0)
+        assert sorted(last_conf+['[gitrepo "lamer"]\n',
+                '\tfqdn = pwnme.com\n',
+                '\tremote = l\n',
+                '\ttype = gitlab\n',
+                '\tname = lamer\n',
+                '\tcommand = lamer\n',
+                '\tport = 443\n',
+                '\tscheme = https\n',
+                '\tinsecure = True\n',
+                '\ttoken = user:pass\n', ]) == sorted(conf)
 
     def test_z_noop(self):
         self.main_noop('guyzmo/git-repo', 1)
-
 

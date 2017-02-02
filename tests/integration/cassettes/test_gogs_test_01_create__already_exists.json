@@ -1,0 +1,79 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2017-01-21T14:04:09",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "User-Agent": "python-requests/2.12.4"
+        },
+        "method": "GET",
+        "uri": "<GOGS_URL>/api/v1/user?token=<PRIVATE_KEY_GOGS>"
+      },
+      "response": {
+        "body": {
+          "encoding": "UTF-8",
+          "string": "{\"id\":3,\"login\":\"<GOGS_NAMESPACE>\",\"full_name\":\"\",\"email\":\"guyzmo@gogs.loopback\",\"avatar_url\":\"<GOGS_URL>/avatars/3\",\"username\":\"<GOGS_NAMESPACE>\"}"
+        },
+        "headers": {
+          "Content-Length": "152",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 21 Jan 2017 14:04:09 GMT",
+          "Proxy-Connection": "keep-alive",
+          "Set-Cookie": "lang=en-US; Path=/; Max-Age=2147483647",
+          "X-Frame-Options": "SAMEORIGIN"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "<GOGS_URL>/api/v1/user?token=<PRIVATE_KEY_GOGS>"
+      }
+    },
+    {
+      "recorded_at": "2017-01-21T14:04:09",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "name=git-repo&auto_init=False&private=False"
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "Content-Length": "43",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Cookie": "i_like_gogits=8454d8bde5123653; _csrf=AaMYap7BESTX7xci37mALGGEVaA6MTQ4NTAwNzQ0ODg5OTkxMDkwMA%3D%3D; lang=en-US",
+          "User-Agent": "python-requests/2.12.4"
+        },
+        "method": "POST",
+        "uri": "<GOGS_URL>/api/v1/user/repos?token=<PRIVATE_KEY_GOGS>"
+      },
+      "response": {
+        "body": {
+          "encoding": "UTF-8",
+          "string": "{\"message\":\"repository already exists [uname: <GOGS_NAMESPACE>, name: git-repo]\",\"url\":\"https://godoc.org/github.com/go-gitea/go-sdk/gitea\"}"
+        },
+        "headers": {
+          "Content-Length": "137",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Sat, 21 Jan 2017 14:04:09 GMT",
+          "Proxy-Connection": "keep-alive",
+          "X-Frame-Options": "SAMEORIGIN"
+        },
+        "status": {
+          "code": 422,
+          "message": "Unprocessable Entity"
+        },
+        "url": "<GOGS_URL>/api/v1/user/repos?token=<PRIVATE_KEY_GOGS>"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}
