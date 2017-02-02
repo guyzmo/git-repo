@@ -415,6 +415,7 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
+        seen_args = seen_args[:-1] # remove the passed edition function
         assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
@@ -430,6 +431,7 @@ class Test_Main(GitRepoMainTestCase):
                     '<title>': 'This is a test',
                     })
         out, err = capsys.readouterr()
+        seen_args = seen_args[:-1] # remove the passed edition function
         assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', None, True) == seen_args
         assert {} == extra_args
         assert out == ''
@@ -446,6 +448,7 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
+        seen_args = seen_args[:-1] # remove the passed edition function
         assert ('guyzmo', 'test', 'bad', 'base-test', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
@@ -462,6 +465,7 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
+        seen_args = seen_args[:-1] # remove the passed edition function
         assert ('guyzmo', 'test', 'pr-test', 'bad', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
@@ -477,6 +481,7 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
+        seen_args = seen_args[:-1] # remove the passed edition function
         assert ('guyzmo', 'test', None, 'base-test', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
@@ -492,6 +497,7 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
+        seen_args = seen_args[:-1] # remove the passed edition function
         assert ('guyzmo', 'test', 'pr-test', None, 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
@@ -568,6 +574,7 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
+        seen_args = seen_args[:-1] # remove the passed edition function
         assert ('guyzmo', 'git-repo', 'pr-test', 'base-test', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''

@@ -311,7 +311,12 @@ class Test_Github(GitRepoTestCase):
                 title='PR test',
                 description='PR description',
                 service='github')
-        assert r == {'local': 'pr-test', 'ref': 1, 'remote': 'PR test'}
+        assert r == {
+                'local': 'pr-test',
+                'ref': 1,
+                'remote': 'PR test',
+                'url': 'https://github.com/ayayayaya/test_create_requests/pull/1',
+                }
 
     def test_32_request_create__bad_branch(self):
         with pytest.raises(ResourceError):

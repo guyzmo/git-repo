@@ -275,6 +275,10 @@ class GitlabService(RepositoryService):
             repository = self.gl.projects.get('/'.join([user, repo]))
             if not repository:
                 raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
+            if not title and not description and edit:
+                title, description = edit(repository, from_branch)
+                if not title and not description:
+                    raise ArgumentError('Missing message for request creation')
             if not local_branch:
                 remote_branch = self.repository.active_branch.name or self.repository.active_branch.name
             if not remote_branch:

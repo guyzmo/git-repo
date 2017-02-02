@@ -4,7 +4,7 @@ import logging
 log = logging.getLogger('git_repo.github')
 
 from ..service import register_target, RepositoryService, os
-from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
+from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError, ArgumentError
 
 import github3
 
@@ -233,7 +233,7 @@ class GithubService(RepositoryService):
             raise ResourceNotFoundError('Could not find gist')
         gist.delete()
 
-    def request_create(self, user, repo, from_branch, onto_branch, title, description=None, auto_slug=False):
+    def request_create(self, user, repo, from_branch, onto_branch, title=None, description=None, auto_slug=False, edit=None):
         repository = self.gh.repository(user, repo)
         if not repository:
             raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
@@ -255,6 +255,10 @@ class GithubService(RepositoryService):
             onto_branch = repository.default_branch or 'master'
         if self.username != repository.owner.login:
             from_branch = ':'.join([self.username, from_branch])
+        if not title and not description and edit:
+            title, description = edit(self.repository, from_branch)
+            if not title and not description:
+                raise ArgumentError('Missing message for request creation')
         try:
             request = repository.create_pull(title,
                     base=onto_branch,
@@ -276,7 +280,8 @@ class GithubService(RepositoryService):
                     raise ResourceError("Unhandled formatting error: {}".format(err.errors))
             raise ResourceError(err.message)
 
-        return {'local': from_branch, 'remote': onto_branch, 'ref': request.number}
+        return {'local': from_branch, 'remote': onto_branch, 'ref': request.number,
+                'url': request.html_url}
 
     def request_list(self, user, repo):
         repository = self.gh.repository(user, repo)

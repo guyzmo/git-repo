@@ -16,14 +16,14 @@ Usage:
     {self} [--path=<path>] [-v...] <target> add <user>/<repo> [<name>] [--tracking=<branch>] [-a]
     {self} [--path=<path>] [-v...] <target> request (list|ls)
     {self} [--path=<path>] [-v...] <target> request fetch <request> [-f]
-    {self} [--path=<path>] [-v...] <target> request create <title> [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request create <local_branch> <title> [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request create <remote_branch> <local_branch> <title> [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request create [--title=<title>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request create <local_branch> [--title=<title>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request create <remote_branch> <local_branch> [--title=<title>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> (list|ls)
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> fetch <request> [-f]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <title> [--branch=<remote>] [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <local_branch> <title> [--branch=<remote>] [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <remote_branch> <local_branch> <title> [--branch=<remote>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create [--title=<title>] [--branch=<remote>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <local_branch> [--title=<title>] [--branch=<remote>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <remote_branch> <local_branch> [--title=<title>] [--branch=<remote>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> (gist|snippet) (list|ls) [<gist>]
     {self} [--path=<path>] [-v...] <target> (gist|snippet) clone <gist>
     {self} [--path=<path>] [-v...] <target> (gist|snippet) fetch <gist> [<gist_file>]
@@ -89,7 +89,7 @@ Options for gist:
     --secret                 Do not publicize gist when pushing
 
 Options for request:
-    <title>                  Title to give to the request for merge
+    -t,--title=<title>       Title to give to the request for merge
     -m,--message=<message>   Description for the request for merge
 
 Configuration options:
@@ -140,11 +140,17 @@ from .services.service import RepositoryService
 from .kwargparse import KeywordArgumentParser, store_parameter, register_action
 
 from git import Repo, Git
-from git.exc import InvalidGitRepositoryError, NoSuchPathError
+from git.exc import InvalidGitRepositoryError, NoSuchPathError, BadName
 
 import re
 
 EXTRACT_URL_RE = re.compile('[^:]*(://|@)[^/]*/')
+
+def loop_input(*args, method=input, **kwarg):
+    out = ''
+    while len(out) == 0:
+        out = method(*args, **kwarg)
+    return out
 
 def confirm(what, where):
     '''
@@ -154,7 +160,7 @@ def confirm(what, where):
     ans = input('Are you sure you want to delete the '
                 '{} {} from the service?\n[yN]> '.format(what, where))
     if 'y' in ans:
-        ans = input('Are you really sure? there\'s no coming back!\n'
+        ans = loop_input('Are you really sure? there\'s no coming back!\n'
                     '[type \'burn!\' to proceed]> ')
         if 'burn!' != ans:
             return False
@@ -411,18 +417,64 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('request', 'create')
     def do_request_create(self):
+        def request_edition(repository, from_branch):
+            try:
+                commit = repository.commit(from_branch)
+                title, *body = commit.message.split('\n')
+            except BadName:
+                log.error('Couldn\'t find local source branch {}'.format(from_branch))
+                return None
+            from tempfile import NamedTemporaryFile
+            from subprocess import call
+            with NamedTemporaryFile(
+                    prefix='git-repo-issue-',
+                    suffix='.md',
+                    mode='w+b') as request_file:
+                request_file.write((
+                    '# Request for Merge Title ##########################\n'
+                    '{}\n'
+                    '\n'
+                    '# Request for Merge Body ###########################\n'
+                    '{}\n'
+                    '####################################################\n'
+                    '## Filled with commit:\n'
+                    '## {}\n'
+                    '####################################################\n'
+                    '## * All lines starting with # will be ignored.\n'
+                    '## * First non-ignored line is the title of the request.\n'
+                        ).format(title, '\n'.join(body), commit.name_rev).encode('utf-8'))
+                request_file.flush()
+                rv = call("{} {}".format(os.environ['EDITOR'], request_file.name), shell=True)
+                if rv != 0:
+                    raise ArgumentError("Aborting request, as editor exited abnormally.")
+                request_file.seek(0)
+                request_message = map(lambda l: l.decode('utf-8'),
+                        filter(lambda l: not l.strip().startswith(b'#'), request_file.readlines()))
+                try:
+                    title = next(request_message)
+                    body = ''.join(request_message)
+                except Exception:
+                    raise ResourceError("Format of the request message cannot be parsed.")
+
+                return title, body
+
+
         service = self.get_service(resolve_targets=('upstream', '{service}', 'origin'))
+
         new_request = service.request_create(self.user_name,
                 self.repo_name,
                 self.local_branch,
                 self.remote_branch,
                 self.title,
                 self.message,
-                self.repo_slug != None)
+                self.repo_slug != None,
+                request_edition)
         log.info('Successfully created request of `{local}` onto `{}:{remote}`, with id `{ref}`!'.format(
             '/'.join([self.user_name, self.repo_name]),
             **new_request)
         )
+        if 'url' in new_request:
+            log.info('available at: {url}'.format(**new_request))
         return 0
 
     @register_action('request', 'fetch')
@@ -495,12 +547,6 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('config')
     def do_config(self):
         from getpass import getpass
-
-        def loop_input(*args, method=input, **kwarg):
-            out = ''
-            while len(out) == 0:
-                out = method(*args, **kwarg)
-            return out
 
         def setup_service(service):
             new_conf = dict(
