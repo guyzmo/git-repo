@@ -14,12 +14,12 @@
           "User-Agent": "python-requests/2.12.4"
         },
         "method": "GET",
-        "uri": "http://127.0.0.1:3000/api/v1/user?token=<PRIVATE_KEY_GOGS>"
+        "uri": "<GOGS_URL>/api/v1/user?token=<PRIVATE_KEY_GOGS>"
       },
       "response": {
         "body": {
           "encoding": "UTF-8",
-          "string": "{\"id\":3,\"login\":\"<GOGS_NAMESPACE>\",\"full_name\":\"\",\"email\":\"guyzmo@gogs.loopback\",\"avatar_url\":\"http://127.0.0.1:3000/avatars/3\",\"username\":\"<GOGS_NAMESPACE>\"}"
+          "string": "{\"id\":3,\"login\":\"<GOGS_NAMESPACE>\",\"full_name\":\"\",\"email\":\"guyzmo@gogs.loopback\",\"avatar_url\":\"<GOGS_URL>/avatars/3\",\"username\":\"<GOGS_NAMESPACE>\"}"
         },
         "headers": {
           "Content-Length": "152",
@@ -33,7 +33,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "http://127.0.0.1:3000/api/v1/user?token=<PRIVATE_KEY_GOGS>"
+        "url": "<GOGS_URL>/api/v1/user?token=<PRIVATE_KEY_GOGS>"
       }
     },
     {
@@ -51,12 +51,12 @@
           "User-Agent": "python-requests/2.12.4"
         },
         "method": "GET",
-        "uri": "http://127.0.0.1:3000/api/v1/user/orgs?token=<PRIVATE_KEY_GOGS>"
+        "uri": "<GOGS_URL>/api/v1/user/orgs?token=<PRIVATE_KEY_GOGS>"
       },
       "response": {
         "body": {
           "encoding": "UTF-8",
-          "string": "[{\"id\":4,\"username\":\"guyzmo\",\"full_name\":\"\",\"avatar_url\":\"http://127.0.0.1:3000/avatars/4\",\"description\":\"\",\"website\":\"\",\"location\":\"\"}]"
+          "string": "[{\"id\":4,\"username\":\"guyzmo\",\"full_name\":\"\",\"avatar_url\":\"<GOGS_URL>/avatars/4\",\"description\":\"\",\"website\":\"\",\"location\":\"\"}]"
         },
         "headers": {
           "Content-Length": "136",
@@ -69,7 +69,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "http://127.0.0.1:3000/api/v1/user/orgs?token=<PRIVATE_KEY_GOGS>"
+        "url": "<GOGS_URL>/api/v1/user/orgs?token=<PRIVATE_KEY_GOGS>"
       }
     },
     {
@@ -89,7 +89,7 @@
           "User-Agent": "python-requests/2.12.4"
         },
         "method": "POST",
-        "uri": "http://127.0.0.1:3000/api/v1/org/guyzmo/repos?token=<PRIVATE_KEY_GOGS>"
+        "uri": "<GOGS_URL>/api/v1/org/guyzmo/repos?token=<PRIVATE_KEY_GOGS>"
       },
       "response": {
         "body": {
@@ -107,7 +107,7 @@
           "code": 422,
           "message": "Unprocessable Entity"
         },
-        "url": "http://127.0.0.1:3000/api/v1/org/guyzmo/repos?token=<PRIVATE_KEY_GOGS>"
+        "url": "<GOGS_URL>/api/v1/org/guyzmo/repos?token=<PRIVATE_KEY_GOGS>"
       }
     }
   ],

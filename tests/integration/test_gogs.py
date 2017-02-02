@@ -12,15 +12,22 @@ log = logging.getLogger('test.gogs')
 import os
 import sys
 import pytest
+from urllib.parse import urlparse
 
 from tests.helpers import GitRepoTestCase
 
 from git_repo.services.service import gogs
 from git_repo.exceptions import ResourceExistsError
 
+from betamax import Betamax
+
+GOGS_URL=os.environ.get('GOGS_URL', 'https://try.gogs.io')
+
+with Betamax.configure() as config:
+    config.define_cassette_placeholder('<GOGS_URL>', GOGS_URL)
+
 class Test_Gogs(GitRepoTestCase):
     log = log
-    fqdn = 'http://127.0.0.1:3000'
 
     @property
     def local_namespace(self):
@@ -29,9 +36,14 @@ class Test_Gogs(GitRepoTestCase):
         return 'git-repo-test'
 
     def get_service(self):
-        gogs.GogsService.fqdn = self.fqdn
-        return gogs.GogsService(c=dict())
-        # return gogs.GogsService(c=dict(fqdn=self.fqdn,__name__='gitrepo "gogs"',token=os.environ['PRIVATE_KEY_GOGS']))
+        url = urlparse(GOGS_URL)
+        return gogs.GogsService(c={
+            '__name__': 'gitrepo "gogs"',
+            'fqdn': url.hostname,
+            'port': url.port,
+            'scheme': url.scheme,
+            'insecure': 'yes',
+            })
 
     def get_requests_session(self):
         return self.service.gg.session
