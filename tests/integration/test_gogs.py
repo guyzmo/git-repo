@@ -34,7 +34,7 @@ class Test_Gogs(GitRepoTestCase):
         # return gogs.GogsService(c=dict(fqdn=self.fqdn,__name__='gitrepo "gogs"',token=os.environ['PRIVATE_KEY_GOGS']))
 
     def get_requests_session(self):
-        return self.service.session
+        return self.service.gg.session
 
     def test_00_fork(self):
         pass
