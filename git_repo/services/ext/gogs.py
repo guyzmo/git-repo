@@ -15,8 +15,10 @@ from git import config as git_config
 from git.exc import GitCommandError
 
 class GogsClient(GogsApi):
-    def __init__(self, *args, **kwarg):
+    def __init__(self):
         self.session = Session()
+
+    def setup(self, *args, **kwarg):
         super().__init__(*args, session=self.session, **kwarg)
 
     def set_token(self, token):
@@ -69,11 +71,11 @@ class GogsService(RepositoryService):
     fqdn = 'try.gogs.io'
 
     def __init__(self, *args, **kwargs):
-        self.url_base, self.fqdn = self._url_parse(self.fqdn)
-        self.gg = GogsClient(self.url_base)
+        self.gg = GogsClient()
 
         super().__init__(*args, **kwargs)
 
+        self.gg.setup(self.url_ro)
         self.gg.set_token(self._privatekey)
         self.gg.set_default_private(self.default_create_private)
         self.gg.setup_session(
@@ -96,35 +98,10 @@ class GogsService(RepositoryService):
                 raise err
 
     @classmethod
-    def _url_parse(cls, url):
-        if '://' not in url:
-            url = 'https://'+url
-        parse = urlparse(url)
-        url_base = urlunparse((parse.scheme, parse.netloc)+('',)*4)
-        fqdn = parse.hostname
-        return url_base, fqdn
-
-    @property
-    def url_ro(self):
-        return self.url_base
-
-    @property
-    def url_rw(self):
-        url = self.ssh_url
-        if '@' in url:
-            return url
-        return '@'.join([self.git_user, url])
-
-    @classmethod
     def get_auth_token(cls, login, password, prompt=None):
         import platform
         name = 'git-repo token used on {}'.format(platform.node())
-        if '/' in login:
-            url, login = login.rsplit('/', 1)
-        else:
-            url = input('URL [{}]> '.format(cls.fqdn)) or cls.fqdn
-        url_base, fqdn = cls._url_parse(url)
-        gg = GogsApi(url_base)
+        gg = GogsApi(cls.build_url())
         auth = UsernamePassword(login, password)
         tokens = gg.get_tokens(auth, login)
         tokens = dict((token.name, token.token) for token in tokens)

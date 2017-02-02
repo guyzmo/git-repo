@@ -9,6 +9,7 @@ import sys
 from git import RemoteProgress, config as git_config
 from progress.bar import IncrementalBar as Bar
 
+from urllib.parse import ParseResult
 from subprocess import call
 
 from ..exceptions import (
@@ -202,14 +203,22 @@ class RepositoryService:
     '''name of the git user to use for SSH remotes'''
     git_user = 'git'
 
+    @classmethod
+    def build_url(cls):
+        netloc = cls.fqdn if not getattr(cls, 'port', None) else ':'.join([cls.fqdn, cls.port])
+        if not getattr(cls, 'scheme', None):
+            cls.scheme = 'https'
+        return ParseResult(cls.scheme, netloc, *['']*4).geturl()
+
     @property
     def url_ro(self):
         '''Property that returns the HTTP URL of the service'''
-        return 'https://{}'.format(self.fqdn)
+        return self.build_url()
 
     @property
     def url_rw(self):
-        return '{}@{}'.format(self.git_user, self.fqdn)
+        url = self.ssh_url
+        return url if '@' in url else '@'.join([self.git_user, url])
 
     def format_path(self, repository, namespace=None, rw=False):
         '''format the repository's URL
