@@ -5,10 +5,13 @@ log = logging.getLogger('git_repo.github')
 
 from ..service import register_target, RepositoryService, os
 from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError, ArgumentError
+from ...tools import columnize
 
 import github3
 
 from git.exc import GitCommandError
+
+from datetime import datetime
 
 @register_target('hub', 'github')
 class GithubService(RepositoryService):
@@ -75,37 +78,18 @@ class GithubService(RepositoryService):
             raise ResourceError('Unhandled exception: {}'.format(err)) from err
 
     def list(self, user, _long=False):
-        import shutil, sys
-        from datetime import datetime
-        term_width = shutil.get_terminal_size((80, 20)).columns
-        def col_print(lines, indent=0, pad=2):
-            # prints a list of items in a fashion similar to the dir command
-            # borrowed from https://gist.github.com/critiqjo/2ca84db26daaeb1715e1
-            n_lines = len(lines)
-            if n_lines == 0:
-                return
-            col_width = max(len(line) for line in lines)
-            n_cols = int((term_width + pad - indent)/(col_width + pad))
-            n_cols = min(n_lines, max(1, n_cols))
-            col_len = int(n_lines/n_cols) + (0 if n_lines % n_cols == 0 else 1)
-            if (n_cols - 1) * col_len >= n_lines:
-                n_cols -= 1
-            cols = [lines[i*col_len : i*col_len + col_len] for i in range(n_cols)]
-            rows = list(zip(*cols))
-            rows_missed = zip(*[col[len(rows):] for col in cols[:-1]])
-            rows.extend(rows_missed)
-            for row in rows:
-                print(" "*indent + (" "*pad).join(line.ljust(col_width) for line in row))
-
         if not self.gh.user(user):
             raise ResourceNotFoundError("User {} does not exists.".format(user))
 
         repositories = self.gh.iter_user_repos(user)
         if not _long:
-            repositories = list(repositories)
-            col_print(["/".join([user, repo.name]) for repo in repositories])
+            repositories = list(["/".join([user, repo.name]) for repo in repositories])
+            yield "{}"
+            yield "Total repositories: {}".format(len(repositories))
+            yield from columnize(repositories)
         else:
-            print('Status\tCommits\tReqs\tIssues\tForks\tCoders\tWatch\tLikes\tLang\tModif\t\tName', file=sys.stderr)
+            yield "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t\t{}"
+            yield ['Status', 'Commits', 'Reqs', 'Issues', 'Forks', 'Coders', 'Watch', 'Likes', 'Lang', 'Modif', 'Name']
             for repo in repositories:
                 try:
                     if repo.updated_at.year < datetime.now().year:
@@ -119,7 +103,7 @@ class GithubService(RepositoryService):
                     ])
                     nb_pulls = len(list(repo.iter_pulls()))
                     nb_issues = len(list(repo.iter_issues())) - nb_pulls
-                    print('\t'.join([
+                    yield [
                         # status
                         status,
                         # stats
@@ -134,10 +118,10 @@ class GithubService(RepositoryService):
                         repo.language or '?',                      # language
                         repo.updated_at.strftime(date_fmt),      # date
                         '/'.join([user, repo.name]),             # name
-                    ]))
+                    ]
                 except Exception as err:
                     if 'Git Repository is empty.' == err.args[0].json()['message']:
-                        print('\t'.join([
+                        yield [
                             # status
                             'E',
                             # stats
@@ -152,7 +136,7 @@ class GithubService(RepositoryService):
                             '?',     # language
                             repo.updated_at.strftime(date_fmt),      # date
                             '/'.join([user, repo.name]),             # name
-                        ]))
+                        ]
                     else:
                         print("Cannot show repository {}: {}".format('/'.join([user, repo.name]), err))
 
@@ -167,12 +151,16 @@ class GithubService(RepositoryService):
 
     def gist_list(self, gist=None):
         if not gist:
+            yield "{:45.45} {}"
+            yield 'title', 'url'
             for gist in self.gh.iter_gists(self.gh.user().login):
-                yield (gist.html_url, gist.description)
+                yield gist.description, gist.html_url
         else:
             gist = self.gh.gist(self._format_gist(gist))
             if gist is None:
                 raise ResourceNotFoundError('Gist does not exists.')
+            yield "{:15}\t{:7}\t{}"
+            yield 'language', 'size', 'name'
             for gist_file in gist.iter_files():
                 yield (gist_file.language if gist_file.language else 'Raw text',
                         gist_file.size,
@@ -285,8 +273,10 @@ class GithubService(RepositoryService):
 
     def request_list(self, user, repo):
         repository = self.gh.repository(user, repo)
+        yield "{}\t{:<60}\t{}"
+        yield 'id', 'title', 'URL'
         for pull in repository.iter_pulls():
-            yield ( str(pull.number), pull.title, pull.links['html'] )
+            yield str(pull.number), pull.title, pull.links['html']
 
     def request_fetch(self, user, repo, request, pull=False, force=False):
         if pull:
