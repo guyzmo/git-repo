@@ -51,7 +51,7 @@ class GithubService(RepositoryService):
             else: # pragma: no cover
                 raise ResourceError("Unhandled error.") from err
         if add:
-            self.add(user=self.username, repo=repo, tracking=self.name)
+            self.add(user=user, repo=repo, tracking=self.name)
 
     def fork(self, user, repo):
         try:
