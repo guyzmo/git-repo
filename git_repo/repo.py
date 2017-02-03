@@ -16,14 +16,14 @@ Usage:
     {self} [--path=<path>] [-v...] <target> add <user>/<repo> [<name>] [--tracking=<branch>] [-a]
     {self} [--path=<path>] [-v...] <target> request (list|ls)
     {self} [--path=<path>] [-v...] <target> request fetch <request> [-f]
-    {self} [--path=<path>] [-v...] <target> request create <title> [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request create <local_branch> <title> [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request create <remote_branch> <local_branch> <title> [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request create [--title=<title>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request create <local_branch> [--title=<title>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request create <remote_branch> <local_branch> [--title=<title>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> (list|ls)
     {self} [--path=<path>] [-v...] <target> request <user>/<repo> fetch <request> [-f]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <title> [--branch=<remote>] [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <local_branch> <title> [--branch=<remote>] [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <remote_branch> <local_branch> <title> [--branch=<remote>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create [--title=<title>] [--branch=<remote>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <local_branch> [--title=<title>] [--branch=<remote>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <remote_branch> <local_branch> [--title=<title>] [--branch=<remote>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> (gist|snippet) (list|ls) [<gist>]
     {self} [--path=<path>] [-v...] <target> (gist|snippet) clone <gist>
     {self} [--path=<path>] [-v...] <target> (gist|snippet) fetch <gist> [<gist_file>]
@@ -89,7 +89,7 @@ Options for gist:
     --secret                 Do not publicize gist when pushing
 
 Options for request:
-    <title>                  Title to give to the request for merge
+    -t,--title=<title>       Title to give to the request for merge
     -m,--message=<message>   Description for the request for merge
 
 Configuration options:
@@ -137,30 +137,15 @@ if sys.version_info.major < 3: # pragma: no cover
 from .exceptions import ArgumentError, ResourceNotFoundError
 from .services.service import RepositoryService
 
+from .tools import print_tty, print_iter, loop_input, confirm
 from .kwargparse import KeywordArgumentParser, store_parameter, register_action
 
 from git import Repo, Git
-from git.exc import InvalidGitRepositoryError, NoSuchPathError
+from git.exc import InvalidGitRepositoryError, NoSuchPathError, BadName
 
 import re
 
 EXTRACT_URL_RE = re.compile('[^:]*(://|@)[^/]*/')
-
-def confirm(what, where):
-    '''
-    Method to show a CLI based confirmation message, waiting for a yes/no answer.
-    "what" and "where" are used to better define the message.
-    '''
-    ans = input('Are you sure you want to delete the '
-                '{} {} from the service?\n[yN]> '.format(what, where))
-    if 'y' in ans:
-        ans = input('Are you really sure? there\'s no coming back!\n'
-                    '[type \'burn!\' to proceed]> ')
-        if 'burn!' != ans:
-            return False
-    else:
-        return False
-    return True
 
 
 class GitRepoRunner(KeywordArgumentParser):
@@ -283,8 +268,7 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('ls')
     @register_action('list')
     def do_list(self):
-        service = self.get_service(False)
-        service.list(self.user, self.long)
+        print_iter(self.get_service(False).list(self.user, self.long))
         return 0
 
     @register_action('add')
@@ -403,26 +387,70 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('request', 'list')
     def do_request_list(self):
         service = self.get_service(lookup_repository=self.repo_slug == None)
-        log.info('List of open requests to merge:')
-        log.info(" {}\t{}\t{}".format('id', 'title'.ljust(60), 'URL'))
-        for pr in service.request_list(self.user_name, self.repo_name):
-            print("{}\t{}\t{}".format(pr[0].rjust(3), pr[1][:60].ljust(60), pr[2]))
+        print_tty('List of open requests to merge:')
+        print_iter(service.request_list(self.user_name, self.repo_name))
         return 0
 
     @register_action('request', 'create')
     def do_request_create(self):
+        def request_edition(repository, from_branch):
+            try:
+                commit = repository.commit(from_branch)
+                title, *body = commit.message.split('\n')
+            except BadName:
+                log.error('Couldn\'t find local source branch {}'.format(from_branch))
+                return None
+            from tempfile import NamedTemporaryFile
+            from subprocess import call
+            with NamedTemporaryFile(
+                    prefix='git-repo-issue-',
+                    suffix='.md',
+                    mode='w+b') as request_file:
+                request_file.write((
+                    '# Request for Merge Title ##########################\n'
+                    '{}\n'
+                    '\n'
+                    '# Request for Merge Body ###########################\n'
+                    '{}\n'
+                    '####################################################\n'
+                    '## Filled with commit:\n'
+                    '## {}\n'
+                    '####################################################\n'
+                    '## * All lines starting with # will be ignored.\n'
+                    '## * First non-ignored line is the title of the request.\n'
+                        ).format(title, '\n'.join(body), commit.name_rev).encode('utf-8'))
+                request_file.flush()
+                rv = call("{} {}".format(os.environ['EDITOR'], request_file.name), shell=True)
+                if rv != 0:
+                    raise ArgumentError("Aborting request, as editor exited abnormally.")
+                request_file.seek(0)
+                request_message = map(lambda l: l.decode('utf-8'),
+                        filter(lambda l: not l.strip().startswith(b'#'), request_file.readlines()))
+                try:
+                    title = next(request_message)
+                    body = ''.join(request_message)
+                except Exception:
+                    raise ResourceError("Format of the request message cannot be parsed.")
+
+                return title, body
+
+
         service = self.get_service(resolve_targets=('upstream', '{service}', 'origin'))
+
         new_request = service.request_create(self.user_name,
                 self.repo_name,
                 self.local_branch,
                 self.remote_branch,
                 self.title,
                 self.message,
-                self.repo_slug != None)
+                self.repo_slug != None,
+                request_edition)
         log.info('Successfully created request of `{local}` onto `{}:{remote}`, with id `{ref}`!'.format(
             '/'.join([self.user_name, self.repo_name]),
             **new_request)
         )
+        if 'url' in new_request:
+            log.info('available at: {url}'.format(**new_request))
         return 0
 
     @register_action('request', 'fetch')
@@ -442,16 +470,7 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('snippet', 'list')
     def do_gist_list(self):
         service = self.get_service(lookup_repository=False)
-        if 'github' == service.name and self.gist_ref:
-            log.info("{:15}\t{:>7}\t{}".format('language', 'size', 'name'))
-        else:
-            log.info("{:56}\t{}".format('id', 'title'.ljust(60)))
-        if self.gist_ref:
-            for gist_file in service.gist_list(self.gist_ref):
-                print("{:15}\t{:7}\t{}".format(*gist_file))
-        else:
-            for gist in service.gist_list():
-                print( "{:56}\t{}".format(gist[0], gist[1]))
+        print_iter(service.gist_list(self.gist_ref or None))
         return 0
 
     @register_action('gist', 'clone')
@@ -495,12 +514,6 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('config')
     def do_config(self):
         from getpass import getpass
-
-        def loop_input(*args, method=input, **kwarg):
-            out = ''
-            while len(out) == 0:
-                out = method(*args, **kwarg)
-            return out
 
         def setup_service(service):
             new_conf = dict(
@@ -592,7 +605,8 @@ def cli(): #pragma: no cover
         sys.exit(main(docopt(__doc__.format(self=sys.argv[0].split('/')[-1], version=__version__))))
     finally:
         # Whatever happens, make sure that the cursor reappears with some ANSI voodoo
-        sys.stdout.write('\033[?25h')
+        if sys.stdout.isatty():
+            sys.stdout.write('\033[?25h')
 
 if __name__ == '__main__': #pragma: no cover
     cli()

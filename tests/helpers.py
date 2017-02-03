@@ -93,17 +93,21 @@ class RepositoryMockup(RepositoryService):
 
     def gist_list(self, *args, **kwarg):
         self._did_gist_list = (args, kwarg)
-        if len(args) == 0:
-            return [('id1', 'value1'),
-                    ('id2', 'value2'),
-                    ('id3', 'value3')]
+        if len(args) == 0 or not args[0]:
+            yield '{} {}'
+            yield 'title', 'url'
+            yield 'id1', 'value1'
+            yield 'id2', 'value2'
+            yield 'id3', 'value3'
         elif len(args) == 1:
             if args[0] == 'bad':
                 raise Exception('bad gist!')
             else:
-                return [('lang1', 'size1', 'name1'),
-                        ('lang2', 'size2', 'name2'),
-                        ('lang3', 'size3', 'name3')]
+                yield '{} {} {}'
+                yield 'language', 'size', 'name'
+                yield 'lang1', 'size1', 'name1'
+                yield 'lang2', 'size2', 'name2'
+                yield 'lang3', 'size3', 'name3'
 
     def gist_fetch(self, *args, **kwarg):
         self._did_gist_fetch = (args, kwarg)
@@ -132,9 +136,11 @@ class RepositoryMockup(RepositoryService):
 
     def request_list(self, *args, **kwarg):
         self._did_request_list = (args, kwarg)
-        return [('1', 'desc1', 'http://request/1'),
-                ('2', 'desc2', 'http://request/2'),
-                ('3', 'desc3', 'http://request/3')]
+        yield '{} {} {}'
+        yield ('id', 'description', 'URL')
+        yield ('1', 'desc1', 'http://request/1')
+        yield ('2', 'desc2', 'http://request/2')
+        yield ('3', 'desc3', 'http://request/3')
 
     def request_fetch(self, *args, **kwarg):
         self._did_request_fetch = (args, kwarg)
@@ -610,7 +616,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
     def action_list(self, namespace, _long=False):
         with self.recorder.use_cassette(self._make_cassette_name()):
             self.service.connect()
-            self.service.list(namespace, _long=_long)
+            return list(self.service.list(namespace, _long=_long))
 
     def action_request_list(self, namespace, repository, rq_list_data=[]):
         with self.recorder.use_cassette(self._make_cassette_name()):

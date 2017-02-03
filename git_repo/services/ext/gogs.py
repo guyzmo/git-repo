@@ -5,10 +5,12 @@ log = logging.getLogger('git_repo.gogs')
 
 from ..service import register_target, RepositoryService, os
 from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
+from ...tools import columnize
 
 from gogs_client import GogsApi, GogsRepo, Token, UsernamePassword, ApiFailure
 from requests import Session, HTTPError
 from urllib.parse import urlparse, urlunparse
+from datetime import datetime
 import functools
 
 from git import config as git_config
@@ -152,32 +154,17 @@ class GogsService(RepositoryService):
         import shutil, sys
         from datetime import datetime
         term_width = shutil.get_terminal_size((80, 20)).columns
-        def col_print(lines, indent=0, pad=2):
-            # prints a list of items in a fashion similar to the dir command
-            # borrowed from https://gist.github.com/critiqjo/2ca84db26daaeb1715e1
-            n_lines = len(lines)
-            if n_lines == 0:
-                return
-            col_width = max(len(line) for line in lines)
-            n_cols = int((term_width + pad - indent)/(col_width + pad))
-            n_cols = min(n_lines, max(1, n_cols))
-            col_len = int(n_lines/n_cols) + (0 if n_lines % n_cols == 0 else 1)
-            if (n_cols - 1) * col_len >= n_lines:
-                n_cols -= 1
-            cols = [lines[i*col_len : i*col_len + col_len] for i in range(n_cols)]
-            rows = list(zip(*cols))
-            rows_missed = zip(*[col[len(rows):] for col in cols[:-1]])
-            rows.extend(rows_missed)
-            for row in rows:
-                print(" "*indent + (" "*pad).join(line.ljust(col_width) for line in row))
 
         repositories = self.gg.repositories(user)
         if user != self.username and not repositories and user not in self.orgs:
             raise ResourceNotFoundError("Unable to list namespace {} - only authenticated user and orgs available for listing.".format(user))
         if not _long:
-            col_print([repo['full_name'] for repo in repositories])
+            repositories = list([repo['full_name'] for repo in repositories])
+            yield "{}"
+            yield "Total repositories: {}".format(len(repositories))
+            yield from columnize(repositories)
         else:
-            print('Status\tCommits\tReqs\tIssues\tForks\tCoders\tWatch\tLikes\tLang\tModif\t\t\t\tName', file=sys.stderr)
+            yield ['Status', 'Commits', 'Reqs', 'Issues', 'Forks', 'Coders', 'Watch', 'Likes', 'Lang', 'Modif\t', 'Name']
             for repo in repositories:
                 status = ''.join([
                     'F' if repo['fork'] else ' ',          # is a fork?
@@ -187,7 +174,7 @@ class GogsService(RepositoryService):
                     issues = self.gg._check_ok(self.gg._get('/repos/{}/issues'.format(repo['full_name']), auth=self.auth)).json()
                 except Exception:
                     issues = []
-                print('\t'.join([
+                yield [
                     # status
                     status,
                     # stats
@@ -202,7 +189,7 @@ class GogsService(RepositoryService):
                     repo.get('language') or '?',           # language
                     repo['updated_at'],                    # date
                     repo['full_name'],                     # name
-                ]))
+                ]
 
     def get_repository(self, user, repo):
         try:
