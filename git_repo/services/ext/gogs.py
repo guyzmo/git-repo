@@ -77,14 +77,13 @@ class GogsService(RepositoryService):
 
         super().__init__(*args, **kwargs)
 
+    def connect(self):
         self.gg.setup(self.url_ro)
         self.gg.set_token(self._privatekey)
         self.gg.set_default_private(self.default_create_private)
         self.gg.setup_session(
                 self.session_certificate or not self.session_insecure,
                 self.session_proxy)
-
-    def connect(self):
         try:
             self.username = self.user  # Call to self.gg.authenticated_user()
         except HTTPError as err:
