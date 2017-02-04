@@ -203,17 +203,23 @@ class RepositoryService:
     '''name of the git user to use for SSH remotes'''
     git_user = 'git'
 
-    @classmethod
-    def build_url(cls):
-        netloc = cls.fqdn if not getattr(cls, 'port', None) else '{}:{}'.format(cls.fqdn, cls.port)
-        if not getattr(cls, 'scheme', None):
-            cls.scheme = 'https'
-        return ParseResult(cls.scheme, netloc, *['']*4).geturl()
+    @staticmethod
+    def build_url(obj):
+        scheme = getattr(obj, 'scheme', 'https')
+        port = getattr(obj, 'port', None)
+        # skip useless port specification
+        if (not port
+            or scheme == 'https' and str(port) == '443'
+            or scheme == 'http' and str(port) == '80'):
+            netloc = obj.fqdn
+        else:
+            netloc = '{}:{}'.format(obj.fqdn, port)
+        return ParseResult(scheme, netloc, *['']*4).geturl()
 
     @property
     def url_ro(self):
         '''Property that returns the HTTP URL of the service'''
-        return self.build_url()
+        return self.build_url(self)
 
     @property
     def url_rw(self):
