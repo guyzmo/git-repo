@@ -534,7 +534,7 @@ class GitRepoRunner(KeywordArgumentParser):
                 print('Enter the service\'s domain name:')
                 new_conf['fqdn'] = input('[{}]> '.format(service.fqdn))
                 print('Enter the service\'s port:')
-                new_conf['port'] = input('[443]> ') or 443
+                new_conf['port'] = input('[443]> ') or '443'
                 print('Are you connecting using HTTPS? (you should):')
                 if 'n' in input('    [Yn]> ').lower():
                     new_conf['scheme'] = 'http'

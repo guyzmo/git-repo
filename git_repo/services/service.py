@@ -205,7 +205,7 @@ class RepositoryService:
 
     @classmethod
     def build_url(cls):
-        netloc = cls.fqdn if not getattr(cls, 'port', None) else ':'.join([cls.fqdn, cls.port])
+        netloc = cls.fqdn if not getattr(cls, 'port', None) else '{}:{}'.format(cls.fqdn, cls.port)
         if not getattr(cls, 'scheme', None):
             cls.scheme = 'https'
         return ParseResult(cls.scheme, netloc, *['']*4).geturl()
