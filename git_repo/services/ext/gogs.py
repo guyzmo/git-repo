@@ -32,6 +32,8 @@ class GogsClient(GogsApi):
     def setup_session(self, ssl_config, proxy=dict()):
         self.session.verify = ssl_config
         self.session.proxies.update(proxy)
+        # this is required to detect fresh GoGS server that redirects everything to /install
+        self.session.max_redirects = 0
 
     @property
     def username(self):
@@ -103,7 +105,7 @@ class GogsService(RepositoryService):
     def get_auth_token(cls, login, password, prompt=None):
         import platform
         name = 'git-repo token used on {}'.format(platform.node())
-        gg = GogsApi(cls.build_url())
+        gg = GogsApi(cls.build_url(cls))
         auth = UsernamePassword(login, password)
         tokens = gg.get_tokens(auth, login)
         tokens = dict((token.name, token.token) for token in tokens)
