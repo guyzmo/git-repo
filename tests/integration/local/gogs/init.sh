@@ -1,17 +1,17 @@
 #!/bin/bash
 echo "Checking user test-admin in Gogs on http://127.0.0.1:3000"
-if python3 -c "import sys,gogs_client;up=gogs_client.UsernamePassword('test-admin','test-admin');s=gogs_client.GogsApi('http://127.0.0.1:3000');sys.exit(s.valid_authentication(up))" ; then
+if ! python3 -c "import sys,gogs_client;up=gogs_client.UsernamePassword('test-admin','test-admin');s=gogs_client.GogsApi('http://127.0.0.1:3000');sys.exit(s.authenticated_user(up).user_id<1)" 2>/dev/null ; then
   echo "Creating admin user test-admin"
   gogs admin create-user --config custom/conf/app.ini --name=test-admin --password=test-admin --email=admin@gogs.loopback --admin=true
 fi
 echo "Checking user other in Gogs on http://127.0.0.1:3000"
-if python3 -c "import sys,gogs_client;up=gogs_client.UsernamePassword('other','other');s=gogs_client.GogsApi('http://127.0.0.1:3000');sys.exit(s.valid_authentication(up))" ; then
+if ! python3 -c "import sys,gogs_client;up=gogs_client.UsernamePassword('other','other');s=gogs_client.GogsApi('http://127.0.0.1:3000');sys.exit(s.authenticated_user(up).user_id<1)" 2>/dev/null ; then
   echo "Creating user other"
   gogs admin create-user --config custom/conf/app.ini --name=other --password=other --email=other@gogs.loopback
   python3 -c "import os,gogs_client,functools;up=gogs_client.UsernamePassword('other','other');s=gogs_client.GogsApi('http://127.0.0.1:3000');r=s.create_repo(up,'git-repo',readme_template='Default',license_template='MIT License',auto_init=True);print('\t'.join(map(str,(r.repo_id,r.full_name,r.urls.ssh_url))))"
 fi
 echo "Checking user git-repo-test in Gogs on http://127.0.0.1:3000"
-if python3 -c "import sys,gogs_client;up=gogs_client.UsernamePassword('git-repo-test','git-repo-test');s=gogs_client.GogsApi('http://127.0.0.1:3000');sys.exit(s.valid_authentication(up))" ; then
+if ! python3 -c "import sys,gogs_client;up=gogs_client.UsernamePassword('git-repo-test','git-repo-test');s=gogs_client.GogsApi('http://127.0.0.1:3000');sys.exit(s.authenticated_user(up).user_id<1)" 2>/dev/null ; then
   echo "Creating user git-repo-test"
   gogs admin create-user --config custom/conf/app.ini --name=git-repo-test --password=git-repo-test --email=guyzmo@gogs.loopback
 fi
