@@ -115,14 +115,16 @@ class Test_Gitlab(GitRepoTestCase):
     def test_13_snippet_list_alone(self):
         namespace = os.environ.get('GITLAB_NAMESPACE', 'bogus')
         s_list = [
-            ('https://gitlab.com/snippets/34124', 'this is a secret test.'),
-            ('https://gitlab.com/snippets/34121', 'this is a test.'),
-            ('https://gitlab.com/{}/git-repo/snippets/32318'.format(namespace), 'this is a test.'),
-            ('https://gitlab.com/{}/git-repo/snippets/32317'.format(namespace), 'this is a secret test.'),
-            ('https://gitlab.com/{}/git-repo/snippets/32316'.format(namespace), 'this is a test.'),
-            ('https://gitlab.com/{}/git-repo/snippets/32303'.format(namespace), 'requirements.txt'),
-            ('https://gitlab.com/{}/git-repo/snippets/26173'.format(namespace), 'test'),
-            ('https://gitlab.com/snippets/20696', 'test')
+            '{:45.45} {}',
+            ("title", "url"),
+            ('this is a secret test.', 'https://gitlab.com/snippets/34124',                               ) ,
+            ('this is a test.',        'https://gitlab.com/snippets/34121',                               ) ,
+            ('this is a test.',        'https://gitlab.com/{}/git-repo/snippets/32318'.format(namespace), ) ,
+            ('this is a secret test.', 'https://gitlab.com/{}/git-repo/snippets/32317'.format(namespace), ) ,
+            ('this is a test.',        'https://gitlab.com/{}/git-repo/snippets/32316'.format(namespace), ) ,
+            ('requirements.txt',       'https://gitlab.com/{}/git-repo/snippets/32303'.format(namespace), ) ,
+            ('test',                   'https://gitlab.com/{}/git-repo/snippets/26173'.format(namespace), ) ,
+            ('test',                   'https://gitlab.com/snippets/20696',                               )
         ]
         self.action_gist_list(gist_list_data=s_list)
 
@@ -230,6 +232,8 @@ class Test_Gitlab(GitRepoTestCase):
                 namespace='git-repo-test',
                 repository='git-repo',
                 rq_list_data=[
+            '{:>3}\t{:<60}\t{:2}',
+            ('id', 'title', 'URL'),
             ('1', 'Adding gitlab gists and requests feature', 'https://gitlab.com/git-repo-test/git-repo/merge_requests/1'),
         ])
 

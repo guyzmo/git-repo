@@ -173,40 +173,36 @@ class Test_Main(GitRepoMainTestCase):
     def test_gist_list(self, capsys, caplog):
         did_list = self.main_gist_list(0, args={})
         out, err = capsys.readouterr()
-        assert did_list == ((), {})
-        assert 'id' in caplog.text and 'title' in caplog.text
+        assert did_list == ((None,), {})
         assert out ==  ''.join([
-            'id1                                                     \tvalue1\n',
-            'id2                                                     \tvalue2\n',
-            'id3                                                     \tvalue3\n'
+            'id1 value1\n',
+            'id2 value2\n',
+            'id3 value3\n'
             ])
 
     def test_gist_ls(self, capsys, caplog):
         did_list = self.main_gist_ls(0, args={})
         out, err = capsys.readouterr()
-        assert did_list == ((), {})
-        assert 'id' in caplog.text and 'title' in caplog.text
+        assert did_list == ((None,), {})
         assert out ==  ''.join([
-            'id1                                                     \tvalue1\n',
-            'id2                                                     \tvalue2\n',
-            'id3                                                     \tvalue3\n'
+            'id1 value1\n',
+            'id2 value2\n',
+            'id3 value3\n'
             ])
 
     def test_gist_list__with_gist(self, capsys, caplog):
         did_list = self.main_gist_list(0, args={'<gist>': 'foobar'})
         out, err = capsys.readouterr()
         assert did_list == (('foobar',), {})
-        assert 'language' in caplog.text and 'size' in caplog.text and 'name' in caplog.text
         assert out ==  ''.join([
-            'lang1          \tsize1  \tname1\n',
-            'lang2          \tsize2  \tname2\n',
-            'lang3          \tsize3  \tname3\n'
+            'lang1 size1 name1\n',
+            'lang2 size2 name2\n',
+            'lang3 size3 name3\n'
             ])
 
     def test_gist_list__with_bad_gist(self, caplog):
         did_list = self.main_gist_list(2, args={'<gist>': 'bad', '--verbose': 0})
         assert did_list == (('bad',), {})
-        assert 'language       \t   size\tname' in caplog.text
         assert 'Fatal error: bad gist!' in caplog.text
 
     def test_gist_clone__with_gist(self, caplog):
@@ -303,8 +299,12 @@ class Test_Main(GitRepoMainTestCase):
         call(['git', 'init', '-q', self.tempdir.name])
         repo_slug, seen_args = self.main_request_list('guyzmo/git-repo', 0, args={})
         out, err = capsys.readouterr()
-        assert out ==  '  1\tdesc1                                                       \thttp://request/1\n  2\tdesc2                                                       \thttp://request/2\n  3\tdesc3                                                       \thttp://request/3\n'
-        assert 'id' in caplog.text and 'title' in caplog.text and 'URL' in caplog.text
+        assert out ==  '1 desc1 http://request/1\n2 desc2 http://request/2\n3 desc3 http://request/3\n'
+
+    def test_request_list__with_repo_slug__no_repo(self, capsys, caplog):
+        repo_slug, seen_args = self.main_request_list('guyzmo/git-repo', 0, args={})
+        out, err = capsys.readouterr()
+        assert out ==  '1 desc1 http://request/1\n2 desc2 http://request/2\n3 desc3 http://request/3\n'
 
     # Commented out because this does not work on travis CI
     # def test_request_list__no_repo_slug__git(self, capsys, caplog):
@@ -326,8 +326,7 @@ class Test_Main(GitRepoMainTestCase):
         assert ('guyzmo', 'git-repo') == repo_slug
         assert dict() == seen_args
         out, err = capsys.readouterr()
-        assert out ==  '  1\tdesc1                                                       \thttp://request/1\n  2\tdesc2                                                       \thttp://request/2\n  3\tdesc3                                                       \thttp://request/3\n'
-        assert 'id' in caplog.text and 'title' in caplog.text and 'URL' in caplog.text
+        assert out ==  '1 desc1 http://request/1\n2 desc2 http://request/2\n3 desc3 http://request/3\n'
 
     def test_request_list__no_repo_slug__https_dot_git_fix__issue55(self):
         from subprocess import call
@@ -360,7 +359,7 @@ class Test_Main(GitRepoMainTestCase):
                 args={'<request>': '42'})
         out, err = capsys.readouterr()
         assert ('guyzmo', 'git-repo', '42') == seen_args
-        assert {} == extra_args
+        assert {'force': False} == extra_args
         assert out == ''
         assert 'Successfully fetched request id `42` of `guyzmo/git-repo` into `pr/42`!' in caplog.text
 
@@ -372,7 +371,7 @@ class Test_Main(GitRepoMainTestCase):
     #     seen_args, extra_args = self.main_request_fetch(rc=0, args={'<request>': '42'})
     #     out, err = capsys.readouterr()
     #     assert ('guyzmo', 'git-repo', '42') == seen_args
-    #     assert {} == extra_args
+    #     assert {'force': False} == extra_args
     #     assert out == ''
     #     assert 'Successfully fetched request id `42` of `guyzmo/git-repo` into `pr/42`!' in caplog.text
 
@@ -383,7 +382,7 @@ class Test_Main(GitRepoMainTestCase):
         seen_args, extra_args = self.main_request_fetch(rc=0, args={'<request>': '42'})
         out, err = capsys.readouterr()
         assert ('guyzmo', 'git-repo', '42') == seen_args
-        assert {} == extra_args
+        assert {'force': False} == extra_args
         assert out == ''
         assert 'Successfully fetched request id `42` of `guyzmo/git-repo` into `pr/42`!' in caplog.text
 
@@ -394,7 +393,7 @@ class Test_Main(GitRepoMainTestCase):
                 args={'<request>': 'bad', '--verbose': 0})
         out, err = capsys.readouterr()
         assert ('guyzmo', 'git-repo', 'bad') == seen_args
-        assert {} == extra_args
+        assert {'force': False} == extra_args
         assert out == ''
         assert 'Fatal error: bad request for merge!' in caplog.text
 
@@ -409,7 +408,8 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', 'This is a test') == seen_args
+        seen_args = seen_args[:-1] # remove the passed edition function
+        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -424,7 +424,8 @@ class Test_Main(GitRepoMainTestCase):
                     '<title>': 'This is a test',
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', None) == seen_args
+        seen_args = seen_args[:-1] # remove the passed edition function
+        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', None, True) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -440,7 +441,8 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', 'bad', 'base-test', 'This is a test', 'This is a test') == seen_args
+        seen_args = seen_args[:-1] # remove the passed edition function
+        assert ('guyzmo', 'test', 'bad', 'base-test', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Fatal error: bad branch to request!' in caplog.text
@@ -456,7 +458,8 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', 'pr-test', 'bad', 'This is a test', 'This is a test') == seen_args
+        seen_args = seen_args[:-1] # remove the passed edition function
+        assert ('guyzmo', 'test', 'pr-test', 'bad', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Fatal error: bad branch to request!' in caplog.text
@@ -471,7 +474,8 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', None, 'base-test', 'This is a test', 'This is a test') == seen_args
+        seen_args = seen_args[:-1] # remove the passed edition function
+        assert ('guyzmo', 'test', None, 'base-test', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -486,7 +490,8 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'test', 'pr-test', None, 'This is a test', 'This is a test') == seen_args
+        seen_args = seen_args[:-1] # remove the passed edition function
+        assert ('guyzmo', 'test', 'pr-test', None, 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -539,8 +544,7 @@ class Test_Main(GitRepoMainTestCase):
         self._create_repository(ro=True)
         repo_slug, seen_args = self.main_request_list(rc=0, args={})
         out, err = capsys.readouterr()
-        assert out ==  '  1\tdesc1                                                       \thttp://request/1\n  2\tdesc2                                                       \thttp://request/2\n  3\tdesc3                                                       \thttp://request/3\n'
-        assert 'id' in caplog.text and 'title' in caplog.text and 'URL' in caplog.text
+        assert out ==  '1 desc1 http://request/1\n2 desc2 http://request/2\n3 desc3 http://request/3\n'
 
     def test_request_fetch__no_repo_slug(self, capsys, caplog):
         self._create_repository(ro=True)
@@ -548,7 +552,7 @@ class Test_Main(GitRepoMainTestCase):
                 args={'<request>': '42'})
         out, err = capsys.readouterr()
         assert ('guyzmo', 'git-repo', '42') == seen_args
-        assert {} == extra_args
+        assert {'force': False} == extra_args
         assert out == ''
         assert 'Successfully fetched request id `42` of `guyzmo/git-repo` into `pr/42`!' in caplog.text
 
@@ -562,7 +566,8 @@ class Test_Main(GitRepoMainTestCase):
                     '--message': 'This is a test'
                     })
         out, err = capsys.readouterr()
-        assert ('guyzmo', 'git-repo', 'pr-test', 'base-test', 'This is a test', 'This is a test') == seen_args
+        seen_args = seen_args[:-1] # remove the passed edition function
+        assert ('guyzmo', 'git-repo', 'pr-test', 'base-test', 'This is a test', 'This is a test', True) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/git-repo:base-test`, with id `42`!' in caplog.text
@@ -570,15 +575,83 @@ class Test_Main(GitRepoMainTestCase):
     def test_config(self, capsys, caplog):
         import sys, io, getpass
         getpass.getpass = input
-        sys.stdin = io.StringIO('\n'.join(['y', 'user', 'pass', 'y', 'fubar', 'y']))
+        sys.stdin = io.StringIO('\n'.join(['y', 'n', 'user', 'pass', 'y', 'fubar', 'y']))
         #
         conf = self.main_config(target='hub', rc=0)
-        assert ['[gitrepo "github"]\n',
+        assert sorted(['[gitrepo "github"]\n',
+                '\tremote = fubar\n',
                 '\ttoken = user:pass\n',
                 '[alias]\n',
-                '\ttest_command = repo test_command\n'] == conf
+                '\ttest_command = repo test_command\n']) == sorted(conf)
+        last_conf = conf
+
+        sys.stdin = io.StringIO('\n'.join([
+            'y', 'y', 'frama', 'framagit.org', '', '', '', '', 'user', 'pass', 'y', 'framagit', 'y']))
+        #
+        conf = self.main_config(target='lab', rc=0)
+        assert sorted(last_conf+[
+                '[gitrepo "frama"]\n',
+                '\tfqdn = framagit.org\n',
+                '\tremote = framagit\n',
+                '\ttype = gitlab\n',
+                '\tname = frama\n',
+                '\tcommand = frama\n',
+                '\tport = 443\n',
+                '\tscheme = https\n',
+                '\tinsecure = False\n',
+                '\ttoken = user:pass\n', ]) == sorted(conf)
+        last_conf = conf
+
+        sys.stdin = io.StringIO('\n'.join([
+            'y', 'y', 'test0r', 'localhost', '8080', 'n', 'user', 'pass', 'y', 'test', 'y']))
+        #
+        conf = self.main_config(target='lab', rc=0)
+        assert sorted(last_conf+[
+                '[gitrepo "test0r"]\n',
+                '\tfqdn = localhost\n',
+                '\tremote = test\n',
+                '\ttype = gitlab\n',
+                '\tname = test0r\n',
+                '\tcommand = test0r\n',
+                '\tport = 8080\n',
+                '\tscheme = http\n',
+                '\ttoken = user:pass\n', ]) == sorted(conf)
+        last_conf = conf
+
+        sys.stdin = io.StringIO('\n'.join([
+            'y', 'y', 'selfsigned', 'server.local', '8443',
+            '', '', 'y', '/etc/server.pem', 'user', 'pass', 'y', 'self', 'y']))
+        #
+        conf = self.main_config(target='lab', rc=0)
+        assert sorted(last_conf+['[gitrepo "selfsigned"]\n',
+                '\tfqdn = server.local\n',
+                '\tremote = self\n',
+                '\ttype = gitlab\n',
+                '\tname = selfsigned\n',
+                '\tcommand = selfsigned\n',
+                '\tport = 8443\n',
+                '\tscheme = https\n',
+                '\tinsecure = False\n',
+                '\tserver-cert = /etc/server.pem\n',
+                '\ttoken = user:pass\n', ]) == sorted(conf)
+        last_conf = conf
+
+        sys.stdin = io.StringIO('\n'.join([
+            'y', 'y', 'lamer', 'pwnme.com', '',
+            '', 'y', 'user', 'pass', 'y', 'l', 'y']))
+        #
+        conf = self.main_config(target='lab', rc=0)
+        assert sorted(last_conf+['[gitrepo "lamer"]\n',
+                '\tfqdn = pwnme.com\n',
+                '\tremote = l\n',
+                '\ttype = gitlab\n',
+                '\tname = lamer\n',
+                '\tcommand = lamer\n',
+                '\tport = 443\n',
+                '\tscheme = https\n',
+                '\tinsecure = True\n',
+                '\ttoken = user:pass\n', ]) == sorted(conf)
 
     def test_z_noop(self):
         self.main_noop('guyzmo/git-repo', 1)
-
 

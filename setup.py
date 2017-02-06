@@ -46,63 +46,6 @@ class DistClean(Command):
         shutil.rmtree(os.path.join(path, '.installed.cfg'), ignore_errors=True)
         print("Repository is now clean!")
 
-class VersionInfo(type):
-    @property
-    def info(cls):
-        if not cls._info:
-            try:
-                cls._info = list(int(x) for x in open(cls.path, 'r').read().strip().split('.'))
-            except ValueError:
-                print('Version parts shall all be integers')
-                sys.exit(1)
-            if len(cls._info) != 3:
-                print('Version number is not conform, there should be exactly three parts')
-                sys.exit(1)
-        return cls._info
-
-    def __str__(cls):
-        return '.'.join(map(str, cls.info))
-
-# Hack for metaclass support in both Py2 and Py3
-class VersionInfo_metaclass(VersionInfo):
-	def __new__(cls, *bases):
-		return VersionInfo('version_info', bases, {})
-
-class Version(VersionInfo_metaclass(Command)):
-    description = 'Bump version number'
-    user_options = [
-            ('major', 'M', 'Bump major part of version number'),
-            ('minor', 'm', 'Bump minor part of version number'),
-            ('patch', 'p', 'Bump patch part of version number')]
-    path = os.path.join(os.path.dirname(__file__), 'VERSION')
-    _info = None
-
-    def finalize_options(self, *args, **kwarg): pass
-    def initialize_options(self, *args, **kwarg):
-        self.major = None
-        self.minor = None
-        self.patch = None
-
-    def run(self):
-        MAJOR, MINOR, PATCH = (0,1,2)
-        prev = str(Version)
-        if self.major:
-            Version.info[MAJOR] += 1
-            Version.info[MINOR] = 0
-            Version.info[PATCH] = 0
-        if self.minor:
-            Version.info[MINOR] += 1
-            Version.info[PATCH] = 0
-        if self.patch:
-            Version.info[PATCH] += 1
-        if self.major or self.minor or self.patch:
-            with open(self.path, 'w') as f:
-                f.write(str(Version))
-            print("Bumped version from {} to {}".format(prev, str(Version)))
-        else:
-            print("Please choose at least one part to bump: --major, --minor or --patch!")
-            sys.exit(1)
-
 
 class PyTest(TestCommand):
     user_options = [
@@ -192,8 +135,7 @@ def requirements(spec=None):
 
 
 setup(name='git-repo',
-      version=str(Version),
-      description='Tool for managing remote repositories from your git CLI!',
+      description='Tool for managing repository services from your git CLI tool',
       classifiers=[
           # 'Development Status :: 2 - Pre-Alpha',
           # 'Development Status :: 3 - Alpha',
@@ -217,10 +159,12 @@ setup(name='git-repo',
       author='Bernard `Guyzmo` Pratz',
       author_email='guyzmo+git-repo@m0g.net',
       setup_requires=[
+          'setuptools_scm',
           'setuptools-markdown',
-          'wheel>=0.25.0'
+          'wheel>=0.25.0',
       ],
       long_description_markdown_filename='README.md',
+      use_scm_version={'version_scheme':'guess-next-dev'},
       include_package_data = True,
       install_requires=requirements(),
       tests_require=requirements('test'),
@@ -229,7 +173,6 @@ setup(name='git-repo',
           'buildout': Buildout,
           'dist_clean': DistClean,
           'test': PyTest,
-          'bump': Version,
       },
       entry_points="""
       # -*- Entry points: -*-

@@ -116,28 +116,30 @@ class Test_Github(GitRepoTestCase):
 
     def test_13_gist_list(self):
         g_list = [
-            ("https://gist.github.com/a7ce4fddba7744ddf335", "unicode combined class for better character counting and indexing"),
-            ("https://gist.github.com/7e5a12bc158a79966020", "avr-gcc derivation build"),
-            ("https://gist.github.com/dd9ab22c8f22a5a8f3d1", "avr-gcc derivation"),
-            ("https://gist.github.com/893fbc98bf1c9cf6212a", "`brew cask install mplabx` fixed"),
-            ("https://gist.github.com/9baed8712a16a29c2e90", "`brew cask install mplabx` issue with target in /usr/local/mplabx"),
-            ("https://gist.github.com/1c03ddfdc8f57fa7919a", "cask formula for mplabx (stripped down)"),
-            ("https://gist.github.com/21949a3fa5f981a869bf", "`brew cask install mplabx` issue removing the caskroom dir!"),
-            ("https://gist.github.com/588deedefc1675998bbe", "cask formula for mplabx"),
-            ("https://gist.github.com/281502e4ae6fce01db92", "TaskJuggler example"),
-            ("https://gist.github.com/06c5b0da8d10c514166f", "redmine to taskjuggler recursive func"),
-            ("https://gist.github.com/603ccdd0f504c63cd0df", "Simple example of Flask/Presst with Login and Principals (not working!)"),
-            ("https://gist.github.com/2482962b153ebd5cfa6b", "radial colour picker crash"),
-            ("https://gist.github.com/fc46896f3e604269ff93", "Platform levelling GCode file"),
-            ("https://gist.github.com/3b18193d6bea07bac37c", "Code to download movies from pluzz"),
-            ("https://gist.github.com/c01613d0453df275622a", ""),
-            ("https://gist.github.com/10118958",             "I2C scanner code for SL030"),
-            ("https://gist.github.com/5b79437ddd3f49491ce3", ""),
-            ("https://gist.github.com/5730750",              "An enhanced implementation of authenticating to stackoverflow using python."),
-            ("https://gist.github.com/4308707",              "Patch to be applied for homebrew's strigi.rb Formula."),
-            ("https://gist.github.com/4170462",              "Patch for strnlen support in freevpn (for OSX 10.6)"),
-            ("https://gist.github.com/3666086",              "z.sh patch for multiline quotes"),
-            ("https://gist.github.com/2788003",              "A Tornado-based library that enables Event Source support !"),
+            '{:45.45} {}',
+            ("title", "url"),
+            ("unicode combined class for better character counting and indexing",           "https://gist.github.com/a7ce4fddba7744ddf335" ) ,
+            ("avr-gcc derivation build",                                                    "https://gist.github.com/7e5a12bc158a79966020" ) ,
+            ("avr-gcc derivation",                                                          "https://gist.github.com/dd9ab22c8f22a5a8f3d1" ) ,
+            ("`brew cask install mplabx` fixed",                                            "https://gist.github.com/893fbc98bf1c9cf6212a" ) ,
+            ("`brew cask install mplabx` issue with target in /usr/local/mplabx",           "https://gist.github.com/9baed8712a16a29c2e90" ) ,
+            ("cask formula for mplabx (stripped down)",                                     "https://gist.github.com/1c03ddfdc8f57fa7919a" ) ,
+            ("`brew cask install mplabx` issue removing the caskroom dir!",                 "https://gist.github.com/21949a3fa5f981a869bf" ) ,
+            ("cask formula for mplabx",                                                     "https://gist.github.com/588deedefc1675998bbe" ) ,
+            ("TaskJuggler example",                                                         "https://gist.github.com/281502e4ae6fce01db92" ) ,
+            ("redmine to taskjuggler recursive func",                                       "https://gist.github.com/06c5b0da8d10c514166f" ) ,
+            ("Simple example of Flask/Presst with Login and Principals (not working!)",     "https://gist.github.com/603ccdd0f504c63cd0df" ) ,
+            ("radial colour picker crash",                                                  "https://gist.github.com/2482962b153ebd5cfa6b" ) ,
+            ("Platform levelling GCode file",                                               "https://gist.github.com/fc46896f3e604269ff93" ) ,
+            ("Code to download movies from pluzz",                                          "https://gist.github.com/3b18193d6bea07bac37c" ) ,
+            ("",                                                                            "https://gist.github.com/c01613d0453df275622a" ) ,
+            ("I2C scanner code for SL030",                                                  "https://gist.github.com/10118958"             ) ,
+            ("",                                                                            "https://gist.github.com/5b79437ddd3f49491ce3" ) ,
+            ("An enhanced implementation of authenticating to stackoverflow using python.", "https://gist.github.com/5730750"              ) ,
+            ("Patch to be applied for homebrew's strigi.rb Formula.",                       "https://gist.github.com/4308707"              ) ,
+            ("Patch for strnlen support in freevpn (for OSX 10.6)",                         "https://gist.github.com/4170462"              ) ,
+            ("z.sh patch for multiline quotes",                                             "https://gist.github.com/3666086"              ) ,
+            ("A Tornado-based library that enables Event Source support !",                 "https://gist.github.com/2788003"              ) ,
         ]
         self.action_gist_list(gist_list_data=g_list)
 
@@ -284,8 +286,10 @@ class Test_Github(GitRepoTestCase):
                 namespace='guyzmo',
                 repository='git-repo',
                 rq_list_data=[
-            ('3', 'docs for fqdn > url', 'https://api.github.com/repos/guyzmo/git-repo/issues/3'),
-            ('2', 'prefer gitrepo.<target>.token > privatekey, docs', 'https://api.github.com/repos/guyzmo/git-repo/issues/2'),
+            '{}\t{:<60}\t{}',
+            ('id', 'title', 'URL'),
+            ('3', 'docs for fqdn > url', 'https://github.com/guyzmo/git-repo/pull/3'),
+            ('2', 'prefer gitrepo.<target>.token > privatekey, docs', 'https://github.com/guyzmo/git-repo/pull/2'),
         ])
 
     def test_31_request_fetch(self):
@@ -311,7 +315,12 @@ class Test_Github(GitRepoTestCase):
                 title='PR test',
                 description='PR description',
                 service='github')
-        assert r == {'local': 'pr-test', 'ref': 1, 'remote': 'PR test'}
+        assert r == {
+                'local': 'pr-test',
+                'ref': 1,
+                'remote': 'PR test',
+                'url': 'https://github.com/{}/test_create_requests/pull/1'.format(self.namespace),
+                }
 
     def test_32_request_create__bad_branch(self):
         with pytest.raises(ResourceError):
@@ -343,17 +352,16 @@ class Test_Github(GitRepoTestCase):
         self.action_open(namespace='guyzmo',
                          repository='git-repo')
 
-    def test_34_list__short(self, capsys, caplog):
-        self.action_list(namespace='git-repo-test')
-        out, err = capsys.readouterr()
-        assert out ==  'git-repo-test/git-repo\n'
+    def test_34_list__short(self, caplog):
+        projects = self.action_list(namespace='git-repo-test')
+        assert projects == ['{}', 'Total repositories: 1', ['git-repo-test/git-repo']]
         assert 'GET https://api.github.com/users/git-repo-test/repos' in caplog.text
 
-    def test_34_list__long(self, capsys, caplog):
-        self.action_list(namespace='git-repo-test', _long=True)
-        out, err = capsys.readouterr()
-        assert err.replace('\t', ' ') == "Status Commits Reqs Issues Forks Coders Watch Likes Lang Modif  Name\n"
-        assert out.replace('\t', ' ') ==  "F  92 0 0 0 1 0 0 Python Mar 30 13:32 git-repo-test/git-repo\n"
+    def test_34_list__long(self, caplog):
+        projects = self.action_list(namespace='git-repo-test', _long=True)
+        assert projects == ['{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t\t{}',
+                ['Status', 'Commits', 'Reqs', 'Issues', 'Forks', 'Coders', 'Watch', 'Likes', 'Lang', 'Modif', 'Name'],
+                ['F ', '92', '0', '0', '0', '1', '0', '0', 'Python', 'Mar 30 2016', 'git-repo-test/git-repo']]
         assert 'GET https://api.github.com/users/git-repo-test/repos' in caplog.text
 
 

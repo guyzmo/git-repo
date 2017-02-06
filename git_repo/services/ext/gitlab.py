@@ -5,6 +5,7 @@ log = logging.getLogger('git_repo.gitlab')
 
 from ..service import register_target, RepositoryService
 from ...exceptions import ArgumentError, ResourceError, ResourceExistsError, ResourceNotFoundError
+from ...tools import columnize
 
 import gitlab
 from gitlab.exceptions import GitlabListError, GitlabCreateError, GitlabGetError
@@ -19,10 +20,14 @@ class GitlabService(RepositoryService):
     fqdn = 'gitlab.com'
 
     def __init__(self, *args, **kwarg):
+        self.gl = gitlab.Gitlab(self.url_ro)
         super().__init__(*args, **kwarg)
-        self.gl = gitlab.Gitlab(self.url_ro, ssl_verify=not self.insecure)
 
     def connect(self):
+        self.gl.ssl_verify = self.session_certificate or not self.session_insecure
+        if self.session_proxy:
+            self.gl.session.proxies.update(self.session_proxy)
+
         self.gl.set_url(self.url_ro)
         self.gl.set_token(self._privatekey)
         self.gl.token_auth()
@@ -70,37 +75,17 @@ class GitlabService(RepositoryService):
             raise ResourceError("Unhandled exception: {}".format(err)) from err
 
     def list(self, user, _long=False):
-        import shutil, sys
-        from datetime import datetime
-        term_width = shutil.get_terminal_size((80, 20)).columns
-        def col_print(lines, indent=0, pad=2):
-            # prints a list of items in a fashion similar to the dir command
-            # borrowed from https://gist.github.com/critiqjo/2ca84db26daaeb1715e1
-            n_lines = len(lines)
-            if n_lines == 0:
-                return
-            col_width = max(len(line) for line in lines)
-            n_cols = int((term_width + pad - indent)/(col_width + pad))
-            n_cols = min(n_lines, max(1, n_cols))
-            col_len = int(n_lines/n_cols) + (0 if n_lines % n_cols == 0 else 1)
-            if (n_cols - 1) * col_len >= n_lines:
-                n_cols -= 1
-            cols = [lines[i*col_len : i*col_len + col_len] for i in range(n_cols)]
-            rows = list(zip(*cols))
-            rows_missed = zip(*[col[len(rows):] for col in cols[:-1]])
-            rows.extend(rows_missed)
-            for row in rows:
-                print(" "*indent + (" "*pad).join(line.ljust(col_width) for line in row))
-
         if not self.gl.users.search(user):
             raise ResourceNotFoundError("User {} does not exists.".format(user))
 
         repositories = self.gl.projects.list(author=user)
         if not _long:
-            repositories = list(repositories)
-            col_print([repo.path_with_namespace for repo in repositories])
+            repositories = list([repo.path_with_namespace for repo in repositories])
+            yield "{}"
+            yield "Total repositories: {}".format(len(repositories))
+            yield from columnize(repositories)
         else:
-            print('Status\tCommits\tReqs\tIssues\tForks\tCoders\tWatch\tLikes\tLang\tModif\t\tName', file=sys.stderr)
+            yield ['Status', 'Commits', 'Reqs', 'Issues', 'Forks', 'Coders', 'Watch', 'Likes', 'Lang', 'Modif\t', 'Name']
             for repo in repositories:
                 time.sleep(0.5)
                 # if repo.last_activity_at.year < datetime.now().year:
@@ -112,7 +97,7 @@ class GitlabService(RepositoryService):
                     'F' if False else ' ',               # is a fork?
                     'P' if repo.visibility_level == 0 else ' ',            # is private?
                 ])
-                print('\t'.join([
+                yield [
                                                                # status
                     status,
                                                                # stats
@@ -127,7 +112,7 @@ class GitlabService(RepositoryService):
                     'N.A.',                                    # language
                     repo.last_activity_at,                     # date
                     repo.name_with_namespace,                  # name
-                ]))
+                ]
 
     def get_repository(self, user, repo):
         try:
@@ -159,10 +144,12 @@ class GitlabService(RepositoryService):
         return (user, project_name, snippet_id)
 
     def gist_list(self, project=None):
+        yield "{:45.45} {}"
+        yield 'title', 'url'
         if not project:
             try:
                 for snippet in self.gl.snippets.list():
-                    yield (snippet.web_url, snippet.title)
+                    yield snippet.title, snippet.web_url
             except GitlabListError as err:
                 if err.response_code == 404:
                     raise ResourceNotFoundError('Feature not available, please upgrade your gitlab instance.') from err
@@ -173,7 +160,7 @@ class GitlabService(RepositoryService):
             try:
                 project = self.gl.projects.get(project)
                 for snippet in project.snippets.list():
-                    yield (snippet.web_url, 0, snippet.title)
+                    yield (snippet.web_url, snippet.title)
             except GitlabGetError as err:
                 raise ResourceNotFoundError('Could not retrieve project "{}".'.format(project)) from err
 
@@ -266,11 +253,15 @@ class GitlabService(RepositoryService):
 
         return snippet.delete()
 
-    def request_create(self, user, repo, local_branch, remote_branch, title, description=None):
+    def request_create(self, user, repo, local_branch, remote_branch, title, description=None, auto_slug=False):
         try:
             repository = self.gl.projects.get('/'.join([user, repo]))
             if not repository:
                 raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
+            if not title and not description and edit:
+                title, description = edit(repository, from_branch)
+                if not title and not description:
+                    raise ArgumentError('Missing message for request creation')
             if not local_branch:
                 remote_branch = self.repository.active_branch.name or self.repository.active_branch.name
             if not remote_branch:
@@ -295,6 +286,8 @@ class GitlabService(RepositoryService):
 
     def request_list(self, user, repo):
         project = self.gl.projects.get('/'.join([user, repo]))
+        yield "{:>3}\t{:<60}\t{:2}"
+        yield ('id', 'title', 'URL')
         for mr in self.gl.project_mergerequests.list(project_id=project.id):
             yield ( str(mr.iid),
                     mr.title,
@@ -306,7 +299,7 @@ class GitlabService(RepositoryService):
                         )
                     )
 
-    def request_fetch(self, user, repo, request, pull=False):
+    def request_fetch(self, user, repo, request, pull=False, force=False):
         if pull:
             raise NotImplementedError('Pull operation on requests for merge are not yet supported')
         try:
@@ -316,7 +309,8 @@ class GitlabService(RepositoryService):
                     self.fetch(
                         remote,
                        'merge_requests/{}/head'.format(request),
-                        local_branch_name
+                        local_branch_name,
+                        force
                     )
                     return local_branch_name
             else:
