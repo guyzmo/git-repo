@@ -1,0 +1,233 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2017-01-31T20:04:37",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false,\"name\":\"<GITHUB_NAMESPACE>\",\"company\":null,\"blog\":\"http://guyzmo.got.nothing.to/blog/\",\"location\":\"Paris\",\"email\":null,\"hireable\":true,\"bio\":\"I'm zmo on freenode.\\r\\n\\r\\n: :(){ :|:& };:\",\"public_repos\":93,\"public_gists\":21,\"followers\":56,\"following\":15,\"created_at\":\"2010-04-27T14:04:09Z\",\"updated_at\":\"2016-12-30T16:56:26Z\"}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "1159",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Tue, 31 Jan 2017 20:04:37 GMT",
+          "ETag": "\"1d82c2c7174688d3e410d8908b5dab40\"",
+          "Last-Modified": "Fri, 30 Dec 2016 16:56:26 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "974C:4114:8F24243:B62FFE7:5890EDD5",
+          "X-OAuth-Scopes": "repo, delete_repo, gist",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4981",
+          "X-RateLimit-Reset": "1485895946",
+          "X-Served-By": "4c8b2d4732c413f4b9aefe394bd65569",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/user"
+      }
+    },
+    {
+      "recorded_at": "2017-01-31T20:04:37",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/repos/git-services/git-repo-test"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"id\":79663368,\"name\":\"git-repo-test\",\"full_name\":\"git-services/git-repo-test\",\"owner\":{\"login\":\"git-services\",\"id\":25266016,\"avatar_url\":\"https://avatars.githubusercontent.com/u/25266016?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/git-services\",\"html_url\":\"https://github.com/git-services\",\"followers_url\":\"https://api.github.com/users/git-services/followers\",\"following_url\":\"https://api.github.com/users/git-services/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/git-services/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/git-services/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/git-services/subscriptions\",\"organizations_url\":\"https://api.github.com/users/git-services/orgs\",\"repos_url\":\"https://api.github.com/users/git-services/repos\",\"events_url\":\"https://api.github.com/users/git-services/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/git-services/received_events\",\"type\":\"Organization\",\"site_admin\":false},\"private\":false,\"html_url\":\"https://github.com/git-services/git-repo-test\",\"description\":null,\"fork\":false,\"url\":\"https://api.github.com/repos/git-services/git-repo-test\",\"forks_url\":\"https://api.github.com/repos/git-services/git-repo-test/forks\",\"keys_url\":\"https://api.github.com/repos/git-services/git-repo-test/keys{/key_id}\",\"collaborators_url\":\"https://api.github.com/repos/git-services/git-repo-test/collaborators{/collaborator}\",\"teams_url\":\"https://api.github.com/repos/git-services/git-repo-test/teams\",\"hooks_url\":\"https://api.github.com/repos/git-services/git-repo-test/hooks\",\"issue_events_url\":\"https://api.github.com/repos/git-services/git-repo-test/issues/events{/number}\",\"events_url\":\"https://api.github.com/repos/git-services/git-repo-test/events\",\"assignees_url\":\"https://api.github.com/repos/git-services/git-repo-test/assignees{/user}\",\"branches_url\":\"https://api.github.com/repos/git-services/git-repo-test/branches{/branch}\",\"tags_url\":\"https://api.github.com/repos/git-services/git-repo-test/tags\",\"blobs_url\":\"https://api.github.com/repos/git-services/git-repo-test/git/blobs{/sha}\",\"git_tags_url\":\"https://api.github.com/repos/git-services/git-repo-test/git/tags{/sha}\",\"git_refs_url\":\"https://api.github.com/repos/git-services/git-repo-test/git/refs{/sha}\",\"trees_url\":\"https://api.github.com/repos/git-services/git-repo-test/git/trees{/sha}\",\"statuses_url\":\"https://api.github.com/repos/git-services/git-repo-test/statuses/{sha}\",\"languages_url\":\"https://api.github.com/repos/git-services/git-repo-test/languages\",\"stargazers_url\":\"https://api.github.com/repos/git-services/git-repo-test/stargazers\",\"contributors_url\":\"https://api.github.com/repos/git-services/git-repo-test/contributors\",\"subscribers_url\":\"https://api.github.com/repos/git-services/git-repo-test/subscribers\",\"subscription_url\":\"https://api.github.com/repos/git-services/git-repo-test/subscription\",\"commits_url\":\"https://api.github.com/repos/git-services/git-repo-test/commits{/sha}\",\"git_commits_url\":\"https://api.github.com/repos/git-services/git-repo-test/git/commits{/sha}\",\"comments_url\":\"https://api.github.com/repos/git-services/git-repo-test/comments{/number}\",\"issue_comment_url\":\"https://api.github.com/repos/git-services/git-repo-test/issues/comments{/number}\",\"contents_url\":\"https://api.github.com/repos/git-services/git-repo-test/contents/{+path}\",\"compare_url\":\"https://api.github.com/repos/git-services/git-repo-test/compare/{base}...{head}\",\"merges_url\":\"https://api.github.com/repos/git-services/git-repo-test/merges\",\"archive_url\":\"https://api.github.com/repos/git-services/git-repo-test/{archive_format}{/ref}\",\"downloads_url\":\"https://api.github.com/repos/git-services/git-repo-test/downloads\",\"issues_url\":\"https://api.github.com/repos/git-services/git-repo-test/issues{/number}\",\"pulls_url\":\"https://api.github.com/repos/git-services/git-repo-test/pulls{/number}\",\"milestones_url\":\"https://api.github.com/repos/git-services/git-repo-test/milestones{/number}\",\"notifications_url\":\"https://api.github.com/repos/git-services/git-repo-test/notifications{?since,all,participating}\",\"labels_url\":\"https://api.github.com/repos/git-services/git-repo-test/labels{/name}\",\"releases_url\":\"https://api.github.com/repos/git-services/git-repo-test/releases{/id}\",\"deployments_url\":\"https://api.github.com/repos/git-services/git-repo-test/deployments\",\"created_at\":\"2017-01-21T18:11:05Z\",\"updated_at\":\"2017-01-21T18:11:05Z\",\"pushed_at\":\"2017-01-21T23:59:07Z\",\"git_url\":\"git://github.com/git-services/git-repo-test.git\",\"ssh_url\":\"git@github.com:git-services/git-repo-test.git\",\"clone_url\":\"https://github.com/git-services/git-repo-test.git\",\"svn_url\":\"https://github.com/git-services/git-repo-test\",\"homepage\":\"\",\"size\":0,\"stargazers_count\":0,\"watchers_count\":0,\"language\":null,\"has_issues\":true,\"has_downloads\":true,\"has_wiki\":true,\"has_pages\":false,\"forks_count\":1,\"mirror_url\":null,\"open_issues_count\":7,\"forks\":1,\"open_issues\":7,\"watchers\":0,\"default_branch\":\"master\",\"permissions\":{\"admin\":true,\"push\":true,\"pull\":true},\"organization\":{\"login\":\"git-services\",\"id\":25266016,\"avatar_url\":\"https://avatars.githubusercontent.com/u/25266016?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/git-services\",\"html_url\":\"https://github.com/git-services\",\"followers_url\":\"https://api.github.com/users/git-services/followers\",\"following_url\":\"https://api.github.com/users/git-services/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/git-services/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/git-services/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/git-services/subscriptions\",\"organizations_url\":\"https://api.github.com/users/git-services/orgs\",\"repos_url\":\"https://api.github.com/users/git-services/repos\",\"events_url\":\"https://api.github.com/users/git-services/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/git-services/received_events\",\"type\":\"Organization\",\"site_admin\":false},\"network_count\":1,\"subscribers_count\":1}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "6036",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Tue, 31 Jan 2017 20:04:37 GMT",
+          "ETag": "\"dd70ecdfd52247a5eb43dcd788cd8238\"",
+          "Last-Modified": "Sat, 21 Jan 2017 18:11:05 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "repo",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "974C:4114:8F24257:B63000D:5890EDD5",
+          "X-OAuth-Scopes": "repo, delete_repo, gist",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4980",
+          "X-RateLimit-Reset": "1485895946",
+          "X-Served-By": "4537b68c46a1b65b106078b0a2578ee2",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/repos/git-services/git-repo-test"
+      }
+    },
+    {
+      "recorded_at": "2017-01-31T20:04:37",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/repos/git-services/git-repo-test/issues/7"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"url\":\"https://api.github.com/repos/git-services/git-repo-test/issues/7\",\"repository_url\":\"https://api.github.com/repos/git-services/git-repo-test\",\"labels_url\":\"https://api.github.com/repos/git-services/git-repo-test/issues/7/labels{/name}\",\"comments_url\":\"https://api.github.com/repos/git-services/git-repo-test/issues/7/comments\",\"events_url\":\"https://api.github.com/repos/git-services/git-repo-test/issues/7/events\",\"html_url\":\"https://github.com/git-services/git-repo-test/issues/7\",\"id\":203653586,\"number\":7,\"title\":\"coin \ud83e\udd86\",\"user\":{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false},\"labels\":[{\"id\":523228922,\"url\":\"https://api.github.com/repos/git-services/git-repo-test/labels/bug\",\"name\":\"bug\",\"color\":\"ee0701\",\"default\":true},{\"id\":523228924,\"url\":\"https://api.github.com/repos/git-services/git-repo-test/labels/enhancement\",\"name\":\"enhancement\",\"color\":\"84b6eb\",\"default\":true}],\"state\":\"open\",\"locked\":false,\"assignee\":null,\"assignees\":[],\"milestone\":null,\"comments\":0,\"created_at\":\"2017-01-27T14:49:52Z\",\"updated_at\":\"2017-01-31T20:04:11Z\",\"closed_at\":null,\"body_html\":\"<p>meuh \u2665<g-emoji alias=\\\"+1\\\" fallback-src=\\\"https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png\\\" ios-version=\\\"6.0\\\">\ud83d\udc4d</g-emoji></p>\",\"body_text\":\"meuh \u2665\ud83d\udc4d\",\"body\":\"meuh \u2665\ud83d\udc4d\\n\\n\",\"closed_by\":{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false}}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "2952",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Tue, 31 Jan 2017 20:04:37 GMT",
+          "ETag": "\"ff06e84b5964d8d32ae7a832112c0f53\"",
+          "Last-Modified": "Tue, 31 Jan 2017 20:04:11 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "public_repo, repo",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "974C:4114:8F24272:B63002C:5890EDD5",
+          "X-OAuth-Scopes": "repo, delete_repo, gist",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4979",
+          "X-RateLimit-Reset": "1485895946",
+          "X-Served-By": "4c8b2d4732c413f4b9aefe394bd65569",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/repos/git-services/git-repo-test/issues/7"
+      }
+    },
+    {
+      "recorded_at": "2017-01-31T20:04:38",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"title\": \"This is a test\", \"body\": \"How successful is that test?\"}"
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Length": "67",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "PATCH",
+        "uri": "https://api.github.com/repos/git-services/git-repo-test/issues/7"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"url\":\"https://api.github.com/repos/git-services/git-repo-test/issues/7\",\"repository_url\":\"https://api.github.com/repos/git-services/git-repo-test\",\"labels_url\":\"https://api.github.com/repos/git-services/git-repo-test/issues/7/labels{/name}\",\"comments_url\":\"https://api.github.com/repos/git-services/git-repo-test/issues/7/comments\",\"events_url\":\"https://api.github.com/repos/git-services/git-repo-test/issues/7/events\",\"html_url\":\"https://github.com/git-services/git-repo-test/issues/7\",\"id\":203653586,\"number\":7,\"title\":\"This is a test\",\"user\":{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false},\"labels\":[{\"id\":523228922,\"url\":\"https://api.github.com/repos/git-services/git-repo-test/labels/bug\",\"name\":\"bug\",\"color\":\"ee0701\",\"default\":true},{\"id\":523228924,\"url\":\"https://api.github.com/repos/git-services/git-repo-test/labels/enhancement\",\"name\":\"enhancement\",\"color\":\"84b6eb\",\"default\":true}],\"state\":\"open\",\"locked\":false,\"assignee\":null,\"assignees\":[],\"milestone\":null,\"comments\":0,\"created_at\":\"2017-01-27T14:49:52Z\",\"updated_at\":\"2017-01-31T20:04:38Z\",\"closed_at\":null,\"body_html\":\"<p>How successful is that test?</p>\",\"body_text\":\"How successful is that test?\",\"body\":\"How successful is that test?\",\"closed_by\":{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false}}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "2865",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Tue, 31 Jan 2017 20:04:38 GMT",
+          "ETag": "\"6f0024257f3fedb8e220b28b2b2a67ad\"",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "public_repo, repo",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "974C:4114:8F24292:B63005F:5890EDD5",
+          "X-OAuth-Scopes": "repo, delete_repo, gist",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4978",
+          "X-RateLimit-Reset": "1485895946",
+          "X-Served-By": "0e17b94a265a427d9cafe798ceea7c02",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/repos/git-services/git-repo-test/issues/7"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

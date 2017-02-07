@@ -3,13 +3,15 @@
 import logging
 log = logging.getLogger('git_repo.github')
 
-from ..service import register_target, RepositoryService, os
+from ..service import register_target, RepositoryService, os, parse_comma_string_to_list
 from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError, ArgumentError
 from ...tools import columnize
 
 import github3
 
 from git.exc import GitCommandError
+from collections import namedtuple
+
 
 from datetime import datetime
 
@@ -298,6 +300,234 @@ class GithubService(RepositoryService):
             if 'Error when fetching: fatal: Couldn\'t find remote ref' in err.command[0]:
                 raise ResourceNotFoundError('Could not find opened request #{}'.format(request)) from err
             raise err
+
+    '''Issues'''
+
+    ISSUE_FILTER_DEFAULTS=dict(
+        state     = 'all',
+        milestone = None,
+        assignee  = None,
+        mentioned = None,
+        labels    = [],
+        sort      = None,
+        direction = 'desc',
+        since     = None,
+        type      = 'all',
+    )
+
+    def issue_list_parse_filter_statement(self, filter_stmt, transform=None):
+        from copy import deepcopy
+
+        params = deepcopy(self.ISSUE_FILTER_DEFAULTS)
+
+        for f in parse_comma_string_to_list(filter_stmt):
+            if ':' in f:
+                param, value_head, *value_tail = f.split(':')
+                value = "".join([value_head] + value_tail) # fix labels containing :
+                if transform:
+                    param, value = transform(param, value)
+                if not param in params.keys():
+                    raise ArgumentError('Unknown filter key {}'.format(param))
+                if isinstance(params[param], list):
+                    params[param].append(value)
+                else:
+                    params[param] = value
+        return params
+
+    def issue_extract_from_file(self, it):
+        # Message-ID: <guyzmo/git-repo/issues/1/123456789@github.com>
+        for line in it:
+            if line.lower().startswith('message-id:'):
+                _, line = line.lower().split('message-id: <')
+                user, repo, _, issue, *_ = line.lower().split('/')
+                return user, repo, [issue]
+
+    def issue_label_list(self, user, repo):
+        repository = self.gh.repository(user, repo)
+        yield "Name"
+        for l in repository.iter_labels():
+            yield l.name
+
+    def issue_milestone_list(self, user, repo):
+        repository = self.gh.repository(user, repo)
+        yield "Name"
+        for m in repository.iter_milestones():
+            yield m.title
+
+    def issue_grab(self, user, repo, issue_id):
+        repository = self.gh.repository(user, repo)
+        issue = repository.issue(issue_id)
+        return dict(
+            id=issue.number,
+            state=issue.state,
+            title=issue.title,
+            uri=issue.html_url,
+            poster=issue.user.login,
+            milestone=issue.milestone,
+            labels=[label.name for label in issue.labels],
+            creation=issue.created_at.isoformat(),
+            closed_at=issue.closed_at,
+            closed_by=issue.closed_by.login if issue.closed_by else '',
+            body=issue.body,
+            assignee=issue.assignee.login if issue.assignee else None,
+            repository='/'.join(issue.repository)
+        )
+
+    def issue_list(self, user, repo, filter_str=''):
+        params = self.issue_list_parse_filter_statement(
+            filter_stmt=filter_str,
+            transform=lambda k,v: (k.replace('status', 'state').replace('label', 'labels'), v)
+        )
+        type_filter = params['type']
+        del params['type']
+        repository = self.gh.repository(user, repo)
+        yield (None, 'Id', 'Labels', 'Title', 'URL', '')
+        for issue in repository.iter_issues(**params):
+            if type_filter != 'all':
+                if type_filter.startswith('i') and issue.pull_request:
+                    continue
+                if type_filter.startswith('p') and not issue.pull_request:
+                    continue
+            yield ( not issue.is_closed(),
+                    str(issue.number),
+                    ','.join([l.name for l in issue.labels]),
+                    issue.title,
+                    issue.html_url,
+                    issue.pull_request)
+
+    def issue_edit(self, user, repo, issue, edit_cb):
+        repository = self.gh.repository(user, repo)
+        issue_obj = repository.issue(issue)
+        updated_issue = edit_cb(issue_obj.title, issue_obj.body)
+        if not updated_issue:
+            return False
+        return issue_obj.edit(title=updated_issue['title'], body=updated_issue['body'])
+
+    def issue_action(self, user, repo, action, value, filter_str, issues, application):
+        log.debug("issue_action({}, {}, {}, {}, {}, {}, {})".format(
+            user, repo, action, value, filter_str, issues, application))
+        repository = self.gh.repository(user, repo)
+        params = self.issue_list_parse_filter_statement(
+            filter_stmt=filter_str,
+            transform=lambda k,v: (k.replace('label', 'labels'), v)
+        )
+        if 'type' in params:
+            del params['type']
+        for issue in repository.iter_issues(**params):
+            if not issues or str(issue.number) in issues:
+                if action.lower() in ('opened', 'open', 'o'):
+                    log.debug("issue_action({}) -> open".format(issue))
+                    yield application['open'](issue)
+                elif action.lower() in ('closed', 'close', 'c'):
+                    log.debug("issue_action({}) -> close".format(issue))
+                    yield application['close'](issue)
+                elif action.lower() in ('read', 'r'):
+                    log.debug("issue_action({}) -> read".format(issue))
+                    for notif in repository.iter_notifications():
+                        if notif.subject['url'].split('/')[-1] in issues:
+                            yield application['read'](issue, notif)
+                            continue
+                    else:
+                        yield "{}\t{}".format(issue.number, True)
+                        continue
+                elif action.lower() in ('subscription', 'subscribed', 'subscribe', 'sub', 's'):
+                    log.debug("issue_action({}) -> subscription".format(issue))
+                    for notif in repository.iter_notifications():
+                        if notif.subject['url'].split('/')[-1] in issues:
+                            yield application['subscription'](issue, notif, is_notif=True)
+                            continue
+                    else:
+                        if value is None:
+                            for event in issue.iter_events():
+                                if event.event == 'subscribed' and event.actor.login == self.username:
+                                    yield application['subscription'](issue, event, is_notif=False)
+                                    continue
+                    yield "{}\t{}".format(issue.number, '?')
+                    continue
+
+                elif action in ('label', 'labels'):
+                    log.debug("issue_action({}) -> label".format(issue))
+                    if value is None:
+                        yield application['label'](issue, list(issue.iter_labels()))
+                        continue
+                    labels = set()
+                    labels_avail = {l.name: l for l in repository.iter_labels()}
+                    for label in parse_comma_string_to_list(value):
+                        if label in labels_avail:
+                            labels.add(labels_avail[label])
+                        else:
+                            raise ArgumentError("Label '{}' is invalid.".format(value))
+                    yield application['label'](issue, list(labels))
+                    continue
+
+                elif action == 'milestone':
+                    log.debug("issue_action({}) -> milestone".format(issue))
+                    if value is None:
+                        yield application['milestone'](issue)
+                        continue
+                    milestones = list(repository.iter_milestones())
+                    for milestone in milestones:
+                        if value == milestone.title:
+                            yield application['milestone'](issue, milestone)
+                            break
+                    else:
+                        raise ArgumentError("Milestone '{}' is invalid.".format(value))
+
+                else:
+                    log.debug("issue_action({}) ?!?!".format(issue))
+
+    def issue_get(self, user, repo, action, filter_str, issues):
+        def red(s):
+            return '\033[91m{}\033[0m'.format(s)
+
+        actions = dict(
+            open=lambda i:          '{}\t{}'.format(i.number, not i.is_closed()),
+            close=lambda i:         '{}\t{}'.format(i.number, i.is_closed()),
+            read=lambda i, notif:   '{}\t{}'.format(i.number, not notif.is_unread()),
+            milestone=lambda i:  '{}\t{}'.format(i.number, i.milestone and i.milestone.title or red('ø')),
+            subscription=lambda i:  '{}\t{}'.format(i.number, notif.subscription().subscribed if is_notif else True),
+            label=lambda i, labels: '{}\t{}'.format(i.number, ','.join([l.name for l in labels]) if labels else red("ø")
+        ))
+
+        yield "Id\tValue"
+        for label in self.issue_action(user, repo, action, None, filter_str, issues, actions):
+            yield label
+
+    def issue_set(self, user, repo, action, value, filter_str, issues):
+        def set_subscription(issue, notif, is_notif):
+            raise ArgumentError('Cannot set subscription.')
+        actions = dict(
+            open=lambda issue:          issue.reopen(),
+            close=lambda issue:         issue.close(),
+            read=lambda issue, notif:   notif.set_read() if notif.is_unread() else False,
+            milestone=lambda issue, m=None:  issue.edit(milestone=m.number) if m else False,
+            subscription=set_subscription,
+            label=lambda issue, labels: issue.add_labels(*[l.name for l in labels]),
+        )
+        return self.issue_action(user, repo, action, value, filter_str, issues, actions)
+
+    def issue_unset(self, user, repo, action, value, filter_str, issues):
+        actions = dict(
+            open= lambda issue: issue.close(),
+            close=lambda issue: issue.reopen(),
+            label=lambda issue, labels: all([issue.remove_label(l.name) for l in labels]),
+            milestone=lambda issue: issue.edit(milestone=0),
+            read=lambda issue, notif: notif.mark(),
+            subscription=lambda issue, notif, is_notif: notif.delete_subscription(),
+        )
+        return self.issue_action(user, repo, action, value, filter_str, issues, actions)
+
+    def issue_toggle(self, user, repo, action, value, filter_str, issues):
+        actions = dict(
+            open= lambda issue: issue.reopen() if issue.is_closed() else issue.close(),
+            close=lambda issue: issue.close() if issue.is_closed() else issue.reopen(),
+            read= lambda issue, notif: notif.mark(),
+            label=lambda i, labels: i.replace_labels(
+                [l.name for l in set(i.iter_labels()).symmetric_difference(labels)]),
+            milestone=lambda i, m: i.edit(milestone=0) if i.milestone else i.edit(milestone=m.number),
+            subscription=lambda issue, notif: notif.delete_subscription(),
+        )
+        return self.issue_action(user, repo, action, value, filter_str, issues, actions)
 
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):

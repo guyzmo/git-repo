@@ -805,6 +805,55 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
             self.service.connect()
             content = self.service.gist_delete(gist)
 
+    def action_issue_label_list(self, user, repo):
+        with self.recorder.use_cassette(self._make_cassette_name()):
+            self.service.connect()
+            content = self.service.issue_label_list(user, repo)
+            return list(content)
+
+    def action_issue_milestone_list(self, user, repo):
+        with self.recorder.use_cassette(self._make_cassette_name()):
+            self.service.connect()
+            content = self.service.issue_milestone_list(user, repo)
+            return list(content)
+
+    def action_issue_list(self, user, repo, filter_str=''):
+        with self.recorder.use_cassette(self._make_cassette_name()):
+            self.service.connect()
+            content = self.service.issue_list(user, repo, filter_str)
+            return list(content)
+
+    def action_issue_grab(self, user, repo, issue_id):
+        with self.recorder.use_cassette(self._make_cassette_name()):
+            self.service.connect()
+            content = self.service.issue_grab(user, repo, issue_id)
+            return content
+
+    def action_issue_edit(self, user, repo, issue, edit_cb):
+        with self.recorder.use_cassette(self._make_cassette_name()):
+            self.service.connect()
+            return self.service.issue_edit(user, repo, issue, edit_cb)
+
+    def action_issue_get(self, user, repo, action, filter_str, issues):
+        with self.recorder.use_cassette(self._make_cassette_name()):
+            self.service.connect()
+            return list(self.service.issue_get(user, repo, action, filter_str, issues))
+
+    def action_issue_set(self, user, repo, action, value, filter_str, issues):
+        with self.recorder.use_cassette(self._make_cassette_name()):
+            self.service.connect()
+            return list(self.service.issue_set(user, repo, action, value, filter_str, issues))
+
+    def action_issue_unset(self, user, repo, action, value, filter_str, issues):
+        with self.recorder.use_cassette(self._make_cassette_name()):
+            self.service.connect()
+            return list(self.service.issue_unset(user, repo, action, value, filter_str, issues))
+
+    def action_issue_toggle(self, user, repo, action, value, filter_str, issues):
+        with self.recorder.use_cassette(self._make_cassette_name()):
+            self.service.connect()
+            return list(self.service.issue_toggle(user, repo, action, value, filter_str, issues))
+
     def action_open(self, namespace, repository):
         self.set_mock_popen_commands([
             ('xdg-open {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),

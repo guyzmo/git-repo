@@ -22,7 +22,7 @@
       "response": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"login\":\"<BITBUCKET_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>\",\"html_url\":\"https://github.com/<BITBUCKET_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<BITBUCKET_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false,\"name\":\"<BITBUCKET_NAMESPACE>\",\"company\":null,\"blog\":\"http://<BITBUCKET_NAMESPACE>.got.nothing.to/blog/\",\"location\":\"Paris\",\"email\":null,\"hireable\":true,\"bio\":null,\"public_repos\":87,\"public_gists\":17,\"followers\":54,\"following\":15,\"created_at\":\"2010-04-27T14:04:09Z\",\"updated_at\":\"2016-09-03T19:19:47Z\"}"
+          "string": "{\"login\":\"<GITHUB_NAMESPACE>\",\"id\":254441,\"avatar_url\":\"https://avatars.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>\",\"html_url\":\"https://github.com/<GITHUB_NAMESPACE>\",\"followers_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/followers\",\"following_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/subscriptions\",\"organizations_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/orgs\",\"repos_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/repos\",\"events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/<GITHUB_NAMESPACE>/received_events\",\"type\":\"User\",\"site_admin\":false,\"name\":\"<GITHUB_NAMESPACE>\",\"company\":null,\"blog\":\"http://<GITHUB_NAMESPACE>.got.nothing.to/blog/\",\"location\":\"Paris\",\"email\":null,\"hireable\":true,\"bio\":null,\"public_repos\":87,\"public_gists\":17,\"followers\":54,\"following\":15,\"created_at\":\"2010-04-27T14:04:09Z\",\"updated_at\":\"2016-09-03T19:19:47Z\"}"
         },
         "headers": {
           "Access-Control-Allow-Origin": "*",
@@ -168,6 +168,56 @@
           "message": "OK"
         },
         "url": "https://api.github.com/users/git-repo-test/repos?per_page=100"
+      }
+    },
+    {
+      "recorded_at": "2017-02-01T03:19:16",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/users/git-repo-test"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"message\":\"Bad credentials\",\"documentation_url\":\"https://developer.github.com/v3\"}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Content-Length": "83",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Wed, 01 Feb 2017 03:19:16 GMT",
+          "Server": "GitHub.com",
+          "Status": "401 Unauthorized",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "A926:411B:8A179B3:AFA0A42:589153B4",
+          "X-RateLimit-Limit": "60",
+          "X-RateLimit-Remaining": "55",
+          "X-RateLimit-Reset": "1485922502",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 401,
+          "message": "Unauthorized"
+        },
+        "url": "https://api.github.com/users/git-repo-test"
       }
     }
   ],

@@ -9,8 +9,10 @@ import sys
 from git import RemoteProgress, config as git_config
 from progress.bar import IncrementalBar as Bar
 
-from urllib.parse import ParseResult
+from copy import deepcopy
 from subprocess import call
+from urllib.parse import ParseResult
+from pyparsing import commaSeparatedList
 
 from ..exceptions import (
         ArgumentError,
@@ -25,6 +27,10 @@ if 'darwin' in sys.platform: #pragma: no cover
     OPEN_COMMAND = 'open'
 else: #pragma: no cover
     OPEN_COMMAND = 'xdg-open'
+
+
+def parse_comma_string_to_list(s):
+    return commaSeparatedList.parseString(s)
 
 
 class ProgressBar(RemoteProgress): # pragma: no cover
@@ -480,6 +486,77 @@ class RepositoryService:
 
     @property
     def user(self): #pragma: no cover
+        raise NotImplementedError
+
+    def issue_label_list(self, user, repo):
+        '''
+        '''
+        raise NotImplementedError
+
+    def issue_milestone_list(self, user, repo):
+        '''
+        '''
+        raise NotImplementedError
+
+    def issue_grab(self, user, repo, issue_id):
+        '''
+        '''
+        raise NotImplementedError
+
+    ISSUE_FILTER_DEFAULTS=dict()
+
+    def issue_list_parse_filter_statement(self, filter_stmt, transform=None):
+        '''
+        Facility to parse a comma separated list of pairs bound by a colon:
+
+        ```
+        >>> filter_stmt = 'keyA:val1, keyB:val2   ,keyC:val3,keyD:v:a:l4'
+        >>> print(issue_list_parse_filter_statement(filter_stmt))
+        {'keyA': 'val1', 'keyB': 'val2', keyC: 'v:a:l4'}
+        ```
+
+        where all keys are defined in the `ISSUE_FILTER_DEFAULTS` class member, with
+        a default. If a key is the value will be appended.
+        '''
+        params = deepcopy(self.ISSUE_FILTER_DEFAULTS)
+
+        for f in parse_comma_string_to_list(filter_stmt):
+            if ':' in f:
+                param, value_head, *value_tail = f.split(':')
+                value = "".join([value_head] + value_tail) # fix labels containing :
+                if transform:
+                    param, value = transform(param, value)
+                if not param in params.keys():
+                    raise ArgumentError('Unknown filter key {}'.format(param))
+                if isinstance(params[param], list):
+                    params[param].append(value)
+                else:
+                    params[param] = value
+        return params
+
+    def issue_list(self, user, repo, filter_str=''):
+        '''
+        '''
+        raise NotImplementedError
+
+    def issue_edit(self, user, repo, issue, edit_cb):
+        '''
+        '''
+        raise NotImplementedError
+
+    def issue_set(self, user, repo, action, value, filter_str, issues):
+        '''
+        '''
+        raise NotImplementedError
+
+    def issue_unset(self, user, repo, action, filter_str, issues):
+        '''
+        '''
+        raise NotImplementedError
+
+    def issue_toggle(self, user, repo, action, filter_str, issues):
+        '''
+        '''
         raise NotImplementedError
 
 
