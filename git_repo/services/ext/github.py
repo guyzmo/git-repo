@@ -85,10 +85,10 @@ class GithubService(RepositoryService):
         if not _long:
             repositories = list(["/".join([user, repo.name]) for repo in repositories])
             yield "{}"
-            yield "Total repositories: {}".format(len(repositories))
+            yield ("Total repositories: {}".format(len(repositories)),)
             yield from columnize(repositories)
         else:
-            yield "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t\t{}"
+            yield "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{:12}\t{}"
             yield ['Status', 'Commits', 'Reqs', 'Issues', 'Forks', 'Coders', 'Watch', 'Likes', 'Lang', 'Modif', 'Name']
             for repo in repositories:
                 try:
