@@ -167,13 +167,13 @@ class GitRepoRunner(KeywordArgumentParser):
                         if url.endswith('.git'):
                             url = url[:-4]
                         *_, user, name = url.split('/')
-                        self.set_repo_slug('/'.join([user, name]))
+                        self.set_repo_slug('/'.join([user, name]), auto=True)
                         return
                     elif url.startswith('git@'):
                         if url.endswith('.git'):
                             url = url[:-4]
                         _, repo_slug = url.split(':')
-                        self.set_repo_slug(repo_slug)
+                        self.set_repo_slug(repo_slug, auto=True)
                         return
 
     def get_service(self, lookup_repository=True, resolve_targets=None):
@@ -223,8 +223,9 @@ class GitRepoRunner(KeywordArgumentParser):
         log.addHandler(logging.StreamHandler())
 
     @store_parameter('<user>/<repo>')
-    def set_repo_slug(self, repo_slug):
+    def set_repo_slug(self, repo_slug, auto=False):
         self.repo_slug = EXTRACT_URL_RE.sub('', repo_slug) if repo_slug else repo_slug
+        self._auto_slug = auto
         if not self.repo_slug:
             self.user_name = None
             self.repo_name = None
@@ -443,7 +444,7 @@ class GitRepoRunner(KeywordArgumentParser):
                 self.remote_branch,
                 self.title,
                 self.message,
-                self.repo_slug != None,
+                self._auto_slug,
                 request_edition)
         log.info('Successfully created request of `{local}` onto `{}:{remote}`, with id `{ref}`!'.format(
             '/'.join([self.user_name, self.repo_name]),
