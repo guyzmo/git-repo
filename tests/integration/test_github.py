@@ -354,12 +354,12 @@ class Test_Github(GitRepoTestCase):
 
     def test_34_list__short(self, caplog):
         projects = self.action_list(namespace='git-repo-test')
-        assert projects == ['{}', 'Total repositories: 1', ['git-repo-test/git-repo']]
+        assert projects == ['{}', ('Total repositories: 1',), ['git-repo-test/git-repo']]
         assert 'GET https://api.github.com/users/git-repo-test/repos' in caplog.text
 
     def test_34_list__long(self, caplog):
         projects = self.action_list(namespace='git-repo-test', _long=True)
-        assert projects == ['{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t\t{}',
+        assert projects == ['{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{:12}\t{}',
                 ['Status', 'Commits', 'Reqs', 'Issues', 'Forks', 'Coders', 'Watch', 'Likes', 'Lang', 'Modif', 'Name'],
                 ['F ', '92', '0', '0', '0', '1', '0', '0', 'Python', 'Mar 30 2016', 'git-repo-test/git-repo']]
         assert 'GET https://api.github.com/users/git-repo-test/repos' in caplog.text
