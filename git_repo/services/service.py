@@ -171,7 +171,7 @@ class RepositoryService:
 
         self.fqdn = c.get('fqdn', self.fqdn)
         self.scheme = c.get('scheme', 'https')
-        self.port = c.get('port', '443')
+        self.port = c.get('port', None)
 
         self.default_create_private = c.get('default-create-private', 'n').lower() in CONFIG_TRUE
         self.ssh_url = c.get('ssh-url', self.fqdn)
