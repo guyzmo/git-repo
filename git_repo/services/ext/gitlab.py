@@ -14,6 +14,8 @@ from git.exc import GitCommandError
 
 import os
 import json, time
+import dateutil.parser
+from datetime import datetime
 
 @register_target('lab', 'gitlab')
 class GitlabService(RepositoryService):
@@ -82,16 +84,18 @@ class GitlabService(RepositoryService):
         if not _long:
             repositories = list([repo.path_with_namespace for repo in repositories])
             yield "{}"
-            yield "Total repositories: {}".format(len(repositories))
+            yield ("Total repositories: {}".format(len(repositories)),)
             yield from columnize(repositories)
         else:
+            yield "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{:12}\t{}"
             yield ['Status', 'Commits', 'Reqs', 'Issues', 'Forks', 'Coders', 'Watch', 'Likes', 'Lang', 'Modif\t', 'Name']
             for repo in repositories:
                 time.sleep(0.5)
-                # if repo.last_activity_at.year < datetime.now().year:
-                #     date_fmt = "%b %d %Y"
-                # else:
-                #     date_fmt = "%b %d %H:%M"
+                repo_last_activity_at = dateutil.parser.parse(repo.last_activity_at)
+                if repo_last_activity_at.year < datetime.now().year:
+                    date_fmt = "%b %d %Y"
+                else:
+                    date_fmt = "%b %d %H:%M"
 
                 status = ''.join([
                     'F' if False else ' ',               # is a fork?
@@ -110,7 +114,7 @@ class GitlabService(RepositoryService):
                     str(repo.star_count),                      # number of ♥
                                                                # info
                     'N.A.',                                    # language
-                    repo.last_activity_at,                     # date
+                    repo_last_activity_at.strftime(date_fmt),  # date
                     repo.name_with_namespace,                  # name
                 ]
 
