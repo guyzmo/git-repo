@@ -11,6 +11,7 @@ from gogs_client import GogsApi, GogsRepo, Token, UsernamePassword, ApiFailure
 from requests import Session, HTTPError
 from urllib.parse import urlparse, urlunparse
 from datetime import datetime
+import dateutil.parser
 import functools
 
 from git import config as git_config
@@ -152,21 +153,23 @@ class GogsService(RepositoryService):
             raise ResourceError("Unhandled exception: {}".format(err)) from err
 
     def list(self, user, _long=False):
-        import shutil, sys
-        from datetime import datetime
-        term_width = shutil.get_terminal_size((80, 20)).columns
-
         repositories = self.gg.repositories(user)
         if user != self.username and not repositories and user not in self.orgs:
             raise ResourceNotFoundError("Unable to list namespace {} - only authenticated user and orgs available for listing.".format(user))
         if not _long:
             repositories = list([repo['full_name'] for repo in repositories])
             yield "{}"
-            yield "Total repositories: {}".format(len(repositories))
+            yield ("Total repositories: {}".format(len(repositories)),)
             yield from columnize(repositories)
         else:
+            yield "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{:12}\t{}"
             yield ['Status', 'Commits', 'Reqs', 'Issues', 'Forks', 'Coders', 'Watch', 'Likes', 'Lang', 'Modif\t', 'Name']
             for repo in repositories:
+                repo_updated_at = dateutil.parser.parse(repo['updated_at'])
+                if repo_updated_at.year < datetime.now().year:
+                    date_fmt = "%b %d %Y"
+                else:
+                    date_fmt = "%b %d %H:%M"
                 status = ''.join([
                     'F' if repo['fork'] else ' ',          # is a fork?
                     'P' if repo['private'] else ' ',       # is private?
@@ -188,7 +191,7 @@ class GogsService(RepositoryService):
                     str(repo.get('stars_count') or 0),     # number of ♥
                     # info
                     repo.get('language') or '?',           # language
-                    repo['updated_at'],                    # date
+                    repo_updated_at.strftime(date_fmt),    # date
                     repo['full_name'],                     # name
                 ]
 
