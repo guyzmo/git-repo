@@ -221,28 +221,6 @@ class GithubService(RepositoryService):
             raise ResourceNotFoundError('Could not find gist')
         gist.delete()
 
-    def _convert_username_into_ref(self, username, from_branch):
-        # builds a ref with an username and a branch
-        # this method parses the repository's remotes to find the url matching username
-        # and containing the given branch and returns the corresponding ref
-        def exists_ref(ref_name):
-            # this function takes a given ref and returns true if it actually exists
-            for ref in self.repository.refs:
-                if ref.name.endswith(ref_name):
-                    return True
-            return False
-
-        remotes = {remote.name: list(remote.urls) for remote in self.repository.remotes}
-        for name in ('upstream', self.name) + tuple(remotes.keys()):
-            if name in remotes and name != 'all':
-                for url in remotes[name]:
-                    if self.fqdn in url and username == url.split(':')[1].split('/')[0]:
-                        ref = '{}/{}'.format(name, from_branch)
-                        if exists_ref(ref):
-                            return ref
-
-        raise ArgumentError('Could not find a remote for user {} containing branch {}'.format(username, from_branch))
-
     def request_create(self, user, repo, from_branch, onto_branch, title=None, description=None, auto_slug=False, edit=None):
         repository = self.gh.repository(user, repo)
         if not repository:
@@ -263,7 +241,8 @@ class GithubService(RepositoryService):
         # the branch we're currently working on
         if not onto_branch:
             onto_branch = repository.default_branch or 'master'
-        from_ref = self._convert_username_into_ref(user, from_branch)
+
+        from_ref = self._extracts_ref(user, from_branch)
         if user != repository.owner.login:
             from_branch = ':'.join([user, from_branch])
 
@@ -307,8 +286,9 @@ class GithubService(RepositoryService):
         if pull:
             raise NotImplementedError('Pull operation on requests for merge are not yet supported')
         try:
+            remote_names = list(self._convert_user_into_remote(user))
             for remote in self.repository.remotes:
-                if remote.name == self.name:
+                if remote.name in remote_names:
                     local_branch_name = 'requests/github/{}'.format(request)
                     self.fetch(
                         remote,

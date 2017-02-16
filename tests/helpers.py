@@ -689,7 +689,8 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
             namespace, repository, branch,
             title, description, service,
             create_repository='test_create_requests',
-            create_branch='pr-test'):
+            create_branch='pr-test',
+            auto_slug=False):
         '''
         Here we are testing the subcommand 'request create'.
 
@@ -739,6 +740,16 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                 self.repository.git.add('second_file')
                 self.repository.git.commit(message='Second commit')
                 self.repository.git.push(service, create_branch)
+            existing_remotes = [r.name for r in self.repository.remotes]
+            if 'all' in existing_remotes:
+                r_all = self.repository.remote('all')
+            else:
+                r_all = self.repository.create_remote('all', '')
+            for name in ('github', 'gitlab', 'bitbucket', 'gogs', 'upstream'):
+                if name not in existing_remotes:
+                    kw = dict(user=namespace, project=repository, host=name)
+                    self.repository.create_remote(name, 'git@{host}.com:{user}/{project}'.format(**kw))
+                    r_all.add_url('git@{host}.com:{user}/{project}'.format(**kw))
             yield
             if will_record:
                 self.service.delete(create_repository)
@@ -747,13 +758,17 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
         with prepare_project_for_test():
             with self.recorder.use_cassette(cassette_name):
                 self.service.connect()
+                def test_edit(repository, from_branch):
+                    return "PR title", "PR body"
                 request = self.service.request_create(
-                        namespace,
-                        repository,
-                        branch,
-                        title,
-                        description
-                )
+                    namespace,
+                    repository,
+                    branch,
+                    create_branch,
+                    title=title,
+                    description=description,
+                    auto_slug=auto_slug,
+                    edit=test_edit)
                 return request
 
     def action_gist_list(self, gist=None, gist_list_data=[]):

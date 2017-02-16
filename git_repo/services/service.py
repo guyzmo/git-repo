@@ -226,6 +226,27 @@ class RepositoryService:
         url = self.ssh_url
         return url if '@' in url else '@'.join([self.git_user, url])
 
+    def _convert_user_into_remote(self, username, exclude=['all']):
+        # builds a ref with an username and a branch
+        # this method parses the repository's remotes to find the url matching username
+        # and containing the given branch and returns the corresponding ref
+
+        remotes = {remote.name: list(remote.urls) for remote in self.repository.remotes}
+        for name in ('upstream', self.name) + tuple(remotes.keys()):
+            if name in remotes and name not in exclude:
+                for url in remotes[name]:
+                    if self.fqdn in url and username == url.split(':')[1].split('/')[0]:
+                        yield name
+
+    def _extracts_ref(self, user, from_branch):
+        for name in self._convert_user_into_remote(user):
+            ref_name = '{}/{}'.format(name, from_branch)
+            for ref in self.repository.refs:
+                if ref.name.endswith(ref_name):
+                    return ref
+
+        raise ArgumentError('Could not find a remote for user {} containing branch {}'.format(username))
+
     def format_path(self, repository, namespace=None, rw=False):
         '''format the repository's URL
 
