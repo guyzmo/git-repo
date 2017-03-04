@@ -744,6 +744,10 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                 self.service.delete(create_repository)
 
         #self.service.repository = self.repository
+
+        def edit_stub(repository, branch):
+            return 'title', 'description'
+
         with prepare_project_for_test():
             with self.recorder.use_cassette(cassette_name):
                 self.service.connect()
@@ -752,7 +756,8 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                         repository,
                         branch,
                         title,
-                        description
+                        description,
+                        edit=edit_stub
                 )
                 return request
 
