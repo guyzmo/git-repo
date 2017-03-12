@@ -241,7 +241,7 @@ class Test_Gitlab(GitRepoTestCase):
         self.action_request_fetch(namespace='guyzmo',
                 repository='git-repo',
                 request='4',
-                remote_branch='merge_requests',
+                remote_branch='merge-requests',
                 local_branch='requests/gitlab')
 
     def test_19_request_fetch__bad_request(self):
