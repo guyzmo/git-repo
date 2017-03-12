@@ -312,7 +312,7 @@ class GitlabService(RepositoryService):
                     local_branch_name = 'requests/gitlab/{}'.format(request)
                     self.fetch(
                         remote,
-                       'merge_requests/{}/head'.format(request),
+                       'merge-requests/{}/head'.format(request),
                         local_branch_name,
                         force
                     )
