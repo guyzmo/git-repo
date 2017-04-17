@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/guyzmo/git-repo.png?label=ready&title=Ready)](https://waffle.io/guyzmo/git-repo)
 ## Git-Repo: git services CLI utility
 
 * To get the sources:
