@@ -265,8 +265,8 @@ class Test_Gitlab(GitRepoTestCase):
     def test_20_request_create_with_edit_and_no_title(self):
         r = self.action_request_create(namespace='crazybus',
                 repository='test_create_requests',
-                branch='pr-test',
-                service='gitlab',
+                source_branch='pr-test',
+                target_branch='master',
                 title=None,
                 description=None)
         assert r == {'local': 'pr-test', 'ref': 1, 'remote': 'master'}
