@@ -262,6 +262,15 @@ class Test_Gitlab(GitRepoTestCase):
                 description='PR description')
         assert r == {'local': 'pr-test', 'ref': 1, 'remote': 'master'}
 
+    def test_20_request_create_with_edit_and_no_title(self):
+        r = self.action_request_create(namespace='crazybus',
+                repository='test_create_requests',
+                branch='pr-test',
+                service='gitlab',
+                title=None,
+                description=None)
+        assert r == {'local': 'pr-test', 'ref': 1, 'remote': 'master'}
+
     # TODO lookup why this is not raising the expected error !
     # def test_20_request_create__bad_branch(self):
     #     with pytest.raises(ResourceError):

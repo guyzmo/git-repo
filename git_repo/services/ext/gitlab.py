@@ -257,19 +257,19 @@ class GitlabService(RepositoryService):
 
         return snippet.delete()
 
-    def request_create(self, user, repo, local_branch, remote_branch, title, description=None, auto_slug=False):
+    def request_create(self, user, repo, local_branch, remote_branch, title, description=None, auto_slug=False, edit=None):
         try:
             repository = self.gl.projects.get('/'.join([user, repo]))
             if not repository:
                 raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
             if not title and not description and edit:
-                title, description = edit(repository, from_branch)
+                title, description = edit(repository, local_branch)
                 if not title and not description:
                     raise ArgumentError('Missing message for request creation')
             if not local_branch:
-                remote_branch = self.repository.active_branch.name or self.repository.active_branch.name
+                local_branch = self.repository.active_branch.name
             if not remote_branch:
-                local_branch = repository.master_branch or 'master'
+                remote_branch = repository.default_branch or 'master'
             request = self.gl.project_mergerequests.create(
                     project_id=repository.id,
                     data= {
