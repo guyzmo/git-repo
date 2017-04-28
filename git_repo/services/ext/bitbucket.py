@@ -3,91 +3,27 @@
 import logging
 log = logging.getLogger('git_repo.bitbucket')
 
-from ..service import register_target, RepositoryService
+from ..service import register_target, RepositoryService, ProgressBar
 from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
+from ...tools import columnize
 
-import bitbucket.bitbucket as bitbucket
+from pybitbucket.bitbucket import Client, Bitbucket
+from pybitbucket.auth import BasicAuthenticator
+from pybitbucket.pullrequest import PullRequest, PullRequestPayload
+from pybitbucket.repository import (
+        Repository, RepositoryPayload, RepositoryForkPayload,
+        RepositoryForkPolicy, RepositoryType
+)
+from pybitbucket.snippet import Snippet, SnippetPayload
+from pybitbucket.user import User
+
 from requests import Request, Session
-import json
+from requests.exceptions import HTTPError
 
-'''
-Extension of the bitbucket module implementation to add support for the extra
-features the original implementation lacked. This is a temporary measure, up
-until a PR is crafted for the original code.
-'''
+from git.exc import GitCommandError
 
-bitbucket.URLS.update({
-    'GET_REPO' : 'repositories/%(username)s/%(repo_slug)s/',
-    'DELETE_REPO' : 'repositories/%(accountname)s/%(repo_slug)s',
-    'FORK_REPO' : 'repositories/%(username)s/%(repo_slug)s/fork',
-})
-
-class Bitbucket(bitbucket.Bitbucket):
-    def __init__(self, *args, **kwarg):
-        super(Bitbucket, self).__init__(self)
-        self.session = Session()
-        # XXX monkey patching of requests within bitbucket module
-        self.requests = self.session
-
-    def get(self, user=None, repo_slug=None):
-        """ Get a single repository on Bitbucket and return it."""
-        username = user or self.username
-        repo_slug = repo_slug or self.repo_slug or ''
-        url = self.url('GET_REPO', username=username, repo_slug=repo_slug)
-        return self.dispatch('GET', url, auth=self.auth)
-
-    def delete(self, user, repo_slug):
-        url = self.url('DELETE_REPO', username=user, accountname=user, repo_slug=repo_slug)
-        return self.dispatch('DELETE', url, auth=self.auth)
-
-    def fork(self, user, repo_slug, new_name=None):
-        url = self.url('FORK_REPO', username=user, repo_slug=repo_slug)
-        new_repo = new_name or repo_slug
-        return self.dispatch('POST', url, name=new_repo, auth=self.auth)
-
-    def dispatch(self, method, url, auth=None, params=None, **kwargs):
-        """ Send HTTP request, with given method,
-            credentials and data to the given URL,
-            and return the success and the result on success.
-        """
-        r = Request(
-            method=method,
-            url=url,
-            auth=auth,
-            params=params,
-            data=kwargs)
-        resp = self.session.send(r.prepare())
-        status = resp.status_code
-        text = resp.text
-        error = resp.reason
-        if status >= 200 and status < 300:
-            if text:
-                try:
-                    return (True, json.loads(text))
-                except TypeError:
-                    pass
-                except ValueError:
-                    pass
-            return (True, text)
-        elif status >= 300 and status < 400:
-            return (
-                False,
-                'Unauthorized access, '
-                'please check your credentials.')
-        elif status == 404:
-            return (False, dict(message='Service not found', reason=error, code=status))
-        elif status == 400:
-            return (False, dict(message='Bad request sent to server.', reason=error, code=status))
-        elif status == 401:
-            return (False, dict(message='Not enough privileges.', reason=error, code=status))
-        elif status == 403:
-            return (False, dict(message='Not authorized.', reason=error, code=status))
-        elif status == 402 or status >= 405:
-            return (False, dict(message='Request error.', reason=error, code=status))
-        elif status >= 500 and status < 600:
-                return (False, dict(message='Server error.', reason=error, code=status))
-        else:
-            return (False, dict(message='Unidentified error.', reason=error, code=status))
+from lxml import html
+import os, json, platform
 
 
 @register_target('bb', 'bitbucket')
@@ -95,66 +31,408 @@ class BitbucketService(RepositoryService):
     fqdn = 'bitbucket.org'
 
     def __init__(self, *args, **kwarg):
-        self.bb = Bitbucket()
+        self.bb = Bitbucket(Client())
         super(BitbucketService, self).__init__(*args, **kwarg)
 
     def connect(self):
-        if not self._privatekey:
+        if self._privatekey and ':' in self._privatekey:
+            login, password = self._privatekey.split(':')
+        else:
+            login = self._username
+            password = self._privatekey
+
+        if not login or not password:
             raise ConnectionError('Could not connect to BitBucket. Please configure .gitconfig with your bitbucket credentials.')
-        if not ':' in self._privatekey:
-            raise ConnectionError('Could not connect to BitBucket. Please setup your private key with login:password')
-        self.bb.username, self.bb.password = self._privatekey.split(':')
-        self.username = self.bb.username
-        result, _ = self.bb.get_user()
-        if not result:
-            raise ConnectionError('Could not connect to BitBucket. Not authorized, wrong credentials.')
+
+        auth = BasicAuthenticator(login, password, 'z+git-repo+pub@m0g.net')
+        self.bb.client.config = auth
+        self.bb.client.session = self.bb.client.config.session = auth.start_http_session(self.bb.client.session)
+        try:
+            _ = self.bb.client.config.who_am_i()
+        except ResourceError as err:
+            raise ConnectionError('Could not connect to BitBucket. Not authorized, wrong credentials.') from err
 
     def create(self, user, repo, add=False):
-        success, result = self.bb.repository.create(repo, scm='git', public=True)
-        if not success and result['code'] == 400:
-            raise ResourceExistsError('Project {} already exists on this account.'.format(repo))
-        elif not success:
-            raise ResourceError("Couldn't complete creation: {message} (error #{code}: {reason})".format(**result))
-        if add:
-            self.add(user=user, repo=repo, tracking=self.name)
+        try:
+            repo = Repository.create(
+                    RepositoryPayload(dict(
+                        fork_policy=RepositoryForkPolicy.ALLOW_FORKS,
+                        is_private=False
+                    )),
+                    repository_name=repo,
+                    owner=user,
+                    client=self.bb.client
+            )
+            if add:
+                self.add(user=user, repo=repo.name, tracking=self.name)
+        except HTTPError as err:
+            if '400' in err.args[0].split(' '):
+                raise ResourceExistsError('Project {} already exists on this account.'.format(repo)) from err
+            raise ResourceError("Couldn't complete creation: {}".format(err)) from err
 
     def fork(self, user, repo):
-        success, result = self.bb.fork(user, repo)
-        if not success:
-            raise ResourceError("Couldn't complete fork: {message} (error #{code}: {reason})".format(**result))
+        # result = self.get_repository(user, repo).fork(
+        #     RepositoryForkPayload(dict(name=repo)),
+        #     owner=user)
+        resp = self.bb.client.session.post(
+            'https://api.bitbucket.org/1.0/repositories/{}/{}/fork'.format(user, repo),
+            data={'name': repo}
+        )
+        if 404 == resp.status_code:
+            raise ResourceNotFoundError("Couldn't complete fork: {}".format(resp.content.decode('utf-8')))
+        elif 200 != resp.status_code:
+            raise ResourceError("Couldn't complete fork: {}".format(resp.content.decode('utf-8')))
+        result = resp.json()
         return '/'.join([result['owner'], result['slug']])
 
     def delete(self, repo, user=None):
         if not user:
             user = self.user
-        success, result = self.bb.delete(user, repo)
-        if not success and result['code'] == 404:
-            raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo))
-        elif not success:
-            raise ResourceError("Couldn't complete deletion: {message} (error #{code}: {reason})".format(**result))
+        try:
+            self.get_repository(user, repo).delete()
+        except HTTPError as err:
+            if '404' in err.args[0].split(' '):
+                raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo)) from err
+            raise ResourceError("Couldn't complete deletion: {}".format(err)) from err
+
+    def list(self, user, _long=False):
+        try:
+            user = User.find_user_by_username(user)
+        except HTTPError as err:
+            raise ResourceNotFoundError("User {} does not exists.".format(user)) from err
+
+        repositories = user.repositories()
+        if not _long:
+            yield "{}"
+            repositories = list(repositories)
+            yield ("Total repositories: {}".format(len(repositories)),)
+            yield from columnize(["/".join([user.username, repo.name]) for repo in repositories])
+        else:
+            yield "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{:12}\t{}"
+            yield ['Status', 'Commits', 'Reqs', 'Issues', 'Forks', 'Coders', 'Watch', 'Likes', 'Lang', 'Modif', 'Name']
+            for repo in repositories:
+                # if repo.updated_at.year < datetime.now().year:
+                #     date_fmt = "%b %d %Y"
+                # else:
+                #     date_fmt = "%b %d %H:%M"
+
+                status = ''.join([
+                    'F' if getattr(repo, 'parent', None) else ' ', # is a fork?
+                    'P' if repo.is_private else ' ',               # is private?
+                ])
+                yield [
+                    # status
+                    status,
+                    # stats
+                    str(len(list(repo.commits()))),       # number of commits
+                    str(len(list(repo.pullrequests()))),  # number of pulls
+                    str('N.A.'),                          # number of issues
+                    str(len(list(repo.forks()))),         # number of forks
+                    str('N.A.'),                          # number of contributors
+                    str(len(list(repo.watchers()))),      # number of subscribers
+                    str('N.A.'),                          # number of ♥
+                    # info
+                    repo.language or '?',                 # language
+                    repo.updated_on,                      # date
+                    '/'.join([user.username, repo.name]), # name
+                ]
 
     def get_repository(self, user, repo):
-        if user != self.user:
-            result, repo_list = self.bb.repository.public(user)
+        try:
+            return next(self.bb.repositoryByOwnerAndRepositoryName(owner=user, repository_name=repo))
+        except HTTPError as err:
+            raise ResourceNotFoundError('Cannot retrieve repository: {}/{} does not exists.'.format(user, repo))
+
+    def _format_gist(self, gist):
+        return gist.split('/')[-1] if gist.startswith('http') else gist
+
+    def gist_list(self, gist=None):
+        if not gist:
+            for snippet in list(self.bb.snippetByOwner(owner=self.user)):
+                if isinstance(snippet, Snippet):
+                    yield (snippet.links['html']['href'], snippet.title)
         else:
-            result, repo_list = self.bb.repository.all()
-        if not result:
-            raise ResourceError("Couldn't list repositories: {message} (error #{code}: {reason})".format(**repo_list))
-        for r in repo_list:
-            if r['name'] == repo:
-                return r
-        #raise ResourceNotFoundError('Cannot retrieve repository: {}/{} does not exists.'.format(user, repo))
+            try:
+                snippet = next(self.bb.snippetByOwnerAndSnippetId(owner=self.user, snippet_id=self._format_gist(gist)))
+                for snippet_file in snippet.filenames:
+                    yield ('N.A.',
+                            0,
+                            snippet_file)
+            except HTTPError as err:
+                if '404' in err.args[0].split(' '):
+                    raise ResourceNotFoundError("Could not find snippet {}.".format(gist)) from err
+                raise ResourceError("Couldn't fetch snippet details: {}".format(err)) from err
+
+    def gist_fetch(self, gist, fname=None):
+        gist = self._format_gist(gist)
+        try:
+            user = self.user
+            snippet = next(self.bb.snippetByOwnerAndSnippetId(owner=user, snippet_id=gist))
+        except HTTPError as err:
+            if '404' in err.args[0].split(' '):
+                raise ResourceNotFoundError("Could not find snippet {}.".format(gist)) from err
+            raise ResourceError("Couldn't fetch snippet details: {}".format(err)) from err
+        if len(snippet.filenames) == 1 and not fname:
+            gist_file = snippet.filenames[0]
+        else:
+            if fname in snippet.filenames:
+                gist_file = fname
+            else:
+                raise ResourceNotFoundError('Could not find file within gist.')
+
+        return self.bb.client.session.get(
+                    'https://bitbucket.org/!api/2.0/snippets/{}/{}/files/{}'.format(user, gist, gist_file)
+                ).content.decode('utf-8')
+
+    def gist_clone(self, gist):
+        gist = self._format_gist(gist)
+        try:
+            snippet = next(self.bb.snippetByOwnerAndSnippetId(owner=self.user, snippet_id=gist))
+            remotes = {it['name']: it['href'] for it in snippet.links['clone']}
+            if 'ssh' in remotes:
+                remote = remotes['ssh']
+            elif 'ssh' in remotes:
+                remote = remotes['https']
+            else:
+                raise ResourceError("Couldn't find appropriate method for cloning.")
+        except HTTPError as err:
+            if '404' in err.args[0].split(' '):
+                raise ResourceNotFoundError("Could not find snippet {}.".format(gist)) from err
+            raise ResourceError("Couldn't fetch snippet details: {}".format(err)) from err
+        remote = self.repository.create_remote('gist', remote)
+        self.pull(remote, 'master')
+
+    def gist_create(self, gist_pathes, description, secret=False):
+        def load_file(fname, path='.'):
+            return open(os.path.join(path, fname), 'r')
+
+        gist_files = dict()
+        for gist_path in gist_pathes:
+            if not os.path.isdir(gist_path):
+                gist_files[os.path.basename(gist_path)] = load_file(gist_path)
+            else:
+                for gist_file in os.listdir(gist_path):
+                    if not os.path.isdir(os.path.join(gist_path, gist_file)) and not gist_file.startswith('.'):
+                        gist_files[gist_file] = load_file(gist_file, gist_path)
+
+        try:
+            snippet = Snippet.create(
+                files=gist_files,
+                payload=SnippetPayload(
+                    payload=dict(
+                        title=description,
+                        scm=RepositoryType.GIT,
+                        is_private=secret
+                    )
+                ),
+                client=self.bb.client
+            )
+
+            return snippet.links['html']['href']
+        except HTTPError as err:
+            raise ResourceError("Couldn't create snippet: {}".format(err)) from err
+
+    def gist_delete(self, gist_id):
+        try:
+            snippet = next(self.bb.snippetByOwnerAndSnippetId(owner=self.user, snippet_id=gist_id)).delete()
+        except HTTPError as err:
+            if '404' in err.args[0].split(' '):
+                raise ResourceNotFoundError("Could not find snippet {}.".format(gist_id)) from err
+            raise ResourceError("Couldn't delete snippet: {}".format(err)) from err
+
+    def request_create(self, user, repo, local_branch, remote_branch, title, description=None):
+        try:
+            repository = next(self.bb.repositoryByOwnerAndRepositoryName(owner=user, repository_name=repo))
+            if not repository:
+                raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
+            if not remote_branch:
+                try:
+                    remote_branch = next(repository.branches()).name
+                except StopIteration:
+                    remote_branch = 'master'
+            if not local_branch:
+                local_branch = self.repository.active_branch.name
+            request = PullRequest.create(
+                        PullRequestPayload(
+                            payload=dict(
+                                title=title,
+                                description=description or '',
+                                destination=dict(
+                                    branch=dict(name=remote_branch)
+                                ),
+                                source=dict(
+                                    repository=dict(full_name='/'.join([self.user, repo])),
+                                    branch=dict(name=local_branch)
+                                )
+                            )
+                        ),
+                        repository_name=repo,
+                        owner=user,
+                        client=self.bb.client
+                    )
+        except HTTPError as err:
+            status_code = hasattr(err, 'code') and err.code or err.response.status_code
+            if 404 == status_code:
+                raise ResourceNotFoundError("Couldn't create request, project not found: {}".format(repo)) from err
+            elif 400 == status_code and 'branch not found' in err.format_message():
+                raise ResourceNotFoundError("Couldn't create request, branch not found: {}".format(local_branch)) from err
+            raise ResourceError("Couldn't create request: {}".format(err)) from err
+
+        return {'local': local_branch, 'remote': remote_branch, 'ref': str(request.id)}
+
+    def request_list(self, user, repo):
+        requests = set(
+            (
+                str(r.id),
+                r.title,
+                r.links['html']['href']
+            ) for r in self.bb.repositoryPullRequestsInState(
+                owner=user,
+                repository_name=repo,
+                state='open'
+            ) if not isinstance(r, dict) # if no PR is empty, result is a dict
+        )
+        for pull in sorted(requests):
+            try:
+                yield pull
+            except Exception as err:
+                log.warn('Error while fetching request information: {}'.format(pull))
+
+    def request_fetch(self, user, repo, request, pull=False):
+        if pull:
+            raise NotImplementedError('Pull operation on requests for merge are not yet supported')
+
+        pb = ProgressBar()
+        pb.setup(self.name)
+
+        try:
+            local_branch_name = 'requests/bitbucket/{}'.format(request)
+            pr = next(self.bb.repositoryPullRequestByPullRequestId(
+                owner=user,
+                repository_name=repo,
+                pullrequest_id=request
+            ))
+            source_branch = pr.source['branch']['name']
+            source_slug = pr.source['repository']['full_name']
+            source_url = pr.source['repository']['links']['html']['href']
+            remote_name = 'requests/bitbucket/{}'.format(source_slug).replace('/', '-')
+            try:
+                remote = self.repository.remote(name=remote_name)
+            except ValueError:
+                remote = self.repository.create_remote(name=remote_name, url=source_url)
+            refspec = '{}:{}'.format(source_branch, local_branch_name)
+            refs = remote.fetch(refspec, progress=pb)
+            for branch in self.repository.branches:
+                if branch.name == local_branch_name:
+                    branch.set_tracking_branch(remote.refs[0])
+            return local_branch_name
+        except HTTPError as err:
+            if '404' in err.args[0].split(' '):
+                raise ResourceNotFoundError('Could not find opened request #{}'.format(request)) from err
+            raise ResourceError("Couldn't delete snippet: {}".format(err)) from err
+        except GitCommandError as err:
+            if 'Error when fetching: fatal: ' in err.command[0]:
+                raise ResourceNotFoundError('Could not find opened request #{}'.format(request)) from err
+            raise err
 
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):
-        log.warn("/!\\ Due to API limitations, the bitbucket login/password is stored as plaintext in configuration.")
-        return "{}:{}".format(login, password)
+        session = Session()
+
+        key_name = 'git-repo@{}'.format(platform.node())
+
+        # get login page
+        log.info('» Login to bitbucket…')
+
+        login_url = "https://bitbucket.org/account/signin/?next=/".format(login)
+
+        session.headers.update({
+            "User-Agent":"Mozilla/5.0 (X11; Linux x86_64) " \
+            "AppleWebKit/537.36 (KHTML, like Gecko) " \
+            "Chrome/52.0.2743.82 Safari/537.36"
+        })
+
+        result = session.get(login_url)
+        tree = html.fromstring(result.text)
+
+        # extract CSRF token
+
+        authenticity_token = list(set(tree.xpath("//input[@name='csrfmiddlewaretoken']/@value")))[0]
+
+        # do login
+
+        payload = {
+            'username': login,
+            'password': password,
+            'csrfmiddlewaretoken': authenticity_token
+        }
+
+        result = session.post(
+            login_url,
+            data = payload,
+            headers = dict(referer=login_url)
+        )
+        tree = html.fromstring(result.text)
+
+        # extract username
+
+        try:
+            username = json.loads(tree.xpath('//meta/@data-current-user')[0])['username']
+        except KeyError:
+            raise ResourceNotFoundError('Invalid login. Please make sure you\'re using your bitbucket email address as username!')
+
+        app_password_url ='https://bitbucket.org/account/user/{}/app-passwords/new'.format(username)
+
+        # load app password page
+        log.info('» Generating app password…')
+
+        result = session.get(
+            app_password_url,
+            headers=dict(referer=app_password_url)
+        )
+        tree = html.fromstring(result.content)
+
+        if 'git-repo@{}'.format(platform.node()) in result:
+            log.warn("A duplicate key is being created!")
+
+        # generate app password
+        log.info('» App password is setup with following scopes:')
+        log.info('»     account, team, project:write, repository:admin, repository:delete')
+        log.info('»     pullrequest:write, snippet, snippet:write')
+
+        authenticity_token = list(set(tree.xpath("//input[@name='csrfmiddlewaretoken']/@value")))[0]
+
+        payload = dict(
+            name=key_name,
+            scope=['account',
+                    'team',
+                    'project',
+                    'project:write',
+                    'repository',
+                    'pullrequest:write',
+                    'repository:admin',
+                    'repository:delete',
+                    'snippet',
+                    'snippet:write'
+                    ],
+            csrfmiddlewaretoken=authenticity_token
+        )
+        result = session.post(
+            app_password_url,
+            data=payload,
+            headers=dict(referer=app_password_url)
+        )
+        tree = html.fromstring(result.content)
+
+        password = json.loads(tree.xpath('//section/@data-app-password')[0])['password']
+
+        return password, username
 
     @property
     def user(self):
-        ret, user = self.bb.get_user()
-        if ret:
-            return user['username']
-        raise ResourceError("Could not retrieve username: {message} (error #{code}: {reason}".format(**result))
-
+        try:
+            user = next(self.bb.userForMyself()).username
+            return user
+        except (HTTPError, AttributeError) as err:
+            raise ResourceError("Couldn't find the current user: {}".format(err)) from err
 

@@ -1,0 +1,106 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-12-28T22:18:44",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOlF0WmpzZVFMaGE4NFBMZnRwaGJF",
+          "Connection": "keep-alive",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.12.0 python-requests/2.12.4"
+        },
+        "method": "GET",
+        "uri": "https://api.bitbucket.org/2.0/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"username\": \"guyzmo\", \"website\": \"http://i.got.nothing.to/blog\", \"display_name\": \"Guyzmo\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"hooks\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo/hooks\"}, \"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo\"}, \"repositories\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo\"}, \"html\": {\"href\": \"https://bitbucket.org/guyzmo/\"}, \"followers\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo/followers\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/guyzmo/avatar/32/\"}, \"following\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo/following\"}, \"snippets\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo\"}}, \"created_on\": \"2008-09-20T15:08:53.695316+00:00\", \"location\": null, \"type\": \"user\"}"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "801",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Wed, 28 Dec 2016 22:18:44 GMT",
+          "ETag": "\"321b3bdea810843db96c90951905a5e3\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Authorization",
+          "X-Accepted-OAuth-Scopes": "account",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-OAuth-Scopes": "snippet:write, snippet, repository:delete, repository:admin, pullrequest:write, repository, project:write, project, team, account",
+          "X-Render-Time": "0.0290269851685",
+          "X-Request-Count": "142",
+          "X-Served-By": "app-141",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.bitbucket.org/2.0/user"
+      }
+    },
+    {
+      "recorded_at": "2016-12-28T22:18:45",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "--0fc19f68f75e4e37aa5a5aa684aa6db8\r\nContent-Disposition: form-data; name=\"random-fortune-1.txt\"; filename=\"random-fortune-1.txt\"\r\n\r\nNo one can guarantee the actions of another.\n\t\t-- Spock, \"Day of the Dove\", stardate unknown\n\r\n--0fc19f68f75e4e37aa5a5aa684aa6db8\r\nContent-Disposition: form-data; name=\"random-fortune-2.txt\"; filename=\"random-fortune-2.txt\"\r\n\r\nI'm having BEAUTIFUL THOUGHTS about the INSIPID WIVES of smug and\nwealthy CORPORATE LAWYERS ...\n\r\n--0fc19f68f75e4e37aa5a5aa684aa6db8\r\nContent-Disposition: form-data; name=\"random-fortune-3.txt\"; filename=\"random-fortune-3.txt\"\r\n\r\nAll wars are civil wars, because all men are brothers ... Each one owes\ninfinitely more to the human race than to the particular country in\nwhich he was born.\n\t\t-- Francois Fenelon\n\r\n--0fc19f68f75e4e37aa5a5aa684aa6db8\r\nContent-Disposition: form-data; name=\"random-fortune-4.txt\"; filename=\"random-fortune-4.txt\"\r\n\r\n\"The lawgiver, of all beings, most owes the law allegiance.\n He of all men should behave as though the law compelled him.\n But it is the universal weakness of mankind that what we are\n given to administer we presently imagine we own.\"\n\t\t-- H. G. Wells\n\r\n--0fc19f68f75e4e37aa5a5aa684aa6db8--\r\n"
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOlF0WmpzZVFMaGE4NFBMZnRwaGJF",
+          "Connection": "keep-alive",
+          "Content-Length": "1196",
+          "Content-Type": "multipart/form-data; boundary=0fc19f68f75e4e37aa5a5aa684aa6db8",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.12.0 python-requests/2.12.4"
+        },
+        "method": "POST",
+        "uri": "https://api.bitbucket.org/2.0/snippets"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"scm\": \"git\", \"files\": {}, \"links\": {\"watchers\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo/M7drR/watchers\"}, \"commits\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo/M7drR/commits\"}, \"self\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo/M7drR\"}, \"comments\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo/M7drR/comments\"}, \"patch\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo/M7drR/0dcd2f4daef1e19f6363c6167be8b2306f0627d1/patch\"}, \"html\": {\"href\": \"https://bitbucket.org/snippets/guyzmo/M7drR\"}, \"diff\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo/M7drR/0dcd2f4daef1e19f6363c6167be8b2306f0627d1/diff\"}, \"clone\": [{\"href\": \"https://guyzmo@bitbucket.org/snippets/guyzmo/M7drR/untitled-snippet.git\", \"name\": \"https\"}, {\"href\": \"ssh://git@bitbucket.org/snippets/guyzmo/M7drR/untitled-snippet.git\", \"name\": \"ssh\"}]}, \"creator\": {\"username\": \"guyzmo\", \"type\": \"user\", \"display_name\": \"Guyzmo\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo\"}, \"html\": {\"href\": \"https://bitbucket.org/guyzmo/\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/guyzmo/avatar/32/\"}}}, \"title\": \"\", \"created_on\": \"2016-12-28T22:18:45.042038+00:00\", \"owner\": {\"username\": \"guyzmo\", \"type\": \"user\", \"display_name\": \"Guyzmo\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo\"}, \"html\": {\"href\": \"https://bitbucket.org/guyzmo/\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/guyzmo/avatar/32/\"}}}, \"updated_on\": \"2016-12-28T22:18:45.042058+00:00\", \"type\": \"snippet\", \"id\": \"M7drR\", \"is_private\": false}"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "1694",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Wed, 28 Dec 2016 22:18:45 GMT",
+          "ETag": "\"fc7fc7b57f7e50b4f50f1b7725be7d2c\"",
+          "Location": "https://api.bitbucket.org/2.0/snippets/guyzmo/M7drR",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Authorization",
+          "X-Accepted-OAuth-Scopes": "snippet:write",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-OAuth-Scopes": "snippet:write, snippet, repository:delete, repository:admin, pullrequest:write, repository, project:write, project, team, account",
+          "X-Render-Time": "0.382823944092",
+          "X-Request-Count": "614",
+          "X-Served-By": "app-139",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
+        },
+        "status": {
+          "code": 201,
+          "message": "CREATED"
+        },
+        "url": "https://api.bitbucket.org/2.0/snippets"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

@@ -1,95 +1,101 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2016-09-11T20:32:29",
+      "recorded_at": "2016-12-24T13:35:53",
       "request": {
         "body": {
           "encoding": "utf-8",
           "string": ""
         },
-        "headers": {},
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOkpKNHRsNHNzMTRuLmMwbQ==",
+          "Connection": "keep-alive",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.11.2 python-requests/2.12.4"
+        },
         "method": "GET",
-        "uri": "https://bitbucket.org/!api/1.0/users/<BITBUCKET_NAMESPACE>/"
+        "uri": "https://api.bitbucket.org/2.0/user"
       },
       "response": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"repositories\": [{\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2016-09-11T20:39:01.932\", \"no_forks\": false, \"created_on\": \"2016-09-11T20:39:01.836\", \"owner\": \"<BITBUCKET_NAMESPACE>\", \"logo\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/github3.py/avatar/32/?ts=1473619141\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 5706942, \"read_only\": false, \"fork_of\": {\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2014-04-25T03:03:01.439\", \"no_forks\": null, \"created_on\": \"2012-06-21T19:12:24.702\", \"owner\": \"icordasc\", \"logo\": \"https://bitbucket.org/icordasc/github3.py/avatar/32/?ts=1398387781\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 5741827, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2012-06-21 17:12:24+00:00\", \"website\": \"http://github3py.rtfd.org/\", \"description\": \"\", \"has_issues\": true, \"is_fork\": false, \"slug\": \"github3.py\", \"is_private\": false, \"name\": \"github3.py\", \"language\": \"python\", \"utc_last_updated\": \"2014-04-25 01:03:01+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/icordasc/github3.py\"}, \"mq_of\": {\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2014-04-25T03:03:01.439\", \"no_forks\": null, \"created_on\": \"2012-06-21T19:12:24.702\", \"owner\": \"icordasc\", \"logo\": \"https://bitbucket.org/icordasc/github3.py/avatar/32/?ts=1398387781\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 5741827, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2012-06-21 17:12:24+00:00\", \"website\": \"http://github3py.rtfd.org/\", \"description\": \"\", \"has_issues\": true, \"is_fork\": false, \"slug\": \"github3.py\", \"is_private\": false, \"name\": \"github3.py\", \"language\": \"python\", \"utc_last_updated\": \"2014-04-25 01:03:01+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/icordasc/github3.py\"}, \"state\": \"available\", \"utc_created_on\": \"2016-09-11 18:39:01+00:00\", \"website\": null, \"description\": \"\", \"has_issues\": false, \"is_fork\": true, \"slug\": \"github3.py\", \"is_private\": false, \"name\": \"github3.py\", \"language\": \"python\", \"utc_last_updated\": \"2016-09-11 18:39:01+00:00\", \"no_public_forks\": false, \"creator\": null, \"resource_uri\": \"/1.0/repositories/<BITBUCKET_NAMESPACE>/github3.py\"}, {\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2016-06-21T22:52:15.524\", \"no_forks\": false, \"created_on\": \"2016-03-21T20:39:20.064\", \"owner\": \"<BITBUCKET_NAMESPACE>\", \"logo\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/git-repo/avatar/32/?ts=1466542335\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 2785235, \"read_only\": false, \"fork_of\": null, \"mq_of\": null, \"state\": \"available\", \"utc_created_on\": \"2016-03-21 19:39:20+00:00\", \"website\": \"\", \"description\": \" Tool to manage multiple repository services from the git CLI\", \"has_issues\": false, \"is_fork\": false, \"slug\": \"git-repo\", \"is_private\": false, \"name\": \"git-repo\", \"language\": \"python\", \"utc_last_updated\": \"2016-06-21 20:52:15+00:00\", \"no_public_forks\": false, \"creator\": null, \"resource_uri\": \"/1.0/repositories/<BITBUCKET_NAMESPACE>/git-repo\"}, {\"scm\": \"hg\", \"has_wiki\": false, \"last_updated\": \"2011-09-17T05:11:38.425\", \"no_forks\": null, \"created_on\": \"2008-11-14T15:29:32.459\", \"owner\": \"<BITBUCKET_NAMESPACE>\", \"logo\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/pida-screen-controller/avatar/32/?ts=1316229098\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 3435973, \"read_only\": false, \"fork_of\": {\"scm\": \"hg\", \"has_wiki\": true, \"last_updated\": \"2012-03-13T21:10:02.175\", \"no_forks\": null, \"created_on\": \"2008-09-15T16:30:29.672\", \"owner\": \"aafshar\", \"logo\": \"https://bitbucket.org/aafshar/pida-main/avatar/32/?ts=1331669402\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 6158307, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2008-09-15 14:30:29+00:00\", \"website\": \"\", \"description\": \"The main PIDA branch\", \"has_issues\": true, \"is_fork\": false, \"slug\": \"pida-main\", \"is_private\": false, \"name\": \"pida-main\", \"language\": \"\", \"utc_last_updated\": \"2012-03-13 20:10:02+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/aafshar/pida-main\"}, \"mq_of\": {\"scm\": \"hg\", \"has_wiki\": true, \"last_updated\": \"2012-03-13T21:10:02.175\", \"no_forks\": null, \"created_on\": \"2008-09-15T16:30:29.672\", \"owner\": \"aafshar\", \"logo\": \"https://bitbucket.org/aafshar/pida-main/avatar/32/?ts=1331669402\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 6158307, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2008-09-15 14:30:29+00:00\", \"website\": \"\", \"description\": \"The main PIDA branch\", \"has_issues\": true, \"is_fork\": false, \"slug\": \"pida-main\", \"is_private\": false, \"name\": \"pida-main\", \"language\": \"\", \"utc_last_updated\": \"2012-03-13 20:10:02+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/aafshar/pida-main\"}, \"state\": \"available\", \"utc_created_on\": \"2008-11-14 14:29:32+00:00\", \"website\": \"http://pida.co.uk/\", \"description\": \"modification of commander so screen receives all new shells and execution outputs.\", \"has_issues\": false, \"is_fork\": true, \"slug\": \"pida-screen-controller\", \"is_private\": false, \"name\": \"pida-screen-controller\", \"language\": \"\", \"utc_last_updated\": \"2011-09-17 03:11:38+00:00\", \"no_public_forks\": false, \"creator\": null, \"resource_uri\": \"/1.0/repositories/<BITBUCKET_NAMESPACE>/pida-screen-controller\"}, {\"scm\": \"hg\", \"has_wiki\": false, \"last_updated\": \"2011-09-17T05:11:38.460\", \"no_forks\": null, \"created_on\": \"2008-11-25T16:47:44.505\", \"owner\": \"<BITBUCKET_NAMESPACE>\", \"logo\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/pida-bugfixing/avatar/32/?ts=1316229098\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 3395341, \"read_only\": false, \"fork_of\": {\"scm\": \"hg\", \"has_wiki\": true, \"last_updated\": \"2012-03-13T21:10:02.175\", \"no_forks\": null, \"created_on\": \"2008-09-15T16:30:29.672\", \"owner\": \"aafshar\", \"logo\": \"https://bitbucket.org/aafshar/pida-main/avatar/32/?ts=1331669402\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 6158307, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2008-09-15 14:30:29+00:00\", \"website\": \"\", \"description\": \"The main PIDA branch\", \"has_issues\": true, \"is_fork\": false, \"slug\": \"pida-main\", \"is_private\": false, \"name\": \"pida-main\", \"language\": \"\", \"utc_last_updated\": \"2012-03-13 20:10:02+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/aafshar/pida-main\"}, \"mq_of\": {\"scm\": \"hg\", \"has_wiki\": true, \"last_updated\": \"2012-03-13T21:10:02.175\", \"no_forks\": null, \"created_on\": \"2008-09-15T16:30:29.672\", \"owner\": \"aafshar\", \"logo\": \"https://bitbucket.org/aafshar/pida-main/avatar/32/?ts=1331669402\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 6158307, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2008-09-15 14:30:29+00:00\", \"website\": \"\", \"description\": \"The main PIDA branch\", \"has_issues\": true, \"is_fork\": false, \"slug\": \"pida-main\", \"is_private\": false, \"name\": \"pida-main\", \"language\": \"\", \"utc_last_updated\": \"2012-03-13 20:10:02+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/aafshar/pida-main\"}, \"state\": \"available\", \"utc_created_on\": \"2008-11-25 15:47:44+00:00\", \"website\": \"http://pida.co.uk/\", \"description\": \"all my bugfixeso\", \"has_issues\": false, \"is_fork\": true, \"slug\": \"pida-bugfixing\", \"is_private\": false, \"name\": \"pida-bugfixing\", \"language\": \"\", \"utc_last_updated\": \"2011-09-17 03:11:38+00:00\", \"no_public_forks\": false, \"creator\": null, \"resource_uri\": \"/1.0/repositories/<BITBUCKET_NAMESPACE>/pida-bugfixing\"}, {\"scm\": \"hg\", \"has_wiki\": true, \"last_updated\": \"2011-09-17T05:11:38.481\", \"no_forks\": null, \"created_on\": \"2008-10-09T00:15:57.372\", \"owner\": \"<BITBUCKET_NAMESPACE>\", \"logo\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/pida-<BITBUCKET_NAMESPACE>-main/avatar/32/?ts=1316229098\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 2980484, \"read_only\": false, \"fork_of\": {\"scm\": \"hg\", \"has_wiki\": true, \"last_updated\": \"2012-03-13T21:10:02.175\", \"no_forks\": null, \"created_on\": \"2008-09-15T16:30:29.672\", \"owner\": \"aafshar\", \"logo\": \"https://bitbucket.org/aafshar/pida-main/avatar/32/?ts=1331669402\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 6158307, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2008-09-15 14:30:29+00:00\", \"website\": \"\", \"description\": \"The main PIDA branch\", \"has_issues\": true, \"is_fork\": false, \"slug\": \"pida-main\", \"is_private\": false, \"name\": \"pida-main\", \"language\": \"\", \"utc_last_updated\": \"2012-03-13 20:10:02+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/aafshar/pida-main\"}, \"mq_of\": {\"scm\": \"hg\", \"has_wiki\": true, \"last_updated\": \"2012-03-13T21:10:02.175\", \"no_forks\": null, \"created_on\": \"2008-09-15T16:30:29.672\", \"owner\": \"aafshar\", \"logo\": \"https://bitbucket.org/aafshar/pida-main/avatar/32/?ts=1331669402\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 6158307, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2008-09-15 14:30:29+00:00\", \"website\": \"\", \"description\": \"The main PIDA branch\", \"has_issues\": true, \"is_fork\": false, \"slug\": \"pida-main\", \"is_private\": false, \"name\": \"pida-main\", \"language\": \"\", \"utc_last_updated\": \"2012-03-13 20:10:02+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/aafshar/pida-main\"}, \"state\": \"available\", \"utc_created_on\": \"2008-10-08 22:15:57+00:00\", \"website\": \"http://pida.co.uk/\", \"description\": \"\", \"has_issues\": true, \"is_fork\": true, \"slug\": \"pida-<BITBUCKET_NAMESPACE>-main\", \"is_private\": false, \"name\": \"pida-<BITBUCKET_NAMESPACE>-main\", \"language\": \"\", \"utc_last_updated\": \"2011-09-17 03:11:38+00:00\", \"no_public_forks\": false, \"creator\": null, \"resource_uri\": \"/1.0/repositories/<BITBUCKET_NAMESPACE>/pida-<BITBUCKET_NAMESPACE>-main\"}], \"user\": {\"username\": \"<BITBUCKET_NAMESPACE>\", \"first_name\": \"Bernard\", \"last_name\": \"\", \"display_name\": \"Bernard\", \"is_staff\": false, \"avatar\": \"https://bitbucket.org/account/<BITBUCKET_NAMESPACE>/avatar/32/?ts=1473615876\", \"resource_uri\": \"/1.0/users/<BITBUCKET_NAMESPACE>\", \"is_team\": false}}"
+          "string": "{\"username\": \"<BITBUCKET_NAMESPACE>\", \"website\": \"http://i.got.nothing.to/blog\", \"display_name\": \"Guyzmo\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"hooks\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>/hooks\"}, \"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>\"}, \"repositories\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>\"}, \"html\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/\"}, \"followers\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>/followers\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/<BITBUCKET_NAMESPACE>/avatar/32/\"}, \"following\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>/following\"}, \"snippets\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/<BITBUCKET_NAMESPACE>\"}}, \"created_on\": \"2008-09-20T15:08:53.695316+00:00\", \"location\": null, \"type\": \"user\"}"
         },
         "headers": {
-          "Accept-Ranges": "bytes",
-          "Cache-Control": "max-age=900",
           "Connection": "keep-alive",
-          "Content-Language": "en",
-          "Content-Length": "9882",
+          "Content-Length": "801",
           "Content-Type": "application/json; charset=utf-8",
-          "Date": "Sun, 11 Sep 2016 20:32:29 GMT",
-          "ETag": "\"2ad5facd90f2f0494d3a91363ccfce0e\"",
-          "Server": "nginx/1.6.2",
+          "Date": "Sat, 24 Dec 2016 13:35:53 GMT",
+          "ETag": "\"321b3bdea810843db96c90951905a5e3\"",
+          "Server": "nginx",
           "Strict-Transport-Security": "max-age=31536000",
-          "Vary": "Authorization, Accept-Language, Cookie, Accept-Encoding",
+          "Vary": "Authorization",
           "X-Accepted-OAuth-Scopes": "account",
-          "X-Cache-Info": "caching",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
-          "X-Render-Time": "0.022145986557",
-          "X-Request-Count": "161",
-          "X-Served-By": "app-104",
-          "X-Static-Version": "0c55837759e5",
-          "X-Version": "0c55837759e5"
+          "X-Render-Time": "0.0154750347137",
+          "X-Request-Count": "647",
+          "X-Served-By": "app-143",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
         },
         "status": {
           "code": 200,
           "message": "OK"
         },
-        "url": "https://bitbucket.org/!api/1.0/users/<BITBUCKET_NAMESPACE>/"
+        "url": "https://api.bitbucket.org/2.0/user"
       }
     },
     {
-      "recorded_at": "2016-09-11T20:32:29",
+      "recorded_at": "2016-12-24T13:35:54",
       "request": {
         "body": {
           "encoding": "utf-8",
           "string": "name=git_tutorial"
         },
         "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
           "Authorization": "Basic Z3V5em1vOkpKNHRsNHNzMTRuLmMwbQ==",
+          "Connection": "keep-alive",
           "Content-Length": "17",
-          "Content-Type": "application/x-www-form-urlencoded"
+          "Content-Type": "application/x-www-form-urlencoded",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.11.2 python-requests/2.12.4"
         },
         "method": "POST",
-        "uri": "https://bitbucket.org/!api/1.0/repositories/abdo2015/git_tutorial/fork"
+        "uri": "https://api.bitbucket.org/1.0/repositories/abdo2015/git_tutorial/fork"
       },
       "response": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2016-09-11T22:32:29.722\", \"no_forks\": false, \"created_on\": \"2016-09-11T22:32:29.669\", \"owner\": \"<BITBUCKET_NAMESPACE>\", \"logo\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/git_tutorial/avatar/32/?ts=1473625949\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 0, \"read_only\": false, \"fork_of\": {\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2015-10-14T12:17:52.926\", \"no_forks\": false, \"created_on\": \"2015-10-13T19:41:25.948\", \"owner\": \"abdo2015\", \"logo\": \"https://bitbucket.org/abdo2015/git_tutorial/avatar/32/?ts=1444817872\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 75295, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2015-10-13 17:41:25+00:00\", \"website\": \"\", \"description\": \"a repository to show git features\", \"has_issues\": false, \"is_fork\": false, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2015-10-14 10:17:52+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/abdo2015/git_tutorial\"}, \"mq_of\": {\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2015-10-14T12:17:52.926\", \"no_forks\": false, \"created_on\": \"2015-10-13T19:41:25.948\", \"owner\": \"abdo2015\", \"logo\": \"https://bitbucket.org/abdo2015/git_tutorial/avatar/32/?ts=1444817872\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 75295, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2015-10-13 17:41:25+00:00\", \"website\": \"\", \"description\": \"a repository to show git features\", \"has_issues\": false, \"is_fork\": false, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2015-10-14 10:17:52+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/abdo2015/git_tutorial\"}, \"state\": \"creating\", \"utc_created_on\": \"2016-09-11 20:32:29+00:00\", \"website\": null, \"description\": \"\", \"has_issues\": false, \"is_fork\": true, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2016-09-11 20:32:29+00:00\", \"no_public_forks\": false, \"creator\": null, \"resource_uri\": \"/1.0/repositories/<BITBUCKET_NAMESPACE>/git_tutorial\"}"
+          "string": "{\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2016-12-24T14:35:53.817\", \"no_forks\": false, \"created_on\": \"2016-12-24T14:35:53.772\", \"owner\": \"<BITBUCKET_NAMESPACE>\", \"logo\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/git_tutorial/avatar/32/?ts=1482586553\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 0, \"read_only\": false, \"fork_of\": {\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2016-11-07T18:42:50.347\", \"no_forks\": false, \"created_on\": \"2015-10-13T19:41:25.948\", \"owner\": \"abdo2015\", \"logo\": \"https://bitbucket.org/abdo2015/git_tutorial/avatar/32/?ts=1478540570\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 75213, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2015-10-13 17:41:25+00:00\", \"website\": \"\", \"description\": \"a repository to show git features\", \"has_issues\": false, \"is_fork\": false, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2016-11-07 17:42:50+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/abdo2015/git_tutorial\"}, \"mq_of\": {\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2016-11-07T18:42:50.347\", \"no_forks\": false, \"created_on\": \"2015-10-13T19:41:25.948\", \"owner\": \"abdo2015\", \"logo\": \"https://bitbucket.org/abdo2015/git_tutorial/avatar/32/?ts=1478540570\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 75213, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2015-10-13 17:41:25+00:00\", \"website\": \"\", \"description\": \"a repository to show git features\", \"has_issues\": false, \"is_fork\": false, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2016-11-07 17:42:50+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/abdo2015/git_tutorial\"}, \"state\": \"creating\", \"utc_created_on\": \"2016-12-24 13:35:53+00:00\", \"website\": null, \"description\": \"\", \"has_issues\": false, \"is_fork\": true, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2016-12-24 13:35:53+00:00\", \"no_public_forks\": false, \"creator\": null, \"resource_uri\": \"/1.0/repositories/<BITBUCKET_NAMESPACE>/git_tutorial\"}"
         },
         "headers": {
           "Connection": "keep-alive",
-          "Content-Language": "en",
           "Content-Length": "2213",
           "Content-Type": "application/json; charset=utf-8",
-          "Date": "Sun, 11 Sep 2016 20:32:29 GMT",
-          "ETag": "\"10a902087736b899fff36d2c79f29685\"",
-          "Server": "nginx/1.6.2",
-          "Set-Cookie": "use_aid=true; httponly; Path=/; secure",
+          "Date": "Sat, 24 Dec 2016 13:35:53 GMT",
+          "ETag": "\"f6b793bcedca90dc158fa94faf86c164\"",
+          "Server": "nginx",
           "Strict-Transport-Security": "max-age=31536000",
-          "Vary": "Authorization, Accept-Language, Cookie",
+          "Vary": "Authorization",
           "X-Accepted-OAuth-Scopes": "repository:admin",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
-          "X-Render-Time": "0.208966016769",
-          "X-Request-Count": "64",
-          "X-Served-By": "app-106",
-          "X-Static-Version": "0c55837759e5",
-          "X-Version": "0c55837759e5"
+          "X-Render-Time": "0.212947845459",
+          "X-Request-Count": "111",
+          "X-Served-By": "app-139",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
         },
         "status": {
           "code": 200,
           "message": "OK"
         },
-        "url": "https://bitbucket.org/!api/1.0/repositories/abdo2015/git_tutorial/fork"
+        "url": "https://api.bitbucket.org/1.0/repositories/abdo2015/git_tutorial/fork"
       }
     }
   ],

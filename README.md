@@ -150,7 +150,8 @@ section in the gitconfig:
         token = YourOtherVerySecretKey
 
     [gitrepo "bitbucket"]
-        token = username:password
+        username = ford.prefect
+        token = YourOtherSecretKey
 
     [gitrepo "gogs"]
         fqdn = UrlOfYourGogs
@@ -165,7 +166,8 @@ You also have the ability to set up an alias:
 
     [gitrepo "bitbucket"]
         alias = bit
-        token = username:password
+        username = ford.prefect
+        token = YourOtherSecretKey
 
 that will change the command you use for a name you'll prefer to handle actions
 for the service you use:
@@ -274,6 +276,7 @@ To use your own credentials, you can setup the following environment variables:
 * [x] add regression tests (and actually find a smart way to implement them…)
 * [x] add travis build
 * [x] show a nice progress bar, while it's fetching (cf [#15](https://github.com/guyzmo/git-repo/issues/15))
+<<<<<<< HEAD
 * [x] add support for gogs (cf [#18](https://github.com/guyzmo/git-repo/issues/18))
 * [ ] add support for handling gists
   * [x] github support
@@ -284,6 +287,11 @@ To use your own credentials, you can setup the following environment variables:
   * [x] gitlab support (cf [#10](https://github.com/guyzmo/git-repo/issues/10))
   * [ ] bitbucket support (cf [#11](https://github.com/guyzmo/git-repo/issues/11))
 * [ ] add application token support for bitbucket (cf [#14](https://github.com/guyzmo/git-repo/issues/14))
+=======
+* [x] add support for handling gists (cf [#12](https://github.com/guyzmo/git-repo/issues/12) and [#13](https://github.com/guyzmo/git-repo/issues/13))
+* [x] add support for handling pull requests (cf [#10](https://github.com/guyzmo/git-repo/issues/10) and cf [#11](https://github.com/guyzmo/git-repo/issues/11))
+* [x] add application token support for bitbucket (cf [#14](https://github.com/guyzmo/git-repo/issues/14))
+>>>>>>> 💄 Updated progress in readme and updated bitbucket documentation!
 * [ ] add support for managing SSH keys (cf [#22](https://github.com/guyzmo/git-repo/issues/22))
 * [ ] add support for issues?
 * [ ] add support for gerrit (cf [#19](https://github.com/guyzmo/git-repo/issues/19))
