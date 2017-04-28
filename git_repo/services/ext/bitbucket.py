@@ -240,7 +240,7 @@ class BitbucketService(RepositoryService):
                 raise ResourceNotFoundError("Could not find snippet {}.".format(gist_id)) from err
             raise ResourceError("Couldn't delete snippet: {}".format(err)) from err
 
-    def request_create(self, user, repo, local_branch, remote_branch, title, description=None):
+    def request_create(self, user, repo, local_branch, remote_branch, title=None, description=None, edit=None):
         try:
             repository = next(self.bb.repositoryByOwnerAndRepositoryName(owner=user, repository_name=repo))
             if not repository:
@@ -252,6 +252,10 @@ class BitbucketService(RepositoryService):
                     remote_branch = 'master'
             if not local_branch:
                 local_branch = self.repository.active_branch.name
+            if not title and not description and edit:
+                title, description = edit(self.repository, from_branch)
+                if not title and not description:
+                    raise ArgumentError('Missing message for request creation')
             request = PullRequest.create(
                         PullRequestPayload(
                             payload=dict(
