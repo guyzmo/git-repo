@@ -1,4 +1,5 @@
 -r requirements.txt
+.
 pytest
 pytest-cov
 pytest-sugar
@@ -8,4 +9,3 @@ testfixtures
 mock
 betamax==0.5.1
 betamax-serializers
-git_repo

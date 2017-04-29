@@ -211,16 +211,20 @@ if you want to use another path, you can change the defaults:
 
 ### Development
 
-For development, I like to use `buildout`, and the repository is already configured
-for that. All you have to do, is install buildout, and then call it from the root of
-the repository:
+For development, start a virtualenv and from within install the devel requirements:
 
-    % pip install zc.buildout
-    % buildout
+    % virtualenv var
+    % var/bin/pip install -r requirements-test.txt
 
 and then you'll have the executable in `bin`:
 
-    % bin/git-repo --help
+    % var/bin/git-repo --help
+
+and to run the tests:
+
+    % var/bin/py.test --cov=git_repo --cov-report term-missing --capture=sys tests
+
+N.B.: *Buildout is no longer supported for development*
 
 #### Verbose running
 
