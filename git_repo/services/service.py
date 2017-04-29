@@ -246,7 +246,10 @@ class RepositoryService:
         if not rw and '/' in repo:
             return '{}/{}'.format(self.url_ro, repo)
         elif rw and '/' in repo:
-            return '{}:{}'.format(self.url_rw, repo)
+            if self.url_rw.startswith('ssh://'):
+                return '{}/{}'.format(self.url_rw, repo)
+            else:
+                return '{}:{}'.format(self.url_rw, repo)
         else:
             raise ArgumentError("Cannot tell how to handle this url: `{}/{}`!".format(namespace, repo))
 
