@@ -1,5 +1,5 @@
 -r requirements.txt
-.
+-e .
 pytest
 pytest-cov
 pytest-sugar

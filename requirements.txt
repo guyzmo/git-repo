@@ -6,4 +6,4 @@ GitPython>=2.1.0
 github3.py
 python-gitlab>=0.18
 gogs-client>=1.0.3
-pybitbucket_fork>=0.12.1
+pybitbucket_fork>=0.12.2
