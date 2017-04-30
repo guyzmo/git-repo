@@ -28,6 +28,7 @@ class GithubService(RepositoryService):
             # upgrade self.gh from a GitHub object to a GitHubEnterprise object
             gh = github3.GitHubEnterprise(RepositoryService.build_url(self))
             self.gh._session.base_url = gh._session.base_url
+            gh._session = self.gh._session
             self.gh = gh
             # propagate ssl certificate parameter
             self.gh._session.verify = self.session_certificate or not self.session_insecure
