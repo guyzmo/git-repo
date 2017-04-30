@@ -29,12 +29,11 @@ class Test_Gitbucket(GitRepoTestCase):
 
     def get_service(self):
         return gitbucket.GitbucketService(c={
-            '__name__': 'gitrepo "gitbucket-test"',
+            '__name__': 'gitrepo "gitbucket"',
             'fqdn': "localhost",
             'port': "8080",
             'scheme': "http",
             'insecure': 'yes',
-            'token': os.environ['GITBUCKET_TOKEN']
             })
 
     def get_requests_session(self):
@@ -65,8 +64,9 @@ class Test_Gitbucket(GitRepoTestCase):
 
 
     def test_02_delete(self):
-        self.action_delete(namespace=self.local_namespace,
-                           repository='foobar')
+        with pytest.raises(NotImplementedError):
+            self.action_delete(namespace=self.local_namespace,
+                               repository='foobar')
 
     def test_03_delete_nouser(self):
         with pytest.raises(NotImplementedError):
