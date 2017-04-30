@@ -312,7 +312,10 @@ class GithubService(RepositoryService):
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):
         import platform
-        gh = github3.GitHub()
+        if self.fqdn != GITHUB_COM_FQDN:
+            gh = github3.GitHubEnterprise()
+        else:
+            gh = github3.GitHub()
         gh.login(login, password, two_factor_callback=lambda: prompt('2FA code> '))
         try:
             auth = gh.authorize(login, password,
