@@ -28,7 +28,7 @@ class Test_Gitbucket(GitRepoTestCase):
     def local_namespace(self):
         if 'GITBUCKET_NAMESPACE' in os.environ:
             return os.environ['GITBUCKET_NAMESPACE']
-        return 'user'
+        return 'git-repo-user'
 
     def get_service(self):
         return gitbucket.GitbucketService(c={

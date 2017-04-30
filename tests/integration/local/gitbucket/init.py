@@ -27,9 +27,9 @@ s.post(base_url + '/admin/system', data=system_data)
 
 # create test user
 user_data = {
-    "userName": "user",
+    "userName": "git-repo-user",
     "password": "user",
-    "fullName": "user",
+    "fullName": "git-repo-user",
     "mailAddress": "user@localhost"
 }
 s.post(base_url + '/admin/users/_newuser', data=user_data)
@@ -49,19 +49,19 @@ s.get(base_url + '/signout')
 
 # sign in by user
 s.get(base_url + '/signin?redirect=%2F')
-s.post(base_url + '/signin', data={"userName": "user", "password": "user"})
+s.post(base_url + '/signin', data={"userName": "git-repo-user", "password": "user"})
 
 # create group
 group_data ={
     "groupName": "group",
     "description": "",
-    "memberName": "user",
-    "members": "user:true"
+    "memberName": "git-repo-user",
+    "members": "git-repo-user:true"
 }
 s.post(base_url + '/groups/new', data=group_data)
 
 # create Token
-ret = s.post(base_url + '/user/_personalToken', data={"note": "for test"})
+ret = s.post(base_url + '/git-repo-user/_personalToken', data={"note": "for test"})
 html = ret.content.decode("utf-8")
 find_text = "data-clipboard-text="
 idx = html.find(find_text) + len(find_text) + 1
