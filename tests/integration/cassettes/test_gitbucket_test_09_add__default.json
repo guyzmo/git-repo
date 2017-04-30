@@ -1,0 +1,44 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2017-04-30T17:42:33",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITBUCKET>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "http://localhost:8080/api/v3/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"login\":\"<GITBUCKET_NAMESPACE>\",\"email\":\"user@localhost\",\"type\":\"User\",\"site_admin\":false,\"created_at\":\"2017-04-30T17:39:36Z\",\"url\":\"http://localhost:8080/api/v3/users/<GITBUCKET_NAMESPACE>\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>\",\"avatar_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/_avatar\"}"
+        },
+        "headers": {
+          "Content-Length": "284",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Sun, 30 Apr 2017 17:42:33 GMT",
+          "Expires": "Thu, 01 Jan 1970 00:00:00 GMT",
+          "Server": "Jetty(9.3.z-SNAPSHOT)",
+          "Set-Cookie": "JSESSIONID=16txux2n20esxcq0ycl4ibyfy;Path=/;HttpOnly"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "http://localhost:8080/api/v3/user"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

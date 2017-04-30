@@ -13,15 +13,25 @@ from git.exc import GitCommandError
 
 from datetime import datetime
 
+GITHUB_COM_FQDN = 'github.com'
+
 @register_target('hub', 'github')
 class GithubService(RepositoryService):
-    fqdn = 'github.com'
+    fqdn = GITHUB_COM_FQDN
 
     def __init__(self, *args, **kwarg):
         self.gh = github3.GitHub()
         super(GithubService, self).__init__(*args, **kwarg)
 
     def connect(self):
+        if self.fqdn != GITHUB_COM_FQDN:
+            # upgrade self.gh from a GitHub object to a GitHubEnterprise object
+            gh = github3.GitHubEnterprise(RepositoryService.build_url(self))
+            self.gh._session.base_url = gh._session.base_url
+            gh._session = self.gh._session
+            self.gh = gh
+            # propagate ssl certificate parameter
+            self.gh._session.verify = self.session_certificate or not self.session_insecure
         try:
             self.gh.login(token=self._privatekey)
             self.username = self.gh.user().login
@@ -284,7 +294,7 @@ class GithubService(RepositoryService):
         try:
             for remote in self.repository.remotes:
                 if remote.name == self.name:
-                    local_branch_name = 'requests/github/{}'.format(request)
+                    local_branch_name = 'requests/{}/{}'.format(self.name,request)
                     self.fetch(
                         remote,
                         'pull/{}/head'.format(request),
@@ -302,7 +312,10 @@ class GithubService(RepositoryService):
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):
         import platform
-        gh = github3.GitHub()
+        if self.fqdn != GITHUB_COM_FQDN:
+            gh = github3.GitHubEnterprise()
+        else:
+            gh = github3.GitHub()
         gh.login(login, password, two_factor_callback=lambda: prompt('2FA code> '))
         try:
             auth = gh.authorize(login, password,
