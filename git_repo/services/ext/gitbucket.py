@@ -13,30 +13,15 @@ import github3
 class GitbucketService(GithubService):
     fqdn = "localhost"
     port = 8080
+
     def __init__(self, *args, **kwarg):
         super(GitbucketService, self).__init__(*args, **kwarg)
 
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):
-        print("Please open the following URL: https://yourgitbucket/youraccount/_application")
+        print("Please open the following URL: {}/{}/_application".format(cls.build_url(cls), login))
         print("Generate a new token, and paste it at the following prompt.")
         return prompt('token> ')
-        ## this code maybe works when GitBucket supports add access token API.
-        #print("build_url: ", cls.build_url(cls))
-        #import platform
-        #gh = github3.GitHubEnterprise(cls.build_url(cls))
-        #gh.login(login, password, two_factor_callback=lambda: prompt('2FA code> '))
-        #try:
-        #    auth = gh.authorize(login, password,
-        #            scopes=[ 'repo', 'delete_repo', 'gist' ],
-        #            note='git-repo2 token used on {}'.format(platform.node()),
-        #            note_url='https://github.com/guyzmo/git-repo')
-        #    return auth.token
-        #except github3.models.GitHubError as err:
-        #    if len(err.args) > 0 and 422 == err.args[0].status_code:
-        #        raise ResourceExistsError("A token already exist for this machine on your github account.")
-        #    else:
-        #        raise err
 
     def format_path(self, repository, namespace=None, rw=False):
         repo = repository
