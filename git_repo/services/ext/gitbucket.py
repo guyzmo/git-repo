@@ -5,6 +5,7 @@ log = logging.getLogger('git_repo.gitbucket')
 
 from ..service import register_target
 from .github import GithubService
+from ...exceptions import ArgumentError
 
 import github3
 
@@ -15,15 +16,11 @@ class GitbucketService(GithubService):
     def __init__(self, *args, **kwarg):
         super(GitbucketService, self).__init__(*args, **kwarg)
 
-    def connect(self):
-        self.gh = github3.GitHubEnterprise(self.build_url(self))
-        super(GitbucketService, self).connect()
-
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):
-        print("Please edit _YOUR_ACCESS_TOKEN_ to actual token in ~/.gitconfig or ~/.git/config after.")
-        print("And add ssh-url = ssh://git@{}:_YOUR_SSH_PORT_".format(cls.fqdn))
-        return "_YOUR_ACCESS_TOKEN_"
+        print("Please open the following URL: https://yourgitbucket/youraccount/_application")
+        print("Generate a new token, and paste it at the following prompt.")
+        return prompt('token> ')
         ## this code maybe works when GitBucket supports add access token API.
         #print("build_url: ", cls.build_url(cls))
         #import platform
@@ -42,10 +39,19 @@ class GitbucketService(GithubService):
         #        raise err
 
     def format_path(self, repository, namespace=None, rw=False):
-        path = super(GitbucketService, self).format_path(repository, namespace, rw)
-        if not path.endswith(".git"):
-            path = "{}.git".format(path)
-        return path
+        repo = repository
+        if namespace:
+            repo = '{}/{}'.format(namespace, repository)
+
+        if not rw and '/' in repo:
+            return '{}/git/{}.git'.format(self.url_ro, repo)
+        elif rw and '/' in repo:
+            if 'ssh://' in self.url_rw:
+                return '{}/{}.git'.format(self.url_rw, repo)
+            else:
+                return '{}:{}.git'.format(self.url_rw, repo)
+        else:
+            raise ArgumentError("Cannot tell how to handle this url: `{}/{}`!".format(namespace, repo))
 
     def delete(self, repo, user=None):
         raise NotImplementedError("GitBucket doesn't suport this action now.")
