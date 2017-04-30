@@ -11,6 +11,20 @@ s = requests.Session()
 s.get(base_url + '/signin?redirect=%2F')
 s.post(base_url + '/signin', data={"userName": "root", "password": "root"})
 
+# start ssh server
+system_data = {
+    "baseUrl": "http://localhost:8080",
+    "information": "",
+    "allowAccountRegistration": "false",
+    "isCreateRepoOptionPublic": "true",
+    "allowAnonymousAccess": "true",
+    "activityLogLimit": "",
+    "ssh": "on",
+    "sshHost": "localhost",
+    "sshPort": "29418",
+}
+s.post(base_url + '/admin/system', data=system_data)
+
 # create test user
 user_data = {
     "userName": "user",
