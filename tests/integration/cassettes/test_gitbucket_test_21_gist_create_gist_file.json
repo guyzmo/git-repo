@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2017-04-30T17:11:44",
+      "recorded_at": "2017-04-30T17:31:25",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -22,15 +22,15 @@
       "response": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"login\":\"<GITBUCKET_NAMESPACE>\",\"email\":\"<GITBUCKET_NAMESPACE>@localhost\",\"type\":\"User\",\"site_admin\":false,\"created_at\":\"2017-04-30T15:09:05Z\",\"url\":\"http://localhost:8080/api/v3/<GITBUCKET_NAMESPACE>s/<GITBUCKET_NAMESPACE>\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>\",\"avatar_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/_avatar\"}"
+          "string": "{\"login\":\"<GITBUCKET_NAMESPACE>\",\"email\":\"<GITBUCKET_NAMESPACE>@localhost\",\"type\":\"User\",\"site_admin\":false,\"created_at\":\"2017-04-30T17:30:44Z\",\"url\":\"http://localhost:8080/api/v3/<GITBUCKET_NAMESPACE>s/<GITBUCKET_NAMESPACE>\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>\",\"avatar_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/_avatar\"}"
         },
         "headers": {
           "Content-Length": "248",
           "Content-Type": "application/json;charset=utf-8",
-          "Date": "Sun, 30 Apr 2017 17:11:44 GMT",
+          "Date": "Sun, 30 Apr 2017 17:31:25 GMT",
           "Expires": "Thu, 01 Jan 1970 00:00:00 GMT",
           "Server": "Jetty(9.3.z-SNAPSHOT)",
-          "Set-Cookie": "JSESSIONID=149wvw8j9lcjpwirqfnvxs441;Path=/;HttpOnly"
+          "Set-Cookie": "JSESSIONID=dp6qp7l5wv9tp4kzhbeu3f1v;Path=/;HttpOnly"
         },
         "status": {
           "code": 200,

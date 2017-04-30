@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2017-04-30T17:11:36",
+      "recorded_at": "2017-04-30T17:31:19",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -22,15 +22,15 @@
       "response": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"login\":\"<GITBUCKET_NAMESPACE>\",\"email\":\"<GITBUCKET_NAMESPACE>@localhost\",\"type\":\"User\",\"site_admin\":false,\"created_at\":\"2017-04-30T15:09:05Z\",\"url\":\"http://localhost:8080/api/v3/<GITBUCKET_NAMESPACE>s/<GITBUCKET_NAMESPACE>\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>\",\"avatar_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/_avatar\"}"
+          "string": "{\"login\":\"<GITBUCKET_NAMESPACE>\",\"email\":\"<GITBUCKET_NAMESPACE>@localhost\",\"type\":\"User\",\"site_admin\":false,\"created_at\":\"2017-04-30T17:30:44Z\",\"url\":\"http://localhost:8080/api/v3/<GITBUCKET_NAMESPACE>s/<GITBUCKET_NAMESPACE>\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>\",\"avatar_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/_avatar\"}"
         },
         "headers": {
           "Content-Length": "248",
           "Content-Type": "application/json;charset=utf-8",
-          "Date": "Sun, 30 Apr 2017 17:11:36 GMT",
+          "Date": "Sun, 30 Apr 2017 17:31:19 GMT",
           "Expires": "Thu, 01 Jan 1970 00:00:00 GMT",
           "Server": "Jetty(9.3.z-SNAPSHOT)",
-          "Set-Cookie": "JSESSIONID=xkncl73xsy4y1aih0cd7kkxo4;Path=/;HttpOnly"
+          "Set-Cookie": "JSESSIONID=1t0htrr6dcqy7zaocy5rln907;Path=/;HttpOnly"
         },
         "status": {
           "code": 200,
@@ -40,11 +40,11 @@
       }
     },
     {
-      "recorded_at": "2017-04-30T17:11:36",
+      "recorded_at": "2017-04-30T17:31:19",
       "request": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"description\": \"\", \"auto_init\": false, \"private\": false, \"has_downloads\": true, \"name\": \"git-repo\", \"has_wiki\": true, \"has_issues\": true, \"gitignore_template\": \"\", \"homepage\": \"\"}"
+          "string": "{\"private\": false, \"has_downloads\": true, \"homepage\": \"\", \"name\": \"git-repo\", \"has_issues\": true, \"gitignore_template\": \"\", \"has_wiki\": true, \"description\": \"\", \"auto_init\": false}"
         },
         "headers": {
           "Accept": "application/vnd.github.v3.full+json",
@@ -54,7 +54,7 @@
           "Connection": "keep-alive",
           "Content-Length": "180",
           "Content-Type": "application/json",
-          "Cookie": "JSESSIONID=xkncl73xsy4y1aih0cd7kkxo4",
+          "Cookie": "JSESSIONID=1t0htrr6dcqy7zaocy5rln907",
           "User-Agent": "github3.py/0.9.5"
         },
         "method": "POST",
@@ -63,12 +63,12 @@
       "response": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"message\":\"A repository with this name already exists on this account\",\"documentation_url\":\"https://developer.github.com/v3/repos/#create\"}"
+          "string": "{\"name\":\"git-repo\",\"full_name\":\"<GITBUCKET_NAMESPACE>/git-repo\",\"description\":\"\",\"watchers\":0,\"forks\":0,\"private\":false,\"default_branch\":\"master\",\"owner\":{\"login\":\"<GITBUCKET_NAMESPACE>\",\"email\":\"<GITBUCKET_NAMESPACE>@localhost\",\"type\":\"User\",\"site_admin\":false,\"created_at\":\"2017-04-30T17:30:44Z\",\"url\":\"http://localhost:8080/api/v3/<GITBUCKET_NAMESPACE>s/<GITBUCKET_NAMESPACE>\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>\",\"avatar_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/_avatar\"},\"forks_count\":0,\"watchers_count\":0,\"url\":\"http://localhost:8080/api/v3/repos/<GITBUCKET_NAMESPACE>/git-repo\",\"http_url\":\"http://localhost:8080/git/<GITBUCKET_NAMESPACE>/git-repo.git\",\"clone_url\":\"http://localhost:8080/git/<GITBUCKET_NAMESPACE>/git-repo.git\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/git-repo\"}"
         },
         "headers": {
-          "Content-Length": "140",
+          "Content-Length": "642",
           "Content-Type": "application/json;charset=utf-8",
-          "Date": "Sun, 30 Apr 2017 17:11:36 GMT",
+          "Date": "Sun, 30 Apr 2017 17:31:19 GMT",
           "Server": "Jetty(9.3.z-SNAPSHOT)"
         },
         "status": {
@@ -79,7 +79,7 @@
       }
     },
     {
-      "recorded_at": "2017-04-30T17:11:36",
+      "recorded_at": "2017-04-30T17:31:20",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -92,7 +92,7 @@
           "Authorization": "token <PRIVATE_KEY_GITBUCKET>",
           "Connection": "keep-alive",
           "Content-Type": "application/json",
-          "Cookie": "JSESSIONID=xkncl73xsy4y1aih0cd7kkxo4",
+          "Cookie": "JSESSIONID=1t0htrr6dcqy7zaocy5rln907",
           "User-Agent": "github3.py/0.9.5"
         },
         "method": "GET",
@@ -101,12 +101,12 @@
       "response": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"name\":\"git-repo\",\"full_name\":\"<GITBUCKET_NAMESPACE>/git-repo\",\"description\":\"\",\"watchers\":0,\"forks\":0,\"private\":false,\"default_branch\":\"master\",\"owner\":{\"login\":\"<GITBUCKET_NAMESPACE>\",\"email\":\"<GITBUCKET_NAMESPACE>@localhost\",\"type\":\"User\",\"site_admin\":false,\"created_at\":\"2017-04-30T15:09:05Z\",\"url\":\"http://localhost:8080/api/v3/<GITBUCKET_NAMESPACE>s/<GITBUCKET_NAMESPACE>\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>\",\"avatar_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/_avatar\"},\"forks_count\":0,\"watchers_count\":0,\"url\":\"http://localhost:8080/api/v3/repos/<GITBUCKET_NAMESPACE>/git-repo\",\"http_url\":\"http://localhost:8080/git/<GITBUCKET_NAMESPACE>/git-repo.git\",\"clone_url\":\"http://localhost:8080/git/<GITBUCKET_NAMESPACE>/git-repo.git\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/git-repo\"}"
+          "string": "{\"name\":\"git-repo\",\"full_name\":\"<GITBUCKET_NAMESPACE>/git-repo\",\"description\":\"\",\"watchers\":0,\"forks\":0,\"private\":false,\"default_branch\":\"master\",\"owner\":{\"login\":\"<GITBUCKET_NAMESPACE>\",\"email\":\"<GITBUCKET_NAMESPACE>@localhost\",\"type\":\"User\",\"site_admin\":false,\"created_at\":\"2017-04-30T17:30:44Z\",\"url\":\"http://localhost:8080/api/v3/<GITBUCKET_NAMESPACE>s/<GITBUCKET_NAMESPACE>\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>\",\"avatar_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/_avatar\"},\"forks_count\":0,\"watchers_count\":0,\"url\":\"http://localhost:8080/api/v3/repos/<GITBUCKET_NAMESPACE>/git-repo\",\"http_url\":\"http://localhost:8080/git/<GITBUCKET_NAMESPACE>/git-repo.git\",\"clone_url\":\"http://localhost:8080/git/<GITBUCKET_NAMESPACE>/git-repo.git\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/git-repo\"}"
         },
         "headers": {
           "Content-Length": "642",
           "Content-Type": "application/json;charset=utf-8",
-          "Date": "Sun, 30 Apr 2017 17:11:36 GMT",
+          "Date": "Sun, 30 Apr 2017 17:31:20 GMT",
           "Server": "Jetty(9.3.z-SNAPSHOT)"
         },
         "status": {
