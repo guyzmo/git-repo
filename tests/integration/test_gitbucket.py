@@ -21,10 +21,13 @@ from git_repo.exceptions import ResourceExistsError, ResourceNotFoundError, Reso
 
 class Test_Gitbucket(GitRepoTestCase):
     log = log
-    namespace = "user"
+    namespace = os.environ['GITBUCKET_NAMESPACE']
+
 
     @property
     def local_namespace(self):
+        if 'GITBUCKET_NAMESPACE' in os.environ:
+            return os.environ['GITBUCKET_NAMESPACE']
         return 'user'
 
     def get_service(self):
@@ -34,6 +37,7 @@ class Test_Gitbucket(GitRepoTestCase):
             'port': "8080",
             'scheme': "http",
             'insecure': 'yes',
+            'ssh-url': 'ssh://git@localhost:29418'
             })
 
     def get_requests_session(self):
