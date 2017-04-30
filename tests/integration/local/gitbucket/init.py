@@ -53,5 +53,5 @@ find_text = "data-clipboard-text="
 idx = html.find(find_text) + len(find_text) + 1
 token = html[idx:idx + 40]
 
-print("GITBUCKET_USER_TOKEN={}".format(token))
+print("PRIVATE_KEY_GITBUCKET={}".format(token))
 
