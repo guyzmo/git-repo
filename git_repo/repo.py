@@ -154,28 +154,6 @@ class GitRepoRunner(KeywordArgumentParser):
         if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys():
             del os.environ['GIT_WORK_TREE']
 
-    def _guess_repo_slug(self, repository, service, resolve_targets=None):
-        config = repository.config_reader()
-        if resolve_targets:
-            targets = [target.format(service=service.name) for target in resolve_targets]
-        else:
-            targets = (service.name, 'upstream', 'origin')
-        for remote in repository.remotes:
-            if remote.name in targets:
-                for url in remote.urls:
-                    if url.startswith('https'):
-                        if url.endswith('.git'):
-                            url = url[:-4]
-                        *_, user, name = url.split('/')
-                        self.set_repo_slug('/'.join([user, name]), auto=True)
-                        return
-                    elif url.startswith('git@'):
-                        if url.endswith('.git'):
-                            url = url[:-4]
-                        _, repo_slug = url.split(':')
-                        self.set_repo_slug(repo_slug, auto=True)
-                        return
-
     def get_service(self, lookup_repository=True, resolve_targets=None):
         if not lookup_repository:
             service = RepositoryService.get_service(None, self.target)
@@ -191,7 +169,11 @@ class GitRepoRunner(KeywordArgumentParser):
                 raise FileNotFoundError('Cannot find path to the repository.')
             service = RepositoryService.get_service(repository, self.target)
             if not self.repo_name:
-                self._guess_repo_slug(repository, service, resolve_targets)
+                repo_slug = RepositoryService.guess_repo_slug(
+                        repository, service, resolve_targets
+                        )
+                if repo_slug:
+                    self.set_repo_slug(repo_slug, auto=True)
         return service
 
     '''Argument storage'''

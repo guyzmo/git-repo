@@ -76,6 +76,27 @@ class RepositoryService:
                 return home_conf
         return xdg_conf
 
+    @staticmethod
+    def guess_repo_slug(repository, service, resolve_targets=None):
+        config = repository.config_reader()
+        if resolve_targets:
+            targets = [target.format(service=service.name) for target in resolve_targets]
+        else:
+            targets = (service.name, 'upstream', 'origin')
+        for remote in repository.remotes:
+            if remote.name in targets:
+                for url in remote.urls:
+                    if url.endswith('.git'):
+                        url = url[:-4]
+                    # strip http://, https:// and ssh://
+                    if '://' in url:
+                        *_, user, name = url.split('/')
+                        return '/'.join([user, name])
+                    # scp-style URL
+                    elif '@' in url and ':' in url:
+                        return url.split(':')[-1]
+        return None
+
     @classmethod
     def get_config(cls, config):
         out = {}
