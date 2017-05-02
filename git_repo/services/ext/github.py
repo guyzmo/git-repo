@@ -231,37 +231,66 @@ class GithubService(RepositoryService):
             raise ResourceNotFoundError('Could not find gist')
         gist.delete()
 
-    def request_create(self, user, repo, from_branch, onto_branch, title=None, description=None, auto_slug=False, edit=None):
-        repository = self.gh.repository(user, repo)
-        if not repository:
-            raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
+    def request_create(self, onto_user, onto_repo, from_branch, onto_branch, title=None, description=None, auto_slug=False, edit=None):
+        onto_project = self.gh.repository(onto_user, onto_repo)
+
+        if not onto_project:
+            raise ResourceNotFoundError('Could not find project `{}/{}`!'.format(onto_user, onto_repo))
+
+        from_reposlug = self.guess_repo_slug(self.repository, self)
+        if from_reposlug:
+            from_user, from_repo = from_reposlug.split('/')
+            if (onto_user, onto_repo) == (from_user, from_repo):
+                from_project = onto_project
+            else:
+                from_project = self.gh.repository(from_user, from_repo)
+        else:
+            from_project = None
+
+        if not from_project:
+            raise ResourceNotFoundError('Could not find project `{}`!'.format(from_user, from_repo))
+
         # when no repo slug has been given to `git-repo X request create`
-        if auto_slug:
-            # then chances are current repository is a fork of the target
-            # repository we want to push to
-            if repository.fork:
-                user = repository.parent.owner.login
-                repo = repository.parent.name
-                from_branch = from_branch or repository.parent.default_branch
+        # then chances are current project is a fork of the target
+        # project we want to push to
+        if auto_slug and onto_project.fork:
+            onto_user = onto_project.parent.owner.login
+            onto_repo = onto_project.parent.name
+            onto_project = self.gh.repository(onto_user, onto_repo)
+
         # if no onto branch has been defined, take the default one
         # with a fallback on master
         if not from_branch:
             from_branch = self.repository.active_branch.name
+
         # if no from branch has been defined, chances are we want to push
         # the branch we're currently working on
         if not onto_branch:
-            onto_branch = repository.default_branch or 'master'
-        if self.username != repository.owner.login:
-            from_branch = ':'.join([self.username, from_branch])
+            onto_branch = onto_project.default_branch or 'master'
+
+        from_target = '{}:{}'.format(from_user, from_branch)
+        onto_target = '{}/{}:{}'.format(onto_user, onto_project, onto_branch)
+
+        # translate from github username to git remote name
         if not title and not description and edit:
-            title, description = edit(self.repository, from_branch)
+            title, description = edit(self.repository, from_branch, onto_target)
             if not title and not description:
                 raise ArgumentError('Missing message for request creation')
+
         try:
-            request = repository.create_pull(title,
+            request = onto_project.create_pull(title,
+                    head=from_target,
                     base=onto_branch,
-                    head=from_branch,
                     body=description)
+
+            return {
+                'local': from_branch,
+                'project': '/'.join([onto_user, onto_repo]),
+                'remote': onto_branch,
+                'ref': request.number,
+                'url': request.html_url
+            }
+
         except github3.models.GitHubError as err:
             if err.code == 422:
                 if err.message == 'Validation Failed':
@@ -278,9 +307,6 @@ class GithubService(RepositoryService):
                     raise ResourceError("Unhandled formatting error: {}".format(err.errors))
             raise ResourceError(err.message)
 
-        return {'local': from_branch, 'remote': onto_branch, 'ref': request.number,
-                'url': request.html_url}
-
     def request_list(self, user, repo):
         repository = self.gh.repository(user, repo)
         yield "{}\t{:<60}\t{}"
@@ -292,8 +318,9 @@ class GithubService(RepositoryService):
         if pull:
             raise NotImplementedError('Pull operation on requests for merge are not yet supported')
         try:
+            remote_names = list(self._convert_user_into_remote(user))
             for remote in self.repository.remotes:
-                if remote.name == self.name:
+                if remote.name in remote_names:
                     local_branch_name = 'requests/{}/{}'.format(self.name,request)
                     self.fetch(
                         remote,

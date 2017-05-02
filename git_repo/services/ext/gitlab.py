@@ -257,36 +257,74 @@ class GitlabService(RepositoryService):
 
         return snippet.delete()
 
-    def request_create(self, user, repo, local_branch, remote_branch, title, description=None, auto_slug=False, edit=None):
+    def request_create(self, onto_user, onto_repo, from_branch, onto_branch, title=None, description=None, auto_slug=False, edit=None):
         try:
-            repository = self.gl.projects.get('/'.join([user, repo]))
-            if not repository:
-                raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
+            onto_project = self.gl.projects.get('/'.join([onto_user, onto_repo]))
+
+            if not onto_project:
+                raise ResourceNotFoundError('Could not find project `{}/{}`!'.format(onto_user, onto_repo))
+
+            from_reposlug = self.guess_repo_slug(self.repository, self)
+            if from_reposlug:
+                from_user, from_repo = from_reposlug.split('/')
+                if (onto_user, onto_repo) == (from_user, from_repo):
+                    from_project = onto_project
+                else:
+                    from_project = self.gl.projects.get('/'.join([from_user, from_repo]))
+            else:
+                from_project = None
+
+            if not from_project:
+                raise ResourceNotFoundError('Could not find project `{}/{}`!'.format(from_user, from_repo))
+
+            # when no repo slug has been given to `git-repo X request create`
+            # then chances are current project is a fork of the target
+            # project we want to push to
+            if auto_slug and 'forked_from_project' in onto_project.as_dict():
+                parent = self.gl.projects.get(onto_project.forked_from_project['id'])
+                onto_user, onto_repo = parent.namespace.path, parent.path
+                onto_project = self.gl.projects.get('/'.join([onto_user, onto_repo]))
+
+            # if no onto branch has been defined, take the default one
+            # with a fallback on master
+            if not from_branch:
+                from_branch = self.repository.active_branch.name
+            # if no from branch has been defined, chances are we want to push
+            # the branch we're currently working on
+            if not onto_branch:
+                onto_branch = onto_project.default_branch or 'master'
+
+            onto_target = '{}/{}:{}'.format(onto_user, onto_project.name, onto_branch)
+
+            # translate from gitlab username to git remote name
             if not title and not description and edit:
-                title, description = edit(repository, local_branch)
+                title, description = edit(self.repository, from_branch, onto_target)
                 if not title and not description:
                     raise ArgumentError('Missing message for request creation')
-            if not local_branch:
-                local_branch = self.repository.active_branch.name
-            if not remote_branch:
-                remote_branch = repository.default_branch or 'master'
+
             request = self.gl.project_mergerequests.create(
-                    project_id=repository.id,
-                    data= {
-                        'source_branch':local_branch,
-                        'target_branch':remote_branch,
-                        'title':title,
-                        'description':description
-                        }
-                    )
+                    project_id=from_project.id,
+                    data={
+                        'source_branch': from_branch,
+                        'target_branch': onto_branch,
+                        'target_project_id': onto_project.id,
+                        'title': title,
+                        'description': description
+                    }
+            )
+
+            return {
+                'local': from_branch,
+                'project': '/'.join([onto_user, onto_repo]),
+                'remote': onto_branch,
+                'url': request.web_url,
+                'ref': request.iid
+            }
+
         except GitlabGetError as err:
             raise ResourceNotFoundError(err) from err
         except Exception as err:
             raise ResourceError("Unhandled error: {}".format(err)) from err
-
-        return {'local': local_branch,
-                'remote': remote_branch,
-                'ref': request.iid}
 
     def request_list(self, user, repo):
         project = self.gl.projects.get('/'.join([user, repo]))

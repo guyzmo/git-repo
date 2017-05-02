@@ -66,8 +66,8 @@ class RepositoryService:
             'server-cert'
             ]
 
-    @classmethod
-    def get_config_path(cls):
+    @staticmethod
+    def get_config_path():
         home_dir = os.environ['HOME']
         home_conf = os.path.join(home_dir, '.gitconfig')
         xdg_conf = os.path.join(home_dir, '.git', 'config')
@@ -75,6 +75,26 @@ class RepositoryService:
             if os.path.exists(home_conf):
                 return home_conf
         return xdg_conf
+
+    @staticmethod
+    def guess_repo_slug(repository, service, resolve_targets=None):
+        if resolve_targets:
+            targets = [target.format(service=service.name) for target in resolve_targets]
+        else:
+            targets = (service.name, 'upstream', 'origin')
+        for remote in repository.remotes:
+            if remote.name in targets:
+                for url in remote.urls:
+                    if url.endswith('.git'):
+                        url = url[:-4]
+                    # strip http://, https:// and ssh://
+                    if '://' in url:
+                        *_, user, name = url.split('/')
+                        return '/'.join([user, name])
+                    # scp-style URL
+                    elif '@' in url and ':' in url:
+                        return url.split(':')[-1]
+        return None
 
     @classmethod
     def get_config(cls, config):
@@ -227,6 +247,17 @@ class RepositoryService:
     def url_rw(self):
         url = self.ssh_url
         return url if '@' in url else '@'.join([self.git_user, url])
+
+    def _convert_user_into_remote(self, username, exclude=['all']):
+        # builds a ref with an username and a branch
+        # this method parses the repository's remotes to find the url matching username
+        # and containing the given branch and returns the corresponding ref
+        remotes = {remote.name: list(remote.urls) for remote in self.repository.remotes}
+        for name in (self.name, 'upstream') + tuple(remotes.keys()):
+            if name in remotes and name not in exclude:
+                for url in remotes[name]:
+                    if self.fqdn in url and username == url.split('/')[-2].split(':')[-1]:
+                        yield name
 
     def format_path(self, repository, namespace=None, rw=False):
         '''format the repository's URL

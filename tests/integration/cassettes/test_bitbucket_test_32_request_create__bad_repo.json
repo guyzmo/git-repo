@@ -64,12 +64,12 @@
           "User-Agent": "pybitbucket/0.11.2 python-requests/2.12.4"
         },
         "method": "GET",
-        "uri": "https://api.bitbucket.org/2.0/repositories/guyzmo/does_not_exists"
+        "uri": "https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/does_not_exists"
       },
       "response": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"type\": \"error\", \"error\": {\"message\": \"Repository guyzmo/does_not_exists not found\"}}"
+          "string": "{\"type\": \"error\", \"error\": {\"message\": \"Repository <BITBUCKET_NAMESPACE>/does_not_exists not found\"}}"
         },
         "headers": {
           "Connection": "keep-alive",
@@ -92,7 +92,7 @@
           "code": 404,
           "message": "NOT FOUND"
         },
-        "url": "https://api.bitbucket.org/2.0/repositories/guyzmo/does_not_exists"
+        "url": "https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/does_not_exists"
       }
     }
   ],

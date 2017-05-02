@@ -64,12 +64,12 @@
           "User-Agent": "pybitbucket/0.11.2 python-requests/2.12.4"
         },
         "method": "GET",
-        "uri": "https://api.bitbucket.org/2.0/repositories/guyzmo/test_create_requests"
+        "uri": "https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/test_create_requests"
       },
       "response": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"scm\": \"git\", \"website\": \"\", \"has_wiki\": false, \"name\": \"test_create_requests\", \"links\": {\"watchers\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/test_create_requests/watchers\"}, \"branches\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/test_create_requests/refs/branches\"}, \"tags\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/test_create_requests/refs/tags\"}, \"commits\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/test_create_requests/commits\"}, \"clone\": [{\"href\": \"https://<BITBUCKET_NAMESPACE>@bitbucket.org/guyzmo/test_create_requests.git\", \"name\": \"https\"}, {\"href\": \"ssh://git@bitbucket.org/guyzmo/test_create_requests.git\", \"name\": \"ssh\"}], \"self\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/test_create_requests\"}, \"html\": {\"href\": \"https://bitbucket.org/guyzmo/test_create_requests\"}, \"avatar\": {\"href\": \"https://bitbucket.org/guyzmo/test_create_requests/avatar/32/\"}, \"hooks\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/test_create_requests/hooks\"}, \"forks\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/test_create_requests/forks\"}, \"downloads\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/test_create_requests/downloads\"}, \"pullrequests\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/test_create_requests/pullrequests\"}}, \"fork_policy\": \"allow_forks\", \"uuid\": \"{e1571fd1-5ee1-483e-ac1e-6bbb81fc3ef0}\", \"language\": \"\", \"created_on\": \"2016-12-24T17:01:19.193562+00:00\", \"full_name\": \"guyzmo/test_create_requests\", \"has_issues\": false, \"owner\": {\"username\": \"<BITBUCKET_NAMESPACE>\", \"display_name\": \"Guyzmo\", \"type\": \"user\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>\"}, \"html\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/<BITBUCKET_NAMESPACE>/avatar/32/\"}}}, \"updated_on\": \"2016-12-24T17:01:23.821330+00:00\", \"size\": 58502, \"type\": \"repository\", \"slug\": \"test_create_requests\", \"is_private\": false, \"description\": \"\"}"
+          "string": "{\"scm\": \"git\", \"website\": \"\", \"has_wiki\": false, \"name\": \"test_create_requests\", \"links\": {\"watchers\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/test_create_requests/watchers\"}, \"branches\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/test_create_requests/refs/branches\"}, \"tags\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/test_create_requests/refs/tags\"}, \"commits\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/test_create_requests/commits\"}, \"clone\": [{\"href\": \"https://<BITBUCKET_NAMESPACE>@bitbucket.org/<BITBUCKET_NAMESPACE>/test_create_requests.git\", \"name\": \"https\"}, {\"href\": \"ssh://git@bitbucket.org/<BITBUCKET_NAMESPACE>/test_create_requests.git\", \"name\": \"ssh\"}], \"self\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/test_create_requests\"}, \"html\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/test_create_requests\"}, \"avatar\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/test_create_requests/avatar/32/\"}, \"hooks\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/test_create_requests/hooks\"}, \"forks\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/test_create_requests/forks\"}, \"downloads\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/test_create_requests/downloads\"}, \"pullrequests\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/test_create_requests/pullrequests\"}}, \"fork_policy\": \"allow_forks\", \"uuid\": \"{e1571fd1-5ee1-483e-ac1e-6bbb81fc3ef0}\", \"language\": \"\", \"created_on\": \"2016-12-24T17:01:19.193562+00:00\", \"full_name\": \"<BITBUCKET_NAMESPACE>/test_create_requests\", \"has_issues\": false, \"owner\": {\"username\": \"<BITBUCKET_NAMESPACE>\", \"display_name\": \"Guyzmo\", \"type\": \"user\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/<BITBUCKET_NAMESPACE>\"}, \"html\": {\"href\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/<BITBUCKET_NAMESPACE>/avatar/32/\"}}}, \"updated_on\": \"2016-12-24T17:01:23.821330+00:00\", \"size\": 58502, \"type\": \"repository\", \"slug\": \"test_create_requests\", \"is_private\": false, \"description\": \"\"}"
         },
         "headers": {
           "Connection": "keep-alive",
@@ -93,7 +93,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://api.bitbucket.org/2.0/repositories/guyzmo/test_create_requests"
+        "url": "https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/test_create_requests"
       }
     },
     {
@@ -114,7 +114,7 @@
           "User-Agent": "pybitbucket/0.11.2 python-requests/2.12.4"
         },
         "method": "POST",
-        "uri": "https://api.bitbucket.org/2.0/repositories/guyzmo/test_create_requests/pullrequests"
+        "uri": "https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/test_create_requests/pullrequests"
       },
       "response": {
         "body": {
@@ -142,7 +142,7 @@
           "code": 400,
           "message": "BAD REQUEST"
         },
-        "url": "https://api.bitbucket.org/2.0/repositories/guyzmo/test_create_requests/pullrequests"
+        "url": "https://api.bitbucket.org/2.0/repositories/<BITBUCKET_NAMESPACE>/test_create_requests/pullrequests"
       }
     }
   ],

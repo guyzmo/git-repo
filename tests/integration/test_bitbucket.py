@@ -287,6 +287,28 @@ class Test_BitBucket(GitRepoTestCase):
                 self.service.repository.create_remote(self.service.name, url=local_slug)
                 self.service.request_fetch(repo=repository, user=namespace, request=request)
 
+    @pytest.mark.skip
+    # Skipping this test because of bug in gitpython, cf https://github.com/gitpython-developers/gitpython#:
+    #   > Pumping 'stderr' of cmd(['git', 'pull', '--progress', '-v', 'bitbucket', 'master']) failed due to: TypeError("a bytes-like object is required, not 'str'",)
+    #   Exception in thread Thread-10:
+    #   Traceback (most recent call last):
+    #     File "/home/travis/virtualenv/python3.6.1/lib/python3.6/site-packages/git/cmd.py", line 87, in pump_stream
+    #       handler(line)
+    #     File "/home/travis/virtualenv/python3.6.1/lib/python3.6/site-packages/git/util.py", line 483, in handler
+    #       return self._parse_progress_line(line.rstrip())
+    #     File "/home/travis/virtualenv/python3.6.1/lib/python3.6/site-packages/git/util.py", line 388, in _parse_progress_line
+    #       if len(self.error_lines) > 0 or self._cur_line.startswith(('error:', 'fatal:')):
+    #   TypeError: a bytes-like object is required, not 'str'
+    #   During handling of the above exception, another exception occurred:
+    #   Traceback (most recent call last):
+    #     File "/opt/python/3.6.1/lib/python3.6/threading.py", line 916, in _bootstrap_inner
+    #       self.run()
+    #     File "/opt/python/3.6.1/lib/python3.6/threading.py", line 864, in run
+    #       self._target(*self._args, **self._kwargs)
+    #     File "/home/travis/virtualenv/python3.6.1/lib/python3.6/site-packages/git/cmd.py", line 90, in pump_stream
+    #       raise CommandError(['<%s-pump>' % name] + cmdline, ex)
+    #   git.exc.CommandError: Cmd('<stderr-pump>') failed due to: TypeError('a bytes-like object is required, not 'str'')
+    #     cmdline: <stderr-pump> git pull --progress -v bitbucket master
     def test_31_request_fetch__bad_request(self):
         with pytest.raises(ResourceNotFoundError):
             self.action_request_fetch(namespace='atlassian',
@@ -295,40 +317,52 @@ class Test_BitBucket(GitRepoTestCase):
                 fail=True)
 
     def test_32_request_create__good(self):
-        r = self.action_request_create(namespace='guyzmo',
+        r = self.action_request_create(namespace=self.local_namespace,
                 repository='test_create_requests',
-                source_branch='pr-test',
                 target_branch='master',
+                source_branch='pr-test',
                 title='PR test',
                 description='PR description')
-        assert r == {'local': 'pr-test', 'ref': '1', 'remote': 'master'}
+        assert r == {
+                'local': 'pr-test',
+                'ref': 1,
+                'remote': 'master',
+                'project': '{}/test_create_requests'.format(self.local_namespace),
+                'url': 'https://bitbucket.org/{}/test_create_requests/pull-requests/1'.format(self.local_namespace),
+                }
 
     def test_32_request_create__bad_branch(self):
         with pytest.raises(ResourceNotFoundError):
-            self.action_request_create(namespace='guyzmo',
+            self.action_request_create(namespace=self.local_namespace,
                     repository='test_create_requests',
-                    source_branch='does_not_exists',
                     target_branch='master',
+                    source_branch='does_not_exists',
                     title='PR test',
                     description='PR description')
 
     def test_32_request_create__bad_repo(self):
         with pytest.raises(ResourceNotFoundError):
-            r = self.action_request_create(namespace='guyzmo',
+            r = self.action_request_create(namespace=self.local_namespace,
                     repository='does_not_exists',
-                    source_branch='pr-test',
                     target_branch='master',
+                    source_branch='pr-test',
                     title='PR test',
                     description='PR description')
 
     def test_32_request_create__guess_branch(self):
-        r = self.action_request_create(namespace='guyzmo',
+        r = self.action_request_create(namespace=self.local_namespace,
                 repository='test_create_requests',
-                source_branch=None,
                 target_branch=None,
+                source_branch=None,
                 title='PR test',
                 description='PR description')
-        assert r == {'local': 'pr-test', 'ref': '1', 'remote': 'master'}
+        assert r == {
+                'local': 'pr-test',
+                'ref': 1,
+                'remote': 'master',
+                'project': '{}/test_create_requests'.format(self.local_namespace),
+                'url': 'https://bitbucket.org/{}/test_create_requests/pull-requests/1'.format(self.local_namespace),
+                }
 
     def test_33_open(self):
         self.action_open(namespace='guyzmo',

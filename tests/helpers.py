@@ -154,7 +154,7 @@ class RepositoryMockup(RepositoryService):
             raise Exception('bad branch to request!')
         local = args[2] or 'pr-test'
         remote = args[3] or 'base-test'
-        return {'local': local, 'remote': remote, 'ref': 42}
+        return {'local': local, 'remote': remote, 'project': '/'.join(args[:2]), 'ref': 42}
 
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):
@@ -632,6 +632,8 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                 self.set_mock_popen_commands([
                     ('git remote add all {}'.format(local_slug), b'', b'', 0),
                     ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
+                    ('git remote get-url --all all', local_slug.encode('utf-8'), b'', 0),
+                    ('git remote get-url --all {}'.format(self.service.name), local_slug.encode('utf-8'), b'', 0),
                     ('git version', b'git version 2.8.0', b'', 0),
                     ('git pull --progress -v {} master'.format(self.service.name), b'', '\n'.join([
                         'POST git-upload-pack (140 bytes)',
@@ -691,7 +693,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
             source_branch='pr-test',
             target_branch='master',
             create_repository='test_create_requests',
-            create_branch='pr-test'):
+            auto_slug=False):
         '''
         Here we are testing the subcommand 'request create'.
 
@@ -734,17 +736,33 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
             self.repository.git.commit(message='First commit')
             if will_record:
                 self.repository.git.push(self.service.name, 'master')
-            # create a new branch
-            new_branch = self.repository.create_head(create_branch, 'HEAD')
-            self.repository.head.reference = new_branch
-            self.repository.head.reset(index=True, working_tree=True)
-            # make a modification, commit and push it to that branch
-            with open(os.path.join(self.repository.working_dir, 'second_file'), 'w') as test:
-                test.write('La meilleure façon de ne pas avancer est de suivre une idée fixe. J.Prévert')
-            self.repository.git.add('second_file')
-            self.repository.git.commit(message='Second commit')
-            if will_record:
-                self.repository.git.push(self.service.name, create_branch)
+                # create a new branch
+                new_branch = self.repository.create_head(source_branch, 'HEAD')
+                self.repository.head.reference = new_branch
+                self.repository.head.reset(index=True, working_tree=True)
+                # make a modification, commit and push it to that branch
+                with open(os.path.join(self.repository.working_dir, 'second_file'), 'w') as test:
+                    test.write('La meilleure façon de ne pas avancer est de suivre une idée fixe. J.Prévert')
+                self.repository.git.add('second_file')
+                self.repository.git.commit(message='Second commit')
+                self.repository.git.push(service, source_branch)
+            else:
+                import git
+                self.service._extracts_ref = lambda *a: git.Reference(
+                        self.service.repository,
+                        '{}/{}'.format(namespace, repository),
+                        check_path=False)
+                self.service.repository.head.reference = git.Head(self.service.repository, path='refs/heads/pr-test')
+            existing_remotes = [r.name for r in self.repository.remotes]
+            if 'all' in existing_remotes:
+                r_all = self.repository.remote('all')
+            else:
+                r_all = self.repository.create_remote('all', '')
+            for name in ('github', 'gitlab', 'bitbucket', 'gogs', 'upstream'):
+                if name not in existing_remotes:
+                    kw = dict(user=namespace, project=repository, host=name)
+                    self.repository.create_remote(name, 'git@{host}.com:{user}/{project}'.format(**kw))
+                    r_all.add_url('git@{host}.com:{user}/{project}'.format(**kw))
             yield
             if will_record:
                 self.service.delete(create_repository)
@@ -757,15 +775,17 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
         with prepare_project_for_test():
             with self.recorder.use_cassette(cassette_name):
                 self.service.connect()
+                def test_edit(repository, from_branch):
+                    return "PR title", "PR body"
                 request = self.service.request_create(
-                        namespace,
-                        repository,
-                        source_branch,
-                        target_branch,
-                        title,
-                        description,
-                        edit=edit_stub
-                )
+                    onto_user=namespace,
+                    onto_repo=repository,
+                    from_branch=source_branch,
+                    onto_branch=target_branch,
+                    title=title,
+                    description=description,
+                    auto_slug=auto_slug,
+                    edit=test_edit)
                 return request
 
     def action_gist_list(self, gist=None, gist_list_data=[]):

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import logging
+import pytest
 
 #################################################################################
 # Enable logging
@@ -409,7 +410,7 @@ class Test_Main(GitRepoMainTestCase):
                     })
         out, err = capsys.readouterr()
         seen_args = seen_args[:-1] # remove the passed edition function
-        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', 'This is a test', True) == seen_args
+        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', 'This is a test', False) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -425,7 +426,7 @@ class Test_Main(GitRepoMainTestCase):
                     })
         out, err = capsys.readouterr()
         seen_args = seen_args[:-1] # remove the passed edition function
-        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', None, True) == seen_args
+        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', None, False) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -442,7 +443,7 @@ class Test_Main(GitRepoMainTestCase):
                     })
         out, err = capsys.readouterr()
         seen_args = seen_args[:-1] # remove the passed edition function
-        assert ('guyzmo', 'test', 'bad', 'base-test', 'This is a test', 'This is a test', True) == seen_args
+        assert ('guyzmo', 'test', 'bad', 'base-test', 'This is a test', 'This is a test', False) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Fatal error: bad branch to request!' in caplog.text
@@ -459,7 +460,7 @@ class Test_Main(GitRepoMainTestCase):
                     })
         out, err = capsys.readouterr()
         seen_args = seen_args[:-1] # remove the passed edition function
-        assert ('guyzmo', 'test', 'pr-test', 'bad', 'This is a test', 'This is a test', True) == seen_args
+        assert ('guyzmo', 'test', 'pr-test', 'bad', 'This is a test', 'This is a test', False) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Fatal error: bad branch to request!' in caplog.text
@@ -475,7 +476,7 @@ class Test_Main(GitRepoMainTestCase):
                     })
         out, err = capsys.readouterr()
         seen_args = seen_args[:-1] # remove the passed edition function
-        assert ('guyzmo', 'test', None, 'base-test', 'This is a test', 'This is a test', True) == seen_args
+        assert ('guyzmo', 'test', None, 'base-test', 'This is a test', 'This is a test', False) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -491,7 +492,7 @@ class Test_Main(GitRepoMainTestCase):
                     })
         out, err = capsys.readouterr()
         seen_args = seen_args[:-1] # remove the passed edition function
-        assert ('guyzmo', 'test', 'pr-test', None, 'This is a test', 'This is a test', True) == seen_args
+        assert ('guyzmo', 'test', 'pr-test', None, 'This is a test', 'This is a test', False) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -515,12 +516,13 @@ class Test_Main(GitRepoMainTestCase):
         assert ('guyzmo', 'git-repo') == repo_slug
         assert {} == seen_args
 
-    # Commented out because this does not work on travis CI
-    # def test_open__no_repo_slug__git(self):
-    #     self._create_repository()
-    #     repo_slug, seen_args = self.main_open(rc=0)
-    #     assert ('guyzmo', 'git-repo') == repo_slug
-    #     assert {} == seen_args
+    # Skipped because this does not work on travis CI
+    @pytest.mark.skip
+    def test_open__no_repo_slug__git(self):
+        self._create_repository()
+        repo_slug, seen_args = self.main_open(rc=0)
+        assert ('guyzmo', 'git-repo') == repo_slug
+        assert {} == seen_args
 
     def test_create__no_repo_slug(self):
         self._create_repository(ro=True)

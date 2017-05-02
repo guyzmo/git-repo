@@ -319,6 +319,7 @@ class Test_Github(GitRepoTestCase):
                 'local': 'pr-test',
                 'ref': 1,
                 'remote': 'master',
+                'project': '{}/test_create_requests'.format(self.namespace),
                 'url': 'https://github.com/{}/test_create_requests/pull/1'.format(self.namespace),
                 }
 

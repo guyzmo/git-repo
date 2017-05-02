@@ -1,6 +1,7 @@
 language: python
 # Don't use the Travis Container-Based Infrastructure
-sudo: true
+sudo: required
+dist: trusty
 matrix:
   include:
     - os: linux
@@ -43,4 +44,4 @@ install:
     - "pip install --upgrade pip" # upgrade to latest pip (needed on py3.4)
     - "pip install -r requirements-test.txt"
 # command to run tests
-script: "py.test --cov=git_repo --cov-report term-missing --capture=sys tests"
+script: "py.test --cov=git_repo --cov-report term-missing tests"

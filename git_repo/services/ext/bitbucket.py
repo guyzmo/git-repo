@@ -240,49 +240,84 @@ class BitbucketService(RepositoryService):
                 raise ResourceNotFoundError("Could not find snippet {}.".format(gist_id)) from err
             raise ResourceError("Couldn't delete snippet: {}".format(err)) from err
 
-    def request_create(self, user, repo, local_branch, remote_branch, title=None, description=None, edit=None):
+    def request_create(self, onto_user, onto_repo, from_branch, onto_branch, title=None, description=None, auto_slug=False, edit=None):
         try:
-            repository = next(self.bb.repositoryByOwnerAndRepositoryName(owner=user, repository_name=repo))
-            if not repository:
-                raise ResourceNotFoundError('Could not find repository `{}/{}`!'.format(user, repo))
-            if not remote_branch:
+            onto_project = self.get_repository(onto_user, onto_repo)
+
+            from_reposlug = self.guess_repo_slug(self.repository, self)
+            if from_reposlug:
+                from_user, from_repo = from_reposlug.split('/')
+                if (onto_user, onto_repo) == (from_user, from_repo):
+                    from_project = onto_project
+                else:
+                    from_project = self.get_repository(from_user, from_repo)
+            else:
+                from_project = None
+
+            # when no repo slug has been given to `git-repo X request create`
+            # then chances are current project is a fork of the target
+            # project we want to push to
+            if auto_slug and onto_project.fork:
+                onto_user = onto_project.parent.owner.login
+                onto_repo = onto_project.parent.name
+                onto_project = self.repository(onto_user, onto_repo)
+
+            # if no onto branch has been defined, take the default one
+            # with a fallback on master
+            if not from_branch:
+                from_branch = self.repository.active_branch.name
+
+            # if no from branch has been defined, chances are we want to push
+            # the branch we're currently working on
+            if not onto_branch:
                 try:
-                    remote_branch = next(repository.branches()).name
+                    onto_branch = next(onto_project.branches()).name
                 except StopIteration:
-                    remote_branch = 'master'
-            if not local_branch:
-                local_branch = self.repository.active_branch.name
+                    onto_branch = 'master'
+
+            from_target = '{}:{}'.format(from_user, from_branch)
+            onto_target = '{}/{}:{}'.format(onto_user, onto_project, onto_branch)
+
+            # translate from github username to git remote name
             if not title and not description and edit:
-                title, description = edit(self.repository, from_branch)
+                title, description = edit(self.repository, from_branch, onto_target)
                 if not title and not description:
                     raise ArgumentError('Missing message for request creation')
+
             request = PullRequest.create(
                         PullRequestPayload(
                             payload=dict(
                                 title=title,
                                 description=description or '',
                                 destination=dict(
-                                    branch=dict(name=remote_branch)
+                                    branch=dict(name=onto_branch)
                                 ),
                                 source=dict(
-                                    repository=dict(full_name='/'.join([self.user, repo])),
-                                    branch=dict(name=local_branch)
+                                    repository=dict(full_name='/'.join([from_user, from_repo])),
+                                    branch=dict(name=from_branch)
                                 )
                             )
                         ),
-                        repository_name=repo,
-                        owner=user,
+                        repository_name=onto_repo,
+                        owner=onto_user,
                         client=self.bb.client
                     )
+
+            return {
+                'local': from_branch,
+                'remote': onto_branch,
+                'ref': request.id,
+                'project': '/'.join([onto_user, onto_repo]),
+                'url': request.links['html']['href']
+            }
+
         except HTTPError as err:
             status_code = hasattr(err, 'code') and err.code or err.response.status_code
             if 404 == status_code:
-                raise ResourceNotFoundError("Couldn't create request, project not found: {}".format(repo)) from err
+                raise ResourceNotFoundError("Couldn't create request, project not found: {}".format(onto_repo)) from err
             elif 400 == status_code and 'branch not found' in err.format_message():
-                raise ResourceNotFoundError("Couldn't create request, branch not found: {}".format(local_branch)) from err
+                raise ResourceNotFoundError("Couldn't create request, branch not found: {}".format(from_branch)) from err
             raise ResourceError("Couldn't create request: {}".format(err)) from err
-
-        return {'local': local_branch, 'remote': remote_branch, 'ref': str(request.id)}
 
     def request_list(self, user, repo):
         requests = set(

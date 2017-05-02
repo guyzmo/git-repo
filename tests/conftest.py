@@ -54,12 +54,32 @@ else:
         if namespace_name not in os.environ:
             os.environ[namespace_name] = os.environ.get('GITREPO_NAMESPACE', '_namespace_{}_'.format(service))
 
+
+def sanitize_token(interaction, current_cassette):
+    # Exit early if the request did not return 200 OK because that's the
+    # only time we want to look for Authorization-Token headers
+    if interaction.data['response']['status']['code'] != 200:
+        return
+
+    headers = interaction.data['response']['headers']
+    token = headers.get('Authorization')
+    # If there was no token header in the response, exit
+    if token is None:
+        return
+
+    # Otherwise, create a new placeholder so that when cassette is saved,
+    # Betamax will replace the token with our placeholder.
+    current_cassette.placeholders.append(
+        cassette.Placeholder(placeholder='<AUTH_TOKEN>', replace=token)
+    )
+
 betamax.Betamax.register_serializer(pretty_json.PrettyJSONSerializer)
 
 with betamax.Betamax.configure() as config:
     config.default_cassette_options['record_mode'] = record_mode
     config.cassette_library_dir = 'tests/integration/cassettes'
     config.default_cassette_options['serialize_with'] = 'prettyjson'
+    #config.before_record(callback=sanitize_token)
     # generating placeholders in betamax configuration for each service's key and default namespace
     for service in services:
         config.define_cassette_placeholder('<PRIVATE_KEY_{}>'.format(service.upper()), os.environ.get('PRIVATE_KEY_{}'.format(service.upper())))
