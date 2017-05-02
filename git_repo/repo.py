@@ -376,13 +376,13 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('request', 'create')
     def do_request_create(self):
-        def request_edition(repository, from_branch):
+        def request_edition(repository, from_branch, onto_target):
             try:
                 commit = repository.commit(from_branch)
                 title, *body = commit.message.split('\n')
             except BadName:
                 log.error('Couldn\'t find local source branch {}'.format(from_branch))
-                return None
+                return None, None
             from tempfile import NamedTemporaryFile
             from subprocess import call
             with NamedTemporaryFile(
@@ -399,9 +399,13 @@ class GitRepoRunner(KeywordArgumentParser):
                     '## Filled with commit:\n'
                     '## {}\n'
                     '####################################################\n'
+                    '## To be applied:\n'
+                    '##   from branch: {}\n'
+                    '##   onto project: {}\n'
+                    '####################################################\n'
                     '## * All lines starting with # will be ignored.\n'
                     '## * First non-ignored line is the title of the request.\n'
-                        ).format(title, '\n'.join(body), commit.name_rev).encode('utf-8'))
+                      ).format(title, '\n'.join(body), commit.name_rev, from_branch, onto_target).encode('utf-8'))
                 request_file.flush()
                 rv = call("{} {}".format(os.environ['EDITOR'], request_file.name), shell=True)
                 if rv != 0:
@@ -428,10 +432,7 @@ class GitRepoRunner(KeywordArgumentParser):
                 self.message,
                 self._auto_slug,
                 request_edition)
-        log.info('Successfully created request of `{local}` onto `{}:{remote}`, with id `{ref}`!'.format(
-            '/'.join([self.user_name, self.repo_name]),
-            **new_request)
-        )
+        log.info('Successfully created request of `{local}` onto `{project}:{remote}`, with id `{ref}`!'.format(**new_request))
         if 'url' in new_request:
             log.info('available at: {url}'.format(**new_request))
         return 0
