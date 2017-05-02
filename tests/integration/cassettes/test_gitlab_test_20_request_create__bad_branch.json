@@ -124,6 +124,45 @@
         },
         "url": "https://gitlab.com/api/v3/projects/2078713/merge_requests"
       }
+    },
+    {
+      "recorded_at": "2017-05-02T09:48:23",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.13.0"
+        },
+        "method": "GET",
+        "uri": "https://gitlab.com/api/v3/projects/<GITLAB_NAMESPACE>%2Ftest_create_requests"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "{\"message\":\"404 Project Not Found\"}"
+        },
+        "headers": {
+          "Cache-Control": "no-cache",
+          "Content-Length": "35",
+          "Content-Type": "application/json",
+          "Date": "Tue, 02 May 2017 09:48:22 GMT",
+          "Server": "nginx",
+          "Vary": "Origin",
+          "X-Request-Id": "3327ef70-1805-4972-9614-bac723eb240e",
+          "X-Runtime": "0.070080"
+        },
+        "status": {
+          "code": 404,
+          "message": "Not Found"
+        },
+        "url": "https://gitlab.com/api/v3/projects/<GITLAB_NAMESPACE>%2Ftest_create_requests"
+      }
     }
   ],
   "recorded_with": "betamax/0.5.1"

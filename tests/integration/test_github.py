@@ -318,7 +318,8 @@ class Test_Github(GitRepoTestCase):
         assert r == {
                 'local': 'pr-test',
                 'ref': 1,
-                'remote': 'PR test',
+                'remote': 'pr-test',
+                'project': '_namespace_github_/test_create_requests',
                 'url': 'https://github.com/{}/test_create_requests/pull/1'.format(self.namespace),
                 }
 

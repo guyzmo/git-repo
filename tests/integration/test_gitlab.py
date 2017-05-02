@@ -20,6 +20,7 @@ from git_repo.exceptions import ResourceExistsError, ResourceNotFoundError, Reso
 
 class Test_Gitlab(GitRepoTestCase):
     log = log
+    namespace = os.environ['GITLAB_NAMESPACE']
 
     @property
     def local_namespace(self):
@@ -238,7 +239,7 @@ class Test_Gitlab(GitRepoTestCase):
         ])
 
     def test_19_request_fetch(self):
-        self.action_request_fetch(namespace='guyzmo',
+        self.action_request_fetch(namespace=self.local_namespace,
                 repository='git-repo',
                 request='4',
                 remote_branch='merge_requests',
@@ -246,7 +247,7 @@ class Test_Gitlab(GitRepoTestCase):
 
     def test_19_request_fetch__bad_request(self):
         with pytest.raises(ResourceNotFoundError):
-            self.action_request_fetch(namespace='git-repo-test',
+            self.action_request_fetch(namespace=self.local_namespace,
                 repository='git-repo',
                 request='42',
                 remote_branch='merge_requests',
@@ -254,27 +255,32 @@ class Test_Gitlab(GitRepoTestCase):
                 fail=True)
 
     def test_20_request_create(self):
-        r = self.action_request_create(namespace='guyzmo',
+        r = self.action_request_create(namespace=self.local_namespace,
                 repository='test_create_requests',
                 branch='pr-test',
                 title='PR test',
                 description='PR description',
                 service='gitlab')
-        assert r == {'local': 'pr-test', 'ref': 1, 'remote': 'PR test'}
+        assert r == {
+            'local': 'pr-test',
+            'project': '_namespace_gitlab_/test_create_requests',
+            'ref': 1,
+            'remote': 'pr-test',
+            'url': 'https://gitlab.com/_namespace_gitlab_/test_create_requests/merge_requests/1'
+        }
 
-    # TODO lookup why this is not raising the expected error !
-    # def test_20_request_create__bad_branch(self):
-    #     with pytest.raises(ResourceError):
-    #         self.action_request_create(namespace='guyzmo',
-    #                 repository='test_create_requests',
-    #                 branch='this_is_not_a_branch',
-    #                 title='PR test',
-    #                 description='PR description',
-    #                 service='gitlab')
+    def test_20_request_create__bad_branch(self):
+        with pytest.raises(ResourceNotFoundError):
+            self.action_request_create(namespace=self.local_namespace,
+                    repository='test_create_requests',
+                    branch='this_is_not_a_branch',
+                    title='PR test',
+                    description='PR description',
+                    service='gitlab')
 
     def test_20_request_create__bad_repo(self):
         with pytest.raises(ResourceNotFoundError):
-            r = self.action_request_create(namespace='guyzmo',
+            r = self.action_request_create(namespace=self.local_namespace,
                     repository='does_not_exists',
                     branch='pr-test',
                     title='PR test',
@@ -283,7 +289,7 @@ class Test_Gitlab(GitRepoTestCase):
 
     def test_20_request_create__blank_branch(self):
         with pytest.raises(ResourceError):
-            r = self.action_request_create(namespace='guyzmo',
+            r = self.action_request_create(namespace=self.local_namespace,
                     repository='test_create_requests',
                     branch=None,
                     title='PR test',
@@ -291,6 +297,6 @@ class Test_Gitlab(GitRepoTestCase):
                     service='gitlab')
 
     def test_31_open(self):
-        self.action_open(namespace='guyzmo',
+        self.action_open(namespace=self.local_namespace,
                          repository='git-repo')
 

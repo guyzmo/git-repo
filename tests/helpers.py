@@ -154,7 +154,7 @@ class RepositoryMockup(RepositoryService):
             raise Exception('bad branch to request!')
         local = args[2] or 'pr-test'
         remote = args[3] or 'base-test'
-        return {'local': local, 'remote': remote, 'ref': 42}
+        return {'local': local, 'remote': remote, 'project': '/'.join(args[:2]), 'ref': 42}
 
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):
@@ -632,6 +632,8 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                 self.set_mock_popen_commands([
                     ('git remote add all {}'.format(local_slug), b'', b'', 0),
                     ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
+                    ('git remote get-url --all all', local_slug.encode('utf-8'), b'', 0),
+                    ('git remote get-url --all {}'.format(self.service.name), local_slug.encode('utf-8'), b'', 0),
                     ('git version', b'git version 2.8.0', b'', 0),
                     ('git pull --progress -v {} master'.format(self.service.name), b'', '\n'.join([
                         'POST git-upload-pack (140 bytes)',
@@ -683,7 +685,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                         ' * [new branch]      master     -> {1}/{0}'.format(request, local_branch)]).encode('utf-8'),
                     0)
                 ])
-                self.service.request_fetch(repository, namespace, request)
+                self.service.request_fetch(namespace, repository, request)
 
     def action_request_create(self,
             namespace, repository, branch,
@@ -740,6 +742,12 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                 self.repository.git.add('second_file')
                 self.repository.git.commit(message='Second commit')
                 self.repository.git.push(service, create_branch)
+            else:
+                import git
+                self.service._extracts_ref = lambda *a: git.Reference(
+                        self.service.repository,
+                        '{}/{}'.format(namespace, repository),
+                        check_path=False)
             existing_remotes = [r.name for r in self.repository.remotes]
             if 'all' in existing_remotes:
                 r_all = self.repository.remote('all')
