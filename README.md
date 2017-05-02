@@ -11,7 +11,7 @@
 
 ### Usage
 
-### main commands
+#### main commands
 
 Control your remote git hosting services from the `git` commandline. The usage is
 very simple. To clone a new project, out of GitHub, just issue:
@@ -57,7 +57,7 @@ Also, you can open the repository's page, using the `open` command:
     % git lab open guyzmo/git-repo
     Successfully fetched branch `2` of `guyzmo/git-repo` into `request-2`!
 
-### Requests for merges *(aka Pull Requests aka Merge Requests)*
+#### Requests for merges *(aka Pull Requests aka Merge Requests)*
 
 Once you're all set with your repository, you can check requests to merge
 (aka Pull Requests on github) using the `request` command:
@@ -71,11 +71,26 @@ And fetch it locally to check and/or amend it before merging:
 
     % git hub request guyzmo/git-repo fetch 2
 
-Or you can create a pull-request by doing a:
+Or you can create a request by doing a:
 
-    % git hub request create guyzmo/git-repo myfeature master 'My neat feature' -m 'So much to say about that feature…'
+    % git hub request create guyzmo/git-repo myfeature master -t 'My neat feature' -m 'So much to say about that feature…'
 
-### Gists or snippets
+You can create the request also by simply calling:
+
+    % git hub request create
+
+That command has a bit of automagic, it will:
+
+1. lookup the namespace and project of the current branch (or at least on the `github` 
+   remote, if called with `hub`), and take this as the source of the request ;
+2. for the target of the request it will lookup and take:
+  * the parent if current project has a parent
+  * or itself, if does not ;
+3. it will take the currently loaded branch for the source
+4. and the default one for the target
+5. call the service to ask for a request to merge from source onto target.
+
+#### Gists or snippets
 
 Finally, another extra feature you can play with is the gist handling:
 
@@ -114,10 +129,57 @@ And when you're done you just get rid of it:
 > have access to the tool using `git-repo hub …` or `git repo hub …`. For the
 > `git hub …` call, you have to set up aliases, see below how to configure that.
 
+#### Remotes
+
+Traditionally, `origin` is being used as the remote name for the code hosted on a 
+service, but because of the nature of `git-repo` there is no single `origin` but
+it encourages to use multiple ones, and also leave you in control of wherever
+`origin` points to.
+
+This is why when you clone from a service or create a new repo on a service,
+it's using a special remote that carries the name of the service:
+
+    % git hub clone foo/bar; cd bar
+    % git status -sb | head -1
+    ## master...github/master
+                ^^^^^^
+    % git lab create bar
+    % git push gitlab master
+
 And as a bonus, each time it's adding a new remote, it's updating the `all` remote,
 so that you can push your code to all your remote repositories in one command:
 
     % git push all master
+    
+Another special remote is the `upstream`. When you do a fork of a project, current
+special remote with a service name will be renamed as `upstream` and the newly
+forked project is now the one with the service name:
+
+    % git lab clone foo/bar; cd bar
+    % git remote
+    all
+    gitlab
+    % git lab fork
+    % git remote
+    all
+    gitlab
+    upstream
+
+Finally, if you want to link other existing projects, you can, the `add` command
+is there for that:
+
+    % git bb add foo/bar
+    % git gg add foo/bar gitea --alone
+
+Use the `--alone` switch if you don't want to add that project in the `all`
+special remote.
+
+And of course the above commands is just sugar around regular git commands,
+so the above can also be done with:
+
+    % git remote add gitbucket https://gitbucket.local:8080/foo/bar
+    % # the command to append the URL to the all remote, --alone skips this step
+    % git remote set-url --add all https://gitbucket.local:8080/foo/bar
 
 ### Installation
 
@@ -283,10 +345,10 @@ To use your own credentials, you can setup the following environment variables:
 * [x] add support for handling gists (cf [#12](https://github.com/guyzmo/git-repo/issues/12), cf [#13](https://github.com/guyzmo/git-repo/issues/13))
 * [x] add support for handling pull requests (cf [#10](https://github.com/guyzmo/git-repo/issues/10), [#11](https://github.com/guyzmo/git-repo/issues/11))
 * [x] add application token support for bitbucket (cf [#14](https://github.com/guyzmo/git-repo/issues/14))
+* [x] add support for gogs (cf [#18](https://github.com/guyzmo/git-repo/issues/18))
+* [x] add support for gitbucket (cf [#142](https://github.com/guyzmo/git-repo/issues/142))
 * [ ] add support for managing SSH keys (cf [#22](https://github.com/guyzmo/git-repo/issues/22))
 * [ ] add support for issues (cf [#104](https://github.com/guyzmo/git-repo/issues/104))
-* [x] add support for gogs (cf [#18](https://github.com/guyzmo/git-repo/issues/18))
-* [ ] add support for gitbucket (cf [#142](https://github.com/guyzmo/git-repo/issues/142))
 * [ ] add support for gerrit (cf [#19](https://github.com/guyzmo/git-repo/issues/19))
 * [ ] do what's needed to make a nice documentation [#146](https://github.com/guyzmo/git-repo/issues/146)
 * for more features, write an issue or, even better, a PR!
@@ -306,6 +368,7 @@ With code contributions coming from:
 * [@Crazybus](https://github.com/Crazybus) — [commits](https://github.com/guyzmo/git-repo/commits?author=Crazybus)
 * [@rnestler](https://github.com/rnestler) — [commits](https://github.com/guyzmo/git-repo/commits/devel?author=rnestler)
 * [@jayvdb](https://github.com/jayvdb) — [commits](https://github.com/guyzmo/git-repo/commits/devel?author=jayvdb)
+* [@kounoike](https://github.com/kounoike) — [commits](https://github.com/guyzmo/git-repo/commits/devel?author=kounoike)
 
 ### License
 
