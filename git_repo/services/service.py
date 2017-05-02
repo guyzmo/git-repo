@@ -66,8 +66,8 @@ class RepositoryService:
             'server-cert'
             ]
 
-    @classmethod
-    def get_config_path(cls):
+    @staticmethod
+    def get_config_path():
         home_dir = os.environ['HOME']
         home_conf = os.path.join(home_dir, '.gitconfig')
         xdg_conf = os.path.join(home_dir, '.git', 'config')
