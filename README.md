@@ -169,6 +169,8 @@ Finally, if you want to link other existing projects, you can, the `add` command
 is there for that:
 
     % git bb add foo/bar
+    % # if the name is identical to current project, you don't need to add a name
+    % git hub add
     % git gg add foo/bar gitea --alone
 
 Use the `--alone` switch if you don't want to add that project in the `all`
@@ -180,6 +182,10 @@ so the above can also be done with:
     % git remote add gitbucket https://gitbucket.local:8080/foo/bar
     % # the command to append the URL to the all remote, --alone skips this step
     % git remote set-url --add all https://gitbucket.local:8080/foo/bar
+
+And to remove a remote, just do:
+
+    % git remote remove github
 
 ### Installation
 
