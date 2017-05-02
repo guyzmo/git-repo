@@ -516,12 +516,13 @@ class Test_Main(GitRepoMainTestCase):
         assert ('guyzmo', 'git-repo') == repo_slug
         assert {} == seen_args
 
-    # Commented out because this does not work on travis CI
-    # def test_open__no_repo_slug__git(self):
-    #     self._create_repository()
-    #     repo_slug, seen_args = self.main_open(rc=0)
-    #     assert ('guyzmo', 'git-repo') == repo_slug
-    #     assert {} == seen_args
+    # Skipped because this does not work on travis CI
+    @pytest.mark.skip
+    def test_open__no_repo_slug__git(self):
+        self._create_repository()
+        repo_slug, seen_args = self.main_open(rc=0)
+        assert ('guyzmo', 'git-repo') == repo_slug
+        assert {} == seen_args
 
     def test_create__no_repo_slug(self):
         self._create_repository(ro=True)
