@@ -13,6 +13,7 @@ Usage:
     {self} [--path=<path>] [-v...] <target> delete <user>/<repo> [-f]
     {self} [--path=<path>] [-v...] <target> open <user>/<repo>
     {self} [--path=<path>] [-v...] <target> clone <user>/<repo> [<repo> [<branch>]]
+    {self} [--path=<path>] [-v...] <target> add
     {self} [--path=<path>] [-v...] <target> add <user>/<repo> [<name>] [--tracking=<branch>] [-a]
     {self} [--path=<path>] [-v...] <target> request (list|ls)
     {self} [--path=<path>] [-v...] <target> request fetch <request> [-f]
