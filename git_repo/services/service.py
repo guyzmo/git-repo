@@ -69,15 +69,32 @@ class RepositoryService:
     @staticmethod
     def get_config_path():
         home_dir = os.environ['HOME']
-        home_conf = os.path.join(home_dir, '.gitconfig')
-        xdg_conf = os.path.join(home_dir, '.git', 'config')
-        if not os.path.exists(xdg_conf):
-            if os.path.exists(home_conf):
-                return home_conf
-        return xdg_conf
+        try:
+            from xdg.BaseDirectory import xdg_config_home
+        except ImportError:
+            xdg_config_home = os.path.join(home_dir, ".config")
+        for config in [
+                os.path.join(home_dir, '.gitconfig'),
+                os.path.join(xdg_config_home, 'git'),
+            ]:
+            if os.path.exists(config):
+                return config
+        raise ResourceNotFoundError('User\'s Git configuration file not found!')
 
     @staticmethod
-    def guess_repo_slug(repository, service, resolve_targets=None):
+    def convert_url_into_slug(url):
+        if url.endswith('.git'):
+            url = url[:-4]
+        # strip http://, https:// and ssh://
+        if '://' in url:
+            *_, user, name = url.split('/')
+            return '/'.join([user, name])
+        # scp-style URL
+        elif '@' in url and ':' in url:
+            return url.split(':')[-1]
+
+    @classmethod
+    def guess_repo_slug(cls, repository, service, resolve_targets=None):
         if resolve_targets:
             targets = [target.format(service=service.name) for target in resolve_targets]
         else:
