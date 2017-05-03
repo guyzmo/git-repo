@@ -368,4 +368,3 @@ class GithubService(RepositoryService):
     @property
     def user(self):
         return self.gh.user().login
-
