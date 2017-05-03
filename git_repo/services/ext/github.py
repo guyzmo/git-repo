@@ -231,6 +231,10 @@ class GithubService(RepositoryService):
             raise ResourceNotFoundError('Could not find gist')
         gist.delete()
 
+    @staticmethod
+    def get_project_default_branch(project):
+        return project.default_branch or 'master'
+
     def request_create(self, onto_user, onto_repo, from_branch, onto_branch, title=None, description=None, auto_slug=False, edit=None):
         onto_project = self.gh.repository(onto_user, onto_repo)
 
@@ -266,7 +270,7 @@ class GithubService(RepositoryService):
         # if no from branch has been defined, chances are we want to push
         # the branch we're currently working on
         if not onto_branch:
-            onto_branch = onto_project.default_branch or 'master'
+            onto_branch = self.get_project_default_branch(onto_project)
 
         from_target = '{}:{}'.format(from_user, from_branch)
         onto_target = '{}/{}:{}'.format(onto_user, onto_project, onto_branch)

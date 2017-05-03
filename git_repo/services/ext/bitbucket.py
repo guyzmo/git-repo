@@ -240,6 +240,10 @@ class BitbucketService(RepositoryService):
                 raise ResourceNotFoundError("Could not find snippet {}.".format(gist_id)) from err
             raise ResourceError("Couldn't delete snippet: {}".format(err)) from err
 
+    @staticmethod
+    def get_project_default_branch(project):
+        return project.mainbranch.get('name', 'master')
+
     def request_create(self, onto_user, onto_repo, from_branch, onto_branch, title=None, description=None, auto_slug=False, edit=None):
         try:
             onto_project = self.get_repository(onto_user, onto_repo)
@@ -270,10 +274,7 @@ class BitbucketService(RepositoryService):
             # if no from branch has been defined, chances are we want to push
             # the branch we're currently working on
             if not onto_branch:
-                try:
-                    onto_branch = next(onto_project.branches()).name
-                except StopIteration:
-                    onto_branch = 'master'
+                onto_branch = self.get_project_default_branch(onto_project)
 
             from_target = '{}:{}'.format(from_user, from_branch)
             onto_target = '{}/{}:{}'.format(onto_user, onto_project, onto_branch)

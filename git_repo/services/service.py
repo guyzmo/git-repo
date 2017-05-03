@@ -329,7 +329,10 @@ class RepositoryService:
         '''
         log.info('Cloning {}…'.format(repo))
 
-        remote = self.add(user=user, repo=repo, tracking=True, rw=rw)
+        if not branch:
+            project = self.get_repository(user, repo)
+            branch = self.get_project_default_branch(project)
+
         self.pull(remote, branch)
 
     def add(self, repo, user=None, name=None, tracking=False, alone=False, rw=True, auto_slug=False):

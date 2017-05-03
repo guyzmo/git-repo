@@ -257,6 +257,10 @@ class GitlabService(RepositoryService):
 
         return snippet.delete()
 
+    @staticmethod
+    def get_project_default_branch(project):
+        return project.default_branch or 'master'
+
     def request_create(self, onto_user, onto_repo, from_branch, onto_branch, title=None, description=None, auto_slug=False, edit=None):
         try:
             onto_project = self.gl.projects.get('/'.join([onto_user, onto_repo]))
@@ -292,7 +296,7 @@ class GitlabService(RepositoryService):
             # if no from branch has been defined, chances are we want to push
             # the branch we're currently working on
             if not onto_branch:
-                onto_branch = onto_project.default_branch or 'master'
+                onto_branch = self.get_project_default_branch(onto_project)
 
             onto_target = '{}/{}:{}'.format(onto_user, onto_project.name, onto_branch)
 

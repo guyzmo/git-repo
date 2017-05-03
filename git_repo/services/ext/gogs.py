@@ -116,6 +116,11 @@ class GogsService(RepositoryService):
         token = gg.create_token(auth, name, login)
         return token.token
 
+    @staticmethod
+    def get_project_default_branch(project):
+        # TODO get default branch
+        return 'master'
+
     @property
     def user(self):
         return self.gg.username
