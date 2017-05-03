@@ -101,8 +101,7 @@ class RepositoryService:
             targets = (service.name, 'upstream', 'origin')
         for remote in repository.remotes:
             if remote.name in targets:
-                for url in remote.urls:
-                    return cls.convert_url_into_slug(url)
+                return cls.convert_url_into_slug(remote.url)
         return None
 
     @classmethod
