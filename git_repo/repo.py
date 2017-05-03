@@ -505,9 +505,6 @@ class GitRepoRunner(KeywordArgumentParser):
                     fqdn=None,
                     remote=None,
                     )
-            conf = service.get_config(self.config)
-            if 'token' in conf:
-                raise Exception('A token has been generated for this service. Please revoke and delete before proceeding.')
 
             print('Is your service self-hosted?')
             if 'y' in input('    [yN]> ').lower():
@@ -537,6 +534,10 @@ class GitRepoRunner(KeywordArgumentParser):
                 service.fqdn = new_conf['fqdn']
                 service.port = new_conf['port']
                 service.scheme = new_conf['scheme']
+
+            conf = service.get_config(self.config)
+            if 'token' in conf:
+                raise Exception('A token has been generated for this service. Please revoke and delete before proceeding.')
 
             print('Please enter your credentials to connect to the service:')
             username = loop_input('username> ')
