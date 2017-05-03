@@ -114,6 +114,30 @@ class Test_Github(GitRepoTestCase):
                         name='test0r',
                         tracking='github')
 
+    def test_12_add__upstream(self):
+        self.action_add(namespace=None,
+                        repository='upstream',
+                        alone=True,
+                        tracking=False,
+                        auto_slug=True,
+                        remotes={'github': 'https://github.com/guyzmo/github-testing'})
+
+    @pytest.mark.skip
+    def test_12_add__guess(self):
+        mock_open(read_data='1\n')
+        with patch('sys.stdin', mock_open):
+            self.action_add(namespace=self.local_namespace,
+                            repository='git-repo',
+                            alone=True,
+                            tracking='github',
+                            auto_slug=True,
+                            remotes={
+                                'origin': 'https://github.com/foo/bar',
+                                'wootwoot': 'git@github.com:w00t/w00t',
+                                'duckling': 'ssh://github.com/duck/duck',
+                            }
+            )
+
     def test_13_gist_list(self):
         g_list = [
             '{:45.45} {}',

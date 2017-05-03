@@ -18,44 +18,49 @@ class Test_Main(GitRepoMainTestCase):
 
     def test_add(self, capsys):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0)
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': None,
                 'alone': False,
+                'auto_slug': False,
                 'tracking': 'master'} == seen_args
         out, err = capsys.readouterr()
-        assert 'Successfully added `guyzmo/git-repo` as remote named `github`\n' == err
+        assert 'Successfully added `guyzmo/git-repo` as remote named `foobar`\n' == err
 
     def test_add__alone(self):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
                                              args={'--alone': True})
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': None,
                 'alone': True,
+                'auto_slug': False,
                 'tracking': 'master'} == seen_args
 
     def test_add__tracking(self):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
                                              args={'--tracking': 'foobar'})
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': None,
                 'alone': False,
+                'auto_slug': False,
                 'tracking': 'foobar'} == seen_args
 
     def test_add__tracking_alone(self):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
                                              args={'--alone': True,
                                                    '--tracking': 'foobar'})
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': None,
                 'alone': True,
+                'auto_slug': False,
                 'tracking': 'foobar'} == seen_args
 
     def test_add__name(self, capsys):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
                                              args={'<name>': 'foobar'})
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': 'foobar',
                 'alone': False,
+                'auto_slug': False,
                 'tracking': 'master'} == seen_args
         out, err = capsys.readouterr()
         assert 'Successfully added `guyzmo/git-repo` as remote named `foobar`\n' in err
@@ -64,18 +69,20 @@ class Test_Main(GitRepoMainTestCase):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
                                              args={'<name>': 'foobar',
                                                    '--tracking': 'barfoo'})
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': 'foobar',
                 'alone': False,
+                'auto_slug': False,
                 'tracking': 'barfoo'} == seen_args
 
     def test_add__name_alone(self):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
                                              args={'--alone': True,
                                                    '<name>': 'foobar'})
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': 'foobar',
                 'alone': True,
+                'auto_slug': False,
                 'tracking': 'master'} == seen_args
 
     def test_add__name_alone_tracking(self):
@@ -83,9 +90,10 @@ class Test_Main(GitRepoMainTestCase):
                                              args={'--alone': True,
                                                    '<name>': 'foobar',
                                                    '--tracking': 'barfoo'})
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': 'foobar',
                 'alone': True,
+                'auto_slug': False,
                 'tracking': 'barfoo'} == seen_args
 
     def test_clone(self):

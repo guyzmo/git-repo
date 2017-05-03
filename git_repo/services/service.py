@@ -333,6 +333,7 @@ class RepositoryService:
             project = self.get_repository(user, repo)
             branch = self.get_project_default_branch(project)
 
+        remote, *_ = self.add(user=user, repo=repo, tracking=True, rw=rw)
         self.pull(remote, branch)
 
     def add(self, repo, user=None, name=None, tracking=False, alone=False, rw=True, auto_slug=False):
@@ -379,6 +380,9 @@ class RepositoryService:
                     if self.fqdn in url:
                         remote_urls.add(self.convert_url_into_slug(url))
             remote_urls = list(remote_urls)
+            if len(remote_urls) > 0:
+                raise ResourceNotFoundError('Couldn\'t find a remote to '
+                        '{service}. Please run git add {service} user/project'.format(service=self.name))
             for idx, url in enumerate(remote_urls, 1):
                 print("[{:d}] {}".format(idx, url))
             try:

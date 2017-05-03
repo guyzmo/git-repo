@@ -73,8 +73,11 @@ class RepositoryMockup(RepositoryService):
     def clone(self, *args, **kwarg):
         self._did_clone = (args, kwarg)
 
-    def add(self, *args, **kwarg):
-        self._did_add = (args, kwarg)
+    def add(self, repo, user=None, *args, **kwarg):
+        self._did_add = ((user, repo)+args, kwarg)
+        class FakeRemote:
+            name = 'foobar'
+        return FakeRemote, user, repo
 
     def open(self, *args, **kwarg):
         self._did_open = (args, kwarg)
@@ -235,8 +238,12 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
         return cli_args
 
     def main_add(self, repo, rc=0, args={}):
-        os.mkdir(os.path.join(self.tempdir.name, repo.split('/')[-1]))
-        Repo.init(os.path.join(self.tempdir.name, repo.split('/')[-1]))
+        if repo:
+            create_repo = repo.split('/')[-1]
+        else:
+            create_repo = 'fubar'
+        os.mkdir(os.path.join(self.tempdir.name, create_repo))
+        Repo.init(os.path.join(self.tempdir.name, create_repo))
         assert rc == main(self.setup_args({
             'add': True,
             '<user>/<repo>': repo,
@@ -581,12 +588,15 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                 namespace = self.service.user
             self.assert_repository_not_exists(namespace, repository)
 
-    def action_add(self, namespace, repository, alone=False, name=None, tracking='master'):
+    def action_add(self, namespace, repository, alone=False, name=None,
+            tracking='master', auto_slug=False, remotes={}):
         with self.recorder.use_cassette(self._make_cassette_name()):
             # init git in the repository's destination
             self.repository.init()
+            for remote, url in remotes.items():
+                self.repository.create_remote(remote, url)
             self.service.connect()
-            self.service.add(user=namespace, repo=repository, alone=alone, name=name, tracking=tracking)
+            self.service.add(user=namespace, repo=repository, alone=alone, name=name, tracking=tracking, auto_slug=auto_slug)
             #
             if not tracking:
                 if not alone and not name:
