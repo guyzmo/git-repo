@@ -339,7 +339,7 @@ class GithubService(RepositoryService):
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):
         import platform
-        if self.fqdn != GITHUB_COM_FQDN:
+        if cls.fqdn != GITHUB_COM_FQDN:
             gh = github3.GitHubEnterprise()
         else:
             gh = github3.GitHub()
@@ -359,4 +359,3 @@ class GithubService(RepositoryService):
     @property
     def user(self):
         return self.gh.user().login
-
