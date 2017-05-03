@@ -362,6 +362,15 @@ class GitlabService(RepositoryService):
                 raise ResourceNotFoundError('Could not find opened request #{}'.format(request)) from err
             raise err
 
+    def get_parent_project_url(self, user, project, rw=True):
+        parent = self.gl.projects.get(onto_project.forked_from_project['id'])
+        if not parent:
+            return None
+        return self.format_path(
+                repository=parent.path,
+                namespace=parent.namespace.path,
+                rw=rw)
+
     @property
     def user(self):
         return self.gl.user.username

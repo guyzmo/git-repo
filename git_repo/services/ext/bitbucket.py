@@ -467,6 +467,15 @@ class BitbucketService(RepositoryService):
 
         return password, username
 
+    def get_parent_project_url(self, user, project, rw=True):
+        project = self.get_repository(user, project)
+        if not project and not project.parent:
+            return None
+        return self.format_path(
+            repository=project.parent.name,
+            namespace=project.parent.owner.login,
+            rw=True)
+
     @property
     def user(self):
         try:

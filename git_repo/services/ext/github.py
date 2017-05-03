@@ -356,6 +356,15 @@ class GithubService(RepositoryService):
             else:
                 raise err
 
+    def get_parent_project_url(self, user, project, rw=True):
+        parent = self.gh.repository(user, project).parent
+        if not parent:
+            return None
+        return self.format_path(
+                repository=parent.name,
+                namespace=parent.owner.login,
+                rw=rw)
+
     @property
     def user(self):
         return self.gh.user().login

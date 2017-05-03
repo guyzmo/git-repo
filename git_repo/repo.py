@@ -258,13 +258,14 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('add')
     def do_remote_add(self):
         service = self.get_service()
-        service.add(self.repo_name, self.user_name,
+        remote, user, repo = service.add(self.repo_name, self.user_name,
                     name=self.remote_name,
                     tracking=self.tracking,
-                    alone=self.alone)
-        log.info('Successfully added `{}` as remote named `{}`'.format(
-            self.repo_slug,
-            self.remote_name or service.name)
+                    alone=self.alone,
+                    auto_slug=self._auto_slug)
+        log.info('Successfully added `{}/{}` as remote named `{}`'.format(
+            user, repo,
+            remote.name)
         )
         return 0
 

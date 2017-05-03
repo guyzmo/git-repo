@@ -102,15 +102,7 @@ class RepositoryService:
         for remote in repository.remotes:
             if remote.name in targets:
                 for url in remote.urls:
-                    if url.endswith('.git'):
-                        url = url[:-4]
-                    # strip http://, https:// and ssh://
-                    if '://' in url:
-                        *_, user, name = url.split('/')
-                        return '/'.join([user, name])
-                    # scp-style URL
-                    elif '@' in url and ':' in url:
-                        return url.split(':')[-1]
+                    return cls.convert_url_into_slug(url)
         return None
 
     @classmethod
@@ -341,7 +333,7 @@ class RepositoryService:
         remote = self.add(user=user, repo=repo, tracking=True, rw=rw)
         self.pull(remote, branch)
 
-    def add(self, repo, user=None, name=None, tracking=False, alone=False, rw=True):
+    def add(self, repo, user=None, name=None, tracking=False, alone=False, rw=True, auto_slug=False):
         '''Adding repository as remote
 
         :param repo: Name slug of the repository to add
@@ -357,7 +349,47 @@ class RepositoryService:
         It also creates an *all* remote that contains all the remotes added by
         this tool, to make it possible to push to all remotes at once.
         '''
-        name = name or self.name
+        # git vcs add upstream
+        if repo == 'upstream':
+            try:
+                slug = self.convert_url_into_slug(self.repository.remote(self.name).url)
+                if not slug:
+                    raise ValueError()
+            except ValueError:
+                raise ResourceNotFoundError('No existing remote for {} to find an upstream of'.format(self.name))
+
+            url = self.get_parent_project_url(*slug.split('/'))
+            if not url:
+                raise ResourceNotFoundError('No upstream on {} found for this project.'.format(self.name))
+            slug = self.convert_url_into_slug(url)
+            if not slug:
+                raise ResourceNotFoundError('No upstream on {} found for this project.'.format(self.name))
+            user, repo = slug.split('/')
+            name = 'upstream'
+            alone = True
+            auto_slug = False
+
+        # git vcs add
+        if auto_slug and not name:
+            remote_urls = set()
+            for remote in self.repository.remotes:
+                for url in remote.urls:
+                    if self.fqdn in url:
+                        remote_urls.add(self.convert_url_into_slug(url))
+            remote_urls = list(remote_urls)
+            for idx, url in enumerate(remote_urls, 1):
+                print("[{:d}] {}".format(idx, url))
+            try:
+                remote_url = int(input('Please choose an slug to use as \'{}\' remote: '.format(self.name)))
+            except ValueError:
+                raise ArgumentError('Please enter a valid integer value.')
+            if remote_url < 1 or remote_url > idx:
+                raise ArgumentError('Please enter one of the suggested choices.')
+            user, repo = remote_urls[remote_url-1].split('/')
+            name = self.name
+
+        if not name:
+            name = self.name
 
         if not user:
             if '/' in repo:
@@ -394,9 +426,10 @@ class RepositoryService:
                     # set that branch as tracking
                     branch.set_tracking_branch(remote.refs[0])
                     break
-            return remote
         else:
-            return self.repository.create_remote(name, self.format_path(repo, user, rw=rw))
+            remote = self.repository.create_remote(name, self.format_path(repo, user, rw=rw))
+
+        return remote, user, repo
 
 
     def run_fork(self, user, repo, branch):
@@ -529,6 +562,10 @@ class RepositoryService:
         raise NotImplementedError
 
     def request_create(self, user, repo, from_branch, onto_branch, title, description=None, auto_slug=False):
+        raise NotImplementedError
+
+    @property
+    def get_parent_project_url(self, user, repo, rw=True): #pragma: no cover
         raise NotImplementedError
 
     @property
