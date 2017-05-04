@@ -337,12 +337,7 @@ class GitlabService(RepositoryService):
         for mr in self.gl.project_mergerequests.list(project_id=project.id):
             yield ( str(mr.iid),
                     mr.title,
-                    'https://{}/{}/{}/merge_requests/{}'.format(
-                        self.fqdn,
-                        project.namespace.name,
-                        project.name,
-                        mr.iid
-                        )
+                    mr.web_url
                     )
 
     def request_fetch(self, user, repo, request, pull=False, force=False):
