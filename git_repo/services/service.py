@@ -68,7 +68,7 @@ class RepositoryService:
 
     @staticmethod
     def get_config_path():
-        home_dir = os.environ['HOME']
+        home_dir = os.environ.get('HOME', '.')
         try:
             from xdg.BaseDirectory import xdg_config_home
         except ImportError:

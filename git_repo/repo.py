@@ -589,7 +589,7 @@ def main(args):
 
 def cli(): #pragma: no cover
     try:
-        sys.exit(main(docopt(__doc__.format(self=sys.argv[0].split('/')[-1], version=__version__))))
+        sys.exit(main(docopt(__doc__.format(self=sys.argv[0].split(os.path.sep)[-1], version=__version__))))
     finally:
         # Whatever happens, make sure that the cursor reappears with some ANSI voodoo
         if sys.stdout.isatty():
