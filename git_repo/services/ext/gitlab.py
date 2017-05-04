@@ -118,13 +118,6 @@ class GitlabService(RepositoryService):
                     repo.name_with_namespace,                  # name
                 ]
 
-    def get_repository(self, user, repo):
-        try:
-            return self.gl.projects.get('{}/{}'.format(user, repo))
-        except GitlabGetError as err:
-            if err.response_code == 404:
-                raise ResourceNotFoundError("Cannot get: repository {}/{} does not exists.".format(user, repo)) from err
-
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):
         gl = gitlab.Gitlab(url='https://{}'.format(cls.fqdn), email=login, password=password)
@@ -257,10 +250,6 @@ class GitlabService(RepositoryService):
 
         return snippet.delete()
 
-    @staticmethod
-    def get_project_default_branch(project):
-        return project.default_branch or 'master'
-
     def request_create(self, onto_user, onto_repo, from_branch, onto_branch, title=None, description=None, auto_slug=False, edit=None):
         try:
             onto_project = self.gl.projects.get('/'.join([onto_user, onto_repo]))
@@ -373,4 +362,23 @@ class GitlabService(RepositoryService):
     @property
     def user(self):
         return self.gl.user.username
+
+    def get_repository(self, user, repo):
+        try:
+            return self.gl.projects.get('{}/{}'.format(user, repo))
+        except GitlabGetError as err:
+            if err.response_code == 404:
+                raise ResourceNotFoundError("Cannot get: repository {}/{} does not exists.".format(user, repo)) from err
+
+    @staticmethod
+    def get_project_default_branch(project):
+        return project.default_branch or 'master'
+
+    @staticmethod
+    def is_repository_empty(project):
+        try:
+            project.repository_tree()
+            return True
+        except gitlab.exceptions.GitlabGetError:
+            return False
 

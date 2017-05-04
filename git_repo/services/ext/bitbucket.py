@@ -137,12 +137,6 @@ class BitbucketService(RepositoryService):
                     '/'.join([user.username, repo.name]), # name
                 ]
 
-    def get_repository(self, user, repo):
-        try:
-            return next(self.bb.repositoryByOwnerAndRepositoryName(owner=user, repository_name=repo))
-        except HTTPError as err:
-            raise ResourceNotFoundError('Cannot retrieve repository: {}/{} does not exists.'.format(user, repo))
-
     def _format_gist(self, gist):
         return gist.split('/')[-1] if gist.startswith('http') else gist
 
@@ -239,10 +233,6 @@ class BitbucketService(RepositoryService):
             if '404' in err.args[0].split(' '):
                 raise ResourceNotFoundError("Could not find snippet {}.".format(gist_id)) from err
             raise ResourceError("Couldn't delete snippet: {}".format(err)) from err
-
-    @staticmethod
-    def get_project_default_branch(project):
-        return project.mainbranch.get('name', 'master')
 
     def request_create(self, onto_user, onto_repo, from_branch, onto_branch, title=None, description=None, auto_slug=False, edit=None):
         try:
@@ -485,3 +475,17 @@ class BitbucketService(RepositoryService):
         except (HTTPError, AttributeError) as err:
             raise ResourceError("Couldn't find the current user: {}".format(err)) from err
 
+
+    def get_repository(self, user, repo):
+        try:
+            return next(self.bb.repositoryByOwnerAndRepositoryName(owner=user, repository_name=repo))
+        except HTTPError as err:
+            raise ResourceNotFoundError('Cannot retrieve repository: {}/{} does not exists.'.format(user, repo))
+
+    @staticmethod
+    def is_repository_empty(project):
+        return project.size == 0
+
+    @staticmethod
+    def get_project_default_branch(project):
+        return project.mainbranch.get('name', 'master')

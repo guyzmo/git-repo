@@ -81,6 +81,47 @@
         },
         "url": "https://gitlab.com/api/v3/projects/guyzmo%2Fgit-repo"
       }
+    },
+    {
+      "recorded_at": "2017-05-04T10:32:22",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.13.0"
+        },
+        "method": "GET",
+        "uri": "https://gitlab.com/api/v3/projects/1016797/repository/tree"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "[{\"id\":\"996e370ca098a6f8ad4de7f290337be3d2872847\",\"name\":\"git_repo\",\"type\":\"tree\",\"path\":\"git_repo\",\"mode\":\"040000\"},{\"id\":\"14b7a932a44744ef896569fa61eff6c765cfb24b\",\"name\":\"tests\",\"type\":\"tree\",\"path\":\"tests\",\"mode\":\"040000\"},{\"id\":\"51ceaea89e237f5886f409bcb078d6dbe0bcbb23\",\"name\":\".editorconfig\",\"type\":\"blob\",\"path\":\".editorconfig\",\"mode\":\"100644\"},{\"id\":\"7a5782d8822078d2230887e3359dd48452c6a3de\",\"name\":\".gitignore\",\"type\":\"blob\",\"path\":\".gitignore\",\"mode\":\"100644\"},{\"id\":\"d0a4e8237e65ef257110a6c6ec9274e88f993fa6\",\"name\":\".gitlab-ci.yml\",\"type\":\"blob\",\"path\":\".gitlab-ci.yml\",\"mode\":\"100644\"},{\"id\":\"0f3b6b1adf2c419dc5e391917236d82fff7ab40a\",\"name\":\".travis.yml\",\"type\":\"blob\",\"path\":\".travis.yml\",\"mode\":\"100644\"},{\"id\":\"c767d63f397a24306badb542b64a8b33aac42d37\",\"name\":\"LICENSE\",\"type\":\"blob\",\"path\":\"LICENSE\",\"mode\":\"100644\"},{\"id\":\"f0cd0f60924cf80dbb2366f85621de52cd340c6f\",\"name\":\"MANIFEST.in\",\"type\":\"blob\",\"path\":\"MANIFEST.in\",\"mode\":\"100644\"},{\"id\":\"bcfa7d36f8abca75d5586e61cdb1765dd1f051ab\",\"name\":\"README.md\",\"type\":\"blob\",\"path\":\"README.md\",\"mode\":\"100644\"},{\"id\":\"afa2b3515e910d7f01eb4eb95480e0fbd9385f75\",\"name\":\"VERSION\",\"type\":\"blob\",\"path\":\"VERSION\",\"mode\":\"100644\"},{\"id\":\"559f42ec779c0df90883b99f2f2be4f14bd120ea\",\"name\":\"buildout.cfg\",\"type\":\"blob\",\"path\":\"buildout.cfg\",\"mode\":\"100644\"},{\"id\":\"b0abd8c1d717ce2bbecab572355798a2dbada6f1\",\"name\":\"requirements-test.txt\",\"type\":\"blob\",\"path\":\"requirements-test.txt\",\"mode\":\"100644\"},{\"id\":\"6a165a3f064946ee2553409091586e0e8ce06a83\",\"name\":\"requirements.txt\",\"type\":\"blob\",\"path\":\"requirements.txt\",\"mode\":\"100644\"},{\"id\":\"ec8880a7b98cf1e579552dc04f832121ade57396\",\"name\":\"setup.py\",\"type\":\"blob\",\"path\":\"setup.py\",\"mode\":\"100644\"},{\"id\":\"90999d5df1b573144a6e139f09b00ba9e3128f41\",\"name\":\"tox.ini\",\"type\":\"blob\",\"path\":\"tox.ini\",\"mode\":\"100644\"}]"
+        },
+        "headers": {
+          "Cache-Control": "max-age=0, private, must-revalidate",
+          "Content-Length": "1819",
+          "Content-Type": "application/json",
+          "Date": "Thu, 04 May 2017 10:32:22 GMT",
+          "Etag": "W/\"96885a58bce1762b8fa9c8dc3a428ac5\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Origin",
+          "X-Request-Id": "7aba5f66-61da-4832-8a08-32190375f7c1",
+          "X-Runtime": "0.100891"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://gitlab.com/api/v3/projects/1016797/repository/tree"
+      }
     }
   ],
   "recorded_with": "betamax/0.5.1"

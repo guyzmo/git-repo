@@ -116,11 +116,6 @@ class GogsService(RepositoryService):
         token = gg.create_token(auth, name, login)
         return token.token
 
-    @staticmethod
-    def get_project_default_branch(project):
-        # TODO get default branch
-        return 'master'
-
     @property
     def user(self):
         return self.gg.username
@@ -200,16 +195,6 @@ class GogsService(RepositoryService):
                     repo['full_name'],                     # name
                 ]
 
-    def get_repository(self, user, repo):
-        try:
-            return self.gg.repository(user, repo)
-        except ApiFailure as err:
-            if err.status_code == 404:
-                raise ResourceNotFoundError("Cannot get: repository {}/{} does not exists.".format(user, repo)) from err
-            raise ResourceError("Unhandled error: {}".format(err)) from err
-        except Exception as err:
-            raise ResourceError("Unhandled exception: {}".format(err)) from err
-
     def gist_list(self, gist=None):
         raise NotImplementedError
 
@@ -233,3 +218,29 @@ class GogsService(RepositoryService):
 
     def request_fetch(self, user, repo, request, pull=False):
         raise NotImplementedError
+
+    def get_repository(self, user, repo):
+        try:
+            return self.gg.repository(user, repo)
+        except ApiFailure as err:
+            if err.status_code == 404:
+                raise ResourceNotFoundError("Cannot get: repository {}/{} does not exists.".format(user, repo)) from err
+            raise ResourceError("Unhandled error: {}".format(err)) from err
+        except Exception as err:
+            raise ResourceError("Unhandled exception: {}".format(err)) from err
+
+    @staticmethod
+    def get_project_default_branch(project):
+        # not yet in gogs_client
+        # cf https://github.com/unfoldingWord-dev/python-gogs-client/pull/8
+        if hasattr(project, 'default_branch'):
+            return project.default_branch
+        return 'master'
+
+    @staticmethod
+    def is_repository_empty(project):
+        # not yet in gogs_client
+        # cf https://github.com/unfoldingWord-dev/python-gogs-client/pull/9
+        if hasattr(project, 'empty'):
+            return project.empty()
+        return False

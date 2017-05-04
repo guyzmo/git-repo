@@ -539,6 +539,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
         with self.mockup_git(namespace, repository):
             local_slug = self.service.format_path(namespace=namespace, repository=repository, rw=True)
             self.set_mock_popen_commands([
+                ('git init', b'Initialized empty Git repository in /tmp/bar/.git/', b'', 0),
                 ('git remote add all {}'.format(local_slug), b'', b'', 0),
                 ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
                 ('git version', b'git version 2.8.0', b'', 0),

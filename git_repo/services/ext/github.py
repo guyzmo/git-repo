@@ -150,12 +150,6 @@ class GithubService(RepositoryService):
                     else:
                         print("Cannot show repository {}: {}".format('/'.join([user, repo.name]), err))
 
-    def get_repository(self, user, repo):
-        repository = self.gh.repository(user, repo)
-        if not repository:
-            raise ResourceNotFoundError('Cannot delete: repository {}/{} does not exists.'.format(user, repo))
-        return repository
-
     def _format_gist(self, gist):
         return gist.split('https://gist.github.com/')[-1].split('.git')[0]
 
@@ -230,10 +224,6 @@ class GithubService(RepositoryService):
         if not gist:
             raise ResourceNotFoundError('Could not find gist')
         gist.delete()
-
-    @staticmethod
-    def get_project_default_branch(project):
-        return project.default_branch or 'master'
 
     def request_create(self, onto_user, onto_repo, from_branch, onto_branch, title=None, description=None, auto_slug=False, edit=None):
         onto_project = self.gh.repository(onto_user, onto_repo)
@@ -372,4 +362,18 @@ class GithubService(RepositoryService):
     @property
     def user(self):
         return self.gh.user().login
+
+    def get_repository(self, user, repo):
+        repository = self.gh.repository(user, repo)
+        if not repository:
+            raise ResourceNotFoundError('Cannot delete: repository {}/{} does not exists.'.format(user, repo))
+        return repository
+
+    @staticmethod
+    def is_repository_empty(project):
+        return project.size == 0
+
+    @staticmethod
+    def get_project_default_branch(project):
+       return project.default_branch or 'master'
 

@@ -329,12 +329,17 @@ class RepositoryService:
         '''
         log.info('Cloning {}…'.format(repo))
 
+        project = self.get_repository(user, repo)
         if not branch:
-            project = self.get_repository(user, repo)
             branch = self.get_project_default_branch(project)
 
+        is_empty = self.is_repository_empty(project)
+        if is_empty:
+            self.repository.init()
+
         remote, *_ = self.add(user=user, repo=repo, tracking=True, rw=rw)
-        self.pull(remote, branch)
+        if not is_empty:
+            self.pull(remote, branch)
 
     def add(self, repo, user=None, name=None, tracking=False, alone=False, rw=True, auto_slug=False):
         '''Adding repository as remote
@@ -578,6 +583,13 @@ class RepositoryService:
     def user(self): #pragma: no cover
         raise NotImplementedError
 
+    @staticmethod
+    def is_repository_empty(project):
+        raise NotImplementedError
+
+    @staticmethod
+    def get_project_default_branch(project):
+        raise NotImplementedError
 
 '''
 register all services by importing their modules, from the ext pagckage

@@ -81,6 +81,45 @@
         },
         "url": "https://gitlab.com/api/v3/projects/<GITLAB_NAMESPACE>%2Fgit-repo"
       }
+    },
+    {
+      "recorded_at": "2017-05-04T10:32:29",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.13.0"
+        },
+        "method": "GET",
+        "uri": "https://gitlab.com/api/v3/projects/1848932/repository/tree"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "{\"message\":\"404 Project Not Found\"}"
+        },
+        "headers": {
+          "Cache-Control": "no-cache",
+          "Content-Length": "35",
+          "Content-Type": "application/json",
+          "Date": "Thu, 04 May 2017 10:32:29 GMT",
+          "Server": "nginx",
+          "Vary": "Origin",
+          "X-Request-Id": "405f9670-f3d3-4d9b-a04f-22d4d393224c",
+          "X-Runtime": "0.036389"
+        },
+        "status": {
+          "code": 404,
+          "message": "Not Found"
+        },
+        "url": "https://gitlab.com/api/v3/projects/1848932/repository/tree"
+      }
     }
   ],
   "recorded_with": "betamax/0.5.1"
