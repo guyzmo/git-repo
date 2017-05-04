@@ -316,7 +316,7 @@ class RepositoryService:
                 update_head_ok=True, force=force, progress=pb)
         print()
 
-    def clone(self, user, repo, branch='master', rw=True):
+    def clone(self, user, repo, branch=None, rw=True):
         '''Clones a new repository
 
         :param user: namespace of the repository

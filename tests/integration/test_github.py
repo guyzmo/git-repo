@@ -6,6 +6,8 @@ import logging
 
 import pytest
 
+from unittest.mock import mock_open, patch
+
 #################################################################################
 # Enable logging
 
@@ -67,8 +69,8 @@ class Test_Github(GitRepoTestCase):
         self.action_delete(repository='github3.py')
 
     def test_04_clone(self):
-        self.action_clone(namespace='guyzmo',
-                          repository='git-repo')
+        self.action_clone(namespace='git-services',
+                          repository='github-testing')
 
     def test_05_add(self):
         self.action_add(namespace='guyzmo',
@@ -317,16 +319,18 @@ class Test_Github(GitRepoTestCase):
         ])
 
     def test_31_request_fetch(self):
-        self.action_request_fetch(namespace='guyzmo',
-                repository='git-repo',
+        self.action_request_fetch(
+                namespace='git-services',
+                repository='github-testing',
                 request='2',
                 remote_branch='pull',
                 local_branch='requests/github')
 
     def test_31_request_fetch__bad_request(self):
         with pytest.raises(ResourceNotFoundError):
-            self.action_request_fetch(namespace='guyzmo',
-                repository='git-repo',
+            self.action_request_fetch(
+                namespace='git-services',
+                repository='github-testing',
                 request='1',
                 remote_branch='pull',
                 local_branch='requests/github',
