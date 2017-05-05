@@ -460,7 +460,7 @@ class BitbucketService(RepositoryService):
 
     def get_parent_project_url(self, user, project, rw=True):
         project = self.get_repository(user, project)
-        if not project and not project.parent:
+        if not project or not hasattr(project, 'parent') or not project.parent:
             return None
         return self.format_path(
             repository=project.parent.name,

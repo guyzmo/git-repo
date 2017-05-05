@@ -229,6 +229,15 @@ class GogsService(RepositoryService):
         except Exception as err:
             raise ResourceError("Unhandled exception: {}".format(err)) from err
 
+    def get_parent_project_url(self, user, repo, rw=True): #pragma: no cover
+        project = self.get_repository(user, repo)
+        if not project.fork:
+            return None
+        # TODO fix GoGs API to provide that mising information
+        self.log.warning('This project has an upstream, but the API does not give information on which.')
+        return None
+
+
     @staticmethod
     def get_project_default_branch(project):
         # not yet in gogs_client
