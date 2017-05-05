@@ -14,7 +14,9 @@
 #### main commands
 
 Control your remote git hosting services from the `git` commandline. The usage is
-very simple. To clone a new project, out of GitHub, just issue:
+very simple (full usage list [in the sources][1]). To clone a new project, out of GitHub, just issue:
+
+[1]:https://github.com/guyzmo/git-repo/blob/devel/git_repo/repo.py#L4,L35
 
     % git hub clone guyzmo/git-repo
 
