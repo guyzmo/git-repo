@@ -68,14 +68,14 @@ class RepositoryService:
 
     @staticmethod
     def get_config_path():
-        home_dir = os.environ.get('HOME', '.')
+        home_dir = os.path.expanduser('~')
         try:
             from xdg.BaseDirectory import xdg_config_home
         except ImportError:
             xdg_config_home = os.path.join(home_dir, ".config")
         for config in [
                 os.path.join(home_dir, '.gitconfig'),
-                os.path.join(xdg_config_home, 'git'),
+                os.path.join(xdg_config_home, 'git', 'config'),
             ]:
             if os.path.exists(config):
                 return config
