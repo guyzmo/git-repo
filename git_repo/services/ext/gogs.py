@@ -233,10 +233,16 @@ class GogsService(RepositoryService):
         project = self.get_repository(user, repo)
         if not project.fork:
             return None
-        # TODO fix GoGs API to provide that mising information
-        self.log.warning('This project has an upstream, but the API does not give information on which.')
-        return None
-
+        if not hasattr(project, 'parent'):
+            # Not yet in gogs_client
+            # cf https://github.com/unfoldingWord-dev/python-gogs-client/pull/12
+            log.warning('This project has an upstream, but the API does not give information on which.')
+            return None
+        elif project.parent:
+            namespace, project = parent.full_name.split('/')
+            return self.format_path(project, namespace, rw=rw)
+        else:
+            return None
 
     @staticmethod
     def get_project_default_branch(project):
