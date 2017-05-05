@@ -251,5 +251,5 @@ class GogsService(RepositoryService):
         # not yet in gogs_client
         # cf https://github.com/unfoldingWord-dev/python-gogs-client/pull/9
         if hasattr(project, 'empty'):
-            return project.empty()
+            return project.empty
         return False
