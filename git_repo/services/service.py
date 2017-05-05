@@ -336,6 +336,11 @@ class RepositoryService:
         is_empty = self.is_repository_empty(project)
         if is_empty:
             self.repository.init()
+        else:
+            url = self.get_parent_project_url(user, repo, rw=rw)
+            if url:
+                parent_user, parent_project = self.convert_url_into_slug(url).split('/')
+                self.add(user=parent_user, repo=parent_project, name='upstream', alone=True)
 
         remote, *_ = self.add(user=user, repo=repo, tracking=True, rw=rw)
         if not is_empty:
