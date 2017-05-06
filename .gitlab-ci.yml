@@ -2,6 +2,6 @@ test:
   script:
   - apt-get update -qy
   - apt-get install -y python-dev python-pip
-  - pip install zc.buildout
-  - buildout
-  - bin/py.test
+  - pip install --upgrade pip
+  - pip install -r requirements-test.txt
+  - py.test --cov=git_repo --cov-report term-missing tests
