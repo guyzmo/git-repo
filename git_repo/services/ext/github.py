@@ -330,6 +330,71 @@ class GithubService(RepositoryService):
                 raise ResourceNotFoundError('Could not find opened request #{}'.format(request)) from err
             raise err
 
+    def _get_key(self, key_id, user=None):
+        try:
+            id_num = int(key_id)
+        except ValueError:
+            raise ResourceError('Key id shall be an integer')
+        if not user:
+            key = self.get_key(key_id)
+            if key:
+                return key
+        user = self.gh.user(user)
+        if not user:
+            raise ResourceNotFoundError('Could not find user {}'.format(user))
+        for key in user.iter_keys():
+            if key.id == id_num:
+                return key
+        raise ResourceNotFoundError('Key {} not found.'.format(key_id))
+
+    def key_create(self, pubkey_file, name=None):
+        with open(os.path.join(pubkey_file, pubkey_file), 'r') as f:
+            key_content = f.read()
+            if self._check_ssh_key(key_content):
+                key = self.gh.create_key(name, key_content)
+                if key:
+                    return key.title, key.id
+            raise ResourceError('Error creating key {}'.format(name))
+
+    def key_list(self, user=None):
+        current_user = not user or user == self.user
+        user = self.gh.user(user)
+        if not user:
+            raise ResourceNotFoundError('Could not find user {}'.format(user))
+        if current_user:
+            yield "{:>9}  {:<12}  {}"
+            yield ('key id', 'Modified', 'Key title')
+            for key in user.iter_keys():
+                    key = self.gh.key(key.id)
+                    keydate = datetime.strptime(
+                            key.last_modified,
+                            '%a, %d %b %Y %H:%M:%S GMT'
+                    )
+                    if keydate.year < datetime.now().year:
+                        date_fmt = "%b %d %Y"
+                    else:
+                        date_fmt = "%b %d %H:%M"
+
+                    yield (key.id, keydate.strftime(date_fmt), key.title)
+        else:
+            yield "{:>8}  {:<60}"
+            yield ('key id', 'contents')
+            for key in user.iter_keys():
+                yield (key.id, key.key[:59]+'…')
+
+    def key_fetch(self, key_id, user=None):
+        return self._get_key(key_id, user).key
+
+    def key_delete(self, pubkey):
+        try:
+            key = self.gh.key(int(pubkey))
+        except ValueError:
+            raise ResourceError('Key id shall be an integer')
+        if key:
+            if key.delete():
+                return
+        raise ResourceNotFoundError('Could not find key {}'.format(pubkey))
+
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):
         import platform

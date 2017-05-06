@@ -580,6 +580,26 @@ class RepositoryService:
     def request_create(self, user, repo, from_branch, onto_branch, title, description=None, auto_slug=False):
         raise NotImplementedError
 
+    @staticmethod
+    def _check_ssh_key(key):
+        if not key.startswith('ssh-'):
+            raise ResourceError('Key is invalid: does not start with "ssh-"')
+        if not len(key.strip().splitlines()) == 1:
+            raise ResourceError('Key is invalid: has more than one line')
+        return True
+
+    def key_create(self, pubkey_file, name):
+        raise NotImplementedError
+
+    def key_delete(self, pubkey):
+        raise NotImplementedError
+
+    def key_list(self):
+        raise NotImplementedError
+
+    def key_fetch(self):
+        raise NotImplementedError
+
     @property
     def get_parent_project_url(self, user, repo, rw=True): #pragma: no cover
         raise NotImplementedError

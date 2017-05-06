@@ -30,6 +30,12 @@ Usage:
     {self} [--path=<path>] [-v...] <target> (gist|snippet) fetch <gist> [<gist_file>]
     {self} [--path=<path>] [-v...] <target> (gist|snippet) create [--secret] <description> [<gist_path> <gist_path>...]
     {self} [--path=<path>] [-v...] <target> (gist|snippet) delete <gist> [-f]
+    {self} [--path=<path>] [-v...] <target> key (list|ls)
+    {self} [--path=<path>] [-v...] <target> key fetch <key_id>
+    {self} [--path=<path>] [-v...] <target> key add [--title <key_name>] <key_path>
+    {self} [--path=<path>] [-v...] <target> key delete <gist> [-f]
+    {self} [--path=<path>] [-v...] <target> key <user> (list|ls)
+    {self} [--path=<path>] [-v...] <target> key <user> fetch <key_id>
     {self} [--path=<path>] [-v...] <target> config [--config=<gitconfig>]
     {self} [-v...] config [--config=<gitconfig>]
     {self} --help
@@ -495,6 +501,37 @@ class GitRepoRunner(KeywordArgumentParser):
 
         service.gist_delete(self.gist_ref)
         log.info('Successfully deleted gist!')
+        return 0
+
+    @register_action('key', 'list')
+    def do_key_list(self):
+        service = self.get_service(lookup_repository=False)
+        print_iter(service.key_list(self.user))
+        return 0
+
+    @register_action('key', 'fetch')
+    def do_key_fetch(self):
+        service = self.get_service(lookup_repository=False)
+        print(service.key_fetch(self.key_id, self.user))
+        return 0
+
+    @register_action('key', 'add')
+    @register_action('key', 'create')
+    def do_key_create(self):
+        service = self.get_service(lookup_repository=False)
+        name, key = service.key_create(self.key_path, self.title)
+        log.info('Successfully added SSH key \'{}\' with id {} !'.format(name, key))
+        return 0
+
+    @register_action('key', 'delete')
+    def do_ssh_delete(self):
+        service = self.get_service(lookup_repository=False)
+        if not self.force: # pragma: no cover
+            if not confirm('ssh key', self.gist_ref):
+                return -1
+
+        service.key_delete(self.gist_ref)
+        log.info('Successfully deleted ssh key!')
         return 0
 
     @register_action('config')
