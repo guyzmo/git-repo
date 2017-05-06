@@ -1,7 +1,10 @@
 test:
+  variables:
+    TRAVIS_GH3: "1"
   script:
   - apt-get update -qy
-  - apt-get install -y python-dev python-pip
-  - pip install --upgrade pip
-  - pip install -r requirements-test.txt
-  - py.test --cov=git_repo --cov-report term-missing tests
+  - apt-get install -y python3-dev python3-pip virtualenv pandoc
+  - virtualenv --python=python3 var
+  - var/bin/pip3 install --upgrade pip
+  - var/bin/pip3 install -r requirements-test.txt
+  - var/bin/py.test --cov=git_repo --cov-report term-missing tests
