@@ -30,7 +30,7 @@ But that works also with a project from GitLab, Bitbucket, your own GitLab or Go
     % git myprecious clone guyzmo/git-repo
     % git gg clone guyzmo/git-repo
 
-If you want to can choose the default branch to clone:
+If you want to choose the default branch to clone:
 
     % git lab clone guyzmo/git-repo master
 
