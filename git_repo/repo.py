@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env pytho
 
 '''
 Usage:
@@ -13,6 +13,7 @@ Usage:
     {self} [--path=<path>] [-v...] <target> delete <user>/<repo> [-f]
     {self} [--path=<path>] [-v...] <target> open <user>/<repo>
     {self} [--path=<path>] [-v...] <target> clone <user>/<repo> [<repo> [<branch>]]
+    {self} [--path=<path>] [-v...] <target> add
     {self} [--path=<path>] [-v...] <target> add <user>/<repo> [<name>] [--tracking=<branch>] [-a]
     {self} [--path=<path>] [-v...] <target> request (list|ls)
     {self} [--path=<path>] [-v...] <target> request fetch <request> [-f]
@@ -154,28 +155,6 @@ class GitRepoRunner(KeywordArgumentParser):
         if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys():
             del os.environ['GIT_WORK_TREE']
 
-    def _guess_repo_slug(self, repository, service, resolve_targets=None):
-        config = repository.config_reader()
-        if resolve_targets:
-            targets = [target.format(service=service.name) for target in resolve_targets]
-        else:
-            targets = (service.name, 'upstream', 'origin')
-        for remote in repository.remotes:
-            if remote.name in targets:
-                for url in remote.urls:
-                    if url.startswith('https'):
-                        if url.endswith('.git'):
-                            url = url[:-4]
-                        *_, user, name = url.split('/')
-                        self.set_repo_slug('/'.join([user, name]))
-                        return
-                    elif url.startswith('git@'):
-                        if url.endswith('.git'):
-                            url = url[:-4]
-                        _, repo_slug = url.split(':')
-                        self.set_repo_slug(repo_slug)
-                        return
-
     def get_service(self, lookup_repository=True, resolve_targets=None):
         if not lookup_repository:
             service = RepositoryService.get_service(None, self.target)
@@ -191,7 +170,11 @@ class GitRepoRunner(KeywordArgumentParser):
                 raise FileNotFoundError('Cannot find path to the repository.')
             service = RepositoryService.get_service(repository, self.target)
             if not self.repo_name:
-                self._guess_repo_slug(repository, service, resolve_targets)
+                repo_slug = RepositoryService.guess_repo_slug(
+                        repository, service, resolve_targets
+                        )
+                if repo_slug:
+                    self.set_repo_slug(repo_slug, auto=True)
         return service
 
     '''Argument storage'''
@@ -223,8 +206,9 @@ class GitRepoRunner(KeywordArgumentParser):
         log.addHandler(logging.StreamHandler())
 
     @store_parameter('<user>/<repo>')
-    def set_repo_slug(self, repo_slug):
+    def set_repo_slug(self, repo_slug, auto=False):
         self.repo_slug = EXTRACT_URL_RE.sub('', repo_slug) if repo_slug else repo_slug
+        self._auto_slug = auto
         if not self.repo_slug:
             self.user_name = None
             self.repo_name = None
@@ -274,13 +258,14 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('add')
     def do_remote_add(self):
         service = self.get_service()
-        service.add(self.repo_name, self.user_name,
+        remote, user, repo = service.add(self.repo_name, self.user_name,
                     name=self.remote_name,
                     tracking=self.tracking,
-                    alone=self.alone)
-        log.info('Successfully added `{}` as remote named `{}`'.format(
-            self.repo_slug,
-            self.remote_name or service.name)
+                    alone=self.alone,
+                    auto_slug=self._auto_slug)
+        log.info('Successfully added `{}/{}` as remote named `{}`'.format(
+            user, repo,
+            remote.name)
         )
         return 0
 
@@ -393,13 +378,13 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('request', 'create')
     def do_request_create(self):
-        def request_edition(repository, from_branch):
+        def request_edition(repository, from_branch, onto_target):
             try:
                 commit = repository.commit(from_branch)
                 title, *body = commit.message.split('\n')
             except BadName:
                 log.error('Couldn\'t find local source branch {}'.format(from_branch))
-                return None
+                return None, None
             from tempfile import NamedTemporaryFile
             from subprocess import call
             with NamedTemporaryFile(
@@ -416,9 +401,13 @@ class GitRepoRunner(KeywordArgumentParser):
                     '## Filled with commit:\n'
                     '## {}\n'
                     '####################################################\n'
+                    '## To be applied:\n'
+                    '##   from branch: {}\n'
+                    '##   onto project: {}\n'
+                    '####################################################\n'
                     '## * All lines starting with # will be ignored.\n'
                     '## * First non-ignored line is the title of the request.\n'
-                        ).format(title, '\n'.join(body), commit.name_rev).encode('utf-8'))
+                      ).format(title, '\n'.join(body), commit.name_rev, from_branch, onto_target).encode('utf-8'))
                 request_file.flush()
                 rv = call("{} {}".format(os.environ['EDITOR'], request_file.name), shell=True)
                 if rv != 0:
@@ -443,12 +432,9 @@ class GitRepoRunner(KeywordArgumentParser):
                 self.remote_branch,
                 self.title,
                 self.message,
-                self.repo_slug != None,
+                self._auto_slug,
                 request_edition)
-        log.info('Successfully created request of `{local}` onto `{}:{remote}`, with id `{ref}`!'.format(
-            '/'.join([self.user_name, self.repo_name]),
-            **new_request)
-        )
+        log.info('Successfully created request of `{local}` onto `{project}:{remote}`, with id `{ref}`!'.format(**new_request))
         if 'url' in new_request:
             log.info('available at: {url}'.format(**new_request))
         return 0
@@ -520,9 +506,6 @@ class GitRepoRunner(KeywordArgumentParser):
                     fqdn=None,
                     remote=None,
                     )
-            conf = service.get_config(self.config)
-            if 'token' in conf:
-                raise Exception('A token has been generated for this service. Please revoke and delete before proceeding.')
 
             print('Is your service self-hosted?')
             if 'y' in input('    [yN]> ').lower():
@@ -552,6 +535,10 @@ class GitRepoRunner(KeywordArgumentParser):
                 service.fqdn = new_conf['fqdn']
                 service.port = new_conf['port']
                 service.scheme = new_conf['scheme']
+
+            conf = service.get_config(self.config)
+            if 'token' in conf:
+                raise Exception('A token has been generated for this service. Please revoke and delete before proceeding.')
 
             print('Please enter your credentials to connect to the service:')
             username = loop_input('username> ')
@@ -602,7 +589,7 @@ def main(args):
 
 def cli(): #pragma: no cover
     try:
-        sys.exit(main(docopt(__doc__.format(self=sys.argv[0].split('/')[-1], version=__version__))))
+        sys.exit(main(docopt(__doc__.format(self=sys.argv[0].split(os.path.sep)[-1], version=__version__))))
     finally:
         # Whatever happens, make sure that the cursor reappears with some ANSI voodoo
         if sys.stdout.isatty():

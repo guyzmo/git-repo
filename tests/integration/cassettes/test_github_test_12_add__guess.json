@@ -1,0 +1,62 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2017-05-03T18:22:47",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.6"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"login\":\"guyzmo\",\"id\":254441,\"avatar_url\":\"https://avatars1.githubusercontent.com/u/254441?v=3\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/guyzmo\",\"html_url\":\"https://github.com/guyzmo\",\"followers_url\":\"https://api.github.com/users/guyzmo/followers\",\"following_url\":\"https://api.github.com/users/guyzmo/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/guyzmo/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/guyzmo/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/guyzmo/subscriptions\",\"organizations_url\":\"https://api.github.com/users/guyzmo/orgs\",\"repos_url\":\"https://api.github.com/users/guyzmo/repos\",\"events_url\":\"https://api.github.com/users/guyzmo/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/guyzmo/received_events\",\"type\":\"User\",\"site_admin\":false,\"name\":\"guyzmo\",\"company\":null,\"blog\":\"http://guyzmo.got.nothing.to/blog/\",\"location\":\"Paris\",\"email\":null,\"hireable\":true,\"bio\":\"I'm zmo on freenode.\\r\\n\\r\\n: :(){ :|:& };:\",\"public_repos\":94,\"public_gists\":33,\"followers\":62,\"following\":15,\"created_at\":\"2010-04-27T14:04:09Z\",\"updated_at\":\"2017-03-10T13:16:43Z\"}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "1160",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Wed, 03 May 2017 18:22:47 GMT",
+          "ETag": "\"8c85e3c34a5f4e44c937b162e8524a4d\"",
+          "Last-Modified": "Fri, 10 Mar 2017 13:16:43 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "85B8:4F4D:C4F635:FB37F1:590A1FF7",
+          "X-OAuth-Scopes": "repo, delete_repo, gist",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4985",
+          "X-RateLimit-Reset": "1493837154",
+          "X-Served-By": "1e9204dbc0447a6f39c3b3c44d87b3f8",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/user"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

@@ -1,0 +1,121 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2017-04-30T17:42:28",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITBUCKET>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "http://localhost:8080/api/v3/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"login\":\"<GITBUCKET_NAMESPACE>\",\"email\":\"user@localhost\",\"type\":\"User\",\"site_admin\":false,\"created_at\":\"2017-04-30T17:39:36Z\",\"url\":\"http://localhost:8080/api/v3/users/<GITBUCKET_NAMESPACE>\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>\",\"avatar_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/_avatar\"}"
+        },
+        "headers": {
+          "Content-Length": "284",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Sun, 30 Apr 2017 17:42:28 GMT",
+          "Expires": "Thu, 01 Jan 1970 00:00:00 GMT",
+          "Server": "Jetty(9.3.z-SNAPSHOT)",
+          "Set-Cookie": "JSESSIONID=1qov5cklqgs4e1csa4msfppabx;Path=/;HttpOnly"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "http://localhost:8080/api/v3/user"
+      }
+    },
+    {
+      "recorded_at": "2017-04-30T17:42:29",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"homepage\": \"\", \"private\": false, \"has_wiki\": true, \"has_downloads\": true, \"name\": \"foobar\", \"description\": \"\", \"gitignore_template\": \"\", \"has_issues\": true, \"auto_init\": false}"
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITBUCKET>",
+          "Connection": "keep-alive",
+          "Content-Length": "178",
+          "Content-Type": "application/json",
+          "Cookie": "JSESSIONID=1qov5cklqgs4e1csa4msfppabx",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "POST",
+        "uri": "http://localhost:8080/api/v3/user/repos"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"name\":\"foobar\",\"full_name\":\"<GITBUCKET_NAMESPACE>/foobar\",\"description\":\"\",\"watchers\":0,\"forks\":0,\"private\":false,\"default_branch\":\"master\",\"owner\":{\"login\":\"<GITBUCKET_NAMESPACE>\",\"email\":\"user@localhost\",\"type\":\"User\",\"site_admin\":false,\"created_at\":\"2017-04-30T17:39:36Z\",\"url\":\"http://localhost:8080/api/v3/users/<GITBUCKET_NAMESPACE>\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>\",\"avatar_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/_avatar\"},\"forks_count\":0,\"watchers_count\":0,\"url\":\"http://localhost:8080/api/v3/repos/<GITBUCKET_NAMESPACE>/foobar\",\"http_url\":\"http://localhost:8080/git/<GITBUCKET_NAMESPACE>/foobar.git\",\"clone_url\":\"http://localhost:8080/git/<GITBUCKET_NAMESPACE>/foobar.git\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/foobar\"}"
+        },
+        "headers": {
+          "Content-Length": "711",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Sun, 30 Apr 2017 17:42:28 GMT",
+          "Server": "Jetty(9.3.z-SNAPSHOT)"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "http://localhost:8080/api/v3/user/repos"
+      }
+    },
+    {
+      "recorded_at": "2017-04-30T17:42:29",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITBUCKET>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "Cookie": "JSESSIONID=1qov5cklqgs4e1csa4msfppabx",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "http://localhost:8080/api/v3/repos/<GITBUCKET_NAMESPACE>/foobar"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"name\":\"foobar\",\"full_name\":\"<GITBUCKET_NAMESPACE>/foobar\",\"description\":\"\",\"watchers\":0,\"forks\":0,\"private\":false,\"default_branch\":\"master\",\"owner\":{\"login\":\"<GITBUCKET_NAMESPACE>\",\"email\":\"user@localhost\",\"type\":\"User\",\"site_admin\":false,\"created_at\":\"2017-04-30T17:39:36Z\",\"url\":\"http://localhost:8080/api/v3/users/<GITBUCKET_NAMESPACE>\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>\",\"avatar_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/_avatar\"},\"forks_count\":0,\"watchers_count\":0,\"url\":\"http://localhost:8080/api/v3/repos/<GITBUCKET_NAMESPACE>/foobar\",\"http_url\":\"http://localhost:8080/git/<GITBUCKET_NAMESPACE>/foobar.git\",\"clone_url\":\"http://localhost:8080/git/<GITBUCKET_NAMESPACE>/foobar.git\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/foobar\"}"
+        },
+        "headers": {
+          "Content-Length": "711",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Sun, 30 Apr 2017 17:42:29 GMT",
+          "Server": "Jetty(9.3.z-SNAPSHOT)"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "http://localhost:8080/api/v3/repos/<GITBUCKET_NAMESPACE>/foobar"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

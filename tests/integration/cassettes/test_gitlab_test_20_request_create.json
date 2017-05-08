@@ -57,7 +57,7 @@
           "User-Agent": "python-requests/2.10.0"
         },
         "method": "GET",
-        "uri": "https://gitlab.com/api/v3/projects/guyzmo%2Ftest_create_requests"
+        "uri": "https://gitlab.com/api/v3/projects/<GITLAB_NAMESPACE>%2Ftest_create_requests"
       },
       "response": {
         "body": {
@@ -79,7 +79,7 @@
           "code": 200,
           "message": "OK"
         },
-        "url": "https://gitlab.com/api/v3/projects/guyzmo%2Ftest_create_requests"
+        "url": "https://gitlab.com/api/v3/projects/<GITLAB_NAMESPACE>%2Ftest_create_requests"
       }
     },
     {

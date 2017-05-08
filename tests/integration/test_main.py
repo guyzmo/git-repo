@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import logging
+import pytest
 
 #################################################################################
 # Enable logging
@@ -17,44 +18,49 @@ class Test_Main(GitRepoMainTestCase):
 
     def test_add(self, capsys):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0)
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': None,
                 'alone': False,
+                'auto_slug': False,
                 'tracking': 'master'} == seen_args
         out, err = capsys.readouterr()
-        assert 'Successfully added `guyzmo/git-repo` as remote named `github`\n' == err
+        assert 'Successfully added `guyzmo/git-repo` as remote named `foobar`\n' == err
 
     def test_add__alone(self):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
                                              args={'--alone': True})
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': None,
                 'alone': True,
+                'auto_slug': False,
                 'tracking': 'master'} == seen_args
 
     def test_add__tracking(self):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
                                              args={'--tracking': 'foobar'})
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': None,
                 'alone': False,
+                'auto_slug': False,
                 'tracking': 'foobar'} == seen_args
 
     def test_add__tracking_alone(self):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
                                              args={'--alone': True,
                                                    '--tracking': 'foobar'})
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': None,
                 'alone': True,
+                'auto_slug': False,
                 'tracking': 'foobar'} == seen_args
 
     def test_add__name(self, capsys):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
                                              args={'<name>': 'foobar'})
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': 'foobar',
                 'alone': False,
+                'auto_slug': False,
                 'tracking': 'master'} == seen_args
         out, err = capsys.readouterr()
         assert 'Successfully added `guyzmo/git-repo` as remote named `foobar`\n' in err
@@ -63,18 +69,20 @@ class Test_Main(GitRepoMainTestCase):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
                                              args={'<name>': 'foobar',
                                                    '--tracking': 'barfoo'})
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': 'foobar',
                 'alone': False,
+                'auto_slug': False,
                 'tracking': 'barfoo'} == seen_args
 
     def test_add__name_alone(self):
         repo_slug, seen_args = self.main_add('guyzmo/git-repo', 0,
                                              args={'--alone': True,
                                                    '<name>': 'foobar'})
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': 'foobar',
                 'alone': True,
+                'auto_slug': False,
                 'tracking': 'master'} == seen_args
 
     def test_add__name_alone_tracking(self):
@@ -82,9 +90,10 @@ class Test_Main(GitRepoMainTestCase):
                                              args={'--alone': True,
                                                    '<name>': 'foobar',
                                                    '--tracking': 'barfoo'})
-        assert ('git-repo', 'guyzmo') == repo_slug
+        assert ('guyzmo', 'git-repo', ) == repo_slug
         assert {'name': 'foobar',
                 'alone': True,
+                'auto_slug': False,
                 'tracking': 'barfoo'} == seen_args
 
     def test_clone(self):
@@ -409,7 +418,7 @@ class Test_Main(GitRepoMainTestCase):
                     })
         out, err = capsys.readouterr()
         seen_args = seen_args[:-1] # remove the passed edition function
-        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', 'This is a test', True) == seen_args
+        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', 'This is a test', False) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -425,7 +434,7 @@ class Test_Main(GitRepoMainTestCase):
                     })
         out, err = capsys.readouterr()
         seen_args = seen_args[:-1] # remove the passed edition function
-        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', None, True) == seen_args
+        assert ('guyzmo', 'test', 'pr-test', 'base-test', 'This is a test', None, False) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -442,7 +451,7 @@ class Test_Main(GitRepoMainTestCase):
                     })
         out, err = capsys.readouterr()
         seen_args = seen_args[:-1] # remove the passed edition function
-        assert ('guyzmo', 'test', 'bad', 'base-test', 'This is a test', 'This is a test', True) == seen_args
+        assert ('guyzmo', 'test', 'bad', 'base-test', 'This is a test', 'This is a test', False) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Fatal error: bad branch to request!' in caplog.text
@@ -459,7 +468,7 @@ class Test_Main(GitRepoMainTestCase):
                     })
         out, err = capsys.readouterr()
         seen_args = seen_args[:-1] # remove the passed edition function
-        assert ('guyzmo', 'test', 'pr-test', 'bad', 'This is a test', 'This is a test', True) == seen_args
+        assert ('guyzmo', 'test', 'pr-test', 'bad', 'This is a test', 'This is a test', False) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Fatal error: bad branch to request!' in caplog.text
@@ -475,7 +484,7 @@ class Test_Main(GitRepoMainTestCase):
                     })
         out, err = capsys.readouterr()
         seen_args = seen_args[:-1] # remove the passed edition function
-        assert ('guyzmo', 'test', None, 'base-test', 'This is a test', 'This is a test', True) == seen_args
+        assert ('guyzmo', 'test', None, 'base-test', 'This is a test', 'This is a test', False) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -491,7 +500,7 @@ class Test_Main(GitRepoMainTestCase):
                     })
         out, err = capsys.readouterr()
         seen_args = seen_args[:-1] # remove the passed edition function
-        assert ('guyzmo', 'test', 'pr-test', None, 'This is a test', 'This is a test', True) == seen_args
+        assert ('guyzmo', 'test', 'pr-test', None, 'This is a test', 'This is a test', False) == seen_args
         assert {} == extra_args
         assert out == ''
         assert 'Successfully created request of `pr-test` onto `guyzmo/test:base-test`, with id `42`!' in caplog.text
@@ -515,12 +524,13 @@ class Test_Main(GitRepoMainTestCase):
         assert ('guyzmo', 'git-repo') == repo_slug
         assert {} == seen_args
 
-    # Commented out because this does not work on travis CI
-    # def test_open__no_repo_slug__git(self):
-    #     self._create_repository()
-    #     repo_slug, seen_args = self.main_open(rc=0)
-    #     assert ('guyzmo', 'git-repo') == repo_slug
-    #     assert {} == seen_args
+    # Skipped because this does not work on travis CI
+    @pytest.mark.skip
+    def test_open__no_repo_slug__git(self):
+        self._create_repository()
+        repo_slug, seen_args = self.main_open(rc=0)
+        assert ('guyzmo', 'git-repo') == repo_slug
+        assert {} == seen_args
 
     def test_create__no_repo_slug(self):
         self._create_repository(ro=True)

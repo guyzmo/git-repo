@@ -1,48 +1,101 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2016-03-30T21:13:06",
+      "recorded_at": "2017-05-03T23:17:10",
       "request": {
         "body": {
           "encoding": "utf-8",
           "string": ""
         },
-        "headers": {},
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOlF0WmpzZVFMaGE4NFBMZnRwaGJF",
+          "Connection": "keep-alive",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket_fork/0.12.2 python-requests/2.13.0"
+        },
         "method": "GET",
-        "uri": "https://bitbucket.org/!api/1.0/users/<BITBUCKET_NAMESPACE>/"
+        "uri": "https://api.bitbucket.org/2.0/user"
       },
       "response": {
         "body": {
           "encoding": "utf-8",
-          "string": "{\"repositories\": [{\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2016-03-29T18:01:17.172\", \"no_forks\": false, \"created_on\": \"2016-03-29T18:01:16.965\", \"owner\": \"<BITBUCKET_NAMESPACE>\", \"logo\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/git_tutorial/avatar/32/?ts=1459267277\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 62738, \"read_only\": false, \"fork_of\": {\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2015-10-14T12:17:52.926\", \"no_forks\": false, \"created_on\": \"2015-10-13T19:41:25.948\", \"owner\": \"abdo2015\", \"logo\": \"https://bitbucket.org/abdo2015/git_tutorial/avatar/32/?ts=1444817872\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 75295, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2015-10-13 17:41:25+00:00\", \"website\": \"\", \"description\": \"a repository to show git features\", \"has_issues\": false, \"is_fork\": false, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2015-10-14 10:17:52+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/abdo2015/git_tutorial\"}, \"mq_of\": {\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2015-10-14T12:17:52.926\", \"no_forks\": false, \"created_on\": \"2015-10-13T19:41:25.948\", \"owner\": \"abdo2015\", \"logo\": \"https://bitbucket.org/abdo2015/git_tutorial/avatar/32/?ts=1444817872\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 75295, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2015-10-13 17:41:25+00:00\", \"website\": \"\", \"description\": \"a repository to show git features\", \"has_issues\": false, \"is_fork\": false, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2015-10-14 10:17:52+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/abdo2015/git_tutorial\"}, \"state\": \"available\", \"utc_created_on\": \"2016-03-29 16:01:16+00:00\", \"website\": null, \"description\": \"\", \"has_issues\": false, \"is_fork\": true, \"slug\": \"git_tutorial\", \"is_private\": false, \"name\": \"git_tutorial\", \"language\": \"java\", \"utc_last_updated\": \"2016-03-29 16:01:17+00:00\", \"no_public_forks\": false, \"creator\": null, \"resource_uri\": \"/1.0/repositories/<BITBUCKET_NAMESPACE>/git_tutorial\"}, {\"scm\": \"git\", \"has_wiki\": false, \"last_updated\": \"2016-03-30T18:10:40.746\", \"no_forks\": false, \"created_on\": \"2016-03-21T20:39:20.064\", \"owner\": \"<BITBUCKET_NAMESPACE>\", \"logo\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/git-repo/avatar/32/?ts=1459354240\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 1254333, \"read_only\": false, \"fork_of\": null, \"mq_of\": null, \"state\": \"available\", \"utc_created_on\": \"2016-03-21 19:39:20+00:00\", \"website\": \"\", \"description\": \" Tool to manage multiple repository services from the git CLI\", \"has_issues\": false, \"is_fork\": false, \"slug\": \"git-repo\", \"is_private\": false, \"name\": \"git-repo\", \"language\": \"python\", \"utc_last_updated\": \"2016-03-30 16:10:40+00:00\", \"no_public_forks\": false, \"creator\": null, \"resource_uri\": \"/1.0/repositories/<BITBUCKET_NAMESPACE>/git-repo\"}, {\"scm\": \"hg\", \"has_wiki\": false, \"last_updated\": \"2011-09-17T05:11:38.425\", \"no_forks\": null, \"created_on\": \"2008-11-14T15:29:32.459\", \"owner\": \"<BITBUCKET_NAMESPACE>\", \"logo\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/pida-screen-controller/avatar/32/?ts=1316229098\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 3435973, \"read_only\": false, \"fork_of\": {\"scm\": \"hg\", \"has_wiki\": true, \"last_updated\": \"2012-03-13T21:10:02.175\", \"no_forks\": null, \"created_on\": \"2008-09-15T16:30:29.672\", \"owner\": \"aafshar\", \"logo\": \"https://bitbucket.org/aafshar/pida-main/avatar/32/?ts=1331669402\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 6158307, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2008-09-15 14:30:29+00:00\", \"website\": \"\", \"description\": \"The main PIDA branch\", \"has_issues\": true, \"is_fork\": false, \"slug\": \"pida-main\", \"is_private\": false, \"name\": \"pida-main\", \"language\": \"\", \"utc_last_updated\": \"2012-03-13 20:10:02+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/aafshar/pida-main\"}, \"mq_of\": {\"scm\": \"hg\", \"has_wiki\": true, \"last_updated\": \"2012-03-13T21:10:02.175\", \"no_forks\": null, \"created_on\": \"2008-09-15T16:30:29.672\", \"owner\": \"aafshar\", \"logo\": \"https://bitbucket.org/aafshar/pida-main/avatar/32/?ts=1331669402\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 6158307, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2008-09-15 14:30:29+00:00\", \"website\": \"\", \"description\": \"The main PIDA branch\", \"has_issues\": true, \"is_fork\": false, \"slug\": \"pida-main\", \"is_private\": false, \"name\": \"pida-main\", \"language\": \"\", \"utc_last_updated\": \"2012-03-13 20:10:02+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/aafshar/pida-main\"}, \"state\": \"available\", \"utc_created_on\": \"2008-11-14 14:29:32+00:00\", \"website\": \"http://pida.co.uk/\", \"description\": \"modification of commander so screen receives all new shells and execution outputs.\", \"has_issues\": false, \"is_fork\": true, \"slug\": \"pida-screen-controller\", \"is_private\": false, \"name\": \"pida-screen-controller\", \"language\": \"\", \"utc_last_updated\": \"2011-09-17 03:11:38+00:00\", \"no_public_forks\": false, \"creator\": null, \"resource_uri\": \"/1.0/repositories/<BITBUCKET_NAMESPACE>/pida-screen-controller\"}, {\"scm\": \"hg\", \"has_wiki\": false, \"last_updated\": \"2011-09-17T05:11:38.460\", \"no_forks\": null, \"created_on\": \"2008-11-25T16:47:44.505\", \"owner\": \"<BITBUCKET_NAMESPACE>\", \"logo\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/pida-bugfixing/avatar/32/?ts=1316229098\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 3395341, \"read_only\": false, \"fork_of\": {\"scm\": \"hg\", \"has_wiki\": true, \"last_updated\": \"2012-03-13T21:10:02.175\", \"no_forks\": null, \"created_on\": \"2008-09-15T16:30:29.672\", \"owner\": \"aafshar\", \"logo\": \"https://bitbucket.org/aafshar/pida-main/avatar/32/?ts=1331669402\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 6158307, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2008-09-15 14:30:29+00:00\", \"website\": \"\", \"description\": \"The main PIDA branch\", \"has_issues\": true, \"is_fork\": false, \"slug\": \"pida-main\", \"is_private\": false, \"name\": \"pida-main\", \"language\": \"\", \"utc_last_updated\": \"2012-03-13 20:10:02+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/aafshar/pida-main\"}, \"mq_of\": {\"scm\": \"hg\", \"has_wiki\": true, \"last_updated\": \"2012-03-13T21:10:02.175\", \"no_forks\": null, \"created_on\": \"2008-09-15T16:30:29.672\", \"owner\": \"aafshar\", \"logo\": \"https://bitbucket.org/aafshar/pida-main/avatar/32/?ts=1331669402\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 6158307, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2008-09-15 14:30:29+00:00\", \"website\": \"\", \"description\": \"The main PIDA branch\", \"has_issues\": true, \"is_fork\": false, \"slug\": \"pida-main\", \"is_private\": false, \"name\": \"pida-main\", \"language\": \"\", \"utc_last_updated\": \"2012-03-13 20:10:02+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/aafshar/pida-main\"}, \"state\": \"available\", \"utc_created_on\": \"2008-11-25 15:47:44+00:00\", \"website\": \"http://pida.co.uk/\", \"description\": \"all my bugfixeso\", \"has_issues\": false, \"is_fork\": true, \"slug\": \"pida-bugfixing\", \"is_private\": false, \"name\": \"pida-bugfixing\", \"language\": \"\", \"utc_last_updated\": \"2011-09-17 03:11:38+00:00\", \"no_public_forks\": false, \"creator\": null, \"resource_uri\": \"/1.0/repositories/<BITBUCKET_NAMESPACE>/pida-bugfixing\"}, {\"scm\": \"hg\", \"has_wiki\": true, \"last_updated\": \"2011-09-17T05:11:38.481\", \"no_forks\": null, \"created_on\": \"2008-10-09T00:15:57.372\", \"owner\": \"<BITBUCKET_NAMESPACE>\", \"logo\": \"https://bitbucket.org/<BITBUCKET_NAMESPACE>/pida-<BITBUCKET_NAMESPACE>-main/avatar/32/?ts=1316229098\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 2980484, \"read_only\": false, \"fork_of\": {\"scm\": \"hg\", \"has_wiki\": true, \"last_updated\": \"2012-03-13T21:10:02.175\", \"no_forks\": null, \"created_on\": \"2008-09-15T16:30:29.672\", \"owner\": \"aafshar\", \"logo\": \"https://bitbucket.org/aafshar/pida-main/avatar/32/?ts=1331669402\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 6158307, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2008-09-15 14:30:29+00:00\", \"website\": \"\", \"description\": \"The main PIDA branch\", \"has_issues\": true, \"is_fork\": false, \"slug\": \"pida-main\", \"is_private\": false, \"name\": \"pida-main\", \"language\": \"\", \"utc_last_updated\": \"2012-03-13 20:10:02+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/aafshar/pida-main\"}, \"mq_of\": {\"scm\": \"hg\", \"has_wiki\": true, \"last_updated\": \"2012-03-13T21:10:02.175\", \"no_forks\": null, \"created_on\": \"2008-09-15T16:30:29.672\", \"owner\": \"aafshar\", \"logo\": \"https://bitbucket.org/aafshar/pida-main/avatar/32/?ts=1331669402\", \"email_mailinglist\": \"\", \"is_mq\": false, \"size\": 6158307, \"read_only\": false, \"creator\": null, \"state\": \"available\", \"utc_created_on\": \"2008-09-15 14:30:29+00:00\", \"website\": \"\", \"description\": \"The main PIDA branch\", \"has_issues\": true, \"is_fork\": false, \"slug\": \"pida-main\", \"is_private\": false, \"name\": \"pida-main\", \"language\": \"\", \"utc_last_updated\": \"2012-03-13 20:10:02+00:00\", \"email_writers\": false, \"no_public_forks\": false, \"resource_uri\": \"/1.0/repositories/aafshar/pida-main\"}, \"state\": \"available\", \"utc_created_on\": \"2008-10-08 22:15:57+00:00\", \"website\": \"http://pida.co.uk/\", \"description\": \"\", \"has_issues\": true, \"is_fork\": true, \"slug\": \"pida-<BITBUCKET_NAMESPACE>-main\", \"is_private\": false, \"name\": \"pida-<BITBUCKET_NAMESPACE>-main\", \"language\": \"\", \"utc_last_updated\": \"2011-09-17 03:11:38+00:00\", \"no_public_forks\": false, \"creator\": null, \"resource_uri\": \"/1.0/repositories/<BITBUCKET_NAMESPACE>/pida-<BITBUCKET_NAMESPACE>-main\"}], \"user\": {\"username\": \"<BITBUCKET_NAMESPACE>\", \"first_name\": \"Bernard\", \"last_name\": \"\", \"display_name\": \"<BITBUCKET_NAMESPACE>\", \"is_staff\": false, \"avatar\": \"https://bitbucket.org/account/<BITBUCKET_NAMESPACE>/avatar/32/?ts=1459263786\", \"resource_uri\": \"/1.0/users/<BITBUCKET_NAMESPACE>\", \"is_team\": false}}"
+          "string": "{\"username\": \"guyzmo\", \"website\": \"http://i.got.nothing.to/blog\", \"display_name\": \"Guyzmo\", \"account_id\": \"557058:8d7f5a89-3d0f-40ad-ad24-4727a2c1498b\", \"links\": {\"hooks\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo/hooks\"}, \"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo\"}, \"repositories\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo\"}, \"html\": {\"href\": \"https://bitbucket.org/guyzmo/\"}, \"followers\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo/followers\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/guyzmo/avatar/32/\"}, \"following\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo/following\"}, \"snippets\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo\"}}, \"created_on\": \"2008-09-20T15:08:53.695316+00:00\", \"is_staff\": false, \"location\": null, \"type\": \"user\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\"}"
         },
         "headers": {
-          "Accept-Ranges": "bytes",
-          "Cache-Control": "max-age=900",
-          "Connection": "Keep-Alive",
-          "Content-Language": "en",
-          "Content-Length": "9911",
+          "Connection": "keep-alive",
+          "Content-Length": "881",
           "Content-Type": "application/json; charset=utf-8",
-          "Date": "Wed, 30 Mar 2016 21:09:12 GMT",
-          "ETag": "\"cd6fa2bad5e9cf8c641a34f32601edcb\"",
-          "Server": "nginx/1.6.2",
-          "Strict-Transport-Security": "max-age=31536000",
-          "Vary": "Authorization, Accept-Language, Cookie, Accept-Encoding",
+          "Date": "Wed, 03 May 2017 23:17:10 GMT",
+          "ETag": "\"85cedc52671c6a8a18bab9a454a65501\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+          "Vary": "Authorization",
           "X-Accepted-OAuth-Scopes": "account",
-          "X-Cache-Info": "cached",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "SAMEORIGIN",
-          "X-Render-Time": "0.0491111278534",
-          "X-Request-Count": "177",
-          "X-Served-By": "app-106",
-          "X-Static-Version": "810b89b501d4",
-          "X-Version": "810b89b501d4"
+          "X-OAuth-Scopes": "snippet:write, snippet, repository:delete, repository:admin, pullrequest:write, repository, project:write, project, team, account",
+          "X-Render-Time": "0.0430748462677",
+          "X-Request-Count": "340",
+          "X-Served-By": "app-140",
+          "X-Static-Version": "1c299938c525",
+          "X-Version": "1c299938c525"
         },
         "status": {
           "code": 200,
           "message": "OK"
         },
-        "url": "https://bitbucket.org/!api/1.0/users/<BITBUCKET_NAMESPACE>/"
+        "url": "https://api.bitbucket.org/2.0/user"
+      }
+    },
+    {
+      "recorded_at": "2017-05-03T23:17:11",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOlF0WmpzZVFMaGE4NFBMZnRwaGJF",
+          "Connection": "keep-alive",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket_fork/0.12.2 python-requests/2.13.0"
+        },
+        "method": "GET",
+        "uri": "https://api.bitbucket.org/2.0/repositories/guyzmo/git-repo"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"scm\": \"git\", \"website\": \"\", \"has_wiki\": false, \"name\": \"git-repo\", \"links\": {\"watchers\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/git-repo/watchers\"}, \"branches\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/git-repo/refs/branches\"}, \"tags\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/git-repo/refs/tags\"}, \"commits\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/git-repo/commits\"}, \"clone\": [{\"href\": \"https://guyzmo@bitbucket.org/guyzmo/git-repo.git\", \"name\": \"https\"}, {\"href\": \"ssh://git@bitbucket.org/guyzmo/git-repo.git\", \"name\": \"ssh\"}], \"self\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/git-repo\"}, \"html\": {\"href\": \"https://bitbucket.org/guyzmo/git-repo\"}, \"avatar\": {\"href\": \"https://bitbucket.org/guyzmo/git-repo/avatar/32/\"}, \"hooks\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/git-repo/hooks\"}, \"forks\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/git-repo/forks\"}, \"downloads\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/git-repo/downloads\"}, \"pullrequests\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo/git-repo/pullrequests\"}}, \"fork_policy\": \"allow_forks\", \"uuid\": \"{def9ba25-9853-43a5-ae92-bf8ad89b38b7}\", \"language\": \"python\", \"created_on\": \"2016-03-21T19:39:20.064112+00:00\", \"mainbranch\": {\"type\": \"branch\", \"name\": \"master\"}, \"full_name\": \"guyzmo/git-repo\", \"has_issues\": false, \"owner\": {\"username\": \"guyzmo\", \"display_name\": \"Guyzmo\", \"type\": \"user\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo\"}, \"html\": {\"href\": \"https://bitbucket.org/guyzmo/\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/guyzmo/avatar/32/\"}}}, \"updated_on\": \"2017-05-03T22:19:24.460574+00:00\", \"size\": 2521128, \"type\": \"repository\", \"slug\": \"git-repo\", \"is_private\": false, \"description\": \" Tool to manage multiple repository services from the git CLI\"}"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "1983",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Wed, 03 May 2017 23:17:10 GMT",
+          "ETag": "\"12765c6a97df167d657de4f16eae7098\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+          "Vary": "Authorization",
+          "X-Accepted-OAuth-Scopes": "repository",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-OAuth-Scopes": "snippet:write, snippet, repository:delete, repository:admin, pullrequest:write, repository, project:write, project, team, account",
+          "X-Render-Time": "0.0391199588776",
+          "X-Request-Count": "448",
+          "X-Served-By": "app-143",
+          "X-Static-Version": "1c299938c525",
+          "X-Version": "1c299938c525"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.bitbucket.org/2.0/repositories/guyzmo/git-repo"
       }
     }
   ],

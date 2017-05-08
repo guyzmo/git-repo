@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2017-01-21T14:04:15",
+      "recorded_at": "2017-05-03T23:33:35",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -11,7 +11,7 @@
           "Accept": "*/*",
           "Accept-Encoding": "identity",
           "Connection": "keep-alive",
-          "User-Agent": "python-requests/2.12.4"
+          "User-Agent": "python-requests/2.13.0"
         },
         "method": "GET",
         "uri": "<GOGS_URL>/api/v1/user?token=<PRIVATE_KEY_GOGS>"
@@ -19,21 +19,55 @@
       "response": {
         "body": {
           "encoding": "UTF-8",
-          "string": "{\"id\":3,\"login\":\"<GOGS_NAMESPACE>\",\"full_name\":\"\",\"email\":\"guyzmo@gogs.loopback\",\"avatar_url\":\"<GOGS_URL>/avatars/3\",\"username\":\"<GOGS_NAMESPACE>\"}"
+          "string": "{\"id\":10838,\"login\":\"<GOGS_NAMESPACE>\",\"full_name\":\"\",\"email\":\"z+gogs+test@m0g.net\",\"avatar_url\":\"https://secure.gravatar.com/avatar/78b33567fde2dd6b34b94416ae8e2d86\",\"username\":\"<GOGS_NAMESPACE>\"}"
         },
         "headers": {
-          "Content-Length": "152",
+          "Content-Length": "177",
           "Content-Type": "application/json; charset=UTF-8",
-          "Date": "Sat, 21 Jan 2017 14:04:15 GMT",
-          "Proxy-Connection": "keep-alive",
-          "Set-Cookie": "lang=en-US; Path=/; Max-Age=2147483647",
-          "X-Frame-Options": "SAMEORIGIN"
+          "Date": "Wed, 03 May 2017 23:33:35 GMT",
+          "Server": "Caddy",
+          "Set-Cookie": "lang=en-US; Path=/; Max-Age=2147483647"
         },
         "status": {
           "code": 200,
           "message": "OK"
         },
         "url": "<GOGS_URL>/api/v1/user?token=<PRIVATE_KEY_GOGS>"
+      }
+    },
+    {
+      "recorded_at": "2017-05-03T23:33:35",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "Cookie": "_csrf=Tch6ziMFxZ85gTgbPVN_0kK9C4c6MTQ5Mzg1NDQxNDk1MTU5MTIwMw%3D%3D; i_like_gogits=fff1fcf75ad7f845; lang=en-US",
+          "User-Agent": "python-requests/2.13.0"
+        },
+        "method": "GET",
+        "uri": "<GOGS_URL>/api/v1/repos/<GOGS_NAMESPACE>/git-repo?token=<PRIVATE_KEY_GOGS>"
+      },
+      "response": {
+        "body": {
+          "encoding": "UTF-8",
+          "string": "{\"id\":8022,\"owner\":{\"id\":10838,\"login\":\"<GOGS_NAMESPACE>\",\"full_name\":\"\",\"email\":\"z+gogs+test@m0g.net\",\"avatar_url\":\"https://secure.gravatar.com/avatar/78b33567fde2dd6b34b94416ae8e2d86\",\"username\":\"<GOGS_NAMESPACE>\"},\"name\":\"git-repo\",\"full_name\":\"<GOGS_NAMESPACE>/git-repo\",\"description\":\"\",\"private\":false,\"fork\":false,\"mirror\":false,\"html_url\":\"<GOGS_URL>/<GOGS_NAMESPACE>/git-repo\",\"ssh_url\":\"git@try.gogs.io:<GOGS_NAMESPACE>/git-repo.git\",\"clone_url\":\"<GOGS_URL>/<GOGS_NAMESPACE>/git-repo.git\",\"website\":\"\",\"stars_count\":0,\"forks_count\":0,\"watchers_count\":1,\"open_issues_count\":0,\"default_branch\":\"master\",\"created_at\":\"2017-01-22T18:41:19Z\",\"updated_at\":\"2017-01-22T18:41:19Z\",\"permissions\":{\"admin\":true,\"push\":true,\"pull\":true}}"
+        },
+        "headers": {
+          "Content-Length": "694",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Wed, 03 May 2017 23:33:35 GMT",
+          "Server": "Caddy"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "<GOGS_URL>/api/v1/repos/<GOGS_NAMESPACE>/git-repo?token=<PRIVATE_KEY_GOGS>"
       }
     }
   ],

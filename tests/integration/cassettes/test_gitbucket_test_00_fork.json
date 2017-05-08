@@ -1,0 +1,120 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2017-04-30T17:42:17",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITBUCKET>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "http://localhost:8080/api/v3/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"login\":\"<GITBUCKET_NAMESPACE>\",\"email\":\"user@localhost\",\"type\":\"User\",\"site_admin\":false,\"created_at\":\"2017-04-30T17:39:36Z\",\"url\":\"http://localhost:8080/api/v3/users/<GITBUCKET_NAMESPACE>\",\"html_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>\",\"avatar_url\":\"http://localhost:8080/<GITBUCKET_NAMESPACE>/_avatar\"}"
+        },
+        "headers": {
+          "Content-Length": "284",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Sun, 30 Apr 2017 17:42:17 GMT",
+          "Expires": "Thu, 01 Jan 1970 00:00:00 GMT",
+          "Server": "Jetty(9.3.z-SNAPSHOT)",
+          "Set-Cookie": "JSESSIONID=odn4jua2ecnf5isyma6dbo21;Path=/;HttpOnly"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "http://localhost:8080/api/v3/user"
+      }
+    },
+    {
+      "recorded_at": "2017-04-30T17:42:17",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITBUCKET>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "Cookie": "JSESSIONID=odn4jua2ecnf5isyma6dbo21",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "GET",
+        "uri": "http://localhost:8080/api/v3/repos/root/repo"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"name\":\"repo\",\"full_name\":\"root/repo\",\"description\":\"\",\"watchers\":0,\"forks\":0,\"private\":false,\"default_branch\":\"master\",\"owner\":{\"login\":\"root\",\"email\":\"root@localhost\",\"type\":\"User\",\"site_admin\":true,\"created_at\":\"2017-04-30T17:39:28Z\",\"url\":\"http://localhost:8080/api/v3/users/root\",\"html_url\":\"http://localhost:8080/root\",\"avatar_url\":\"http://localhost:8080/root/_avatar\"},\"forks_count\":0,\"watchers_count\":0,\"url\":\"http://localhost:8080/api/v3/repos/root/repo\",\"http_url\":\"http://localhost:8080/git/root/repo.git\",\"clone_url\":\"http://localhost:8080/git/root/repo.git\",\"html_url\":\"http://localhost:8080/root/repo\"}"
+        },
+        "headers": {
+          "Content-Length": "617",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Sun, 30 Apr 2017 17:42:17 GMT",
+          "Server": "Jetty(9.3.z-SNAPSHOT)"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "http://localhost:8080/api/v3/repos/root/repo"
+      }
+    },
+    {
+      "recorded_at": "2017-04-30T17:42:24",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITBUCKET>",
+          "Connection": "keep-alive",
+          "Content-Length": "0",
+          "Content-Type": "application/json",
+          "Cookie": "JSESSIONID=odn4jua2ecnf5isyma6dbo21",
+          "User-Agent": "github3.py/0.9.5"
+        },
+        "method": "POST",
+        "uri": "http://localhost:8080/api/v3/repos/root/repo/forks"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": ""
+        },
+        "headers": {
+          "Content-Length": "0",
+          "Date": "Sun, 30 Apr 2017 17:42:17 GMT",
+          "Server": "Jetty(9.3.z-SNAPSHOT)"
+        },
+        "status": {
+          "code": 404,
+          "message": "Not Found"
+        },
+        "url": "http://localhost:8080/api/v3/repos/root/repo/forks"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

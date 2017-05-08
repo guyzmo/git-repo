@@ -1,0 +1,102 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2016-12-29T00:47:59",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOlF0WmpzZVFMaGE4NFBMZnRwaGJF",
+          "Connection": "keep-alive",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.12.0 python-requests/2.12.4"
+        },
+        "method": "GET",
+        "uri": "https://api.bitbucket.org/2.0/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"username\": \"guyzmo\", \"website\": \"http://i.got.nothing.to/blog\", \"display_name\": \"Guyzmo\", \"uuid\": \"{abf29c83-e77e-4c9a-b5c7-38db801ef79e}\", \"links\": {\"hooks\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo/hooks\"}, \"self\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo\"}, \"repositories\": {\"href\": \"https://api.bitbucket.org/2.0/repositories/guyzmo\"}, \"html\": {\"href\": \"https://bitbucket.org/guyzmo/\"}, \"followers\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo/followers\"}, \"avatar\": {\"href\": \"https://bitbucket.org/account/guyzmo/avatar/32/\"}, \"following\": {\"href\": \"https://api.bitbucket.org/2.0/users/guyzmo/following\"}, \"snippets\": {\"href\": \"https://api.bitbucket.org/2.0/snippets/guyzmo\"}}, \"created_on\": \"2008-09-20T15:08:53.695316+00:00\", \"location\": null, \"type\": \"user\"}"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "801",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Thu, 29 Dec 2016 00:47:59 GMT",
+          "ETag": "\"321b3bdea810843db96c90951905a5e3\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Authorization",
+          "X-Accepted-OAuth-Scopes": "account",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-OAuth-Scopes": "snippet:write, snippet, repository:delete, repository:admin, pullrequest:write, repository, project:write, project, team, account",
+          "X-Render-Time": "0.0356111526489",
+          "X-Request-Count": "583",
+          "X-Served-By": "app-140",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.bitbucket.org/2.0/user"
+      }
+    },
+    {
+      "recorded_at": "2016-12-29T00:47:59",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic Z3V5em1vOlF0WmpzZVFMaGE4NFBMZnRwaGJF",
+          "Connection": "keep-alive",
+          "From": "z+git-repo+pub@m0g.net",
+          "User-Agent": "pybitbucket/0.12.0 python-requests/2.12.4"
+        },
+        "method": "GET",
+        "uri": "https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/pullrequests/42"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"type\": \"error\", \"error\": {\"message\": \"No PullRequest matches the given query.\"}}"
+        },
+        "headers": {
+          "Connection": "keep-alive",
+          "Content-Length": "82",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Thu, 29 Dec 2016 00:47:59 GMT",
+          "ETag": "\"c4601e458b69ec3b0ba0e466c8c8df86\"",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Authorization",
+          "X-Accepted-OAuth-Scopes": "pullrequest",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-OAuth-Scopes": "snippet:write, snippet, repository:delete, repository:admin, pullrequest:write, repository, project:write, project, team, account",
+          "X-Render-Time": "0.0433068275452",
+          "X-Request-Count": "425",
+          "X-Served-By": "app-142",
+          "X-Static-Version": "e72177d765d6",
+          "X-Version": "e72177d765d6"
+        },
+        "status": {
+          "code": 404,
+          "message": "NOT FOUND"
+        },
+        "url": "https://api.bitbucket.org/2.0/repositories/atlassian/python-bitbucket/pullrequests/42"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

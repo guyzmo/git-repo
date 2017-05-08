@@ -1,6 +1,7 @@
 language: python
 # Don't use the Travis Container-Based Infrastructure
-sudo: true
+sudo: required
+dist: trusty
 matrix:
   include:
     - os: linux
@@ -41,7 +42,6 @@ before_install: |
 # command to install dependencies
 install:
     - "pip install --upgrade pip" # upgrade to latest pip (needed on py3.4)
-    - "pip install zc.buildout"
-    - "buildout"
+    - "pip install -r requirements-test.txt"
 # command to run tests
-script: "bin/py.test"
+script: "py.test --cov=git_repo --cov-report term-missing tests"

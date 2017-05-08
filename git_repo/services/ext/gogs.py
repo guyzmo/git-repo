@@ -11,6 +11,7 @@ from gogs_client import GogsApi, GogsRepo, Token, UsernamePassword, ApiFailure
 from requests import Session, HTTPError
 from urllib.parse import urlparse, urlunparse
 from datetime import datetime
+import dateutil.parser
 import functools
 
 from git import config as git_config
@@ -152,21 +153,23 @@ class GogsService(RepositoryService):
             raise ResourceError("Unhandled exception: {}".format(err)) from err
 
     def list(self, user, _long=False):
-        import shutil, sys
-        from datetime import datetime
-        term_width = shutil.get_terminal_size((80, 20)).columns
-
         repositories = self.gg.repositories(user)
         if user != self.username and not repositories and user not in self.orgs:
             raise ResourceNotFoundError("Unable to list namespace {} - only authenticated user and orgs available for listing.".format(user))
         if not _long:
             repositories = list([repo['full_name'] for repo in repositories])
             yield "{}"
-            yield "Total repositories: {}".format(len(repositories))
+            yield ("Total repositories: {}".format(len(repositories)),)
             yield from columnize(repositories)
         else:
+            yield "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{:12}\t{}"
             yield ['Status', 'Commits', 'Reqs', 'Issues', 'Forks', 'Coders', 'Watch', 'Likes', 'Lang', 'Modif\t', 'Name']
             for repo in repositories:
+                repo_updated_at = dateutil.parser.parse(repo['updated_at'])
+                if repo_updated_at.year < datetime.now().year:
+                    date_fmt = "%b %d %Y"
+                else:
+                    date_fmt = "%b %d %H:%M"
                 status = ''.join([
                     'F' if repo['fork'] else ' ',          # is a fork?
                     'P' if repo['private'] else ' ',       # is private?
@@ -188,19 +191,9 @@ class GogsService(RepositoryService):
                     str(repo.get('stars_count') or 0),     # number of ♥
                     # info
                     repo.get('language') or '?',           # language
-                    repo['updated_at'],                    # date
+                    repo_updated_at.strftime(date_fmt),    # date
                     repo['full_name'],                     # name
                 ]
-
-    def get_repository(self, user, repo):
-        try:
-            return self.gg.repository(user, repo)
-        except ApiFailure as err:
-            if err.status_code == 404:
-                raise ResourceNotFoundError("Cannot get: repository {}/{} does not exists.".format(user, repo)) from err
-            raise ResourceError("Unhandled error: {}".format(err)) from err
-        except Exception as err:
-            raise ResourceError("Unhandled exception: {}".format(err)) from err
 
     def gist_list(self, gist=None):
         raise NotImplementedError
@@ -225,3 +218,44 @@ class GogsService(RepositoryService):
 
     def request_fetch(self, user, repo, request, pull=False):
         raise NotImplementedError
+
+    def get_repository(self, user, repo):
+        try:
+            return self.gg.repository(user, repo)
+        except ApiFailure as err:
+            if err.status_code == 404:
+                raise ResourceNotFoundError("Cannot get: repository {}/{} does not exists.".format(user, repo)) from err
+            raise ResourceError("Unhandled error: {}".format(err)) from err
+        except Exception as err:
+            raise ResourceError("Unhandled exception: {}".format(err)) from err
+
+    def get_parent_project_url(self, user, repo, rw=True): #pragma: no cover
+        project = self.get_repository(user, repo)
+        if not project.fork:
+            return None
+        if not hasattr(project, 'parent'):
+            # Not yet in gogs_client
+            # cf https://github.com/unfoldingWord-dev/python-gogs-client/pull/12
+            log.warning('This project has an upstream, but the API does not give information on which.')
+            return None
+        elif project.parent:
+            namespace, project = parent.full_name.split('/')
+            return self.format_path(project, namespace, rw=rw)
+        else:
+            return None
+
+    @staticmethod
+    def get_project_default_branch(project):
+        # not yet in gogs_client
+        # cf https://github.com/unfoldingWord-dev/python-gogs-client/pull/8
+        if hasattr(project, 'default_branch'):
+            return project.default_branch
+        return 'master'
+
+    @staticmethod
+    def is_repository_empty(project):
+        # not yet in gogs_client
+        # cf https://github.com/unfoldingWord-dev/python-gogs-client/pull/9
+        if hasattr(project, 'empty'):
+            return project.empty
+        return False

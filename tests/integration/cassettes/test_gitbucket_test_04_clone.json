@@ -1,0 +1,82 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2017-05-03T22:27:00",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITBUCKET>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.6"
+        },
+        "method": "GET",
+        "uri": "http://localhost:8080/api/v3/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"login\":\"git-repo-user\",\"email\":\"user@localhost\",\"type\":\"User\",\"site_admin\":false,\"created_at\":\"2017-05-03T22:25:55Z\",\"url\":\"http://localhost:8080/api/v3/users/git-repo-user\",\"html_url\":\"http://localhost:8080/git-repo-user\",\"avatar_url\":\"http://localhost:8080/git-repo-user/_avatar\"}"
+        },
+        "headers": {
+          "Content-Length": "284",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Wed, 03 May 2017 22:27:00 GMT",
+          "Expires": "Thu, 01 Jan 1970 00:00:00 GMT",
+          "Server": "Jetty(9.3.z-SNAPSHOT)",
+          "Set-Cookie": "JSESSIONID=1ljvq76b5ckzqc8s941te392h;Path=/;HttpOnly"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "http://localhost:8080/api/v3/user"
+      }
+    },
+    {
+      "recorded_at": "2017-05-03T22:27:00",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITBUCKET>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "Cookie": "JSESSIONID=1ljvq76b5ckzqc8s941te392h",
+          "User-Agent": "github3.py/0.9.6"
+        },
+        "method": "GET",
+        "uri": "http://localhost:8080/api/v3/repos/root/repo"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"name\":\"repo\",\"full_name\":\"root/repo\",\"description\":\"\",\"watchers\":0,\"forks\":0,\"private\":false,\"default_branch\":\"master\",\"owner\":{\"login\":\"root\",\"email\":\"root@localhost\",\"type\":\"User\",\"site_admin\":true,\"created_at\":\"2017-05-03T22:25:27Z\",\"url\":\"http://localhost:8080/api/v3/users/root\",\"html_url\":\"http://localhost:8080/root\",\"avatar_url\":\"http://localhost:8080/root/_avatar\"},\"forks_count\":0,\"watchers_count\":0,\"url\":\"http://localhost:8080/api/v3/repos/root/repo\",\"http_url\":\"http://localhost:8080/git/root/repo.git\",\"clone_url\":\"http://localhost:8080/git/root/repo.git\",\"html_url\":\"http://localhost:8080/root/repo\"}"
+        },
+        "headers": {
+          "Content-Length": "617",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Wed, 03 May 2017 22:27:00 GMT",
+          "Server": "Jetty(9.3.z-SNAPSHOT)"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "http://localhost:8080/api/v3/repos/root/repo"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

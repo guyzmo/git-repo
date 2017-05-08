@@ -66,15 +66,43 @@ class RepositoryService:
             'server-cert'
             ]
 
+    @staticmethod
+    def get_config_path():
+        home_dir = os.path.expanduser('~')
+        try:
+            from xdg.BaseDirectory import xdg_config_home
+        except ImportError:
+            xdg_config_home = os.path.join(home_dir, ".config")
+        for config in [
+                os.path.join(home_dir, '.gitconfig'),
+                os.path.join(xdg_config_home, 'git', 'config'),
+            ]:
+            if os.path.exists(config):
+                return config
+        raise ResourceNotFoundError('User\'s Git configuration file not found!')
+
+    @staticmethod
+    def convert_url_into_slug(url):
+        if url.endswith('.git'):
+            url = url[:-4]
+        # strip http://, https:// and ssh://
+        if '://' in url:
+            *_, user, name = url.split('/')
+            return '/'.join([user, name])
+        # scp-style URL
+        elif '@' in url and ':' in url:
+            return url.split(':')[-1]
+
     @classmethod
-    def get_config_path(cls):
-        home_dir = os.environ['HOME']
-        home_conf = os.path.join(home_dir, '.gitconfig')
-        xdg_conf = os.path.join(home_dir, '.git', 'config')
-        if not os.path.exists(xdg_conf):
-            if os.path.exists(home_conf):
-                return home_conf
-        return xdg_conf
+    def guess_repo_slug(cls, repository, service, resolve_targets=None):
+        if resolve_targets:
+            targets = [target.format(service=service.name) for target in resolve_targets]
+        else:
+            targets = (service.name, 'upstream', 'origin')
+        for remote in repository.remotes:
+            if remote.name in targets:
+                return cls.convert_url_into_slug(remote.url)
+        return None
 
     @classmethod
     def get_config(cls, config):
@@ -167,11 +195,13 @@ class RepositoryService:
                                           c.get('token',
                                                 c.get('private_token',
                                                       c.get('privatekey', None))))
+        self._username = os.environ.get('USERNAME_{}'.format(self.name.upper()),
+                                          c.get('username', None))
         self._alias = c.get('alias', self.name)
 
         self.fqdn = c.get('fqdn', self.fqdn)
         self.scheme = c.get('scheme', 'https')
-        self.port = c.get('port', '443')
+        self.port = c.get('port', None)
 
         self.default_create_private = c.get('default-create-private', 'n').lower() in CONFIG_TRUE
         self.ssh_url = c.get('ssh-url', self.fqdn)
@@ -226,6 +256,17 @@ class RepositoryService:
         url = self.ssh_url
         return url if '@' in url else '@'.join([self.git_user, url])
 
+    def _convert_user_into_remote(self, username, exclude=['all']):
+        # builds a ref with an username and a branch
+        # this method parses the repository's remotes to find the url matching username
+        # and containing the given branch and returns the corresponding ref
+        remotes = {remote.name: list(remote.urls) for remote in self.repository.remotes}
+        for name in (self.name, 'upstream') + tuple(remotes.keys()):
+            if name in remotes and name not in exclude:
+                for url in remotes[name]:
+                    if self.fqdn in url and username == url.split('/')[-2].split(':')[-1]:
+                        yield name
+
     def format_path(self, repository, namespace=None, rw=False):
         '''format the repository's URL
 
@@ -244,7 +285,10 @@ class RepositoryService:
         if not rw and '/' in repo:
             return '{}/{}'.format(self.url_ro, repo)
         elif rw and '/' in repo:
-            return '{}:{}'.format(self.url_rw, repo)
+            if self.url_rw.startswith('ssh://'):
+                return '{}/{}'.format(self.url_rw, repo)
+            else:
+                return '{}:{}'.format(self.url_rw, repo)
         else:
             raise ArgumentError("Cannot tell how to handle this url: `{}/{}`!".format(namespace, repo))
 
@@ -272,7 +316,7 @@ class RepositoryService:
                 update_head_ok=True, force=force, progress=pb)
         print()
 
-    def clone(self, user, repo, branch='master', rw=True):
+    def clone(self, user, repo, branch=None, rw=True):
         '''Clones a new repository
 
         :param user: namespace of the repository
@@ -285,10 +329,24 @@ class RepositoryService:
         '''
         log.info('Cloning {}…'.format(repo))
 
-        remote = self.add(user=user, repo=repo, tracking=True, rw=rw)
-        self.pull(remote, branch)
+        project = self.get_repository(user, repo)
+        if not branch:
+            branch = self.get_project_default_branch(project)
 
-    def add(self, repo, user=None, name=None, tracking=False, alone=False, rw=True):
+        is_empty = self.is_repository_empty(project)
+        if is_empty:
+            self.repository.init()
+        else:
+            url = self.get_parent_project_url(user, repo, rw=rw)
+            if url:
+                parent_user, parent_project = self.convert_url_into_slug(url).split('/')
+                self.add(user=parent_user, repo=parent_project, name='upstream', alone=True)
+
+        remote, *_ = self.add(user=user, repo=repo, tracking=True, rw=rw)
+        if not is_empty:
+            self.pull(remote, branch)
+
+    def add(self, repo, user=None, name=None, tracking=False, alone=False, rw=True, auto_slug=False):
         '''Adding repository as remote
 
         :param repo: Name slug of the repository to add
@@ -304,7 +362,50 @@ class RepositoryService:
         It also creates an *all* remote that contains all the remotes added by
         this tool, to make it possible to push to all remotes at once.
         '''
-        name = name or self.name
+        # git vcs add upstream
+        if repo == 'upstream':
+            try:
+                slug = self.convert_url_into_slug(self.repository.remote(self.name).url)
+                if not slug:
+                    raise ValueError()
+            except ValueError:
+                raise ResourceNotFoundError('No existing remote for {} to find an upstream of'.format(self.name))
+
+            url = self.get_parent_project_url(*slug.split('/'))
+            if not url:
+                raise ResourceNotFoundError('No upstream on {} found for this project.'.format(self.name))
+            slug = self.convert_url_into_slug(url)
+            if not slug:
+                raise ResourceNotFoundError('No upstream on {} found for this project.'.format(self.name))
+            user, repo = slug.split('/')
+            name = 'upstream'
+            alone = True
+            auto_slug = False
+
+        # git vcs add
+        if auto_slug and not name:
+            remote_urls = set()
+            for remote in self.repository.remotes:
+                for url in remote.urls:
+                    if self.fqdn in url:
+                        remote_urls.add(self.convert_url_into_slug(url))
+            remote_urls = list(remote_urls)
+            if len(remote_urls) > 0:
+                raise ResourceNotFoundError('Couldn\'t find a remote to '
+                        '{service}. Please run git add {service} user/project'.format(service=self.name))
+            for idx, url in enumerate(remote_urls, 1):
+                print("[{:d}] {}".format(idx, url))
+            try:
+                remote_url = int(input('Please choose an slug to use as \'{}\' remote: '.format(self.name)))
+            except ValueError:
+                raise ArgumentError('Please enter a valid integer value.')
+            if remote_url < 1 or remote_url > idx:
+                raise ArgumentError('Please enter one of the suggested choices.')
+            user, repo = remote_urls[remote_url-1].split('/')
+            name = self.name
+
+        if not name:
+            name = self.name
 
         if not user:
             if '/' in repo:
@@ -341,9 +442,10 @@ class RepositoryService:
                     # set that branch as tracking
                     branch.set_tracking_branch(remote.refs[0])
                     break
-            return remote
         else:
-            return self.repository.create_remote(name, self.format_path(repo, user, rw=rw))
+            remote = self.repository.create_remote(name, self.format_path(repo, user, rw=rw))
+
+        return remote, user, repo
 
 
     def run_fork(self, user, repo, branch):
@@ -479,9 +581,20 @@ class RepositoryService:
         raise NotImplementedError
 
     @property
+    def get_parent_project_url(self, user, repo, rw=True): #pragma: no cover
+        raise NotImplementedError
+
+    @property
     def user(self): #pragma: no cover
         raise NotImplementedError
 
+    @staticmethod
+    def is_repository_empty(project):
+        raise NotImplementedError
+
+    @staticmethod
+    def get_project_default_branch(project):
+        raise NotImplementedError
 
 '''
 register all services by importing their modules, from the ext pagckage

@@ -57,7 +57,7 @@
           "User-Agent": "python-requests/2.10.0"
         },
         "method": "GET",
-        "uri": "https://gitlab.com/api/v3/projects/guyzmo%2Fdoes_not_exists"
+        "uri": "https://gitlab.com/api/v3/projects/<GITLAB_NAMESPACE>%2Fdoes_not_exists"
       },
       "response": {
         "body": {

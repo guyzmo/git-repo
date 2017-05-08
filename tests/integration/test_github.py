@@ -6,6 +6,8 @@ import logging
 
 import pytest
 
+from unittest.mock import mock_open, patch
+
 #################################################################################
 # Enable logging
 
@@ -67,8 +69,8 @@ class Test_Github(GitRepoTestCase):
         self.action_delete(repository='github3.py')
 
     def test_04_clone(self):
-        self.action_clone(namespace='guyzmo',
-                          repository='git-repo')
+        self.action_clone(namespace='git-services',
+                          repository='github-testing')
 
     def test_05_add(self):
         self.action_add(namespace='guyzmo',
@@ -113,6 +115,30 @@ class Test_Github(GitRepoTestCase):
                         alone=True,
                         name='test0r',
                         tracking='github')
+
+    def test_12_add__upstream(self):
+        self.action_add(namespace=None,
+                        repository='upstream',
+                        alone=True,
+                        tracking=False,
+                        auto_slug=True,
+                        remotes={'github': 'https://github.com/guyzmo/github-testing'})
+
+    @pytest.mark.skip
+    def test_12_add__guess(self):
+        mock_open(read_data='1\n')
+        with patch('sys.stdin', mock_open):
+            self.action_add(namespace=self.local_namespace,
+                            repository='git-repo',
+                            alone=True,
+                            tracking='github',
+                            auto_slug=True,
+                            remotes={
+                                'origin': 'https://github.com/foo/bar',
+                                'wootwoot': 'git@github.com:w00t/w00t',
+                                'duckling': 'ssh://github.com/duck/duck',
+                            }
+            )
 
     def test_13_gist_list(self):
         g_list = [
@@ -293,16 +319,18 @@ class Test_Github(GitRepoTestCase):
         ])
 
     def test_31_request_fetch(self):
-        self.action_request_fetch(namespace='guyzmo',
-                repository='git-repo',
+        self.action_request_fetch(
+                namespace='git-services',
+                repository='github-testing',
                 request='2',
                 remote_branch='pull',
                 local_branch='requests/github')
 
     def test_31_request_fetch__bad_request(self):
         with pytest.raises(ResourceNotFoundError):
-            self.action_request_fetch(namespace='guyzmo',
-                repository='git-repo',
+            self.action_request_fetch(
+                namespace='git-services',
+                repository='github-testing',
                 request='1',
                 remote_branch='pull',
                 local_branch='requests/github',
@@ -311,14 +339,15 @@ class Test_Github(GitRepoTestCase):
     def test_32_request_create(self):
         r = self.action_request_create(namespace=self.namespace,
                 repository='test_create_requests',
-                branch='pr-test',
+                source_branch='pr-test',
+                target_branch='master',
                 title='PR test',
-                description='PR description',
-                service='github')
+                description='PR description')
         assert r == {
                 'local': 'pr-test',
                 'ref': 1,
-                'remote': 'PR test',
+                'remote': 'master',
+                'project': '{}/test_create_requests'.format(self.namespace),
                 'url': 'https://github.com/{}/test_create_requests/pull/1'.format(self.namespace),
                 }
 
@@ -326,27 +355,27 @@ class Test_Github(GitRepoTestCase):
         with pytest.raises(ResourceError):
             self.action_request_create(namespace=self.namespace,
                     repository='test_create_requests',
-                    branch='does_not_exists',
+                    source_branch='does_not_exists',
+                    target_branch='master',
                     title='PR test',
-                    description='PR description',
-                    service='github')
+                    description='PR description')
 
     def test_32_request_create__bad_repo(self):
         with pytest.raises(ResourceNotFoundError):
             r = self.action_request_create(namespace=self.namespace,
                     repository='does_not_exists',
-                    branch='pr-test',
+                    source_branch='pr-test',
+                    target_branch='master',
                     title='PR test',
-                    description='PR description',
-                    service='github')
+                    description='PR description')
 
     def test_32_request_create__guess_branch(self):
         r = self.action_request_create(namespace=self.namespace,
                 repository='test_create_requests',
-                branch=None,
+                source_branch=None,
+                target_branch=None,
                 title='PR test',
-                description='PR description',
-                service='github')
+                description='PR description')
 
     def test_33_open(self):
         self.action_open(namespace='guyzmo',
@@ -354,12 +383,12 @@ class Test_Github(GitRepoTestCase):
 
     def test_34_list__short(self, caplog):
         projects = self.action_list(namespace='git-repo-test')
-        assert projects == ['{}', 'Total repositories: 1', ['git-repo-test/git-repo']]
+        assert projects == ['{}', ('Total repositories: 1',), ['git-repo-test/git-repo']]
         assert 'GET https://api.github.com/users/git-repo-test/repos' in caplog.text
 
     def test_34_list__long(self, caplog):
         projects = self.action_list(namespace='git-repo-test', _long=True)
-        assert projects == ['{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t\t{}',
+        assert projects == ['{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{:12}\t{}',
                 ['Status', 'Commits', 'Reqs', 'Issues', 'Forks', 'Coders', 'Watch', 'Likes', 'Lang', 'Modif', 'Name'],
                 ['F ', '92', '0', '0', '0', '1', '0', '0', 'Python', 'Mar 30 2016', 'git-repo-test/git-repo']]
         assert 'GET https://api.github.com/users/git-repo-test/repos' in caplog.text

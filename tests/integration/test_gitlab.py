@@ -20,6 +20,7 @@ from git_repo.exceptions import ResourceExistsError, ResourceNotFoundError, Reso
 
 class Test_Gitlab(GitRepoTestCase):
     log = log
+    namespace = os.environ['GITLAB_NAMESPACE']
 
     @property
     def local_namespace(self):
@@ -238,15 +239,15 @@ class Test_Gitlab(GitRepoTestCase):
         ])
 
     def test_19_request_fetch(self):
-        self.action_request_fetch(namespace='guyzmo',
+        self.action_request_fetch(namespace=self.local_namespace,
                 repository='git-repo',
                 request='4',
-                remote_branch='merge_requests',
+                remote_branch='merge-requests',
                 local_branch='requests/gitlab')
 
     def test_19_request_fetch__bad_request(self):
         with pytest.raises(ResourceNotFoundError):
-            self.action_request_fetch(namespace='git-repo-test',
+            self.action_request_fetch(namespace=self.local_namespace,
                 repository='git-repo',
                 request='42',
                 remote_branch='merge_requests',
@@ -254,43 +255,47 @@ class Test_Gitlab(GitRepoTestCase):
                 fail=True)
 
     def test_20_request_create(self):
-        r = self.action_request_create(namespace='guyzmo',
+        r = self.action_request_create(namespace=self.local_namespace,
                 repository='test_create_requests',
-                branch='pr-test',
+                source_branch='pr-test',
+                target_branch='master',
                 title='PR test',
-                description='PR description',
-                service='gitlab')
-        assert r == {'local': 'pr-test', 'ref': 1, 'remote': 'PR test'}
+                description='PR description')
+        assert r == {
+            'local': 'pr-test',
+            'project': '{}/test_create_requests'.format(self.local_namespace),
+            'ref': 1,
+            'remote': 'master',
+            'url': 'https://gitlab.com/{}/test_create_requests/merge_requests/1'.format(self.local_namespace)
+        }
 
-    # TODO lookup why this is not raising the expected error !
-    # def test_20_request_create__bad_branch(self):
-    #     with pytest.raises(ResourceError):
-    #         self.action_request_create(namespace='guyzmo',
-    #                 repository='test_create_requests',
-    #                 branch='this_is_not_a_branch',
-    #                 title='PR test',
-    #                 description='PR description',
-    #                 service='gitlab')
+    def test_20_request_create__bad_branch(self):
+        with pytest.raises(ResourceNotFoundError):
+            self.action_request_create(namespace=self.local_namespace,
+                    repository='test_create_requests',
+                    source_branch='this_is_not_a_branch',
+                    title='PR test',
+                    description='PR description')
 
     def test_20_request_create__bad_repo(self):
         with pytest.raises(ResourceNotFoundError):
-            r = self.action_request_create(namespace='guyzmo',
+            r = self.action_request_create(namespace=self.local_namespace,
                     repository='does_not_exists',
-                    branch='pr-test',
+                    source_branch='pr-test',
+                    target_branch='master',
                     title='PR test',
-                    description='PR description',
-                    service='gitlab')
+                    description='PR description')
 
     def test_20_request_create__blank_branch(self):
         with pytest.raises(ResourceError):
-            r = self.action_request_create(namespace='guyzmo',
+            r = self.action_request_create(namespace=self.local_namespace,
                     repository='test_create_requests',
-                    branch=None,
+                    source_branch=None,
+                    target_branch=None,
                     title='PR test',
-                    description='PR description',
-                    service='gitlab')
+                    description='PR description')
 
     def test_31_open(self):
-        self.action_open(namespace='guyzmo',
+        self.action_open(namespace=self.local_namespace,
                          repository='git-repo')
 
