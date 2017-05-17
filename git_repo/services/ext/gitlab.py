@@ -257,7 +257,7 @@ class GitlabService(RepositoryService):
             if not onto_project:
                 raise ResourceNotFoundError('Could not find project `{}/{}`!'.format(onto_user, onto_repo))
 
-            from_reposlug = self.guess_repo_slug(self.repository, self)
+            from_reposlug = self.guess_repo_slug(self.repository, self, resolve_targets=['{service}'])
             if from_reposlug:
                 from_user, from_repo = from_reposlug.split('/')
                 if (onto_user, onto_repo) == (from_user, from_repo):
@@ -287,7 +287,7 @@ class GitlabService(RepositoryService):
             if not onto_branch:
                 onto_branch = self.get_project_default_branch(onto_project)
 
-            onto_target = '{}/{}:{}'.format(onto_user, onto_project.name, onto_branch)
+            onto_target = '{}:{}'.format(onto_user, onto_project.path_with_namespace, onto_branch)
 
             # translate from gitlab username to git remote name
             if not title and not description and edit:

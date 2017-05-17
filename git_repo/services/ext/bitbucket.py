@@ -238,7 +238,7 @@ class BitbucketService(RepositoryService):
         try:
             onto_project = self.get_repository(onto_user, onto_repo)
 
-            from_reposlug = self.guess_repo_slug(self.repository, self)
+            from_reposlug = self.guess_repo_slug(self.repository, self, resolve_targets=['{service}'])
             if from_reposlug:
                 from_user, from_repo = from_reposlug.split('/')
                 if (onto_user, onto_repo) == (from_user, from_repo):
