@@ -238,7 +238,7 @@ class BitbucketService(RepositoryService):
         try:
             onto_project = self.get_repository(onto_user, onto_repo)
 
-            from_reposlug = self.guess_repo_slug(self.repository, self)
+            from_reposlug = self.guess_repo_slug(self.repository, self, resolve_targets=['{service}'])
             if from_reposlug:
                 from_user, from_repo = from_reposlug.split('/')
                 if (onto_user, onto_repo) == (from_user, from_repo):
@@ -456,7 +456,7 @@ class BitbucketService(RepositoryService):
 
         password = json.loads(tree.xpath('//section/@data-app-password')[0])['password']
 
-        return password, username
+        return password
 
     def get_parent_project_url(self, user, project, rw=True):
         project = self.get_repository(user, project)
