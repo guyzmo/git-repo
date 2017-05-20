@@ -456,7 +456,7 @@ class BitbucketService(RepositoryService):
 
         password = json.loads(tree.xpath('//section/@data-app-password')[0])['password']
 
-        return password, username
+        return password
 
     def get_parent_project_url(self, user, project, rw=True):
         project = self.get_repository(user, project)
