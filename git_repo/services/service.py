@@ -5,6 +5,7 @@ log = logging.getLogger('git_repo.base')
 
 import os
 import sys
+import webbrowser
 
 from git import RemoteProgress, config as git_config
 from progress.bar import IncrementalBar as Bar
@@ -18,13 +19,6 @@ from ..exceptions import (
         ResourceNotFoundError,
         ResourceExistsError
 )
-
-'''select open command'''
-
-if 'darwin' in sys.platform: #pragma: no cover
-    OPEN_COMMAND = 'open'
-else: #pragma: no cover
-    OPEN_COMMAND = 'xdg-open'
 
 
 class ProgressBar(RemoteProgress): # pragma: no cover
@@ -476,7 +470,7 @@ class RepositoryService:
 
     def open(self, user=None, repo=None):
         '''Open the URL of a repository in the user's browser'''
-        call([OPEN_COMMAND, self.format_path(repo, namespace=user, rw=False)])
+        webbrowser.open(self.format_path(repo, namespace=user, rw=False))
 
     def connect(self): #pragma: no cover
         '''Brings up the connection to the remote service's API
