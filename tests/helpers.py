@@ -851,6 +851,8 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
     def action_open(self, namespace, repository):
         self.set_mock_popen_commands([
             ('xdg-open {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),
+            ('gnome-open {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),
+            ('www-browser {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),
             ('open {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),
         ])
         with Replace('subprocess.Popen', self.Popen):
