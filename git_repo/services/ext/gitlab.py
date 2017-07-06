@@ -22,7 +22,7 @@ class GitlabService(RepositoryService):
     fqdn = 'gitlab.com'
 
     def __init__(self, *args, **kwarg):
-        self.gl = gitlab.Gitlab(self.url_ro)
+        self.gl = gitlab.Gitlab(self.url_ro, private_token=self._privatekey)
         super().__init__(*args, **kwarg)
 
     def connect(self):
@@ -31,8 +31,7 @@ class GitlabService(RepositoryService):
             self.gl.session.proxies.update(self.session_proxy)
 
         self.gl.set_url(self.url_ro)
-        self.gl.set_token(self._privatekey)
-        self.gl.token_auth()
+        self.gl.auth()
         self.username = self.gl.user.username
 
     def create(self, user, repo, add=False):
