@@ -80,7 +80,7 @@ class GitlabService(RepositoryService):
         if not self.gl.users.search(user):
             raise ResourceNotFoundError("User {} does not exists.".format(user))
 
-        repositories = self.gl.projects.list(author=user)
+        repositories = self.gl.projects.list(author=user, safe_all=True)
         if not _long:
             repositories = list([repo.path_with_namespace for repo in repositories])
             yield "{}"
@@ -105,11 +105,11 @@ class GitlabService(RepositoryService):
                                                                # status
                     status,
                                                                # stats
-                    str(len(list(repo.commits.list()))),       # number of commits
-                    str(len(list(repo.mergerequests.list()))), # number of pulls
-                    str(len(list(repo.issues.list()))),        # number of issues
+                    str(len(repo.commits.list(all=True))),       # number of commits
+                    str(len(repo.mergerequests.list(all=True))), # number of pulls
+                    str(len(repo.issues.list(all=True))),        # number of issues
                     str(repo.forks_count),                     # number of forks
-                    str(len(list(repo.members.list()))),       # number of contributors
+                    str(len(repo.members.list(all=True))),       # number of contributors
                     'N.A.',                                    # number of subscribers
                     str(repo.star_count),                      # number of ♥
                                                                # info
