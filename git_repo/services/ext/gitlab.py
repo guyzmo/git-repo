@@ -22,17 +22,21 @@ class GitlabService(RepositoryService):
     fqdn = 'gitlab.com'
 
     def __init__(self, *args, **kwarg):
-        self.gl = gitlab.Gitlab(self.url_ro)
+        self.session = gitlab.requests.Session()
         super().__init__(*args, **kwarg)
 
     def connect(self):
-        self.gl.ssl_verify = self.session_certificate or not self.session_insecure
         if self.session_proxy:
             self.gl.session.proxies.update(self.session_proxy)
 
-        self.gl.set_url(self.url_ro)
-        self.gl.set_token(self._privatekey)
-        self.gl.token_auth()
+        self.gl = gitlab.Gitlab(self.url_ro,
+                session=self.session,
+                private_token=self._privatekey
+        )
+
+        self.gl.ssl_verify = self.session_certificate or not self.session_insecure
+
+        self.gl.auth()
         self.username = self.gl.user.username
 
     def create(self, user, repo, add=False):
