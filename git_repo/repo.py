@@ -215,10 +215,9 @@ class GitRepoRunner(KeywordArgumentParser):
             self.repo_name = None
         elif '/' in self.repo_slug:
             # in case a full URL is given as parameter, just extract the slug part.
-            self.user_name, self.repo_name, *overflow = self.repo_slug.split('/')
-            if len(overflow) != 0:
-                raise ArgumentError('Too many slashes.'
-                                    'Format of the parameter is <user>/<repo> or <repo>.')
+            #self.user_name, self.repo_name, *overflow = self.repo_slug.split('/')
+            *namespaces, self.repo_name = self.repo_slug.split('/')
+            self.user_name = '/'.join(namespaces)
         else:
             self.user_name = None
             self.repo_name = self.repo_slug

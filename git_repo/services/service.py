@@ -20,6 +20,16 @@ from ..exceptions import (
         ResourceExistsError
 )
 
+import re
+
+EXTRACT_URL_RE = re.compile('[^:]*(://|@)[^/]*/')
+
+'''select open command'''
+
+if 'darwin' in sys.platform: #pragma: no cover
+    OPEN_COMMAND = 'open'
+else: #pragma: no cover
+    OPEN_COMMAND = 'xdg-open'
 
 class ProgressBar(RemoteProgress): # pragma: no cover
     '''Nice looking progress bar for long running commands'''
@@ -81,8 +91,9 @@ class RepositoryService:
             url = url[:-4]
         # strip http://, https:// and ssh://
         if '://' in url:
-            *_, user, name = url.split('/')
-            return '/'.join([user, name])
+            # *_, user, name = url.split('/')
+            repo_path = EXTRACT_URL_RE.sub('', url)
+            return repo_path
         # scp-style URL
         elif '@' in url and ':' in url:
             return url.split(':')[-1]
