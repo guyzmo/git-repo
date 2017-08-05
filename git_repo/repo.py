@@ -136,18 +136,13 @@ if sys.version_info.major < 3: # pragma: no cover
     sys.exit(1)
 
 from .exceptions import ArgumentError, ResourceNotFoundError
-from .services.service import RepositoryService
+from .services.service import RepositoryService, EXTRACT_URL_RE
 
 from .tools import print_tty, print_iter, loop_input, confirm
 from .kwargparse import KeywordArgumentParser, store_parameter, register_action
 
 from git import Repo, Git
 from git.exc import InvalidGitRepositoryError, NoSuchPathError, BadName
-
-import re
-
-EXTRACT_URL_RE = re.compile('[^:]*(://|@)[^/]*/')
-
 
 class GitRepoRunner(KeywordArgumentParser):
 

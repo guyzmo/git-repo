@@ -19,14 +19,16 @@ from ..exceptions import (
         ResourceExistsError
 )
 
-from ..repo import EXTRACT_URL_RE
-
 '''select open command'''
 
 if 'darwin' in sys.platform: #pragma: no cover
     OPEN_COMMAND = 'open'
 else: #pragma: no cover
     OPEN_COMMAND = 'xdg-open'
+
+import re
+
+EXTRACT_URL_RE = re.compile('[^:]*(://|@)[^/]*/')
 
 
 class ProgressBar(RemoteProgress): # pragma: no cover
