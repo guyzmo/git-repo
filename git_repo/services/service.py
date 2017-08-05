@@ -19,9 +19,7 @@ from ..exceptions import (
         ResourceExistsError
 )
 
-import re
-
-EXTRACT_URL_RE = re.compile('[^:]*(://|@)[^/]*/')
+from ..repo import EXTRACT_URL_RE
 
 '''select open command'''
 
