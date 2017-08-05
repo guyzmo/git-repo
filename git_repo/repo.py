@@ -211,15 +211,15 @@ class GitRepoRunner(KeywordArgumentParser):
         self.repo_slug = EXTRACT_URL_RE.sub('', repo_slug) if repo_slug else repo_slug
         self._auto_slug = auto
         if not self.repo_slug:
-            self.user_name = None
+            self.namespace = None
             self.repo_name = None
         elif '/' in self.repo_slug:
             # in case a full URL is given as parameter, just extract the slug part.
-            #self.user_name, self.repo_name, *overflow = self.repo_slug.split('/')
-            *namespaces, self.repo_name = self.repo_slug.split('/')
-            self.user_name = '/'.join(namespaces)
+            #self.namespace, self.repo_name, *overflow = self.repo_slug.split('/')
+            *namespace, self.repo_name = self.repo_slug.split('/')
+            self.namespace = '/'.join(namespace)
         else:
-            self.user_name = None
+            self.namespace = None
             self.repo_name = self.repo_slug
 
     @store_parameter('<branch>')
@@ -258,7 +258,7 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('add')
     def do_remote_add(self):
         service = self.get_service()
-        remote, user, repo = service.add(self.repo_name, self.user_name,
+        remote, user, repo = service.add(self.repo_name, self.namespace,
                     name=self.remote_name,
                     tracking=self.tracking,
                     alone=self.alone,
@@ -282,7 +282,7 @@ class GitRepoRunner(KeywordArgumentParser):
         else:
             # git <target> fork <user>/<repo>
             if not self.target_repo:
-                if not self.user_name:
+                if not self.namespace:
                     raise ArgumentError('Cannot clone repository, '
                                         'you shall provide either a <user>/<repo> parameter '
                                         'or no parameters to fork current repository!')
@@ -298,7 +298,7 @@ class GitRepoRunner(KeywordArgumentParser):
                     # if the repository does not exists at given path, clone upstream into that path
                     self.do_clone(service, repo_path)
 
-        service.run_fork(self.user_name, self.repo_name, branch=self.branch)
+        service.run_fork(self.namespace, self.repo_name, branch=self.branch)
 
         if not self.repo_slug or self.target_repo:
             log.info('Successfully forked {} as {} within {}.'.format(
@@ -317,7 +317,7 @@ class GitRepoRunner(KeywordArgumentParser):
         try:
             repository = Repo.init(repo_path)
             service = RepositoryService.get_service(repository, self.target)
-            service.clone(self.user_name, self.repo_name, self.branch)
+            service.clone(self.namespace, self.repo_name, self.branch)
             log.info('Successfully cloned `{}` into `{}`!'.format(
                 service.format_path(self.repo_slug),
                 repo_path)
@@ -332,15 +332,15 @@ class GitRepoRunner(KeywordArgumentParser):
     def do_create(self):
         service = self.get_service(lookup_repository=self.repo_slug == None or self.add)
         # if no repo_slug has been given, use the directory name as current project name
-        if not self.user_name and not self.repo_name:
+        if not self.namespace and not self.repo_name:
             self.set_repo_slug('/'.join([service.user,
                 os.path.basename(os.path.abspath(self.path))]))
-        if not self.user_name:
-            self.user_name = service.user
-        service.create(self.user_name, self.repo_name, add=self.add)
+        if not self.namespace:
+            self.namespace = service.user
+        service.create(self.namespace, self.repo_name, add=self.add)
         log.info('Successfully created remote repository `{}`, '
                  'with local remote `{}`'.format(
-            service.format_path(self.repo_name, namespace=self.user_name),
+            service.format_path(self.repo_name, namespace=self.namespace),
             service.name)
         )
         return 0
@@ -352,8 +352,8 @@ class GitRepoRunner(KeywordArgumentParser):
             if not confirm('repository', self.repo_slug):
                 return 0
 
-        if self.user_name:
-            service.delete(self.repo_name, self.user_name)
+        if self.namespace:
+            service.delete(self.repo_name, self.namespace)
         else:
             service.delete(self.repo_name)
         log.info('Successfully deleted remote `{}` from {}'.format(
@@ -365,7 +365,7 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('open')
     def do_open(self):
-        self.get_service(lookup_repository=self.repo_slug is None).open(self.user_name, self.repo_name)
+        self.get_service(lookup_repository=self.repo_slug is None).open(self.namespace, self.repo_name)
         return 0
 
     @register_action('request', 'ls')
@@ -373,7 +373,7 @@ class GitRepoRunner(KeywordArgumentParser):
     def do_request_list(self):
         service = self.get_service(lookup_repository=self.repo_slug == None)
         print_tty('List of open requests to merge:')
-        print_iter(service.request_list(self.user_name, self.repo_name))
+        print_iter(service.request_list(self.namespace, self.repo_name))
         return 0
 
     @register_action('request', 'create')
@@ -426,7 +426,7 @@ class GitRepoRunner(KeywordArgumentParser):
 
         service = self.get_service(resolve_targets=('upstream', '{service}', 'origin'))
 
-        new_request = service.request_create(self.user_name,
+        new_request = service.request_create(self.namespace,
                 self.repo_name,
                 self.local_branch,
                 self.remote_branch,
@@ -442,7 +442,7 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('request', 'fetch')
     def do_request_fetch(self):
         service = self.get_service()
-        new_branch = service.request_fetch(self.user_name, self.repo_name, self.request, force=self.force)
+        new_branch = service.request_fetch(self.namespace, self.repo_name, self.request, force=self.force)
         log.info('Successfully fetched request id `{}` of `{}` into `{}`!'.format(
             self.request,
             self.repo_slug,
