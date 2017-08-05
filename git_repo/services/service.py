@@ -3,6 +3,7 @@
 import logging
 log = logging.getLogger('git_repo.base')
 
+import re
 import os
 import sys
 import webbrowser
@@ -20,14 +21,14 @@ from ..exceptions import (
         ResourceExistsError
 )
 
-from ..repo import EXTRACT_URL_RE
-
 '''select open command'''
 
 if 'darwin' in sys.platform: #pragma: no cover
     OPEN_COMMAND = 'open'
 else: #pragma: no cover
     OPEN_COMMAND = 'xdg-open'
+
+EXTRACT_URL_RE = re.compile('[^:]*(://|@)[^/]*/')
 
 class ProgressBar(RemoteProgress): # pragma: no cover
     '''Nice looking progress bar for long running commands'''
