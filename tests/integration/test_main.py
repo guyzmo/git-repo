@@ -117,9 +117,9 @@ class Test_Main(GitRepoMainTestCase):
         repo_slug_branch, seen_args = self.main_clone('git@service.com/guyzmo/git-repo', 0)
         assert ('guyzmo', 'git-repo', 'master') == repo_slug_branch
 
-    def test_clone__too_many_slashes(self):
-        did_clone = self.main_clone('guyzmo/git/repo', 2)
-        assert None is did_clone
+    # def test_clone__too_many_slashes(self):
+    #     did_clone = self.main_clone('guyzmo/git/repo', 2)
+    #     assert None is did_clone
 
     def test_create(self):
         repo_slug, seen_args = self.main_create('guyzmo/git-repo', 0)

@@ -1,0 +1,115 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2017-08-06T19:04:46",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.6"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/user"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"login\":\"AmandaCameron\",\"id\":114638,\"avatar_url\":\"https://avatars1.githubusercontent.com/u/114638?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/AmandaCameron\",\"html_url\":\"https://github.com/AmandaCameron\",\"followers_url\":\"https://api.github.com/users/AmandaCameron/followers\",\"following_url\":\"https://api.github.com/users/AmandaCameron/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/AmandaCameron/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/AmandaCameron/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/AmandaCameron/subscriptions\",\"organizations_url\":\"https://api.github.com/users/AmandaCameron/orgs\",\"repos_url\":\"https://api.github.com/users/AmandaCameron/repos\",\"events_url\":\"https://api.github.com/users/AmandaCameron/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/AmandaCameron/received_events\",\"type\":\"User\",\"site_admin\":false,\"name\":\"Amanda Cameron\",\"company\":null,\"blog\":\"http://amanda.darkdna.net\",\"location\":null,\"email\":null,\"hireable\":null,\"bio\":null,\"public_repos\":43,\"public_gists\":19,\"followers\":15,\"following\":0,\"created_at\":\"2009-08-12T16:15:59Z\",\"updated_at\":\"2017-07-20T03:24:22Z\"}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Cache-Control": "private, max-age=60, s-maxage=60",
+          "Content-Length": "1198",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sun, 06 Aug 2017 19:03:56 GMT",
+          "ETag": "\"7ae175c9ad28b1045b3179886c2040ac\"",
+          "Last-Modified": "Thu, 20 Jul 2017 03:24:22 GMT",
+          "Server": "GitHub.com",
+          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+          "X-Accepted-OAuth-Scopes": "",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "ACED:5584:2294A6C:5270EDC:5987681C",
+          "X-OAuth-Scopes": "repo, delete_repo, gist",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4999",
+          "X-RateLimit-Reset": "1502049836",
+          "X-Runtime-rack": "0.040436",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://api.github.com/user"
+      }
+    },
+    {
+      "recorded_at": "2017-08-06T19:04:46",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/vnd.github.v3.full+json",
+          "Accept-Charset": "utf-8",
+          "Accept-Encoding": "identity",
+          "Authorization": "token <PRIVATE_KEY_GITHUB>",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "github3.py/0.9.6"
+        },
+        "method": "GET",
+        "uri": "https://api.github.com/repos/git-services/foo-bar/github-testing"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"message\":\"Not Found\",\"documentation_url\":\"https://developer.github.com/v3\"}"
+        },
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Expose-Headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+          "Content-Length": "77",
+          "Content-Security-Policy": "default-src 'none'",
+          "Content-Type": "application/json; charset=utf-8",
+          "Date": "Sun, 06 Aug 2017 19:03:56 GMT",
+          "Server": "GitHub.com",
+          "Status": "404 Not Found",
+          "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+          "X-Accepted-OAuth-Scopes": "repo",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "deny",
+          "X-GitHub-Media-Type": "github.v3; param=full; format=json",
+          "X-GitHub-Request-Id": "ACED:5584:2294A78:5270EF8:5987681C",
+          "X-OAuth-Scopes": "repo, delete_repo, gist",
+          "X-RateLimit-Limit": "5000",
+          "X-RateLimit-Remaining": "4998",
+          "X-RateLimit-Reset": "1502049836",
+          "X-Runtime-rack": "0.019213",
+          "X-XSS-Protection": "1; mode=block"
+        },
+        "status": {
+          "code": 404,
+          "message": "Not Found"
+        },
+        "url": "https://api.github.com/repos/git-services/foo-bar/github-testing"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}
