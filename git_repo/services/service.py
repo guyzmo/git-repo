@@ -69,6 +69,8 @@ class RepositoryService:
             'server-cert'
             ]
 
+    _supports_nested_namespaces = False
+
     @staticmethod
     def get_config_path():
         home_dir = os.path.expanduser('~')
@@ -90,7 +92,6 @@ class RepositoryService:
             url = url[:-4]
         # strip http://, https:// and ssh://
         if '://' in url:
-            # *_, user, name = url.split('/')
             repo_path = EXTRACT_URL_RE.sub('', url)
             return repo_path
         # scp-style URL

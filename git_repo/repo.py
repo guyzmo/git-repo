@@ -7,24 +7,24 @@ Usage:
     {self} [--path=<path>] [-v...] <target> delete [-f]
     {self} [--path=<path>] [-v...] <target> open
     {self} [--path=<path>] [-v...] <target> (list|ls) [-l] <user>
-    {self} [--path=<path>] [-v...] <target> fork <user>/<repo> [--branch=<branch>]
-    {self} [--path=<path>] [-v...] <target> fork <user>/<repo> <repo> [--branch=<branch>]
-    {self} [--path=<path>] [-v...] <target> create <user>/<repo> [--add]
-    {self} [--path=<path>] [-v...] <target> delete <user>/<repo> [-f]
-    {self} [--path=<path>] [-v...] <target> open <user>/<repo>
-    {self} [--path=<path>] [-v...] <target> clone <user>/<repo> [<repo> [<branch>]]
+    {self} [--path=<path>] [-v...] <target> fork <namespace>/<repo> [--branch=<branch>]
+    {self} [--path=<path>] [-v...] <target> fork <namespace>/<repo> <repo> [--branch=<branch>]
+    {self} [--path=<path>] [-v...] <target> create <namespace>/<repo> [--add]
+    {self} [--path=<path>] [-v...] <target> delete <namespace>/<repo> [-f]
+    {self} [--path=<path>] [-v...] <target> open <namespace>/<repo>
+    {self} [--path=<path>] [-v...] <target> clone <namespace>/<repo> [<repo> [<branch>]]
     {self} [--path=<path>] [-v...] <target> add
-    {self} [--path=<path>] [-v...] <target> add <user>/<repo> [<name>] [--tracking=<branch>] [-a]
+    {self} [--path=<path>] [-v...] <target> add <namespace>/<repo> [<name>] [--tracking=<branch>] [-a]
     {self} [--path=<path>] [-v...] <target> request (list|ls)
     {self} [--path=<path>] [-v...] <target> request fetch <request> [-f]
     {self} [--path=<path>] [-v...] <target> request create [--title=<title>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request create <local_branch> [--title=<title>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request create <remote_branch> <local_branch> [--title=<title>] [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> (list|ls)
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> fetch <request> [-f]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create [--title=<title>] [--branch=<remote>] [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <local_branch> [--title=<title>] [--branch=<remote>] [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <remote_branch> <local_branch> [--title=<title>] [--branch=<remote>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <namespace>/<repo> (list|ls)
+    {self} [--path=<path>] [-v...] <target> request <namespace>/<repo> fetch <request> [-f]
+    {self} [--path=<path>] [-v...] <target> request <namespace>/<repo> create [--title=<title>] [--branch=<remote>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <namespace>/<repo> create <local_branch> [--title=<title>] [--branch=<remote>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <namespace>/<repo> create <remote_branch> <local_branch> [--title=<title>] [--branch=<remote>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> (gist|snippet) (list|ls) [<gist>]
     {self} [--path=<path>] [-v...] <target> (gist|snippet) clone <gist>
     {self} [--path=<path>] [-v...] <target> (gist|snippet) fetch <gist> [<gist_file>]
@@ -49,13 +49,13 @@ Commands:
     config                   Run authentication process and configure the tool
 
 Options:
-    <user>/<repo>            Repository to work with
+    <namespace>/<repo>       Repository to work with
     -p,--path=<path>         Path to work on [default: .]
     -v,--verbose             Makes it more chatty (repeat twice to see git commands)
     -h,--help                Shows this message
 
 Options for list:
-    <user>                   Name of the user whose repositories will be listed
+    <namespace>              Name of the user whose repositories will be listed
     -l,--long                Show one repository per line, when set show the results
                              with the following columns:
     STATUS, COMMITS, REQUESTS, ISSUES, FORKS, CONTRIBUTORS, WATCHERS, LIKES, LANGUAGE, MODIF, NAME
@@ -201,7 +201,7 @@ class GitRepoRunner(KeywordArgumentParser):
 
         log.addHandler(logging.StreamHandler())
 
-    @store_parameter('<user>/<repo>')
+    @store_parameter('<namespace>/<repo>')
     def set_repo_slug(self, repo_slug, auto=False):
         self.repo_slug = EXTRACT_URL_RE.sub('', repo_slug) if repo_slug else repo_slug
         self._auto_slug = auto
@@ -210,9 +210,11 @@ class GitRepoRunner(KeywordArgumentParser):
             self.repo_name = None
         elif '/' in self.repo_slug:
             # in case a full URL is given as parameter, just extract the slug part.
-            #self.namespace, self.repo_name, *overflow = self.repo_slug.split('/')
             *namespace, self.repo_name = self.repo_slug.split('/')
             self.namespace = '/'.join(namespace)
+            if len(namespace) > 1 and not self.service._supports_nested_namespaces:
+                raise ArgumentError('Too many slashes.'
+                                    'This service does not support nested namespaces.')
         else:
             self.namespace = None
             self.repo_name = self.repo_slug
@@ -275,15 +277,15 @@ class GitRepoRunner(KeywordArgumentParser):
                 raise ArgumentError('Path {} is not a git repository'.format(self.path))
 
         else:
-            # git <target> fork <user>/<repo>
+            # git <target> fork <namespace>/<repo>
             if not self.target_repo:
                 if not self.namespace:
                     raise ArgumentError('Cannot clone repository, '
-                                        'you shall provide either a <user>/<repo> parameter '
+                                        'you shall provide either a <namespace>/<repo> parameter '
                                         'or no parameters to fork current repository!')
                 service = self.get_service(None)
 
-            # git <target> fork <user>/<repo> <path>
+            # git <target> fork <namespace>/<repo> <path>
             else:
                 repo_path = os.path.join(self.path, self.target_repo)
                 try:
