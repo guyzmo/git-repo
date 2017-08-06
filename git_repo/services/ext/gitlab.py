@@ -21,6 +21,8 @@ from datetime import datetime
 class GitlabService(RepositoryService):
     fqdn = 'gitlab.com'
 
+    _supports_nested_namespaces = True
+
     def __init__(self, *args, **kwarg):
         self.gl = gitlab.Gitlab(self.url_ro)
         super().__init__(*args, **kwarg)
