@@ -70,7 +70,7 @@ class RepositoryService:
             'server-cert'
             ]
 
-    _supports_nested_namespaces = False
+    _max_nested_namespaces = 1
 
     @staticmethod
     def get_config_path():
