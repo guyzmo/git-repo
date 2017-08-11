@@ -21,7 +21,7 @@ from datetime import datetime
 class GitlabService(RepositoryService):
     fqdn = 'gitlab.com'
 
-    _supports_nested_namespaces = True
+    _max_nested_namespaces = 21
 
     def __init__(self, *args, **kwarg):
         self.session = gitlab.requests.Session()

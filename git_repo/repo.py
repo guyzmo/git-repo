@@ -212,9 +212,9 @@ class GitRepoRunner(KeywordArgumentParser):
             # in case a full URL is given as parameter, just extract the slug part.
             *namespace, self.repo_name = self.repo_slug.split('/')
             self.namespace = '/'.join(namespace)
-            if len(namespace) > 1 and not self.service._supports_nested_namespaces:
+            if len(namespace) > self.service._max_nested_namespaces:
                 raise ArgumentError('Too many slashes.'
-                                    'This service does not support nested namespaces.')
+                                    'The maximum depth of namespaces is: {}'.format(self.service._max_nested_namespaces))
         else:
             self.namespace = None
             self.repo_name = self.repo_slug
