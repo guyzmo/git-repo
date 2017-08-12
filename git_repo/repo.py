@@ -211,7 +211,10 @@ class GitRepoRunner(KeywordArgumentParser):
             # in case a full URL is given as parameter, just extract the slug part.
             *namespace, self.repo_name = self.repo_slug.split('/')
             self.namespace = '/'.join(namespace)
-            if len(namespace) > self.service._max_nested_namespaces:
+
+            # This needs to be manually plucked because otherwise it'll be unset for some commands.
+            service = RepositoryService.get_service(None, self.target)
+            if len(namespace) > service._max_nested_namespaces:
                 raise ArgumentError('Too many slashes.'
                                     'The maximum depth of namespaces is: {}'.format(self.service._max_nested_namespaces))
         else:
