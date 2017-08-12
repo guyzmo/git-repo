@@ -21,6 +21,8 @@ from datetime import datetime
 class GitlabService(RepositoryService):
     fqdn = 'gitlab.com'
 
+    _max_nested_namespaces = 21
+
     def __init__(self, *args, **kwarg):
         self.gl = gitlab.Gitlab(self.url_ro)
         super().__init__(*args, **kwarg)
@@ -259,7 +261,8 @@ class GitlabService(RepositoryService):
 
             from_reposlug = self.guess_repo_slug(self.repository, self, resolve_targets=['{service}'])
             if from_reposlug:
-                from_user, from_repo = from_reposlug.split('/')
+                *namespaces, from_repo = from_reposlug.split('/')
+                from_user = '/'.join(namespaces)
                 if (onto_user, onto_repo) == (from_user, from_repo):
                     from_project = onto_project
                 else:
@@ -268,7 +271,7 @@ class GitlabService(RepositoryService):
                 from_project = None
 
             if not from_project:
-                raise ResourceNotFoundError('Could not find project `{}/{}`!'.format(from_user, from_repo))
+                raise ResourceNotFoundError('Could not find project `{}`!'.format(from_reposlug))
 
             # when no repo slug has been given to `git-repo X request create`
             # then chances are current project is a fork of the target

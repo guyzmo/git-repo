@@ -7,24 +7,24 @@ Usage:
     {self} [--path=<path>] [-v...] <target> delete [-f]
     {self} [--path=<path>] [-v...] <target> open
     {self} [--path=<path>] [-v...] <target> (list|ls) [-l] <user>
-    {self} [--path=<path>] [-v...] <target> fork <user>/<repo> [--branch=<branch>]
-    {self} [--path=<path>] [-v...] <target> fork <user>/<repo> <repo> [--branch=<branch>]
-    {self} [--path=<path>] [-v...] <target> create <user>/<repo> [--add]
-    {self} [--path=<path>] [-v...] <target> delete <user>/<repo> [-f]
-    {self} [--path=<path>] [-v...] <target> open <user>/<repo>
-    {self} [--path=<path>] [-v...] <target> clone <user>/<repo> [<repo> [<branch>]]
+    {self} [--path=<path>] [-v...] <target> fork <namespace>/<repo> [--branch=<branch>]
+    {self} [--path=<path>] [-v...] <target> fork <namespace>/<repo> <repo> [--branch=<branch>]
+    {self} [--path=<path>] [-v...] <target> create <namespace>/<repo> [--add]
+    {self} [--path=<path>] [-v...] <target> delete <namespace>/<repo> [-f]
+    {self} [--path=<path>] [-v...] <target> open <namespace>/<repo>
+    {self} [--path=<path>] [-v...] <target> clone <namespace>/<repo> [<repo> [<branch>]]
     {self} [--path=<path>] [-v...] <target> add
-    {self} [--path=<path>] [-v...] <target> add <user>/<repo> [<name>] [--tracking=<branch>] [-a]
+    {self} [--path=<path>] [-v...] <target> add <namespace>/<repo> [<name>] [--tracking=<branch>] [-a]
     {self} [--path=<path>] [-v...] <target> request (list|ls)
     {self} [--path=<path>] [-v...] <target> request fetch <request> [-f]
     {self} [--path=<path>] [-v...] <target> request create [--title=<title>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request create <local_branch> [--title=<title>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> request create <remote_branch> <local_branch> [--title=<title>] [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> (list|ls)
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> fetch <request> [-f]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create [--title=<title>] [--branch=<remote>] [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <local_branch> [--title=<title>] [--branch=<remote>] [--message=<message>]
-    {self} [--path=<path>] [-v...] <target> request <user>/<repo> create <remote_branch> <local_branch> [--title=<title>] [--branch=<remote>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <namespace>/<repo> (list|ls)
+    {self} [--path=<path>] [-v...] <target> request <namespace>/<repo> fetch <request> [-f]
+    {self} [--path=<path>] [-v...] <target> request <namespace>/<repo> create [--title=<title>] [--branch=<remote>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <namespace>/<repo> create <local_branch> [--title=<title>] [--branch=<remote>] [--message=<message>]
+    {self} [--path=<path>] [-v...] <target> request <namespace>/<repo> create <remote_branch> <local_branch> [--title=<title>] [--branch=<remote>] [--message=<message>]
     {self} [--path=<path>] [-v...] <target> (gist|snippet) (list|ls) [<gist>]
     {self} [--path=<path>] [-v...] <target> (gist|snippet) clone <gist>
     {self} [--path=<path>] [-v...] <target> (gist|snippet) fetch <gist> [<gist_file>]
@@ -49,13 +49,13 @@ Commands:
     config                   Run authentication process and configure the tool
 
 Options:
-    <user>/<repo>            Repository to work with
+    <namespace>/<repo>       Repository to work with
     -p,--path=<path>         Path to work on [default: .]
     -v,--verbose             Makes it more chatty (repeat twice to see git commands)
     -h,--help                Shows this message
 
 Options for list:
-    <user>                   Name of the user whose repositories will be listed
+    <namespace>              Name of the user whose repositories will be listed
     -l,--long                Show one repository per line, when set show the results
                              with the following columns:
     STATUS, COMMITS, REQUESTS, ISSUES, FORKS, CONTRIBUTORS, WATCHERS, LIKES, LANGUAGE, MODIF, NAME
@@ -136,18 +136,13 @@ if sys.version_info.major < 3: # pragma: no cover
     sys.exit(1)
 
 from .exceptions import ArgumentError, ResourceNotFoundError
-from .services.service import RepositoryService
+from .services.service import RepositoryService, EXTRACT_URL_RE
 
 from .tools import print_tty, print_iter, loop_input, confirm
 from .kwargparse import KeywordArgumentParser, store_parameter, register_action
 
 from git import Repo, Git
 from git.exc import InvalidGitRepositoryError, NoSuchPathError, BadName
-
-import re
-
-EXTRACT_URL_RE = re.compile('[^:]*(://|@)[^/]*/')
-
 
 class GitRepoRunner(KeywordArgumentParser):
 
@@ -205,21 +200,25 @@ class GitRepoRunner(KeywordArgumentParser):
 
         log.addHandler(logging.StreamHandler())
 
-    @store_parameter('<user>/<repo>')
+    @store_parameter('<namespace>/<repo>')
     def set_repo_slug(self, repo_slug, auto=False):
         self.repo_slug = EXTRACT_URL_RE.sub('', repo_slug) if repo_slug else repo_slug
         self._auto_slug = auto
         if not self.repo_slug:
-            self.user_name = None
+            self.namespace = None
             self.repo_name = None
         elif '/' in self.repo_slug:
             # in case a full URL is given as parameter, just extract the slug part.
-            self.user_name, self.repo_name, *overflow = self.repo_slug.split('/')
-            if len(overflow) != 0:
+            *namespace, self.repo_name = self.repo_slug.split('/')
+            self.namespace = '/'.join(namespace)
+
+            # This needs to be manually plucked because otherwise it'll be unset for some commands.
+            service = RepositoryService.get_service(None, self.target)
+            if len(namespace) > service._max_nested_namespaces:
                 raise ArgumentError('Too many slashes.'
-                                    'Format of the parameter is <user>/<repo> or <repo>.')
+                                    'The maximum depth of namespaces is: {}'.format(self.service._max_nested_namespaces))
         else:
-            self.user_name = None
+            self.namespace = None
             self.repo_name = self.repo_slug
 
     @store_parameter('<branch>')
@@ -258,7 +257,7 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('add')
     def do_remote_add(self):
         service = self.get_service()
-        remote, user, repo = service.add(self.repo_name, self.user_name,
+        remote, user, repo = service.add(self.repo_name, self.namespace,
                     name=self.remote_name,
                     tracking=self.tracking,
                     alone=self.alone,
@@ -280,15 +279,15 @@ class GitRepoRunner(KeywordArgumentParser):
                 raise ArgumentError('Path {} is not a git repository'.format(self.path))
 
         else:
-            # git <target> fork <user>/<repo>
+            # git <target> fork <namespace>/<repo>
             if not self.target_repo:
-                if not self.user_name:
+                if not self.namespace:
                     raise ArgumentError('Cannot clone repository, '
-                                        'you shall provide either a <user>/<repo> parameter '
+                                        'you shall provide either a <namespace>/<repo> parameter '
                                         'or no parameters to fork current repository!')
                 service = self.get_service(None)
 
-            # git <target> fork <user>/<repo> <path>
+            # git <target> fork <namespace>/<repo> <path>
             else:
                 repo_path = os.path.join(self.path, self.target_repo)
                 try:
@@ -298,7 +297,7 @@ class GitRepoRunner(KeywordArgumentParser):
                     # if the repository does not exists at given path, clone upstream into that path
                     self.do_clone(service, repo_path)
 
-        service.run_fork(self.user_name, self.repo_name, branch=self.branch)
+        service.run_fork(self.namespace, self.repo_name, branch=self.branch)
 
         if not self.repo_slug or self.target_repo:
             log.info('Successfully forked {} as {} within {}.'.format(
@@ -317,7 +316,7 @@ class GitRepoRunner(KeywordArgumentParser):
         try:
             repository = Repo.init(repo_path)
             service = RepositoryService.get_service(repository, self.target)
-            service.clone(self.user_name, self.repo_name, self.branch)
+            service.clone(self.namespace, self.repo_name, self.branch)
             log.info('Successfully cloned `{}` into `{}`!'.format(
                 service.format_path(self.repo_slug),
                 repo_path)
@@ -332,15 +331,15 @@ class GitRepoRunner(KeywordArgumentParser):
     def do_create(self):
         service = self.get_service(lookup_repository=self.repo_slug == None or self.add)
         # if no repo_slug has been given, use the directory name as current project name
-        if not self.user_name and not self.repo_name:
+        if not self.namespace and not self.repo_name:
             self.set_repo_slug('/'.join([service.user,
                 os.path.basename(os.path.abspath(self.path))]))
-        if not self.user_name:
-            self.user_name = service.user
-        service.create(self.user_name, self.repo_name, add=self.add)
+        if not self.namespace:
+            self.namespace = service.user
+        service.create(self.namespace, self.repo_name, add=self.add)
         log.info('Successfully created remote repository `{}`, '
                  'with local remote `{}`'.format(
-            service.format_path(self.repo_name, namespace=self.user_name),
+            service.format_path(self.repo_name, namespace=self.namespace),
             service.name)
         )
         return 0
@@ -352,8 +351,8 @@ class GitRepoRunner(KeywordArgumentParser):
             if not confirm('repository', self.repo_slug):
                 return 0
 
-        if self.user_name:
-            service.delete(self.repo_name, self.user_name)
+        if self.namespace:
+            service.delete(self.repo_name, self.namespace)
         else:
             service.delete(self.repo_name)
         log.info('Successfully deleted remote `{}` from {}'.format(
@@ -365,7 +364,7 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('open')
     def do_open(self):
-        self.get_service(lookup_repository=self.repo_slug is None).open(self.user_name, self.repo_name)
+        self.get_service(lookup_repository=self.repo_slug is None).open(self.namespace, self.repo_name)
         return 0
 
     @register_action('request', 'ls')
@@ -373,7 +372,7 @@ class GitRepoRunner(KeywordArgumentParser):
     def do_request_list(self):
         service = self.get_service(lookup_repository=self.repo_slug == None)
         print_tty('List of open requests to merge:')
-        print_iter(service.request_list(self.user_name, self.repo_name))
+        print_iter(service.request_list(self.namespace, self.repo_name))
         return 0
 
     @register_action('request', 'create')
@@ -426,7 +425,7 @@ class GitRepoRunner(KeywordArgumentParser):
 
         service = self.get_service(resolve_targets=('upstream', '{service}', 'origin'))
 
-        new_request = service.request_create(self.user_name,
+        new_request = service.request_create(self.namespace,
                 self.repo_name,
                 self.local_branch,
                 self.remote_branch,
@@ -442,7 +441,7 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('request', 'fetch')
     def do_request_fetch(self):
         service = self.get_service()
-        new_branch = service.request_fetch(self.user_name, self.repo_name, self.request, force=self.force)
+        new_branch = service.request_fetch(self.namespace, self.repo_name, self.request, force=self.force)
         log.info('Successfully fetched request id `{}` of `{}` into `{}`!'.format(
             self.request,
             self.repo_slug,
