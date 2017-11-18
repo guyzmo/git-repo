@@ -32,7 +32,7 @@ class Test_Gitlab(GitRepoTestCase):
         return gitlab.GitlabService(c=dict())
 
     def get_requests_session(self):
-        return self.service.gl.session
+        return self.service.session
 
     def test_00_fork(self):
         self.action_fork(local_namespace=self.local_namespace,
