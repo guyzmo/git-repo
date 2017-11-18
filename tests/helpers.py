@@ -22,6 +22,11 @@ class TestGitPopenMockupMixin:
         self.repository = Repo.init(self.tempdir.name)
         # setup git command mockup
         self.Popen = MockPopen()
+        def FixPopen(*a, **k):
+            if 'start_new_session' in k:
+                del k['start_new_session']
+            return self.Popen.Popen(*a, **k)
+        self.Popen.mock.Popen.side_effect = FixPopen
         self.Popen.mock.Popen_instance.stdin = None
         self.Popen.mock.Popen_instance.wait = lambda *a, **k: self.Popen.wait()
         self.Popen.mock.Popen_instance.__enter__ = lambda self: self
@@ -851,6 +856,8 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
     def action_open(self, namespace, repository):
         self.set_mock_popen_commands([
             ('xdg-open {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),
+            ('gnome-open {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),
+            ('www-browser {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),
             ('open {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),
         ])
         with Replace('subprocess.Popen', self.Popen):

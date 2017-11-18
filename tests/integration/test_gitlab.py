@@ -32,7 +32,7 @@ class Test_Gitlab(GitRepoTestCase):
         return gitlab.GitlabService(c=dict())
 
     def get_requests_session(self):
-        return self.service.gl.session
+        return self.service.session
 
     def test_00_fork(self):
         self.action_fork(local_namespace=self.local_namespace,
@@ -68,6 +68,10 @@ class Test_Gitlab(GitRepoTestCase):
     def test_04_clone(self):
         self.action_clone(namespace='guyzmo',
                           repository='git-repo')
+
+    def test_04_clone__subgroup(self):
+        self.action_clone(namespace='git-repo-test/subgroup',
+                          repository='test-repo')
 
     def test_05_add(self):
         self.action_add(namespace='guyzmo',
@@ -245,6 +249,7 @@ class Test_Gitlab(GitRepoTestCase):
                 remote_branch='merge-requests',
                 local_branch='requests/gitlab')
 
+
     def test_19_request_fetch__bad_request(self):
         with pytest.raises(ResourceNotFoundError):
             self.action_request_fetch(namespace=self.local_namespace,
@@ -298,4 +303,3 @@ class Test_Gitlab(GitRepoTestCase):
     def test_31_open(self):
         self.action_open(namespace=self.local_namespace,
                          repository='git-repo')
-

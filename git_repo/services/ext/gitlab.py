@@ -21,18 +21,24 @@ from datetime import datetime
 class GitlabService(RepositoryService):
     fqdn = 'gitlab.com'
 
+    _max_nested_namespaces = 21
+
     def __init__(self, *args, **kwarg):
-        self.gl = gitlab.Gitlab(self.url_ro)
+        self.session = gitlab.requests.Session()
         super().__init__(*args, **kwarg)
 
     def connect(self):
-        self.gl.ssl_verify = self.session_certificate or not self.session_insecure
         if self.session_proxy:
             self.gl.session.proxies.update(self.session_proxy)
 
-        self.gl.set_url(self.url_ro)
-        self.gl.set_token(self._privatekey)
-        self.gl.token_auth()
+        self.gl = gitlab.Gitlab(self.url_ro,
+                session=self.session,
+                private_token=self._privatekey
+        )
+
+        self.gl.ssl_verify = self.session_certificate or not self.session_insecure
+
+        self.gl.auth()
         self.username = self.gl.user.username
 
     def create(self, user, repo, add=False):
@@ -80,7 +86,7 @@ class GitlabService(RepositoryService):
         if not self.gl.users.search(user):
             raise ResourceNotFoundError("User {} does not exists.".format(user))
 
-        repositories = self.gl.projects.list(author=user)
+        repositories = self.gl.projects.list(author=user, safe_all=True)
         if not _long:
             repositories = list([repo.path_with_namespace for repo in repositories])
             yield "{}"
@@ -105,11 +111,11 @@ class GitlabService(RepositoryService):
                                                                # status
                     status,
                                                                # stats
-                    str(len(list(repo.commits.list()))),       # number of commits
-                    str(len(list(repo.mergerequests.list()))), # number of pulls
-                    str(len(list(repo.issues.list()))),        # number of issues
+                    str(len(repo.commits.list(all=True))),       # number of commits
+                    str(len(repo.mergerequests.list(all=True))), # number of pulls
+                    str(len(repo.issues.list(all=True))),        # number of issues
                     str(repo.forks_count),                     # number of forks
-                    str(len(list(repo.members.list()))),       # number of contributors
+                    str(len(repo.members.list(all=True))),       # number of contributors
                     'N.A.',                                    # number of subscribers
                     str(repo.star_count),                      # number of ♥
                                                                # info
@@ -259,7 +265,8 @@ class GitlabService(RepositoryService):
 
             from_reposlug = self.guess_repo_slug(self.repository, self, resolve_targets=['{service}'])
             if from_reposlug:
-                from_user, from_repo = from_reposlug.split('/')
+                *namespaces, from_repo = from_reposlug.split('/')
+                from_user = '/'.join(namespaces)
                 if (onto_user, onto_repo) == (from_user, from_repo):
                     from_project = onto_project
                 else:
@@ -268,7 +275,7 @@ class GitlabService(RepositoryService):
                 from_project = None
 
             if not from_project:
-                raise ResourceNotFoundError('Could not find project `{}/{}`!'.format(from_user, from_repo))
+                raise ResourceNotFoundError('Could not find project `{}`!'.format(from_reposlug))
 
             # when no repo slug has been given to `git-repo X request create`
             # then chances are current project is a fork of the target
