@@ -72,11 +72,6 @@ class Test_Github(GitRepoTestCase):
         self.action_clone(namespace='git-services',
                           repository='github-testing')
 
-    def test_04_clone__too_many_slashes(self):
-        with pytest.raises(ResourceNotFoundError):
-            self.action_clone(namespace='git-services/foo-bar',
-                              repository = 'github-testing')
-
     def test_05_add(self):
         self.action_add(namespace='guyzmo',
                         repository='git-repo')
