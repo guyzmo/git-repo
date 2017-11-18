@@ -1,0 +1,40 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2017-08-06T19:07:26",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "User-Agent": "python-requests/2.18.1"
+        },
+        "method": "GET",
+        "uri": "<GOGS_URL>/api/v1/user?token=<PRIVATE_KEY_GOGS>"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Content-Length": "0",
+          "Content-Type": "text/plain; charset=utf-8",
+          "Date": "Sun, 06 Aug 2017 19:06:36 GMT",
+          "Server": "Caddy",
+          "Set-Cookie": "lang=en-US; Path=/; Max-Age=2147483647"
+        },
+        "status": {
+          "code": 401,
+          "message": "Unauthorized"
+        },
+        "url": "<GOGS_URL>/api/v1/user?token=<PRIVATE_KEY_GOGS>"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

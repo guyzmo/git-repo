@@ -4,6 +4,6 @@ python-dateutil
 lxml
 GitPython>=2.1.0
 github3.py<1.0.0
-python-gitlab>=0.18
+python-gitlab>=1.0.0
 gogs-client>=1.0.3
 pybitbucket_fork>=0.12.2

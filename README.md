@@ -12,6 +12,19 @@
 * [![Issues in Ready](https://badge.waffle.io/guyzmo/git-repo.png?label=ready&title=Ready)](https://waffle.io/guyzmo/git-repo) [![Issues in Progress](https://badge.waffle.io/guyzmo/git-repo.png?label=in%20progress&title=Progress)](https://waffle.io/guyzmo/git-repo) [![Show Travis Build Status](https://travis-ci.org/guyzmo/git-repo.svg)](https://travis-ci.org/guyzmo/git-repo)
 * [![Pypi Version](https://img.shields.io/pypi/v/git-repo.svg) ![Pypi Downloads](https://img.shields.io/pypi/dm/git-repo.svg)](https://pypi.python.org/pypi/git-repo)
 
+## Looking for help
+
+For the past few months I've been really busy coding on stuff that puts food on the table…
+And sadly, I cannot give this project all the love it deserves. Which is why it's taken me months
+to spend a few hours merge and release the PRs featured in this repository.
+
+I'm still using this project daily, but I'm not having enough time to keep on putting all the
+effort needed to make it shine (SSH keys, issues support…)
+
+So I'd like to share the maintenance responsibility with someone or more people. If you're
+interested, please ping me on IRC or by mail (which is in all my commits). I'm always happy
+to guide through the code's design!
+
 ### Usage
 
 #### main commands
@@ -380,6 +393,8 @@ With code contributions coming from:
 * [@rnestler](https://github.com/rnestler) — [commits](https://github.com/guyzmo/git-repo/commits/devel?author=rnestler)
 * [@jayvdb](https://github.com/jayvdb) — [commits](https://github.com/guyzmo/git-repo/commits/devel?author=jayvdb)
 * [@kounoike](https://github.com/kounoike) — [commits](https://github.com/guyzmo/git-repo/commits/devel?author=kounoike)
+* [@AmandaCameron](https://github.com/AmandaCameron) — [commits](https://github.com/guyzmo/git-repo/commits/devel?author=AmandaCameron)
+* [@fa7ad](https://github.com/fa7ad) — [commits](https://github.com/guyzmo/git-repo/commits/devel?author=fa7ad)
 
 ### License
 

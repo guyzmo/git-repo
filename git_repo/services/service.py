@@ -3,8 +3,10 @@
 import logging
 log = logging.getLogger('git_repo.base')
 
+import re
 import os
 import sys
+import webbrowser
 
 from git import RemoteProgress, config as git_config
 from progress.bar import IncrementalBar as Bar
@@ -26,6 +28,7 @@ if 'darwin' in sys.platform: #pragma: no cover
 else: #pragma: no cover
     OPEN_COMMAND = 'xdg-open'
 
+EXTRACT_URL_RE = re.compile('[^:]*(://|@)[^/]*/')
 
 class ProgressBar(RemoteProgress): # pragma: no cover
     '''Nice looking progress bar for long running commands'''
@@ -66,6 +69,8 @@ class RepositoryService:
             'server-cert'
             ]
 
+    _max_nested_namespaces = 1
+
     @staticmethod
     def get_config_path():
         home_dir = os.path.expanduser('~')
@@ -87,8 +92,8 @@ class RepositoryService:
             url = url[:-4]
         # strip http://, https:// and ssh://
         if '://' in url:
-            *_, user, name = url.split('/')
-            return '/'.join([user, name])
+            repo_path = EXTRACT_URL_RE.sub('', url)
+            return repo_path
         # scp-style URL
         elif '@' in url and ':' in url:
             return url.split(':')[-1]
@@ -476,7 +481,7 @@ class RepositoryService:
 
     def open(self, user=None, repo=None):
         '''Open the URL of a repository in the user's browser'''
-        call([OPEN_COMMAND, self.format_path(repo, namespace=user, rw=False)])
+        webbrowser.open(self.format_path(repo, namespace=user, rw=False))
 
     def connect(self): #pragma: no cover
         '''Brings up the connection to the remote service's API
