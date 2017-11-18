@@ -116,6 +116,7 @@ out: http://www.gnu.org/licenses/gpl-2.0.txt
 '''
 
 from docopt import docopt
+from getpass import getpass
 
 import os
 import sys
@@ -131,7 +132,7 @@ __contributors__ = []
 log_root = logging.getLogger()
 log = logging.getLogger('git_repo')
 
-if sys.version_info.major < 3: # pragma: no cover
+if sys.version_info.major < 3:  # pragma: no cover
     print('Please use with python version 3')
     sys.exit(1)
 
@@ -151,7 +152,7 @@ EXTRACT_URL_RE = re.compile('[^:]*(://|@)[^/]*/')
 
 class GitRepoRunner(KeywordArgumentParser):
 
-    def init(self): # pragma: no cover
+    def init(self):  # pragma: no cover
         if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys():
             del os.environ['GIT_WORK_TREE']
 
@@ -180,7 +181,7 @@ class GitRepoRunner(KeywordArgumentParser):
     '''Argument storage'''
 
     @store_parameter('--verbose')
-    def set_verbosity(self, verbose): # pragma: no cover
+    def set_verbosity(self, verbose):  # pragma: no cover
         if verbose >= 5:
             print(self.args)
         if verbose >= 4:
@@ -348,7 +349,7 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('delete')
     def do_delete(self):
         service = self.get_service(lookup_repository=self.repo_slug == None)
-        if not self.force: # pragma: no cover
+        if not self.force:  # pragma: no cover
             if not confirm('repository', self.repo_slug):
                 return 0
 
@@ -489,7 +490,7 @@ class GitRepoRunner(KeywordArgumentParser):
     @register_action('snippet', 'delete')
     def do_gist_delete(self):
         service = self.get_service(lookup_repository=False)
-        if not self.force: # pragma: no cover
+        if not self.force:  # pragma: no cover
             if not confirm('snippet', self.gist_ref):
                 return 0
 
@@ -499,8 +500,6 @@ class GitRepoRunner(KeywordArgumentParser):
 
     @register_action('config')
     def do_config(self):
-        from getpass import getpass
-
         def setup_service(service):
             new_conf = dict(
                     fqdn=None,
@@ -587,7 +586,8 @@ def main(args):
             log.exception('------------------------------------')
         return 2
 
-def cli(): #pragma: no cover
+
+def cli():  # pragma: no cover
     try:
         sys.exit(main(docopt(__doc__.format(self=sys.argv[0].split(os.path.sep)[-1], version=__version__))))
     finally:

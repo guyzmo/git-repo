@@ -583,8 +583,9 @@ class Test_Main(GitRepoMainTestCase):
         assert 'Successfully created request of `pr-test` onto `guyzmo/git-repo:base-test`, with id `42`!' in caplog.text
 
     def test_config(self, capsys, caplog):
-        import sys, io, getpass
-        getpass.getpass = input
+        import sys, io
+        import git_repo.repo
+        git_repo.repo.getpass = input
         sys.stdin = io.StringIO('\n'.join(['y', 'n', 'user', 'pass', 'y', 'fubar', 'y']))
         #
         conf = self.main_config(target='hub', rc=0)
