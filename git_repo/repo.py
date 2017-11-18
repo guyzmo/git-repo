@@ -217,7 +217,7 @@ class GitRepoRunner(KeywordArgumentParser):
             service = RepositoryService.get_service(None, self.target)
             if len(namespace) > service._max_nested_namespaces:
                 raise ArgumentError('Too many slashes.'
-                                    'The maximum depth of namespaces is: {}'.format(self.service._max_nested_namespaces))
+                                    'The maximum depth of namespaces is: {}'.format(service._max_nested_namespaces))
         else:
             self.namespace = None
             self.repo_name = self.repo_slug
