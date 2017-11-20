@@ -7,6 +7,7 @@ from ..service import register_target, RepositoryService, ProgressBar
 from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
 from ...tools import columnize
 
+import pybitbucket
 from pybitbucket.bitbucket import Client, Bitbucket
 from pybitbucket.auth import BasicAuthenticator
 from pybitbucket.pullrequest import PullRequest, PullRequestPayload
@@ -24,6 +25,9 @@ from git.exc import GitCommandError
 
 from lxml import html
 import os, json, platform
+
+
+SERVICE_PACKAGE = pybitbucket
 
 
 @register_target('bb', 'bitbucket')

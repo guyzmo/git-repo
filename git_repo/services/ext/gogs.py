@@ -7,6 +7,8 @@ from ..service import register_target, RepositoryService, os
 from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
 from ...tools import columnize
 
+import gogs_client
+
 from gogs_client import GogsApi, GogsRepo, Token, UsernamePassword, ApiFailure
 from requests import Session, HTTPError
 from urllib.parse import urlparse, urlunparse
@@ -16,6 +18,10 @@ import functools
 
 from git import config as git_config
 from git.exc import GitCommandError
+
+
+SERVICE_PACKAGE = gogs_client
+
 
 class GogsClient(GogsApi):
     def __init__(self):
