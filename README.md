@@ -394,6 +394,7 @@ With code contributions coming from:
 * [@jayvdb](https://github.com/jayvdb) — [commits](https://github.com/guyzmo/git-repo/commits/devel?author=jayvdb)
 * [@kounoike](https://github.com/kounoike) — [commits](https://github.com/guyzmo/git-repo/commits/devel?author=kounoike)
 * [@AmandaCameron](https://github.com/AmandaCameron) — [commits](https://github.com/guyzmo/git-repo/commits/devel?author=AmandaCameron)
+* [@fa7ad](https://github.com/fa7ad) — [commits](https://github.com/guyzmo/git-repo/commits/devel?author=fa7ad)
 
 ### License
 
