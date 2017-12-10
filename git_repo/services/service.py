@@ -70,6 +70,7 @@ class RepositoryService:
             ]
 
     _max_nested_namespaces = 1
+    _min_nested_namespaces = 1
 
     @staticmethod
     def get_config_path():
@@ -287,9 +288,9 @@ class RepositoryService:
         if namespace:
             repo = '{}/{}'.format(namespace, repository)
 
-        if not rw and '/' in repo:
+        if not rw and repo.count('/') >= self._min_nested_namespaces:
             return '{}/{}'.format(self.url_ro, repo)
-        elif rw and '/' in repo:
+        elif rw and repo.count('/') >= self._min_nested_namespaces:
             if self.url_rw.startswith('ssh://'):
                 return '{}/{}'.format(self.url_rw, repo)
             else:
