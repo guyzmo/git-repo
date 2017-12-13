@@ -426,7 +426,7 @@ class GitRepoRunner(KeywordArgumentParser):
 
         service = self.get_service(resolve_targets=('upstream', '{service}', 'origin'))
 
-        new_request = service.request_create(self.namespace,
+        output_generator = service.request_create(self.namespace,
                 self.repo_name,
                 self.local_branch,
                 self.remote_branch,
@@ -434,9 +434,10 @@ class GitRepoRunner(KeywordArgumentParser):
                 self.message,
                 self._auto_slug,
                 request_edition)
-        log.info('Successfully created request of `{local}` onto `{project}:{remote}`, with id `{ref}`!'.format(**new_request))
-        if 'url' in new_request:
-            log.info('available at: {url}'.format(**new_request))
+
+        log.info(next(output_generator))
+        print_iter(output_generator)
+
         return 0
 
     @register_action('request', 'fetch')
