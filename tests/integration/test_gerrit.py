@@ -30,3 +30,9 @@ class Test_Gerrit(GitRepoTestCase):
     def test_00_clone(self):
         self.action_clone(namespace='TestUser',
                           repository='DemoRepository')
+
+    def test_01_review(self):
+        self.action_request_create_by_push(namespace='TestUser',
+                                           repository='DemoRepository',
+                                           branch='master',
+                                           remote_ref='refs/for/master')

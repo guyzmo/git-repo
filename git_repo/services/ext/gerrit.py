@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from ...exceptions import ResourceNotFoundError
 from ..service import register_target, RepositoryService
 
 from gerritclient import client
@@ -92,3 +93,38 @@ class GerritService(RepositoryService):
         # Gerrit parent project concept is quite different from other services,
         # so it is better to always return None here
         return None
+
+    def request_create(self, onto_user, onto_repo, from_branch, onto_branch=None, title=None, description=None, auto_slug=False, edit=None):
+        from_branch = from_branch or self.repository.active_branch.name
+        onto_branch = onto_branch or 'HEAD:refs/for/' + from_branch
+        remote = self.repository.remote(self.name)
+        info, lines = self.push(remote, onto_branch)
+        new_changes = []
+        new_changes_lines = False
+        for line in lines:
+            if line.startswith('remote:'):
+                line = line[len('remote:'):].strip()
+
+                if 'New Changes' in line:
+                    new_changes_lines = True
+
+                if new_changes_lines and self.fqdn in line:
+                    url = line.split(' ')[0]
+                    new_changes.append(url)
+
+        if len(new_changes) > 0:
+            yield 'Created new review request of `{local}` onto `{project}:{remote}`'.format(
+                local = from_branch,
+                project = '/'.join([onto_user, onto_repo]),
+                remote = onto_branch
+            )
+            yield 'with changeset {} available at {}'
+            for url in new_changes:
+                yield [url, url.split('/')[-1]]
+        else:
+            yield 'Review request of `{local}` was not created'.format(
+                local = from_branch
+            )
+            yield '{} -> {}: {}'
+            for element in info:
+                yield [element.local_ref, element.remote_ref_string, element.summary]
