@@ -313,13 +313,14 @@ class GitlabService(RepositoryService):
                     }
             )
 
-            return {
-                'local': from_branch,
-                'project': '/'.join([onto_user, onto_repo]),
-                'remote': onto_branch,
-                'url': request.web_url,
-                'ref': request.iid
-            }
+            yield 'Successfully created request of `{local}` onto `{project}:{remote}, with id `{ref}'.format(
+                local=from_branch,
+                project='/'.join([onto_user, onto_repo]),
+                remote=onto_branch,
+                ref=request.iid
+            )
+            yield 'available at {}'
+            yield request.web_url
 
         except GitlabGetError as err:
             raise ResourceNotFoundError(err) from err

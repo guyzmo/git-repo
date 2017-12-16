@@ -277,13 +277,14 @@ class GithubService(RepositoryService):
                     base=onto_branch,
                     body=description)
 
-            return {
-                'local': from_branch,
-                'project': '/'.join([onto_user, onto_repo]),
-                'remote': onto_branch,
-                'ref': request.number,
-                'url': request.html_url
-            }
+            yield 'Successfully created request of `{local}` onto `{project}:{remote}, with id `{ref}'.format(
+                local=from_branch,
+                project='/'.join([onto_user, onto_repo]),
+                remote=onto_branch,
+                ref=request.number
+            )
+            yield 'available at {}'
+            yield request.html_url
 
         except github3.models.GitHubError as err:
             if err.code == 422:
