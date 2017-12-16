@@ -342,14 +342,12 @@ class Test_Github(GitRepoTestCase):
                 source_branch='pr-test',
                 target_branch='master',
                 title='PR test',
-                description='PR description')
-        assert r == {
-                'local': 'pr-test',
-                'ref': 1,
-                'remote': 'master',
-                'project': '{}/test_create_requests'.format(self.namespace),
-                'url': 'https://github.com/{}/test_create_requests/pull/1'.format(self.namespace),
-                }
+                description='PR description',
+                expected_result=[
+                    '{}',
+                    ['Successfully created request of `pr-test` onto `_namespace_github_/test_create_requests:master, with id `1'],
+                    ['available at https://github.com/_namespace_github_/test_create_requests/pull/1']
+        ])
 
     def test_32_request_create__bad_branch(self):
         with pytest.raises(ResourceError):

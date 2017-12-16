@@ -322,14 +322,12 @@ class Test_BitBucket(GitRepoTestCase):
                 target_branch='master',
                 source_branch='pr-test',
                 title='PR test',
-                description='PR description')
-        assert r == {
-                'local': 'pr-test',
-                'ref': 1,
-                'remote': 'master',
-                'project': '{}/test_create_requests'.format(self.local_namespace),
-                'url': 'https://bitbucket.org/{}/test_create_requests/pull-requests/1'.format(self.local_namespace),
-                }
+                description='PR description',
+                expected_result=[
+                    '{}',
+                     ['Successfully created request of `pr-test` onto `_namespace_bitbucket_/test_create_requests:master, with id `1'],
+                     ['available at https://bitbucket.org/_namespace_bitbucket_/test_create_requests/pull-requests/1']
+        ])
 
     def test_32_request_create__bad_branch(self):
         with pytest.raises(ResourceNotFoundError):
@@ -357,14 +355,12 @@ class Test_BitBucket(GitRepoTestCase):
                 target_branch=None,
                 source_branch=None,
                 title='PR test',
-                description='PR description')
-        assert r == {
-                'local': 'pr-test',
-                'ref': 1,
-                'remote': 'master',
-                'project': '{}/test_create_requests'.format(self.local_namespace),
-                'url': 'https://bitbucket.org/{}/test_create_requests/pull-requests/1'.format(self.local_namespace),
-                }
+                description='PR description',
+                expected_result=[
+                    '{}',
+                     ['Successfully created request of `pr-test` onto `_namespace_bitbucket_/test_create_requests:master, with id `1'],
+                     ['available at https://bitbucket.org/_namespace_bitbucket_/test_create_requests/pull-requests/1']
+        ])
 
     def test_33_open(self):
         self.action_open(namespace='guyzmo',
