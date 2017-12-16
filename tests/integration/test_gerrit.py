@@ -105,3 +105,15 @@ class Test_Gerrit(GitRepoTestCase):
 
     def test_05_fetch_patchet__change_id(self):
         self.action_request_fetch(namespace='TestUser', repository='DemoRepository', request='I873f1207d6', ref='refs/changes/89/392089/2')
+
+    def test_06_list_patchets(self):
+        self.action_request_list(
+            namespace='TestUser',
+            repository='DemoRepository',
+            rq_list_data=[
+                '{}	{}	{:<60}	{}',
+                ['id', 'branch', 'subject', 'url'],
+                [392074, 'master', 'Commit-24', 'https://review.gerrithub.io/392074'],
+                [392073, 'master', 'Commit-23', 'https://review.gerrithub.io/392073'],
+                [392072, 'master', 'Commit-22', 'https://review.gerrithub.io/392072']
+        ])

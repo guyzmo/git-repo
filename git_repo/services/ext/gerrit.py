@@ -152,3 +152,12 @@ class GerritService(RepositoryService):
         self.repository.git.checkout('FETCH_HEAD')
 
         return 'FETCH_HEAD'
+
+    def request_list(self, user, repo):
+        project = self.repo_name(user, repo)
+        changes = self.change_client.get_all(['project:{} status:open'.format(project)])
+
+        yield "{}\t{}\t{:<60}\t{}"
+        yield ['id', 'branch', 'subject', 'url']
+        for change in changes:
+            yield [change['_number'], change['branch'], change['subject'], '{}/{}'.format(self.url_ro, change['_number'])]
