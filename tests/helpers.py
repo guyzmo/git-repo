@@ -641,7 +641,14 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
             for i, rq in enumerate(rq_list_data):
                 assert requests[i] == rq
 
-    def action_request_fetch(self, namespace, repository, request, pull=False, fail=False, remote_branch='pull', local_branch='requests'):
+    def action_request_fetch(self, namespace, repository, request, pull=False, fail=False, remote_branch='pull', local_branch='requests', remote_ref=None, local_ref=None):
+        if remote_ref is None:
+            remote_ref = '{}/{}/head'.format(remote_branch, request)
+        if local_ref is None:
+            local_ref = '{}/{}'.format(local_branch, request)
+        additional_flags = ''
+        if not remote_ref.endswith('/head'):
+            additional_flags += '--update-head-ok '
         local_slug = self.service.format_path(namespace=namespace, repository=repository, rw=False)
         with self.recorder.use_cassette(self._make_cassette_name()):
             with self.mockup_git(namespace, repository):
@@ -663,11 +670,11 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                         ' * [new branch]      master     -> {1}/{0}'.format(request, local_branch)]).encode('utf-8'),
                     0),
                     ('git version', b'git version 2.8.0', b'', 0),
-                    ('git fetch --progress -v {0} {2}/{1}/head:{3}/{1}'.format(
+                    ('git fetch --progress {0}-v {1} {2}:{3}'.format(
+                            additional_flags,
                             self.service.name,
-                            request,
-                            remote_branch,
-                            local_branch), b'', '\n'.join([
+                            remote_ref,
+                            local_ref), b'', '\n'.join([
                         'POST git-upload-pack (140 bytes)',
                         'remote: Counting objects: 8318, done.',
                         'remote: Compressing objects: 100% (3/3), done.',
