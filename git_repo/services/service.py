@@ -337,15 +337,18 @@ class RepositoryService:
         print()
         return result, pb.other_lines
 
-    def fetch(self, remote, remote_branch, local_branch, force=False):
+    def fetch(self, remote, branch, local_branch = None, force=False):
         '''Pull a repository
         :param remote: git-remote instance
         :param branch: name of the branch to pull
         '''
         pb = ProgressBar()
         pb.setup(self.name)
-        remote.fetch(':'.join([remote_branch, local_branch]),
-                update_head_ok=True, force=force, progress=pb)
+
+        if local_branch:
+            branch = ':'.join([branch, local_branch])
+
+        remote.fetch(branch, update_head_ok=True, force=force, progress=pb)
         print()
 
     def clone(self, user, repo, branch=None, rw=True):
