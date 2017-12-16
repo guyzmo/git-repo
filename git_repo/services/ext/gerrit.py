@@ -25,6 +25,7 @@ class GerritService(RepositoryService):
             self.create_connection()
         self.server_client = client.get_client('server', connection=self.connection)
         self.project_client = client.get_client('project', connection=self.connection)
+        self.change_client = client.get_client('change', connection=self.connection)
 
         try:
             self.server_client.get_version()
@@ -128,3 +129,26 @@ class GerritService(RepositoryService):
             yield '{} -> {}: {}'
             for element in info:
                 yield [element.local_ref, element.remote_ref_string, element.summary]
+
+    def request_fetch(self, user, repo, request, pull=False, force=False):
+        if 'refs/changes/' not in request:
+            if '/' in request:
+                change_id, patch_set = request.split('/')
+            else:
+                change_id = request
+                change = self.change_client.get_all(['change: {}'.format(change_id)], ['CURRENT_REVISION'])[0]
+                current_patchset = change['revisions'][change['current_revision']]
+                patch_set = current_patchset['_number']
+
+            if change_id[0] == 'I':
+                change_id = str(self.change_client.get_by_id(request)['_number'])
+
+            request = 'refs/changes/{}/{}/{}'.format(change_id[-2:], change_id, patch_set)
+        else:
+            change_id = request.split('/')[3]
+
+        remote = self.repository.remote(self.name)
+        self.fetch(remote, request)
+        self.repository.git.checkout('FETCH_HEAD')
+
+        return 'FETCH_HEAD'
