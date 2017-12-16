@@ -716,7 +716,8 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
             source_branch='pr-test',
             target_branch='master',
             create_repository='test_create_requests',
-            auto_slug=False):
+            auto_slug=False,
+            expected_result=[]):
         '''
         Here we are testing the subcommand 'request create'.
 
@@ -800,7 +801,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                 self.service.connect()
                 def test_edit(repository, from_branch):
                     return "PR title", "PR body"
-                request = self.service.request_create(
+                output = list(self.service.request_create(
                     onto_user=namespace,
                     onto_repo=repository,
                     from_branch=source_branch,
@@ -808,8 +809,10 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                     title=title,
                     description=description,
                     auto_slug=auto_slug,
-                    edit=test_edit)
-                return request
+                    edit=test_edit))
+
+                for i, line in enumerate(expected_result):
+                    assert output[i] == line
 
     def action_request_create_by_push(self, namespace, repository, branch, remote_ref):
         local_slug = self.service.format_path(namespace=namespace, repository=repository, rw=True)
