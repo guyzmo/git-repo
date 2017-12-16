@@ -114,21 +114,21 @@ class GerritService(RepositoryService):
                     new_changes.append(url)
 
         if len(new_changes) > 0:
-            yield 'Created new review request of `{local}` onto `{project}:{remote}`'.format(
+            yield '{}'
+            yield ['Created new review request of `{local}` onto `{project}:{remote}`'.format(
                 local = from_branch,
                 project = '/'.join([onto_user, onto_repo]),
                 remote = onto_branch
-            )
-            yield 'with changeset {} available at {}'
+            )]
             for url in new_changes:
-                yield [url, url.split('/')[-1]]
+                yield ['with changeset {} available at {}'.format(url, url.split('/')[-1])]
         else:
-            yield 'Review request of `{local}` was not created'.format(
+            yield '{}'
+            yield ['Review request of `{local}` was not created'.format(
                 local = from_branch
-            )
-            yield '{} -> {}: {}'
+            )]
             for element in info:
-                yield [element.local_ref, element.remote_ref_string, element.summary]
+                yield ['{} -> {}: {}'.format(element.local_ref, element.remote_ref_string, element.summary)]
 
     def request_fetch(self, user, repo, request, pull=False, force=False):
         if 'refs/changes/' not in request:
@@ -152,3 +152,12 @@ class GerritService(RepositoryService):
         self.fetch(remote, request, local_branch_name, force=force)
 
         return local_branch_name
+
+    def request_list(self, user, repo):
+        project = self.repo_name(user, repo)
+        changes = self.change_client.get_all(['project:{} status:open'.format(project)])
+
+        yield "{}\t{}\t{:<60}\t{}"
+        yield ['id', 'branch', 'subject', 'url']
+        for change in changes:
+            yield [change['_number'], change['branch'], change['subject'], '{}/{}'.format(self.url_ro, change['_number'])]
