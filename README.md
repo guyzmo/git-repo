@@ -237,23 +237,20 @@ section in the gitconfig:
 
     [gitrepo "bitbucket"]
         username = ford.prefect
-        token = YourOtherSecretKey
+        token = YourSecretAppKey
 
     [gitrepo "gogs"]
         fqdn = UrlOfYourGogs
         token = YourVerySecretKey
 
-Here, we're setting the basics: just the private token. You'll notice that for bitbucket
-the private token is your username and password seperated by a column. That's because
-bitbucket does not offer throw away private tokens for tools (I might implement BB's OAuth
-at some point).
+Here, we're setting the basics: just the private token. Notice that the token needed for Bitbucket are an App-token, not to be confused with an OAuth-token, which are also avaiable from the Butbucket settings.
 
 You also have the ability to set up an alias:
 
     [gitrepo "bitbucket"]
         alias = bit
         username = ford.prefect
-        token = YourOtherSecretKey
+        token = YourSecretAppKey
 
 that will change the command you use for a name you'll prefer to handle actions
 for the service you use:
