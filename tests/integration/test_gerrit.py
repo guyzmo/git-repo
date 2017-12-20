@@ -76,3 +76,7 @@ class Test_Gerrit(GitRepoTestCase):
                 [392073, 'master', 'Commit-23', 'https://review.gerrithub.io/392073'],
                 [392072, 'master', 'Commit-22', 'https://review.gerrithub.io/392072']
         ])
+
+    def test_07_add(self):
+        self.action_add(namespace='TestUser',
+                        repository='AnotherRepository')
