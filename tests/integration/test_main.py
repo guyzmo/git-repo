@@ -2,6 +2,7 @@
 
 import logging
 import pytest
+import os
 
 #################################################################################
 # Enable logging
@@ -520,6 +521,13 @@ class Test_Main(GitRepoMainTestCase):
 
     def test_open__no_repo_slug__https(self):
         self._create_repository(ro=True)
+        repo_slug, seen_args = self.main_open(rc=0)
+        assert ('guyzmo', 'git-repo') == repo_slug
+        assert {} == seen_args
+
+    def test_open__from_sub_dir(self):
+        self._create_repository(ro=True)
+        os.chdir('git_repo')
         repo_slug, seen_args = self.main_open(rc=0)
         assert ('guyzmo', 'git-repo') == repo_slug
         assert {} == seen_args

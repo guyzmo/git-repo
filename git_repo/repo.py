@@ -159,9 +159,9 @@ class GitRepoRunner(KeywordArgumentParser):
             # Try to resolve existing repository path
             try:
                 try:
-                    repository = Repo(os.path.join(self.path, self.repo_name or ''))
+                    repository = Repo(os.path.join(self.path, self.repo_name or ''), search_parent_directories=True)
                 except NoSuchPathError:
-                    repository = Repo(self.path)
+                    repository = Repo(self.path, search_parent_directories=True)
             except InvalidGitRepositoryError:
                 raise FileNotFoundError('Cannot find path to the repository.')
             service = RepositoryService.get_service(repository, self.target)
