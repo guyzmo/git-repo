@@ -5,17 +5,15 @@ dist: trusty
 matrix:
   include:
     - os: linux
-      python: "3.4"
-    - os: linux
       python: "3.5"
     - os: linux
       python: "3.6"
     - os: linux
       python: "3.6-dev"
     - os: linux
-      python: "nightly"
+      python: "3.7-dev"
     - os: linux
-      python: "pypy3"
+      python: "nightly"
 
     - os: osx
       sudo: required
@@ -23,8 +21,8 @@ matrix:
 
   allow_failures:
       - python: "3.6-dev"
+      - python: "3.7-dev"
       - python: "nightly"
-      - python: "pypy3"
       - os: "osx"
 addons:
   apt:

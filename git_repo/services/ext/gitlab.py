@@ -44,7 +44,7 @@ class GitlabService(RepositoryService):
     def create(self, user, repo, add=False):
         try:
             group = self.gl.groups.search(user)
-            data = {'name': repo}
+            data = {'name': repo, 'path': repo}
             if group:
                 data['namespace_id'] = group[0].id
             self.gl.projects.create(data=data)
