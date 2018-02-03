@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from tempfile import TemporaryDirectory
 from git import Repo, Git
