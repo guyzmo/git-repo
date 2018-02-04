@@ -58,14 +58,14 @@ class Test_Gerrit(GitRepoTestCase):
                                   remote_ref='refs/changes/08/391808/2',
                                   local_ref='requests/gerrithub/391808')
 
-    def test_05_fetch_patchet__change_id(self):
+    def test_05_fetch_patchset__change_id(self):
         self.action_request_fetch(namespace='TestUser',
                                   repository='DemoRepository',
                                   request='I873f1207d6',
                                   remote_ref='refs/changes/89/392089/2',
                                   local_ref='requests/gerrithub/392089')
 
-    def test_06_list_patchets(self):
+    def test_06_list_patchsets(self):
         self.action_request_list(
             namespace='TestUser',
             repository='DemoRepository',
