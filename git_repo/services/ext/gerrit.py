@@ -147,7 +147,10 @@ class GerritService(RepositoryService):
         else:
             change_id = request.split('/')[3]
 
-        remote = self.repository.remote(self.name)
+        try:
+            remote = self.repository.remote(self.name)
+        except ValueError as err:
+            raise Exception('Remote "{remote}" is not setup. Please run `git {remote} add`'.format(remote=self.name))
         local_branch_name = 'requests/{}/{}'.format(self.name, change_id)
         self.fetch(remote, request, local_branch_name, force=force)
 
