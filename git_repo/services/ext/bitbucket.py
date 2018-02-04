@@ -294,13 +294,14 @@ class BitbucketService(RepositoryService):
                         client=self.bb.client
                     )
 
-            return {
-                'local': from_branch,
-                'remote': onto_branch,
-                'ref': request.id,
-                'project': '/'.join([onto_user, onto_repo]),
-                'url': request.links['html']['href']
-            }
+            yield '{}'
+            yield ['Successfully created request of `{local}` onto `{project}:{remote}, with id `{ref}'.format(
+                local=from_branch,
+                project='/'.join([onto_user, onto_repo]),
+                remote=onto_branch,
+                ref=request.id
+            )]
+            yield ['available at {}'.format(request.links['html']['href'])]
 
         except HTTPError as err:
             status_code = hasattr(err, 'code') and err.code or err.response.status_code

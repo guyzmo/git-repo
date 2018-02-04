@@ -11,6 +11,7 @@ import webbrowser
 from git import RemoteProgress, config as git_config
 from progress.bar import IncrementalBar as Bar
 
+from enum import Enum
 from urllib.parse import ParseResult
 from subprocess import call
 
@@ -32,8 +33,18 @@ EXTRACT_URL_RE = re.compile('[^:]*(://|@)[^/]*/')
 
 class ProgressBar(RemoteProgress): # pragma: no cover
     '''Nice looking progress bar for long running commands'''
-    def setup(self, repo_name):
-        self.bar = Bar(message='Pulling from {}'.format(repo_name), suffix='')
+
+    class Action(Enum):
+        PULL = 1
+        PUSH = 2
+
+    def setup(self, repo_name, action=Action.PULL):
+        if action == ProgressBar.Action.PULL:
+            message = 'Pulling from {}'.format(repo_name)
+        elif action == ProgressBar.Action.PUSH:
+            message = 'Pushing to {}'.format(repo_name)
+
+        self.bar = Bar(message=message, suffix='')
 
     def update(self, op_code, cur_count, max_count=100, message=''):
         #log.info("{}, {}, {}, {}".format(op_code, cur_count, max_count, message))
@@ -70,6 +81,7 @@ class RepositoryService:
             ]
 
     _max_nested_namespaces = 1
+    _min_nested_namespaces = 1
 
     @staticmethod
     def get_config_path():
@@ -287,9 +299,9 @@ class RepositoryService:
         if namespace:
             repo = '{}/{}'.format(namespace, repository)
 
-        if not rw and '/' in repo:
+        if not rw and repo.count('/') >= self._min_nested_namespaces:
             return '{}/{}'.format(self.url_ro, repo)
-        elif rw and '/' in repo:
+        elif rw and repo.count('/') >= self._min_nested_namespaces:
             if self.url_rw.startswith('ssh://'):
                 return '{}/{}'.format(self.url_rw, repo)
             else:
@@ -310,15 +322,33 @@ class RepositoryService:
             remote.pull(progress=pb)
         print()
 
-    def fetch(self, remote, remote_branch, local_branch, force=False):
+    def push(self, remote, branch=None):
+        '''Push a repository
+        :param remote: git-remote instance
+        :param branch: name of the branch to push
+        :return: PushInfo, git push output lines
+        '''
+        pb = ProgressBar()
+        pb.setup(self.name, ProgressBar.Action.PUSH)
+        if branch:
+            result = remote.push(branch, progress=pb)
+        else: #pragma: no cover
+            result = remote.push(progress=pb)
+        print()
+        return result, pb.other_lines
+
+    def fetch(self, remote, branch, local_branch = None, force=False):
         '''Pull a repository
         :param remote: git-remote instance
         :param branch: name of the branch to pull
         '''
         pb = ProgressBar()
         pb.setup(self.name)
-        remote.fetch(':'.join([remote_branch, local_branch]),
-                update_head_ok=True, force=force, progress=pb)
+
+        if local_branch:
+            branch = ':'.join([branch, local_branch])
+
+        remote.fetch(branch, update_head_ok=True, force=force, progress=pb)
         print()
 
     def clone(self, user, repo, branch=None, rw=True):

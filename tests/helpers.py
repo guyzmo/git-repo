@@ -641,7 +641,14 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
             for i, rq in enumerate(rq_list_data):
                 assert requests[i] == rq
 
-    def action_request_fetch(self, namespace, repository, request, pull=False, fail=False, remote_branch='pull', local_branch='requests'):
+    def action_request_fetch(self, namespace, repository, request, pull=False, fail=False, remote_branch='pull', local_branch='requests', remote_ref=None, local_ref=None):
+        if remote_ref is None:
+            remote_ref = '{}/{}/head'.format(remote_branch, request)
+        if local_ref is None:
+            local_ref = '{}/{}'.format(local_branch, request)
+        additional_flags = ''
+        if not remote_ref.endswith('/head'):
+            additional_flags += '--update-head-ok '
         local_slug = self.service.format_path(namespace=namespace, repository=repository, rw=False)
         with self.recorder.use_cassette(self._make_cassette_name()):
             with self.mockup_git(namespace, repository):
@@ -663,11 +670,11 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                         ' * [new branch]      master     -> {1}/{0}'.format(request, local_branch)]).encode('utf-8'),
                     0),
                     ('git version', b'git version 2.8.0', b'', 0),
-                    ('git fetch --progress -v {0} {2}/{1}/head:{3}/{1}'.format(
+                    ('git fetch --progress {0}-v {1} {2}:{3}'.format(
+                            additional_flags,
                             self.service.name,
-                            request,
-                            remote_branch,
-                            local_branch), b'', '\n'.join([
+                            remote_ref,
+                            local_ref), b'', '\n'.join([
                         'POST git-upload-pack (140 bytes)',
                         'remote: Counting objects: 8318, done.',
                         'remote: Compressing objects: 100% (3/3), done.',
@@ -709,7 +716,8 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
             source_branch='pr-test',
             target_branch='master',
             create_repository='test_create_requests',
-            auto_slug=False):
+            auto_slug=False,
+            expected_result=[]):
         '''
         Here we are testing the subcommand 'request create'.
 
@@ -793,7 +801,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                 self.service.connect()
                 def test_edit(repository, from_branch):
                     return "PR title", "PR body"
-                request = self.service.request_create(
+                output = list(self.service.request_create(
                     onto_user=namespace,
                     onto_repo=repository,
                     from_branch=source_branch,
@@ -801,8 +809,39 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                     title=title,
                     description=description,
                     auto_slug=auto_slug,
-                    edit=test_edit)
-                return request
+                    edit=test_edit))
+
+                for i, line in enumerate(expected_result):
+                    assert output[i] == line
+
+    def action_request_create_by_push(self, namespace, repository, branch, remote_ref):
+        local_slug = self.service.format_path(namespace=namespace, repository=repository, rw=True)
+        self.repository.create_remote('all', url=local_slug)
+        self.repository.create_remote(self.service.name, url=local_slug)
+
+        with self.mockup_git(namespace, repository):
+            self.set_mock_popen_commands([
+                ('git version', b'git version 2.7.4', b'', 0),
+                ('git push --porcelain --progress {} HEAD:{}'.format(self.service.name, remote_ref), b'', '\n'.join([
+                    'Counting objects: 6, done.',
+                    'Delta compression using up to 2 threads.',
+                    'Compressing objects: 100% (6/6), done.',
+                    'Writing objects: 100% (6/6), 515 bytes | 0 bytes/s, done.',
+                    'Total 6 (delta 4), reused 0 (delta 0)',
+                    'remote: Resolving deltas: 100% (4/4)',
+                    'remote: Processing changes: new: 1, refs: 1, done',
+                    'remote: ',
+                    'remote: New Changes:',
+                    'remote:   https://{}/391808 One more test'.format(self.service.fqdn),
+                    'remote: ',
+                    'To {}'.format(local_slug),
+                    '*	HEAD:refs/for/{}	[new branch]'.format(branch),
+                    'Done'
+                ]).encode('utf-8'), 0)
+            ])
+            with self.recorder.use_cassette(self._make_cassette_name()):
+                self.service.connect()
+                self.service.request_create(namespace, repository, branch)
 
     def action_gist_list(self, gist=None, gist_list_data=[]):
         with self.recorder.use_cassette(self._make_cassette_name()):

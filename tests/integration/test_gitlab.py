@@ -265,14 +265,12 @@ class Test_Gitlab(GitRepoTestCase):
                 source_branch='pr-test',
                 target_branch='master',
                 title='PR test',
-                description='PR description')
-        assert r == {
-            'local': 'pr-test',
-            'project': '{}/test_create_requests'.format(self.local_namespace),
-            'ref': 1,
-            'remote': 'master',
-            'url': 'https://gitlab.com/{}/test_create_requests/merge_requests/1'.format(self.local_namespace)
-        }
+                description='PR description',
+                expected_result=[
+                    '{}',
+                    ['Successfully created request of `pr-test` onto `_namespace_gitlab_/test_create_requests:master, with id `1'],
+                    ['available at https://gitlab.com/_namespace_gitlab_/test_create_requests/merge_requests/1']
+        ])
 
     def test_20_request_create__bad_branch(self):
         with pytest.raises(ResourceNotFoundError):
