@@ -9,6 +9,10 @@ from ...exceptions import ArgumentError
 
 import github3
 
+
+SERVICE_PACKAGE = github3
+
+
 @register_target('bucket', 'gitbucket')
 class GitbucketService(GithubService):
     fqdn = "localhost"

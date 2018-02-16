@@ -32,6 +32,7 @@ Usage:
     {self} [--path=<path>] [-v...] <target> (gist|snippet) delete <gist> [-f]
     {self} [--path=<path>] [-v...] <target> config [--config=<gitconfig>]
     {self} [-v...] config [--config=<gitconfig>]
+    {self} --version
     {self} --help
 
 Tool for managing remote repository services.
@@ -52,6 +53,7 @@ Options:
     <namespace>/<repo>       Repository to work with
     -p,--path=<path>         Path to work on [default: .]
     -v,--verbose             Makes it more chatty (repeat twice to see git commands)
+    --version                Show the version
     -h,--help                Shows this message
 
 Options for list:
@@ -142,7 +144,7 @@ from .services.service import RepositoryService, EXTRACT_URL_RE
 from .tools import print_tty, print_iter, loop_input, confirm
 from .kwargparse import KeywordArgumentParser, store_parameter, register_action
 
-from git import Repo, Git
+from git import Repo, Git, __version__ as GitPythonVersion
 from git.exc import InvalidGitRepositoryError, NoSuchPathError, BadName
 
 class GitRepoRunner(KeywordArgumentParser):
@@ -587,9 +589,39 @@ def main(args):
         return 2
 
 
+class Version:
+    def __str__(self):
+        import importlib
+        s = ['Version: {}'.format(__version__),
+             '  GitPython: {}'.format(GitPythonVersion),
+             '  Services:'
+             ]
+        services = RepositoryService.service_map.values()
+
+        for service in sorted(services, key=lambda s: s.name):
+            version = 'unknown'
+            try:
+                mod = importlib.import_module(service.__module__)
+                package = mod.SERVICE_PACKAGE
+                client = package.__name__
+            except:
+                client = 'unknown'
+            else:
+                try:
+                    version = package.__version__
+                except AttributeError:
+                    pass
+
+            s.append('  {}:'.format(service.name))
+            s.append('    {}: {}'.format(client, version))
+
+        return '\n'.join(s)
+
+
 def cli():  # pragma: no cover
     try:
-        sys.exit(main(docopt(__doc__.format(self=sys.argv[0].split(os.path.sep)[-1], version=__version__))))
+        sys.exit(main(docopt(__doc__.format(self=sys.argv[0].split(os.path.sep)[-1], version=__version__),
+                             version=Version())))
     finally:
         # Whatever happens, make sure that the cursor reappears with some ANSI voodoo
         if sys.stdout.isatty():

@@ -17,6 +17,10 @@ import json, time
 import dateutil.parser
 from datetime import datetime
 
+
+SERVICE_PACKAGE = gitlab
+
+
 @register_target('lab', 'gitlab')
 class GitlabService(RepositoryService):
     fqdn = 'gitlab.com'
@@ -40,6 +44,10 @@ class GitlabService(RepositoryService):
 
         self.gl.auth()
         self.username = self.gl.user.username
+
+    def server_version(self):
+        self.connect()
+        return self.gl.version()
 
     def create(self, user, repo, add=False):
         try:

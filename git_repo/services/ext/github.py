@@ -13,6 +13,10 @@ from git.exc import GitCommandError
 
 from datetime import datetime
 
+
+SERVICE_PACKAGE = github3
+
+
 GITHUB_COM_FQDN = 'github.com'
 
 @register_target('hub', 'github')
