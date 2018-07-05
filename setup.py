@@ -117,19 +117,17 @@ class Buildout(Command):
 
 requirements_links = []
 
-def requirements(spec=None):
-    spec = '{}{}.txt'.format('requirements',
-            '-'+spec if spec else '')
+def requirements(filename):
     requires = []
 
-    requirements = pip.req.parse_requirements(
-        spec, session=pip.download.PipSession())
-
-    for item in requirements:
-        if getattr(item, 'link', None):
-            requirements_links.append(str(item.link))
-        if item.req:
-            requires.append(str(item.req))
+    with open(filename) as reqs:
+        for line in reqs.read().splitlines():
+            if line.startswith('-r '):
+                requires += requirements(line.split()[1])
+            elif line.startswith('-e '):
+                continue
+            else:
+                requires.append(line)
 
     return requires
 
@@ -166,8 +164,8 @@ setup(name='git-repo',
       long_description_markdown_filename='README.md',
       use_scm_version={'version_scheme':'guess-next-dev'},
       include_package_data = True,
-      install_requires=requirements(),
-      tests_require=requirements('test'),
+      install_requires=requirements('requirements.txt'),
+      tests_require=requirements('requirements-test.txt'),
       dependency_links=requirements_links,
       cmdclass={
           'buildout': Buildout,
