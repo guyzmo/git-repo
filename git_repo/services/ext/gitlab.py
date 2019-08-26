@@ -182,7 +182,7 @@ class GitlabService(RepositoryService):
         except Exception as err:
             raise ResourceNotFoundError('Could not find snippet') from err
 
-        return snippet.raw().decode('utf-8')
+        return snippet.content().decode('utf-8')
 
     def gist_clone(self, gist):
         raise ArgumentError('Snippets cannot be cloned in gitlab.')
@@ -302,15 +302,14 @@ class GitlabService(RepositoryService):
                 if not title and not description:
                     raise ArgumentError('Missing message for request creation')
 
-            request = self.gl.project_mergerequests.create(
-                    project_id=from_project.id,
-                    data={
-                        'source_branch': from_branch,
-                        'target_branch': onto_branch,
-                        'target_project_id': onto_project.id,
-                        'title': title,
-                        'description': description
-                    }
+            request = self.gl.projects.get(project.id).mergerequests.create(
+                {
+                    'source_branch': from_branch,
+                    'target_branch': onto_branch,
+                    'target_project_id': onto_project.id,
+                    'title': title,
+                    'description': description
+                }
             )
 
             yield '{}'
@@ -331,7 +330,7 @@ class GitlabService(RepositoryService):
         project = self.gl.projects.get('/'.join([user, repo]))
         yield "{:>3}\t{:<60}\t{:2}"
         yield ('id', 'title', 'URL')
-        for mr in self.gl.project_mergerequests.list(project_id=project.id):
+        for mr in self.gl.projects.get(project.id).mergerequests.list() :
             yield ( str(mr.iid),
                     mr.title,
                     mr.web_url
