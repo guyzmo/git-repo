@@ -25,10 +25,11 @@ class TestGitPopenMockupMixin:
         def FixPopen(*a, **k):
             if 'start_new_session' in k:
                 del k['start_new_session']
-            return self.Popen.Popen(*a, **k)
+            return self.Popen.mock.Popen_instance(*a, **k)
         self.Popen.mock.Popen.side_effect = FixPopen
         self.Popen.mock.Popen_instance.stdin = None
-        self.Popen.mock.Popen_instance.wait = lambda *a, **k: self.Popen.wait()
+        self.Popen.mock.Popen_instance.wait_orig = self.Popen.mock.Popen_instance.wait
+        self.Popen.mock.Popen_instance.wait = lambda *a, **k: self.Popen.mock.Popen_instance.wait_orig()
         self.Popen.mock.Popen_instance.__enter__ = lambda self: self
         self.Popen.mock.Popen_instance.__exit__ = lambda self, *a, **k: None
 
