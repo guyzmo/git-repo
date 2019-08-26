@@ -15,15 +15,6 @@ if sys.version_info.major < 3:
     print('Please install with python version 3')
     sys.exit(1)
 
-# Use buildout's path for eggs
-def get_egg_cache_dir(self):
-    egg_cache_dir = os.path.join(os.curdir, 'var', 'eggs')
-    if not os.path.exists(egg_cache_dir):
-        os.makedirs(egg_cache_dir, exist_ok=True)
-    return egg_cache_dir
-dist.Distribution.get_egg_cache_dir = get_egg_cache_dir
-
-
 class DistClean(Command):
     description = 'Clean the repository from all buildout stuff'
     user_options = []
@@ -94,43 +85,32 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-class Buildout(Command):
-    description = 'Running buildout on the project'
-    user_options = []
+requirements = [
+    'docopt',
+    'progress',
+    'python-dateutil',
+    'lxml',
+    'GitPython',
+    'github3.py<1.0.0',
+    'python-gitlab',
+    'gogs-client',
+    'pybitbucket_fork',
+    'python-gerritclient',
+]
 
-    def initialize_options(self): pass
-    def finalize_options(self): pass
-
-    def run(self):
-        try:
-            from zc.buildout.buildout import main
-        except ImportError:
-            print('Please install buildout!\n  pip install zc.buildout')
-            sys.exit(1)
-        errno = main(sys.argv[sys.argv.index('buildout')+1:])
-        if errno == 0:
-            print('Now you can run tests using: bin/py.test')
-            print('Now you can test current code using: bin/git-repo')
-            print('Thank you 🍻')
-        sys.exit(errno)
-
+requirements_tests = [
+    'pytest',
+    'pytest-cov',
+    'pytest-sugar',
+    'pytest-catchlog',
+    'pytest-datadir-ng',
+    'testfixtures',
+    'mock',
+    'betamax==0.5.1',
+    'betamax-serializers',
+]
 
 requirements_links = []
-
-def requirements(filename):
-    requires = []
-
-    with open(filename) as reqs:
-        for line in reqs.read().splitlines():
-            if line.startswith('-r '):
-                requires += requirements(line.split()[1])
-            elif line.startswith('-e '):
-                continue
-            else:
-                requires.append(line)
-
-    return requires
-
 
 setup(name='git-repo',
       description='Tool for managing repository services from your git CLI tool',
@@ -164,11 +144,11 @@ setup(name='git-repo',
       long_description_markdown_filename='README.md',
       use_scm_version={'version_scheme':'guess-next-dev'},
       include_package_data = True,
-      install_requires=requirements('requirements.txt'),
-      tests_require=requirements('requirements-test.txt'),
+      install_requires=requirements,
+      tests_require=requirements_tests,
+      extras_require={'test': requirements_tests},
       dependency_links=requirements_links,
       cmdclass={
-          'buildout': Buildout,
           'dist_clean': DistClean,
           'test': PyTest,
       },
