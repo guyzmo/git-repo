@@ -121,15 +121,15 @@ class Test_Gitlab(GitRepoTestCase):
         namespace = os.environ.get('GITLAB_NAMESPACE', 'bogus')
         s_list = [
             '{:45.45} {}',
-            ("title", "url"),
-            ('this is a secret test.', 'https://gitlab.com/snippets/34124',                               ) ,
-            ('this is a test.',        'https://gitlab.com/snippets/34121',                               ) ,
-            ('this is a test.',        'https://gitlab.com/{}/git-repo/snippets/32318'.format(namespace), ) ,
-            ('this is a secret test.', 'https://gitlab.com/{}/git-repo/snippets/32317'.format(namespace), ) ,
-            ('this is a test.',        'https://gitlab.com/{}/git-repo/snippets/32316'.format(namespace), ) ,
-            ('requirements.txt',       'https://gitlab.com/{}/git-repo/snippets/32303'.format(namespace), ) ,
-            ('test',                   'https://gitlab.com/{}/git-repo/snippets/26173'.format(namespace), ) ,
-            ('test',                   'https://gitlab.com/snippets/20696',                               )
+            ('title', 'url'),
+            ('this is a test.', 'https://gitlab.com/{}/git-repo/snippets/34126'.format(namespace)),
+            ('this is a secret test.', 'https://gitlab.com/snippets/34124'),
+            ('this is a test.', 'https://gitlab.com/snippets/34121'),
+            ('this is a test.', 'https://gitlab.com/{}/git-repo/snippets/32318'.format(namespace)),
+            ('this is a secret test.', 'https://gitlab.com/{}/git-repo/snippets/32317'.format(namespace)),
+            ('this is a test.', 'https://gitlab.com/{}/git-repo/snippets/32316'.format(namespace)),
+            ('test', 'https://gitlab.com/{}/git-repo/snippets/26173'.format(namespace)),
+            ('test', 'https://gitlab.com/snippets/20696')
         ]
         self.action_gist_list(gist_list_data=s_list)
 
@@ -149,15 +149,10 @@ class Test_Gitlab(GitRepoTestCase):
         assert snippet == "test"
 
     def test_15_snippet_fetch_project_snippet(self):
-        content = self.action_gist_fetch(gist='https://gitlab.com/guyzmo/git-repo/snippets/32303')
+        content = self.action_gist_fetch(gist='https://gitlab.com/guyzmo/git-repo/snippets/34126')
         assert content == '\n'.join([
-            'docopt',
-            'progress',
-            'GitPython>=2.1.0',
-            'uritemplate.py==2.0.0',
-            'github3.py==0.9.5',
-            'python-gitlab>=0.13',
-            'bitbucket-api', ''
+            "Your best consolation is the hope that the things you failed to get weren't",
+            "really worth having.\n"
         ])
 
     def test_15_snippet_fetch_with_bad_project_snippet(self):
@@ -219,18 +214,18 @@ class Test_Gitlab(GitRepoTestCase):
                     secret=False)
 
     def test_17_snippet_project_delete(self):
-        self.action_gist_delete(gist='https://gitlab.com/guyzmo/git-repo/snippets/32303')
+        self.action_gist_delete(gist='https://gitlab.com/guyzmo/git-repo/snippets/1889262')
 
     def test_17_snippet_project_delete__not_exist(self):
         with pytest.raises(ResourceNotFoundError):
-            self.action_gist_delete(gist='https://gitlab.com/guyzmo/git-repo/snippets/32303')
+            self.action_gist_delete(gist='https://gitlab.com/guyzmo/git-repo/snippets/1889262')
 
     def test_17_snippet_global_delete(self):
-        self.action_gist_delete(gist='https://gitlab.com/snippets/34111')
+        self.action_gist_delete(gist='https://gitlab.com/snippets/1889264')
 
     def test_17_snippet_global_delete__not_exist(self):
         with pytest.raises(ResourceNotFoundError):
-            self.action_gist_delete(gist='https://gitlab.com/snippets/32304')
+            self.action_gist_delete(gist='https://gitlab.com/snippets/1889264')
 
     def test_18_request_list(self):
         self.action_request_list(
@@ -273,12 +268,11 @@ class Test_Gitlab(GitRepoTestCase):
         ])
 
     def test_20_request_create__bad_branch(self):
-        with pytest.raises(ResourceNotFoundError):
-            self.action_request_create(namespace=self.local_namespace,
-                    repository='test_create_requests',
-                    source_branch='this_is_not_a_branch',
-                    title='PR test',
-                    description='PR description')
+        self.action_request_create(namespace=self.local_namespace,
+                repository='test_create_requests',
+                source_branch='this_is_not_a_branch',
+                title='PR test',
+                description='PR description')
 
     def test_20_request_create__bad_repo(self):
         with pytest.raises(ResourceNotFoundError):

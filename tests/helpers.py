@@ -654,6 +654,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
         with self.recorder.use_cassette(self._make_cassette_name()):
             with self.mockup_git(namespace, repository):
                 self.set_mock_popen_commands([
+                    ('git init', b'Initialized empty Git repository in /tmp/bar/.git/', b'', 0),
                     ('git remote add all {}'.format(local_slug), b'', b'', 0),
                     ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
                     ('git remote get-url --all all', local_slug.encode('utf-8'), b'', 0),
@@ -762,7 +763,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
             if will_record:
                 self.repository.git.push(self.service.name, 'master')
                 # create a new branch
-                new_branch = self.repository.create_head(source_branch, 'HEAD')
+                new_branch = self.repository.create_head(source_branch or 'master', 'HEAD')
                 self.repository.head.reference = new_branch
                 self.repository.head.reset(index=True, working_tree=True)
                 # make a modification, commit and push it to that branch
@@ -770,7 +771,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                     test.write('La meilleure façon de ne pas avancer est de suivre une idée fixe. J.Prévert')
                 self.repository.git.add('second_file')
                 self.repository.git.commit(message='Second commit')
-                self.repository.git.push(service, source_branch)
+                self.repository.git.push(self.service.name, source_branch or 'master')
             else:
                 import git
                 self.service._extracts_ref = lambda *a: git.Reference(
