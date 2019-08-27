@@ -319,10 +319,11 @@ class BitbucketService(RepositoryService):
                 r.links['html']['href']
             ) for r in self.bb.repositoryPullRequestsInState(
                 owner=user,
-                repository_name=repo,
-                state='open'
+                repository_name=repo
             ) if not isinstance(r, dict) # if no PR is empty, result is a dict
         )
+        yield "{}\t{:<60}\t{}"
+        yield 'id', 'title', 'URL'
         for pull in sorted(requests):
             try:
                 yield pull
