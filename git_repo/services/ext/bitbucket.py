@@ -97,7 +97,7 @@ class BitbucketService(RepositoryService):
 
     def list(self, user, _long=False):
         try:
-            user = User.find_user_by_username(user)
+            user = User(User.find_user_by_username(user))
         except HTTPError as err:
             raise ResourceNotFoundError("User {} does not exists.".format(user)) from err
 
@@ -106,7 +106,7 @@ class BitbucketService(RepositoryService):
             yield "{}"
             repositories = list(repositories)
             yield ("Total repositories: {}".format(len(repositories)),)
-            yield from columnize(["/".join([user.username, repo.name]) for repo in repositories])
+            yield from columnize(["/".join([user.nickname, repo.name]) for repo in repositories])
         else:
             yield "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{:12}\t{}"
             yield ['Status', 'Commits', 'Reqs', 'Issues', 'Forks', 'Coders', 'Watch', 'Likes', 'Lang', 'Modif', 'Name']
@@ -134,7 +134,7 @@ class BitbucketService(RepositoryService):
                     # info
                     repo.language or '?',                 # language
                     repo.updated_on,                      # date
-                    '/'.join([user.username, repo.name]), # name
+                    '/'.join([user.nickname, repo.name]), # name
                 ]
 
     def _format_gist(self, gist):
