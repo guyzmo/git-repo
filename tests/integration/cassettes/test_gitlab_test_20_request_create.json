@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2016-11-28T00:00:37",
+      "recorded_at": "2019-08-26T22:09:21",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -10,119 +10,195 @@
         "headers": {
           "Accept": "*/*",
           "Accept-Encoding": "identity",
-          "Authorization": "Basic Tm9uZTpOb25l",
           "Connection": "keep-alive",
-          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
-          "User-Agent": "python-requests/2.10.0"
-        },
-        "method": "GET",
-        "uri": "https://gitlab.com/api/v3/user"
-      },
-      "response": {
-        "body": {
-          "encoding": null,
-          "string": "{\"name\":\"Guyzmo\",\"username\":\"<GITLAB_NAMESPACE>\",\"id\":459552,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80&d=identicon\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>\",\"created_at\":\"2016-03-21T12:52:59.859Z\",\"is_admin\":false,\"bio\":\": :(){ :|:& };:\",\"location\":\"Earth, Solar system, Milkyway, Universe\",\"skype\":\"\",\"linkedin\":\"\",\"twitter\":\"\",\"website_url\":\"http://i.got.nothing.to/blog\",\"organization\":null,\"last_sign_in_at\":\"2016-11-05T15:04:27.341Z\",\"confirmed_at\":\"2016-03-21T13:48:05.234Z\",\"email\":\"<GITLAB_NAMESPACE>+gitlab@m0g.net\",\"theme_id\":4,\"color_scheme_id\":4,\"projects_limit\":100000,\"current_sign_in_at\":\"2016-11-25T02:04:59.533Z\",\"identities\":[],\"can_create_group\":true,\"can_create_project\":true,\"two_factor_enabled\":false,\"external\":false}"
-        },
-        "headers": {
-          "Cache-Control": "max-age=0, private, must-revalidate",
-          "Content-Length": "775",
-          "Content-Type": "application/json",
-          "Date": "Mon, 28 Nov 2016 00:00:37 GMT",
-          "Etag": "W/\"757252f72cad7c2cbb99b765d65cc424\"",
-          "Server": "nginx",
-          "Vary": "Origin",
-          "X-Request-Id": "2ad79d07-cf21-4cfc-8a1a-9a9f3678586a",
-          "X-Runtime": "0.043649"
-        },
-        "status": {
-          "code": 200,
-          "message": "OK"
-        },
-        "url": "https://gitlab.com/api/v3/user"
-      }
-    },
-    {
-      "recorded_at": "2016-11-28T00:00:37",
-      "request": {
-        "body": {
-          "encoding": "utf-8",
-          "string": ""
-        },
-        "headers": {
-          "Accept": "*/*",
-          "Accept-Encoding": "identity",
-          "Authorization": "Basic Tm9uZTpOb25l",
-          "Connection": "keep-alive",
-          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
-          "User-Agent": "python-requests/2.10.0"
-        },
-        "method": "GET",
-        "uri": "https://gitlab.com/api/v3/projects/<GITLAB_NAMESPACE>%2Ftest_create_requests"
-      },
-      "response": {
-        "body": {
-          "encoding": null,
-          "string": "{\"id\":2078682,\"description\":null,\"default_branch\":\"master\",\"tag_list\":[],\"public\":false,\"archived\":false,\"visibility_level\":0,\"ssh_url_to_repo\":\"git@gitlab.com:<GITLAB_NAMESPACE>/test_create_requests.git\",\"http_url_to_repo\":\"https://gitlab.com/<GITLAB_NAMESPACE>/test_create_requests.git\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>/test_create_requests\",\"owner\":{\"name\":\"Guyzmo\",\"username\":\"<GITLAB_NAMESPACE>\",\"id\":459552,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80&d=identicon\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>\"},\"name\":\"test_create_requests\",\"name_with_namespace\":\"Guyzmo / test_create_requests\",\"path\":\"test_create_requests\",\"path_with_namespace\":\"<GITLAB_NAMESPACE>/test_create_requests\",\"container_registry_enabled\":true,\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"builds_enabled\":true,\"snippets_enabled\":false,\"created_at\":\"2016-11-28T00:00:28.850Z\",\"last_activity_at\":\"2016-11-28T00:00:28.850Z\",\"shared_runners_enabled\":true,\"lfs_enabled\":true,\"creator_id\":459552,\"namespace\":{\"id\":540439,\"name\":\"<GITLAB_NAMESPACE>\",\"path\":\"<GITLAB_NAMESPACE>\",\"owner_id\":459552,\"created_at\":\"2016-03-21T12:53:00.139Z\",\"updated_at\":\"2016-03-21T12:53:00.139Z\",\"description\":\"\",\"avatar\":null,\"membership_lock\":false,\"share_with_group_lock\":false,\"visibility_level\":20,\"request_access_enabled\":true,\"ldap_sync_status\":\"ready\",\"ldap_sync_error\":null,\"ldap_sync_last_update_at\":null,\"ldap_sync_last_successful_update_at\":null,\"ldap_sync_last_sync_at\":null,\"deleted_at\":null,\"lfs_enabled\":null,\"repository_size_limit\":null},\"avatar_url\":null,\"star_count\":0,\"forks_count\":0,\"open_issues_count\":0,\"runners_token\":\"FQdm-xHar7jhbTDfWceK\",\"public_builds\":true,\"shared_with_groups\":[],\"only_allow_merge_if_build_succeeds\":false,\"request_access_enabled\":false,\"only_allow_merge_if_all_discussions_are_resolved\":false,\"approvals_before_merge\":0,\"permissions\":{\"project_access\":{\"access_level\":40,\"notification_level\":3},\"group_access\":null}}"
-        },
-        "headers": {
-          "Cache-Control": "max-age=0, private, must-revalidate",
-          "Content-Length": "1934",
-          "Content-Type": "application/json",
-          "Date": "Mon, 28 Nov 2016 00:00:37 GMT",
-          "Etag": "W/\"fdc29a223cce1aed525b6d3355b31382\"",
-          "Server": "nginx",
-          "Vary": "Origin",
-          "X-Request-Id": "6eb5247f-bebf-4163-8890-97da380bfe52",
-          "X-Runtime": "0.120761"
-        },
-        "status": {
-          "code": 200,
-          "message": "OK"
-        },
-        "url": "https://gitlab.com/api/v3/projects/<GITLAB_NAMESPACE>%2Ftest_create_requests"
-      }
-    },
-    {
-      "recorded_at": "2016-11-28T00:00:38",
-      "request": {
-        "body": {
-          "encoding": "utf-8",
-          "string": "{\"source_branch\": \"pr-test\", \"title\": \"PR description\", \"description\": null, \"target_branch\": \"PR test\"}"
-        },
-        "headers": {
-          "Accept": "*/*",
-          "Accept-Encoding": "identity",
-          "Authorization": "Basic Tm9uZTpOb25l",
-          "Connection": "keep-alive",
-          "Content-Length": "104",
           "Content-type": "application/json",
           "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
-          "User-Agent": "python-requests/2.10.0"
+          "User-Agent": "python-requests/2.22.0"
         },
-        "method": "POST",
-        "uri": "https://gitlab.com/api/v3/projects/2078682/merge_requests"
+        "method": "GET",
+        "uri": "https://gitlab.com/api/v4/user"
       },
       "response": {
         "body": {
           "encoding": null,
-          "string": "{\"id\":1312866,\"iid\":1,\"project_id\":2078682,\"title\":\"PR description\",\"description\":null,\"state\":\"opened\",\"created_at\":\"2016-11-28T00:00:37.670Z\",\"updated_at\":\"2016-11-28T00:00:37.670Z\",\"target_branch\":\"PR test\",\"source_branch\":\"pr-test\",\"upvotes\":0,\"downvotes\":0,\"author\":{\"name\":\"Guyzmo\",\"username\":\"<GITLAB_NAMESPACE>\",\"id\":459552,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80&d=identicon\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>\"},\"assignee\":null,\"source_project_id\":2078682,\"target_project_id\":2078682,\"labels\":[],\"work_in_progress\":false,\"milestone\":null,\"merge_when_build_succeeds\":false,\"merge_status\":\"unchecked\",\"sha\":\"d47313f69ab606bfd93e49ceed9ffbe993d4e97f\",\"merge_commit_sha\":null,\"subscribed\":true,\"user_notes_count\":0,\"approvals_before_merge\":null,\"should_remove_source_branch\":null,\"force_remove_source_branch\":null,\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>/test_create_requests/merge_requests/1\"}"
+          "string": "{\"id\":459552,\"name\":\"Guyzmo\",\"username\":\"<GITLAB_NAMESPACE>\",\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>\",\"created_at\":\"2016-03-21T12:52:59.859Z\",\"bio\":\": :(){ :|:\\u0026 };:\",\"location\":\"Earth, Solar system, Milkyway, Universe\",\"public_email\":\"\",\"skype\":\"\",\"linkedin\":\"\",\"twitter\":\"https://twitter.com/<GITLAB_NAMESPACE>\",\"website_url\":\"http://i.got.nothing.to/blog\",\"organization\":\"\",\"last_sign_in_at\":\"2019-08-19T16:34:20.318Z\",\"confirmed_at\":\"2016-03-21T13:48:05.234Z\",\"last_activity_on\":\"2019-08-26\",\"email\":\"<GITLAB_NAMESPACE>+gitlab@m0g.net\",\"theme_id\":2,\"color_scheme_id\":2,\"projects_limit\":100000,\"current_sign_in_at\":\"2019-08-26T12:05:47.884Z\",\"identities\":[],\"can_create_group\":true,\"can_create_project\":true,\"two_factor_enabled\":false,\"external\":false,\"private_profile\":false,\"shared_runners_minutes_limit\":2000,\"extra_shared_runners_minutes_limit\":null}"
         },
         "headers": {
           "Cache-Control": "max-age=0, private, must-revalidate",
-          "Content-Length": "950",
+          "Content-Length": "944",
           "Content-Type": "application/json",
-          "Date": "Mon, 28 Nov 2016 00:00:38 GMT",
-          "Etag": "W/\"0591966e0911ad178c60525bfb1ba72b\"",
+          "Date": "Mon, 26 Aug 2019 22:09:21 GMT",
+          "Etag": "W/\"c277655375af222ec17621ae3125a5fd\"",
+          "RateLimit-Limit": "600",
+          "RateLimit-Observed": "7",
+          "RateLimit-Remaining": "593",
+          "RateLimit-Reset": "1566857421",
+          "RateLimit-ResetTime": "Mon, 26 Aug 2019 22:10:21 GMT",
+          "Referrer-Policy": "strict-origin-when-cross-origin",
           "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
           "Vary": "Origin",
-          "X-Request-Id": "175863f7-5762-4c97-84f9-c7899bb0f20a",
-          "X-Runtime": "1.021809"
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Request-Id": "VS5ARRN86h9",
+          "X-Runtime": "0.044459"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://gitlab.com/api/v4/user"
+      }
+    },
+    {
+      "recorded_at": "2019-08-26T22:09:21",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "Content-type": "application/json",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.22.0"
+        },
+        "method": "GET",
+        "uri": "https://gitlab.com/api/v4/projects/<GITLAB_NAMESPACE>%2Ftest_create_requests"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "{\"id\":13999179,\"description\":null,\"name\":\"test_create_requests\",\"name_with_namespace\":\"Guyzmo / test_create_requests\",\"path\":\"test_create_requests\",\"path_with_namespace\":\"<GITLAB_NAMESPACE>/test_create_requests\",\"created_at\":\"2019-08-26T22:09:14.796Z\",\"default_branch\":\"master\",\"tag_list\":[],\"ssh_url_to_repo\":\"git@gitlab.com:<GITLAB_NAMESPACE>/test_create_requests.git\",\"http_url_to_repo\":\"https://gitlab.com/<GITLAB_NAMESPACE>/test_create_requests.git\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>/test_create_requests\",\"readme_url\":null,\"avatar_url\":null,\"star_count\":0,\"forks_count\":0,\"last_activity_at\":\"2019-08-26T22:09:14.796Z\",\"namespace\":{\"id\":540439,\"name\":\"Guyzmo\",\"path\":\"<GITLAB_NAMESPACE>\",\"kind\":\"user\",\"full_path\":\"<GITLAB_NAMESPACE>\",\"parent_id\":null,\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>\"},\"_links\":{\"self\":\"https://gitlab.com/api/v4/projects/13999179\",\"issues\":\"https://gitlab.com/api/v4/projects/13999179/issues\",\"merge_requests\":\"https://gitlab.com/api/v4/projects/13999179/merge_requests\",\"repo_branches\":\"https://gitlab.com/api/v4/projects/13999179/repository/branches\",\"labels\":\"https://gitlab.com/api/v4/projects/13999179/labels\",\"events\":\"https://gitlab.com/api/v4/projects/13999179/events\",\"members\":\"https://gitlab.com/api/v4/projects/13999179/members\"},\"empty_repo\":false,\"archived\":false,\"visibility\":\"private\",\"owner\":{\"id\":459552,\"name\":\"Guyzmo\",\"username\":\"<GITLAB_NAMESPACE>\",\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>\"},\"resolve_outdated_diff_discussions\":false,\"container_registry_enabled\":true,\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"jobs_enabled\":true,\"snippets_enabled\":true,\"issues_access_level\":\"enabled\",\"repository_access_level\":\"enabled\",\"merge_requests_access_level\":\"enabled\",\"wiki_access_level\":\"enabled\",\"builds_access_level\":\"enabled\",\"snippets_access_level\":\"enabled\",\"shared_runners_enabled\":true,\"lfs_enabled\":true,\"creator_id\":459552,\"import_status\":\"none\",\"import_error\":null,\"open_issues_count\":0,\"runners_token\":\"Z8DzSchCy6LXHHuYWKVD\",\"ci_default_git_depth\":50,\"public_jobs\":true,\"build_git_strategy\":\"fetch\",\"build_timeout\":3600,\"auto_cancel_pending_pipelines\":\"enabled\",\"build_coverage_regex\":null,\"ci_config_path\":null,\"shared_with_groups\":[],\"only_allow_merge_if_pipeline_succeeds\":false,\"request_access_enabled\":false,\"only_allow_merge_if_all_discussions_are_resolved\":false,\"printing_merge_request_link_enabled\":true,\"merge_method\":\"merge\",\"auto_devops_enabled\":false,\"auto_devops_deploy_strategy\":\"continuous\",\"permissions\":{\"project_access\":{\"access_level\":40,\"notification_level\":3},\"group_access\":null},\"mirror\":false,\"external_authorization_classification_label\":\"\"}"
+        },
+        "headers": {
+          "Cache-Control": "max-age=0, private, must-revalidate",
+          "Content-Length": "2806",
+          "Content-Type": "application/json",
+          "Date": "Mon, 26 Aug 2019 22:09:21 GMT",
+          "Etag": "W/\"24d29038ec6b9c58246c491aaae6ebfe\"",
+          "RateLimit-Limit": "600",
+          "RateLimit-Observed": "8",
+          "RateLimit-Remaining": "592",
+          "RateLimit-Reset": "1566857421",
+          "RateLimit-ResetTime": "Mon, 26 Aug 2019 22:10:21 GMT",
+          "Referrer-Policy": "strict-origin-when-cross-origin",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Request-Id": "lW7Qm5KGHW7",
+          "X-Runtime": "0.097675"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://gitlab.com/api/v4/projects/<GITLAB_NAMESPACE>%2Ftest_create_requests"
+      }
+    },
+    {
+      "recorded_at": "2019-08-26T22:09:21",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "Content-type": "application/json",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.22.0"
+        },
+        "method": "GET",
+        "uri": "https://gitlab.com/api/v4/projects/13999179"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "{\"id\":13999179,\"description\":null,\"name\":\"test_create_requests\",\"name_with_namespace\":\"Guyzmo / test_create_requests\",\"path\":\"test_create_requests\",\"path_with_namespace\":\"<GITLAB_NAMESPACE>/test_create_requests\",\"created_at\":\"2019-08-26T22:09:14.796Z\",\"default_branch\":\"master\",\"tag_list\":[],\"ssh_url_to_repo\":\"git@gitlab.com:<GITLAB_NAMESPACE>/test_create_requests.git\",\"http_url_to_repo\":\"https://gitlab.com/<GITLAB_NAMESPACE>/test_create_requests.git\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>/test_create_requests\",\"readme_url\":null,\"avatar_url\":null,\"star_count\":0,\"forks_count\":0,\"last_activity_at\":\"2019-08-26T22:09:14.796Z\",\"namespace\":{\"id\":540439,\"name\":\"Guyzmo\",\"path\":\"<GITLAB_NAMESPACE>\",\"kind\":\"user\",\"full_path\":\"<GITLAB_NAMESPACE>\",\"parent_id\":null,\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>\"},\"_links\":{\"self\":\"https://gitlab.com/api/v4/projects/13999179\",\"issues\":\"https://gitlab.com/api/v4/projects/13999179/issues\",\"merge_requests\":\"https://gitlab.com/api/v4/projects/13999179/merge_requests\",\"repo_branches\":\"https://gitlab.com/api/v4/projects/13999179/repository/branches\",\"labels\":\"https://gitlab.com/api/v4/projects/13999179/labels\",\"events\":\"https://gitlab.com/api/v4/projects/13999179/events\",\"members\":\"https://gitlab.com/api/v4/projects/13999179/members\"},\"empty_repo\":false,\"archived\":false,\"visibility\":\"private\",\"owner\":{\"id\":459552,\"name\":\"Guyzmo\",\"username\":\"<GITLAB_NAMESPACE>\",\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>\"},\"resolve_outdated_diff_discussions\":false,\"container_registry_enabled\":true,\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"jobs_enabled\":true,\"snippets_enabled\":true,\"issues_access_level\":\"enabled\",\"repository_access_level\":\"enabled\",\"merge_requests_access_level\":\"enabled\",\"wiki_access_level\":\"enabled\",\"builds_access_level\":\"enabled\",\"snippets_access_level\":\"enabled\",\"shared_runners_enabled\":true,\"lfs_enabled\":true,\"creator_id\":459552,\"import_status\":\"none\",\"import_error\":null,\"open_issues_count\":0,\"runners_token\":\"Z8DzSchCy6LXHHuYWKVD\",\"ci_default_git_depth\":50,\"public_jobs\":true,\"build_git_strategy\":\"fetch\",\"build_timeout\":3600,\"auto_cancel_pending_pipelines\":\"enabled\",\"build_coverage_regex\":null,\"ci_config_path\":null,\"shared_with_groups\":[],\"only_allow_merge_if_pipeline_succeeds\":false,\"request_access_enabled\":false,\"only_allow_merge_if_all_discussions_are_resolved\":false,\"printing_merge_request_link_enabled\":true,\"merge_method\":\"merge\",\"auto_devops_enabled\":false,\"auto_devops_deploy_strategy\":\"continuous\",\"permissions\":{\"project_access\":{\"access_level\":40,\"notification_level\":3},\"group_access\":null},\"mirror\":false,\"external_authorization_classification_label\":\"\"}"
+        },
+        "headers": {
+          "Cache-Control": "max-age=0, private, must-revalidate",
+          "Content-Length": "2806",
+          "Content-Type": "application/json",
+          "Date": "Mon, 26 Aug 2019 22:09:21 GMT",
+          "Etag": "W/\"24d29038ec6b9c58246c491aaae6ebfe\"",
+          "RateLimit-Limit": "600",
+          "RateLimit-Observed": "9",
+          "RateLimit-Remaining": "591",
+          "RateLimit-Reset": "1566857421",
+          "RateLimit-ResetTime": "Mon, 26 Aug 2019 22:10:21 GMT",
+          "Referrer-Policy": "strict-origin-when-cross-origin",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Request-Id": "Jawwtgp55Y1",
+          "X-Runtime": "0.085407"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://gitlab.com/api/v4/projects/13999179"
+      }
+    },
+    {
+      "recorded_at": "2019-08-26T22:09:22",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": "{\"source_branch\": \"pr-test\", \"target_branch\": \"master\", \"target_project_id\": 13999179, \"title\": \"PR test\", \"description\": \"PR description\"}"
+        },
+        "headers": {
+          "Accept": "*/*",
+          "Accept-Encoding": "identity",
+          "Connection": "keep-alive",
+          "Content-Length": "139",
+          "Content-type": "application/json",
+          "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
+          "User-Agent": "python-requests/2.22.0"
+        },
+        "method": "POST",
+        "uri": "https://gitlab.com/api/v4/projects/13999179/merge_requests"
+      },
+      "response": {
+        "body": {
+          "encoding": null,
+          "string": "{\"id\":35863161,\"iid\":1,\"project_id\":13999179,\"title\":\"PR test\",\"description\":\"PR description\",\"state\":\"opened\",\"created_at\":\"2019-08-26T22:09:22.055Z\",\"updated_at\":\"2019-08-26T22:09:22.055Z\",\"merged_by\":null,\"merged_at\":null,\"closed_by\":null,\"closed_at\":null,\"target_branch\":\"master\",\"source_branch\":\"pr-test\",\"user_notes_count\":0,\"upvotes\":0,\"downvotes\":0,\"assignee\":null,\"author\":{\"id\":459552,\"name\":\"Guyzmo\",\"username\":\"<GITLAB_NAMESPACE>\",\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>\"},\"assignees\":[],\"source_project_id\":13999179,\"target_project_id\":13999179,\"labels\":[],\"work_in_progress\":false,\"milestone\":null,\"merge_when_pipeline_succeeds\":false,\"merge_status\":\"can_be_merged\",\"sha\":\"1ffc0af3fb82291ea6a20de17a311506aab11649\",\"merge_commit_sha\":null,\"discussion_locked\":null,\"should_remove_source_branch\":null,\"force_remove_source_branch\":null,\"reference\":\"!1\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>/test_create_requests/merge_requests/1\",\"time_stats\":{\"time_estimate\":0,\"total_time_spent\":0,\"human_time_estimate\":null,\"human_total_time_spent\":null},\"squash\":false,\"task_completion_status\":{\"count\":0,\"completed_count\":0},\"subscribed\":true,\"changes_count\":\"1\",\"latest_build_started_at\":null,\"latest_build_finished_at\":null,\"first_deployed_to_production_at\":null,\"pipeline\":null,\"head_pipeline\":null,\"diff_refs\":{\"base_sha\":\"c73ccdcc7600be42b685b3c0aaf088622f3ebb71\",\"head_sha\":\"1ffc0af3fb82291ea6a20de17a311506aab11649\",\"start_sha\":\"c73ccdcc7600be42b685b3c0aaf088622f3ebb71\"},\"merge_error\":null,\"user\":{\"can_merge\":true},\"approvals_before_merge\":null}"
+        },
+        "headers": {
+          "Cache-Control": "max-age=0, private, must-revalidate",
+          "Content-Length": "1659",
+          "Content-Type": "application/json",
+          "Date": "Mon, 26 Aug 2019 22:09:22 GMT",
+          "Etag": "W/\"c2cd31c93fcfb916130cc3c11795a5a8\"",
+          "RateLimit-Limit": "600",
+          "RateLimit-Observed": "10",
+          "RateLimit-Remaining": "590",
+          "RateLimit-Reset": "1566857422",
+          "RateLimit-ResetTime": "Mon, 26 Aug 2019 22:10:22 GMT",
+          "Referrer-Policy": "strict-origin-when-cross-origin",
+          "Server": "nginx",
+          "Strict-Transport-Security": "max-age=31536000",
+          "Vary": "Origin",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Request-Id": "zhMKbXyQlv6",
+          "X-Runtime": "0.405838"
         },
         "status": {
           "code": 201,
           "message": "Created"
         },
-        "url": "https://gitlab.com/api/v3/projects/2078682/merge_requests"
+        "url": "https://gitlab.com/api/v4/projects/13999179/merge_requests"
       }
     }
   ],

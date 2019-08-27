@@ -25,10 +25,11 @@ class TestGitPopenMockupMixin:
         def FixPopen(*a, **k):
             if 'start_new_session' in k:
                 del k['start_new_session']
-            return self.Popen.Popen(*a, **k)
+            return self.Popen.mock.Popen_instance(*a, **k)
         self.Popen.mock.Popen.side_effect = FixPopen
         self.Popen.mock.Popen_instance.stdin = None
-        self.Popen.mock.Popen_instance.wait = lambda *a, **k: self.Popen.wait()
+        self.Popen.mock.Popen_instance.wait_orig = self.Popen.mock.Popen_instance.wait
+        self.Popen.mock.Popen_instance.wait = lambda *a, **k: self.Popen.mock.Popen_instance.wait_orig()
         self.Popen.mock.Popen_instance.__enter__ = lambda self: self
         self.Popen.mock.Popen_instance.__exit__ = lambda self, *a, **k: None
 
@@ -73,34 +74,34 @@ class RepositoryMockup(RepositoryService):
         self._did_request_fetch = None
 
     def pull(self, *args, **kwarg):
-        self._did_pull = (args, kwarg)
+        self.__class__._current._did_pull = (args, kwarg)
 
     def clone(self, *args, **kwarg):
-        self._did_clone = (args, kwarg)
+        self.__class__._current._did_clone = (args, kwarg)
 
     def add(self, repo, user=None, *args, **kwarg):
-        self._did_add = ((user, repo)+args, kwarg)
+        self.__class__._current._did_add = ((user, repo)+args, kwarg)
         class FakeRemote:
             name = 'foobar'
         return FakeRemote, user, repo
 
     def open(self, *args, **kwarg):
-        self._did_open = (args, kwarg)
+        self.__class__._current._did_open = (args, kwarg)
 
     def connect(self):
-        self._did_connect = True
+        self.__class__._current._did_connect = True
 
     def delete(self, *args, **kwarg):
-        self._did_delete = (tuple(reversed(args)), kwarg)
+        self.__class__._current._did_delete = (tuple(reversed(args)), kwarg)
 
     def create(self, *args, **kwarg):
-        self._did_create = (args, kwarg)
+        self.__class__._current._did_create = (args, kwarg)
 
     def fork(self, *args, **kwarg):
-        self._did_fork = (args, kwarg)
+        self.__class__._current._did_fork = (args, kwarg)
 
     def gist_list(self, *args, **kwarg):
-        self._did_gist_list = (args, kwarg)
+        self.__class__._current._did_gist_list = (args, kwarg)
         if len(args) == 0 or not args[0]:
             yield '{} {}'
             yield 'title', 'url'
@@ -118,7 +119,7 @@ class RepositoryMockup(RepositoryService):
                 yield 'lang3', 'size3', 'name3'
 
     def gist_fetch(self, *args, **kwarg):
-        self._did_gist_fetch = (args, kwarg)
+        self.__class__._current._did_gist_fetch = (args, kwarg)
         if args[0] == 'bad':
             raise Exception('bad gist!')
         elif args[1] == 'bad':
@@ -127,23 +128,23 @@ class RepositoryMockup(RepositoryService):
             return "content of a gist"
 
     def gist_clone(self, *args, **kwarg):
-        self._did_gist_clone = (args, kwarg)
+        self.__class__._current._did_gist_clone = (args, kwarg)
         if args[0] == 'bad':
             raise Exception('bad gist!')
 
     def gist_create(self, *args, **kwarg):
-        self._did_gist_create = (args, kwarg)
+        self.__class__._current._did_gist_create = (args, kwarg)
         if 'exists' in args[0]:
             raise Exception('gist exists!')
         return 'https://gists/42'
 
     def gist_delete(self, *args, **kwarg):
-        self._did_gist_delete = (args, kwarg)
+        self.__class__._current._did_gist_delete = (args, kwarg)
         if args[0] == 'bad':
             raise Exception('bad gist!')
 
     def request_list(self, *args, **kwarg):
-        self._did_request_list = (args, kwarg)
+        self.__class__._current._did_request_list = (args, kwarg)
         yield '{} {} {}'
         yield ('id', 'description', 'URL')
         yield ('1', 'desc1', 'http://request/1')
@@ -151,18 +152,24 @@ class RepositoryMockup(RepositoryService):
         yield ('3', 'desc3', 'http://request/3')
 
     def request_fetch(self, *args, **kwarg):
-        self._did_request_fetch = (args, kwarg)
+        self.__class__._current._did_request_fetch = (args, kwarg)
         if args[-1] == 'bad':
             raise Exception('bad request for merge!')
         return "pr/42"
 
     def request_create(self, *args, **kwarg):
-        self._did_request_create = (args, kwarg)
+        self.__class__._current._did_request_create = (args, kwarg)
         if args[2] == 'bad' or args[3] == 'bad':
             raise Exception('bad branch to request!')
         local = args[2] or 'pr-test'
         remote = args[3] or 'base-test'
-        return {'local': local, 'remote': remote, 'project': '/'.join(args[:2]), 'ref': 42}
+        # return
+        yield '{}'
+        yield ['Successfully created request of `{local}` onto `{project}:{remote}, with id `{ref}'.format(
+            **{'local': local, 'remote': remote, 'project': '/'.join(args[:2]), 'ref': 42}
+        )]
+        yield ['available at {}'.format('https://...')]
+
 
     @classmethod
     def get_auth_token(cls, login, password, prompt=None):
@@ -170,7 +177,7 @@ class RepositoryMockup(RepositoryService):
 
     @property
     def user(self):
-        self._did_user = True
+        self.__class__._current._did_user = True
         return 'foobar'
 
     def get_repository(self, *args, **kwarg):
@@ -180,6 +187,7 @@ class RepositoryMockup(RepositoryService):
 class GitRepoMainTestCase(TestGitPopenMockupMixin):
     def setup_method(self, method):
         self.log.info('GitRepoMainTestCase.setup_method({})'.format(method))
+        RepositoryService._current = RepositoryMockup(c={})
         self.tempdir = TemporaryDirectory()
         RepositoryService.service_map = {
             'github': RepositoryMockup,
@@ -196,7 +204,6 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
 
     def teardown_method(self, method):
         self.log.info('GitRepoMainTestCase.teardown_method({})'.format(method))
-        RepositoryService._current = RepositoryMockup(c={})
         self.tempdir.cleanup()
 
     def setup_args(self, d, args={}):
@@ -214,7 +221,6 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
             '<branch>': None,
             '<target>': self.target,
             '<target_repo>': None,
-            '<user>/<repo>': '',
             'add': False,
             'clone': False,
             'create': False,
@@ -236,7 +242,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
             '<request>': None,
             '<local_branch>': None,
             '<remote_branch>': None,
-            '<user>/<repo>': None,
+            '<namespace>/<repo>': None,
         }
         cli_args.update(d)
         cli_args.update(args)
@@ -251,7 +257,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
         Repo.init(os.path.join(self.tempdir.name, create_repo))
         assert rc == main(self.setup_args({
             'add': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for add".format(rc)
         return RepositoryService._current._did_add
@@ -259,7 +265,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
     def main_clone(self, repo, rc=0, args={}):
         assert rc == main(self.setup_args({
             'clone': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for clone".format(rc)
         return RepositoryService._current._did_clone
@@ -271,7 +277,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
             Repo.init(repo_path)
         assert rc == main(self.setup_args({
             'create': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for create".format(rc)
         return RepositoryService._current._did_create
@@ -283,7 +289,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
             Repo.init(repo_path)
         assert rc == main(self.setup_args({
             'delete': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--path': self.tempdir.name,
         }, args)), "Non {} result for delete".format(rc)
         return RepositoryService._current._did_delete
@@ -291,7 +297,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
     def main_fork(self, repo=None, rc=0, args={}):
         assert rc == main(self.setup_args({
             'fork': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for fork".format(rc)
         return RepositoryService._current._did_fork
@@ -343,7 +349,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
         assert rc == main(self.setup_args({
             'request': True,
             'list': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--clone': True,
             '--path': self.tempdir.name
         }, args)), "Non {} result for request list".format(rc)
@@ -353,7 +359,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
         assert rc == main(self.setup_args({
             'request': True,
             'fetch': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--clone': True,
             '--path': self.tempdir.name
         }, args)), "Non {} result for request fetch".format(rc)
@@ -363,7 +369,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
         assert rc == main(self.setup_args({
             'request': True,
             'create': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for request create".format(rc)
         return RepositoryService._current._did_request_create
@@ -371,7 +377,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
     def main_open(self, repo=None, rc=0, args={}):
         assert rc == main(self.setup_args({
             'open': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for open".format(rc)
         return RepositoryService._current._did_open
@@ -387,7 +393,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
 
     def main_noop(self, repo, rc=1, args={}):
         assert rc == main(self.setup_args({
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for no-action".format(rc)
 
@@ -653,6 +659,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
         with self.recorder.use_cassette(self._make_cassette_name()):
             with self.mockup_git(namespace, repository):
                 self.set_mock_popen_commands([
+                    ('git init', b'Initialized empty Git repository in /tmp/bar/.git/', b'', 0),
                     ('git remote add all {}'.format(local_slug), b'', b'', 0),
                     ('git remote add {} {}'.format(self.service.name, local_slug), b'', b'', 0),
                     ('git remote get-url --all all', local_slug.encode('utf-8'), b'', 0),
@@ -761,7 +768,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
             if will_record:
                 self.repository.git.push(self.service.name, 'master')
                 # create a new branch
-                new_branch = self.repository.create_head(source_branch, 'HEAD')
+                new_branch = self.repository.create_head(source_branch or 'master', 'HEAD')
                 self.repository.head.reference = new_branch
                 self.repository.head.reset(index=True, working_tree=True)
                 # make a modification, commit and push it to that branch
@@ -769,7 +776,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
                     test.write('La meilleure façon de ne pas avancer est de suivre une idée fixe. J.Prévert')
                 self.repository.git.add('second_file')
                 self.repository.git.commit(message='Second commit')
-                self.repository.git.push(service, source_branch)
+                self.repository.git.push(self.service.name, source_branch or 'master')
             else:
                 import git
                 self.service._extracts_ref = lambda *a: git.Reference(
@@ -894,6 +901,7 @@ class GitRepoTestCase(TestGitPopenMockupMixin):
 
     def action_open(self, namespace, repository):
         self.set_mock_popen_commands([
+            ('xdg-settings get default-web-browser', 'xdg-open {}'.format(self.service.format_path(namespace=namespace, repository=repository)).encode('utf-8'), b'', 0),
             ('xdg-open {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),
             ('gnome-open {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),
             ('www-browser {}'.format(self.service.format_path(namespace=namespace, repository=repository)), b'', b'', 0),

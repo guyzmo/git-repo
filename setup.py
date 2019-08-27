@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-from setuptools import setup, find_packages
 
 import sys, os
 
 import pip
 
-from setuptools import setup, find_packages, dist
+from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 from distutils.core import Command
 from distutils.core import setup
@@ -14,15 +13,6 @@ from distutils.core import setup
 if sys.version_info.major < 3:
     print('Please install with python version 3')
     sys.exit(1)
-
-# Use buildout's path for eggs
-def get_egg_cache_dir(self):
-    egg_cache_dir = os.path.join(os.curdir, 'var', 'eggs')
-    if not os.path.exists(egg_cache_dir):
-        os.makedirs(egg_cache_dir, exist_ok=True)
-    return egg_cache_dir
-dist.Distribution.get_egg_cache_dir = get_egg_cache_dir
-
 
 class DistClean(Command):
     description = 'Clean the repository from all buildout stuff'
@@ -94,45 +84,31 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-class Buildout(Command):
-    description = 'Running buildout on the project'
-    user_options = []
+requirements = [
+    'docopt',
+    'progress',
+    'python-dateutil',
+    'lxml',
+    'GitPython',
+    'github3.py<1.0.0',
+    'python-gitlab',
+    'gogs-client',
+    'pybitbucket_fork',
+    'python-gerritclient',
+]
 
-    def initialize_options(self): pass
-    def finalize_options(self): pass
-
-    def run(self):
-        try:
-            from zc.buildout.buildout import main
-        except ImportError:
-            print('Please install buildout!\n  pip install zc.buildout')
-            sys.exit(1)
-        errno = main(sys.argv[sys.argv.index('buildout')+1:])
-        if errno == 0:
-            print('Now you can run tests using: bin/py.test')
-            print('Now you can test current code using: bin/git-repo')
-            print('Thank you 🍻')
-        sys.exit(errno)
-
+requirements_tests = [
+    'pytest',
+    'pytest-cov',
+    'pytest-sugar',
+    'pytest-datadir-ng',
+    'testfixtures',
+    'mock',
+    'betamax==0.5.1',
+    'betamax-serializers',
+]
 
 requirements_links = []
-
-def requirements(spec=None):
-    spec = '{}{}.txt'.format('requirements',
-            '-'+spec if spec else '')
-    requires = []
-
-    requirements = pip.req.parse_requirements(
-        spec, session=pip.download.PipSession())
-
-    for item in requirements:
-        if getattr(item, 'link', None):
-            requirements_links.append(str(item.link))
-        if item.req:
-            requires.append(str(item.req))
-
-    return requires
-
 
 setup(name='git-repo',
       description='Tool for managing repository services from your git CLI tool',
@@ -160,17 +136,17 @@ setup(name='git-repo',
       author_email='guyzmo+git-repo@m0g.net',
       setup_requires=[
           'setuptools_scm',
-          'setuptools-markdown',
           'wheel>=0.25.0',
       ],
-      long_description_markdown_filename='README.md',
+      long_description=open('README.md').read(),
+      long_description_content_type='text/markdown',
       use_scm_version={'version_scheme':'guess-next-dev'},
       include_package_data = True,
-      install_requires=requirements(),
-      tests_require=requirements('test'),
+      install_requires=requirements,
+      tests_require=requirements_tests,
+      extras_require={'test': requirements_tests},
       dependency_links=requirements_links,
       cmdclass={
-          'buildout': Buildout,
           'dist_clean': DistClean,
           'test': PyTest,
       },

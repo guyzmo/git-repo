@@ -43,13 +43,13 @@ class GitlabService(RepositoryService):
 
     def create(self, user, repo, add=False):
         try:
-            group = self.gl.groups.search(user)
-            data = {'name': repo, 'path': repo}
+            group = self.gl.groups.list(search=user)
+            data = {'name': repo}
             if group:
                 data['namespace_id'] = group[0].id
             self.gl.projects.create(data=data)
         except GitlabCreateError as err:
-            if json.loads(err.response_body.decode('utf-8'))['message']['name'][0] == 'has already been taken':
+            if json.loads(err.response_body.decode('utf-8')).get('message', {}).get('name', [None])[0] == 'has already been taken':
                 raise ResourceExistsError("Project already exists.") from err
             else:
                 raise ResourceError("Unhandled error.") from err
@@ -60,7 +60,7 @@ class GitlabService(RepositoryService):
         try:
             return self.gl.projects.get('{}/{}'.format(user, repo)).forks.create({}).path_with_namespace
         except GitlabCreateError as err:
-            if json.loads(err.response_body.decode('utf-8'))['message']['name'][0] == 'has already been taken':
+            if json.loads(err.response_body.decode('utf-8')).get('message', {}).get('name', [None])[0] == 'has already been taken':
                 raise ResourceExistsError("Project already exists.") from err
             else:
                 raise ResourceError("Unhandled error: {}".format(err)) from err
@@ -71,8 +71,8 @@ class GitlabService(RepositoryService):
         try:
             repository = self.gl.projects.get('{}/{}'.format(user, repo))
             if repository:
-                result = self.gl.delete(repository.__class__, repository.id)
-            if not repository or not result:
+                result = self.gl.projects.delete(repository.id)
+            if not repository:
                 raise ResourceNotFoundError("Cannot delete: repository {}/{} does not exists.".format(user, repo))
         except GitlabGetError as err:
             if err.response_code == 404:
@@ -182,7 +182,7 @@ class GitlabService(RepositoryService):
         except Exception as err:
             raise ResourceNotFoundError('Could not find snippet') from err
 
-        return snippet.raw().decode('utf-8')
+        return snippet.content().decode('utf-8')
 
     def gist_clone(self, gist):
         raise ArgumentError('Snippets cannot be cloned in gitlab.')
@@ -197,7 +197,7 @@ class GitlabService(RepositoryService):
 
         data = {
             'title': description,
-            'visibility_level': 0 if secret else 20
+            'visibility': 'private' if secret else 'public'
         }
 
         try:
@@ -211,12 +211,11 @@ class GitlabService(RepositoryService):
                     namespace = self.username
                 gist_path = gist_pathes[1]
                 data.update({
-                        'project_id': '/'.join([namespace, project]),
                         'code': load_file(gist_path),
                         'file_name': os.path.basename(gist_path),
                     }
                 )
-                gist = self.gl.project_snippets.create(data)
+                gist = self.gl.projects.get('/'.join([namespace, project])).snippets.create(data)
 
             elif len(gist_pathes) == 1:
                 gist_path = gist_pathes[0]
@@ -302,15 +301,14 @@ class GitlabService(RepositoryService):
                 if not title and not description:
                     raise ArgumentError('Missing message for request creation')
 
-            request = self.gl.project_mergerequests.create(
-                    project_id=from_project.id,
-                    data={
-                        'source_branch': from_branch,
-                        'target_branch': onto_branch,
-                        'target_project_id': onto_project.id,
-                        'title': title,
-                        'description': description
-                    }
+            request = self.gl.projects.get(from_project.id).mergerequests.create(
+                {
+                    'source_branch': from_branch,
+                    'target_branch': onto_branch,
+                    'target_project_id': onto_project.id,
+                    'title': title,
+                    'description': description
+                }
             )
 
             yield '{}'
@@ -324,6 +322,8 @@ class GitlabService(RepositoryService):
 
         except GitlabGetError as err:
             raise ResourceNotFoundError(err) from err
+        except GitlabCreateError as err:
+            raise ResourceError("Creation error: {}".format(err)) from err
         except Exception as err:
             raise ResourceError("Unhandled error: {}".format(err)) from err
 
@@ -331,7 +331,7 @@ class GitlabService(RepositoryService):
         project = self.gl.projects.get('/'.join([user, repo]))
         yield "{:>3}\t{:<60}\t{:2}"
         yield ('id', 'title', 'URL')
-        for mr in self.gl.project_mergerequests.list(project_id=project.id):
+        for mr in project.mergerequests.list() :
             yield ( str(mr.iid),
                     mr.title,
                     mr.web_url

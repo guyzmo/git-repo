@@ -1,7 +1,7 @@
 {
   "http_interactions": [
     {
-      "recorded_at": "2016-09-11T20:32:32",
+      "recorded_at": "2019-08-26T21:55:37",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -11,38 +11,47 @@
           "Accept": "*/*",
           "Accept-Encoding": "identity",
           "Connection": "keep-alive",
+          "Content-type": "application/json",
           "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
-          "User-Agent": "python-requests/2.10.0"
+          "User-Agent": "python-requests/2.22.0"
         },
         "method": "GET",
-        "uri": "https://gitlab.com/api/v3/user"
+        "uri": "https://gitlab.com/api/v4/user"
       },
       "response": {
         "body": {
           "encoding": null,
-          "string": "{\"name\":\"Guyzmo\",\"username\":\"<GITLAB_NAMESPACE>\",\"id\":459552,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/<GITLAB_NAMESPACE>\",\"created_at\":\"2016-03-21T12:52:59.859Z\",\"is_admin\":false,\"bio\":\"\\\\_o\\u003c\",\"location\":\"\",\"skype\":\"\",\"linkedin\":\"\",\"twitter\":\"\",\"website_url\":\"\",\"last_sign_in_at\":\"2016-09-10T14:02:13.834Z\",\"confirmed_at\":\"2016-03-21T13:48:05.234Z\",\"email\":\"<GITLAB_NAMESPACE>+gitlab@m0g.net\",\"theme_id\":4,\"color_scheme_id\":4,\"projects_limit\":100000,\"current_sign_in_at\":\"2016-09-11T16:56:59.552Z\",\"identities\":[],\"can_create_group\":true,\"can_create_project\":true,\"two_factor_enabled\":false,\"external\":false,\"private_token\":\"<PRIVATE_KEY_GITLAB>\"}"
+          "string": "{\"id\":459552,\"name\":\"Guyzmo\",\"username\":\"<GITLAB_NAMESPACE>\",\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>\",\"created_at\":\"2016-03-21T12:52:59.859Z\",\"bio\":\": :(){ :|:\\u0026 };:\",\"location\":\"Earth, Solar system, Milkyway, Universe\",\"public_email\":\"\",\"skype\":\"\",\"linkedin\":\"\",\"twitter\":\"https://twitter.com/<GITLAB_NAMESPACE>\",\"website_url\":\"http://i.got.nothing.to/blog\",\"organization\":\"\",\"last_sign_in_at\":\"2019-08-19T16:34:20.318Z\",\"confirmed_at\":\"2016-03-21T13:48:05.234Z\",\"last_activity_on\":\"2019-08-26\",\"email\":\"<GITLAB_NAMESPACE>+gitlab@m0g.net\",\"theme_id\":2,\"color_scheme_id\":2,\"projects_limit\":100000,\"current_sign_in_at\":\"2019-08-26T12:05:47.884Z\",\"identities\":[],\"can_create_group\":true,\"can_create_project\":true,\"two_factor_enabled\":false,\"external\":false,\"private_profile\":false,\"shared_runners_minutes_limit\":2000,\"extra_shared_runners_minutes_limit\":null}"
         },
         "headers": {
           "Cache-Control": "max-age=0, private, must-revalidate",
-          "Content-Length": "729",
+          "Content-Length": "944",
           "Content-Type": "application/json",
-          "Date": "Sun, 11 Sep 2016 20:32:32 GMT",
-          "Etag": "W/\"664b3d69847cb9f053e3c94bd53b06c5\"",
+          "Date": "Mon, 26 Aug 2019 21:55:37 GMT",
+          "Etag": "W/\"c277655375af222ec17621ae3125a5fd\"",
+          "RateLimit-Limit": "600",
+          "RateLimit-Observed": "1",
+          "RateLimit-Remaining": "599",
+          "RateLimit-Reset": "1566856597",
+          "RateLimit-ResetTime": "Mon, 26 Aug 2019 21:56:37 GMT",
+          "Referrer-Policy": "strict-origin-when-cross-origin",
           "Server": "nginx",
-          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000",
           "Vary": "Origin",
-          "X-Request-Id": "c34e2fe5-6395-44fe-acf1-31f80092161e",
-          "X-Runtime": "0.043705"
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Request-Id": "ZjutYYKAafa",
+          "X-Runtime": "0.026178"
         },
         "status": {
           "code": 200,
           "message": "OK"
         },
-        "url": "https://gitlab.com/api/v3/user"
+        "url": "https://gitlab.com/api/v4/user"
       }
     },
     {
-      "recorded_at": "2016-09-11T20:32:32",
+      "recorded_at": "2019-08-26T21:55:39",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -52,38 +61,47 @@
           "Accept": "*/*",
           "Accept-Encoding": "identity",
           "Connection": "keep-alive",
+          "Content-type": "application/json",
           "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
-          "User-Agent": "python-requests/2.10.0"
+          "User-Agent": "python-requests/2.22.0"
         },
         "method": "GET",
-        "uri": "https://gitlab.com/api/v3/projects/sigmavirus24%2Fgithub3-py"
+        "uri": "https://gitlab.com/api/v4/projects/sigmavirus24%2Fgithub3-py"
       },
       "response": {
         "body": {
           "encoding": null,
-          "string": "{\"id\":7817,\"description\":\"\",\"default_branch\":\"develop\",\"tag_list\":[],\"public\":true,\"archived\":false,\"visibility_level\":20,\"ssh_url_to_repo\":\"git@gitlab.com:sigmavirus24/github3-py.git\",\"http_url_to_repo\":\"https://gitlab.com/sigmavirus24/github3-py.git\",\"web_url\":\"https://gitlab.com/sigmavirus24/github3-py\",\"owner\":{\"name\":\"Ian Cordasco\",\"username\":\"sigmavirus24\",\"id\":6325,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/396e3de53320abf9855d912cd3d9431f?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/sigmavirus24\"},\"name\":\"github3.py\",\"name_with_namespace\":\"Ian Cordasco / github3.py\",\"path\":\"github3-py\",\"path_with_namespace\":\"sigmavirus24/github3-py\",\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"builds_enabled\":false,\"snippets_enabled\":false,\"container_registry_enabled\":null,\"created_at\":\"2013-07-07T04:31:48.000Z\",\"last_activity_at\":\"2014-12-21T15:58:17.464Z\",\"shared_runners_enabled\":true,\"creator_id\":6325,\"namespace\":{\"id\":6577,\"name\":\"sigmavirus24\",\"path\":\"sigmavirus24\",\"owner_id\":6325,\"created_at\":\"2013-07-07T04:31:15.000Z\",\"updated_at\":\"2014-04-25T07:48:18.000Z\",\"description\":\"\",\"avatar\":null,\"membership_lock\":false,\"share_with_group_lock\":false,\"visibility_level\":20,\"request_access_enabled\":true,\"ldap_sync_status\":\"ready\",\"ldap_sync_error\":null,\"ldap_sync_last_update_at\":null,\"ldap_sync_last_successful_update_at\":null,\"ldap_sync_last_sync_at\":null,\"deleted_at\":null},\"avatar_url\":null,\"star_count\":1,\"forks_count\":1,\"open_issues_count\":0,\"public_builds\":true,\"shared_with_groups\":[],\"permissions\":{\"project_access\":null,\"group_access\":null}}"
+          "string": "{\"id\":7817,\"description\":\"\",\"name\":\"github3.py\",\"name_with_namespace\":\"Ian Stapleton Cordasco / github3.py\",\"path\":\"github3-py\",\"path_with_namespace\":\"sigmavirus24/github3-py\",\"created_at\":\"2013-07-07T04:31:48.000Z\",\"default_branch\":\"develop\",\"tag_list\":[],\"ssh_url_to_repo\":\"git@gitlab.com:sigmavirus24/github3-py.git\",\"http_url_to_repo\":\"https://gitlab.com/sigmavirus24/github3-py.git\",\"web_url\":\"https://gitlab.com/sigmavirus24/github3-py\",\"readme_url\":\"https://gitlab.com/sigmavirus24/github3-py/blob/develop/README.rst\",\"avatar_url\":null,\"star_count\":1,\"forks_count\":2,\"last_activity_at\":\"2014-12-21T15:58:17.464Z\",\"namespace\":{\"id\":6577,\"name\":\"Ian Stapleton Cordasco\",\"path\":\"sigmavirus24\",\"kind\":\"user\",\"full_path\":\"sigmavirus24\",\"parent_id\":null,\"avatar_url\":\"https://secure.gravatar.com/avatar/396e3de53320abf9855d912cd3d9431f?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/sigmavirus24\"},\"_links\":{\"self\":\"https://gitlab.com/api/v4/projects/7817\",\"issues\":\"https://gitlab.com/api/v4/projects/7817/issues\",\"merge_requests\":\"https://gitlab.com/api/v4/projects/7817/merge_requests\",\"repo_branches\":\"https://gitlab.com/api/v4/projects/7817/repository/branches\",\"labels\":\"https://gitlab.com/api/v4/projects/7817/labels\",\"events\":\"https://gitlab.com/api/v4/projects/7817/events\",\"members\":\"https://gitlab.com/api/v4/projects/7817/members\"},\"empty_repo\":false,\"archived\":false,\"visibility\":\"public\",\"owner\":{\"id\":6325,\"name\":\"Ian Stapleton Cordasco\",\"username\":\"sigmavirus24\",\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/396e3de53320abf9855d912cd3d9431f?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/sigmavirus24\"},\"resolve_outdated_diff_discussions\":null,\"container_registry_enabled\":null,\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"jobs_enabled\":false,\"snippets_enabled\":false,\"issues_access_level\":\"enabled\",\"repository_access_level\":\"enabled\",\"merge_requests_access_level\":\"enabled\",\"wiki_access_level\":\"enabled\",\"builds_access_level\":\"disabled\",\"snippets_access_level\":\"disabled\",\"shared_runners_enabled\":true,\"lfs_enabled\":true,\"creator_id\":6325,\"import_status\":\"finished\",\"open_issues_count\":0,\"ci_default_git_depth\":null,\"public_jobs\":true,\"build_timeout\":3600,\"auto_cancel_pending_pipelines\":\"enabled\",\"build_coverage_regex\":null,\"ci_config_path\":null,\"shared_with_groups\":[],\"only_allow_merge_if_pipeline_succeeds\":false,\"request_access_enabled\":true,\"only_allow_merge_if_all_discussions_are_resolved\":null,\"printing_merge_request_link_enabled\":true,\"merge_method\":\"merge\",\"auto_devops_enabled\":false,\"auto_devops_deploy_strategy\":\"continuous\",\"permissions\":{\"project_access\":null,\"group_access\":null},\"approvals_before_merge\":0,\"mirror\":false,\"external_authorization_classification_label\":\"\",\"packages_enabled\":null}"
         },
         "headers": {
           "Cache-Control": "max-age=0, private, must-revalidate",
-          "Content-Length": "1618",
+          "Content-Length": "2794",
           "Content-Type": "application/json",
-          "Date": "Sun, 11 Sep 2016 20:32:32 GMT",
-          "Etag": "W/\"b62cab98d990464cc26ce91e513e9eaf\"",
+          "Date": "Mon, 26 Aug 2019 21:55:39 GMT",
+          "Etag": "W/\"68f724117132ecde04070ee433755f08\"",
+          "RateLimit-Limit": "600",
+          "RateLimit-Observed": "2",
+          "RateLimit-Remaining": "598",
+          "RateLimit-Reset": "1566856599",
+          "RateLimit-ResetTime": "Mon, 26 Aug 2019 21:56:39 GMT",
+          "Referrer-Policy": "strict-origin-when-cross-origin",
           "Server": "nginx",
-          "Status": "200 OK",
+          "Strict-Transport-Security": "max-age=31536000",
           "Vary": "Origin",
-          "X-Request-Id": "ab96c937-179d-4dcc-8969-bd299562bd02",
-          "X-Runtime": "0.085586"
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Request-Id": "elRs0QKOOZ9",
+          "X-Runtime": "0.080379"
         },
         "status": {
           "code": 200,
           "message": "OK"
         },
-        "url": "https://gitlab.com/api/v3/projects/sigmavirus24%2Fgithub3-py"
+        "url": "https://gitlab.com/api/v4/projects/sigmavirus24%2Fgithub3-py"
       }
     },
     {
-      "recorded_at": "2016-09-11T20:32:35",
+      "recorded_at": "2019-08-26T21:55:40",
       "request": {
         "body": {
           "encoding": "utf-8",
@@ -96,33 +114,41 @@
           "Content-Length": "2",
           "Content-type": "application/json",
           "PRIVATE-TOKEN": "<PRIVATE_KEY_GITLAB>",
-          "User-Agent": "python-requests/2.10.0"
+          "User-Agent": "python-requests/2.22.0"
         },
         "method": "POST",
-        "uri": "https://gitlab.com/api/v3/projects/fork/7817"
+        "uri": "https://gitlab.com/api/v4/projects/7817/fork"
       },
       "response": {
         "body": {
           "encoding": null,
-          "string": "{\"id\":1654274,\"description\":\"\",\"default_branch\":null,\"tag_list\":[],\"public\":true,\"archived\":false,\"visibility_level\":20,\"ssh_url_to_repo\":\"git@gitlab.com:<GITLAB_NAMESPACE>/github3-py.git\",\"http_url_to_repo\":\"https://gitlab.com/<GITLAB_NAMESPACE>/github3-py.git\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>/github3-py\",\"owner\":{\"name\":\"Guyzmo\",\"username\":\"<GITLAB_NAMESPACE>\",\"id\":459552,\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/u/<GITLAB_NAMESPACE>\"},\"name\":\"github3.py\",\"name_with_namespace\":\"Guyzmo / github3.py\",\"path\":\"github3-py\",\"path_with_namespace\":\"<GITLAB_NAMESPACE>/github3-py\",\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"builds_enabled\":false,\"snippets_enabled\":false,\"container_registry_enabled\":true,\"created_at\":\"2016-09-11T20:32:32.851Z\",\"last_activity_at\":\"2016-09-11T20:32:34.969Z\",\"shared_runners_enabled\":true,\"creator_id\":459552,\"namespace\":{\"id\":540439,\"name\":\"<GITLAB_NAMESPACE>\",\"path\":\"<GITLAB_NAMESPACE>\",\"owner_id\":459552,\"created_at\":\"2016-03-21T12:53:00.139Z\",\"updated_at\":\"2016-03-21T12:53:00.139Z\",\"description\":\"\",\"avatar\":null,\"membership_lock\":false,\"share_with_group_lock\":false,\"visibility_level\":20,\"request_access_enabled\":true,\"ldap_sync_status\":\"ready\",\"ldap_sync_error\":null,\"ldap_sync_last_update_at\":null,\"ldap_sync_last_successful_update_at\":null,\"ldap_sync_last_sync_at\":null,\"deleted_at\":null},\"forked_from_project\":{\"id\":7817,\"http_url_to_repo\":\"https://gitlab.com/sigmavirus24/github3-py.git\",\"web_url\":\"https://gitlab.com/sigmavirus24/github3-py\",\"name\":\"github3.py\",\"name_with_namespace\":\"Ian Cordasco / github3.py\",\"path\":\"github3-py\",\"path_with_namespace\":\"sigmavirus24/github3-py\"},\"avatar_url\":null,\"star_count\":0,\"forks_count\":0,\"open_issues_count\":0,\"runners_token\":\"_egD53P68gfRNPbeY-Eg\",\"public_builds\":true,\"shared_with_groups\":[]}"
+          "string": "{\"id\":13999059,\"description\":\"\",\"name\":\"github3.py\",\"name_with_namespace\":\"Guyzmo / github3.py\",\"path\":\"github3-py\",\"path_with_namespace\":\"<GITLAB_NAMESPACE>/github3-py\",\"created_at\":\"2019-08-26T21:55:39.761Z\",\"default_branch\":null,\"tag_list\":[],\"ssh_url_to_repo\":\"git@gitlab.com:<GITLAB_NAMESPACE>/github3-py.git\",\"http_url_to_repo\":\"https://gitlab.com/<GITLAB_NAMESPACE>/github3-py.git\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>/github3-py\",\"readme_url\":null,\"avatar_url\":null,\"star_count\":0,\"forks_count\":0,\"last_activity_at\":\"2019-08-26T21:55:39.761Z\",\"namespace\":{\"id\":540439,\"name\":\"Guyzmo\",\"path\":\"<GITLAB_NAMESPACE>\",\"kind\":\"user\",\"full_path\":\"<GITLAB_NAMESPACE>\",\"parent_id\":null,\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>\"},\"_links\":{\"self\":\"https://gitlab.com/api/v4/projects/13999059\",\"issues\":\"https://gitlab.com/api/v4/projects/13999059/issues\",\"merge_requests\":\"https://gitlab.com/api/v4/projects/13999059/merge_requests\",\"repo_branches\":\"https://gitlab.com/api/v4/projects/13999059/repository/branches\",\"labels\":\"https://gitlab.com/api/v4/projects/13999059/labels\",\"events\":\"https://gitlab.com/api/v4/projects/13999059/events\",\"members\":\"https://gitlab.com/api/v4/projects/13999059/members\"},\"empty_repo\":true,\"archived\":false,\"visibility\":\"public\",\"owner\":{\"id\":459552,\"name\":\"Guyzmo\",\"username\":\"<GITLAB_NAMESPACE>\",\"state\":\"active\",\"avatar_url\":\"https://secure.gravatar.com/avatar/917dc55c63895af9953df7d798cdd5f8?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/<GITLAB_NAMESPACE>\"},\"resolve_outdated_diff_discussions\":false,\"container_registry_enabled\":true,\"issues_enabled\":true,\"merge_requests_enabled\":true,\"wiki_enabled\":true,\"jobs_enabled\":false,\"snippets_enabled\":true,\"issues_access_level\":\"enabled\",\"repository_access_level\":\"enabled\",\"merge_requests_access_level\":\"enabled\",\"wiki_access_level\":\"enabled\",\"builds_access_level\":\"disabled\",\"snippets_access_level\":\"enabled\",\"shared_runners_enabled\":true,\"lfs_enabled\":true,\"creator_id\":459552,\"forked_from_project\":{\"id\":7817,\"description\":\"\",\"name\":\"github3.py\",\"name_with_namespace\":\"Ian Stapleton Cordasco / github3.py\",\"path\":\"github3-py\",\"path_with_namespace\":\"sigmavirus24/github3-py\",\"created_at\":\"2013-07-07T04:31:48.000Z\",\"default_branch\":\"develop\",\"tag_list\":[],\"ssh_url_to_repo\":\"git@gitlab.com:sigmavirus24/github3-py.git\",\"http_url_to_repo\":\"https://gitlab.com/sigmavirus24/github3-py.git\",\"web_url\":\"https://gitlab.com/sigmavirus24/github3-py\",\"readme_url\":\"https://gitlab.com/sigmavirus24/github3-py/blob/develop/README.rst\",\"avatar_url\":null,\"star_count\":1,\"forks_count\":2,\"last_activity_at\":\"2014-12-21T15:58:17.464Z\",\"namespace\":{\"id\":6577,\"name\":\"Ian Stapleton Cordasco\",\"path\":\"sigmavirus24\",\"kind\":\"user\",\"full_path\":\"sigmavirus24\",\"parent_id\":null,\"avatar_url\":\"https://secure.gravatar.com/avatar/396e3de53320abf9855d912cd3d9431f?s=80\\u0026d=identicon\",\"web_url\":\"https://gitlab.com/sigmavirus24\"}},\"import_status\":\"scheduled\",\"import_error\":null,\"open_issues_count\":0,\"runners_token\":\"-kxyvWmTN6B1-ySZxbts\",\"ci_default_git_depth\":0,\"public_jobs\":true,\"build_git_strategy\":\"fetch\",\"build_timeout\":3600,\"auto_cancel_pending_pipelines\":\"enabled\",\"build_coverage_regex\":null,\"ci_config_path\":null,\"shared_with_groups\":[],\"only_allow_merge_if_pipeline_succeeds\":false,\"request_access_enabled\":false,\"only_allow_merge_if_all_discussions_are_resolved\":false,\"printing_merge_request_link_enabled\":true,\"merge_method\":\"merge\",\"auto_devops_enabled\":false,\"auto_devops_deploy_strategy\":\"continuous\",\"approvals_before_merge\":0,\"mirror\":false,\"external_authorization_classification_label\":\"\",\"packages_enabled\":true}"
         },
         "headers": {
           "Cache-Control": "max-age=0, private, must-revalidate",
-          "Content-Length": "1840",
+          "Content-Length": "3617",
           "Content-Type": "application/json",
-          "Date": "Sun, 11 Sep 2016 20:32:35 GMT",
-          "Etag": "W/\"2298ba6bba43ef61bc1076dd29ed95cc\"",
+          "Date": "Mon, 26 Aug 2019 21:55:40 GMT",
+          "Etag": "W/\"f429909d05c0ab1d691dfba0a8596a7b\"",
+          "RateLimit-Limit": "600",
+          "RateLimit-Observed": "3",
+          "RateLimit-Remaining": "597",
+          "RateLimit-Reset": "1566856600",
+          "RateLimit-ResetTime": "Mon, 26 Aug 2019 21:56:40 GMT",
+          "Referrer-Policy": "strict-origin-when-cross-origin",
           "Server": "nginx",
-          "Status": "201 Created",
+          "Strict-Transport-Security": "max-age=31536000",
           "Vary": "Origin",
-          "X-Request-Id": "f1668de1-6c64-4ec2-9eec-50f1e208d547",
-          "X-Runtime": "2.428569"
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Request-Id": "wG7moOx18U5",
+          "X-Runtime": "0.415306"
         },
         "status": {
           "code": 201,
           "message": "Created"
         },
-        "url": "https://gitlab.com/api/v3/projects/fork/7817"
+        "url": "https://gitlab.com/api/v4/projects/7817/fork"
       }
     }
   ],

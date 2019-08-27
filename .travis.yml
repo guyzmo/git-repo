@@ -39,7 +39,7 @@ before_install: |
   fi
 # command to install dependencies
 install:
-    - "pip install --upgrade pip" # upgrade to latest pip (needed on py3.4)
-    - "pip install -r requirements-test.txt"
+    - "pip install --upgrade pip pipenv" # upgrade to latest pip (needed on py3.4)
+    - "pipenv install -e .[test]"
 # command to run tests
-script: "py.test --cov=git_repo --cov-report term-missing tests"
+script: "pipenv run py.test --cov=git_repo --cov-report term-missing tests"
