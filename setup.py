@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-from setuptools import setup, find_packages
 
 import sys, os
 
 import pip
 
-from setuptools import setup, find_packages, dist
+from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 from distutils.core import Command
 from distutils.core import setup
@@ -102,7 +101,6 @@ requirements_tests = [
     'pytest',
     'pytest-cov',
     'pytest-sugar',
-    'pytest-catchlog',
     'pytest-datadir-ng',
     'testfixtures',
     'mock',
@@ -138,10 +136,10 @@ setup(name='git-repo',
       author_email='guyzmo+git-repo@m0g.net',
       setup_requires=[
           'setuptools_scm',
-          'setuptools-markdown',
           'wheel>=0.25.0',
       ],
-      long_description_markdown_filename='README.md',
+      long_description=open('README.md').read(),
+      long_description_content_type='text/markdown',
       use_scm_version={'version_scheme':'guess-next-dev'},
       include_package_data = True,
       install_requires=requirements,
