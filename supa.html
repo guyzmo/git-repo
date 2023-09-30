@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supercars Showcase</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add additional CSS styles here, if needed */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #161616; /* Background color similar to Bugatti website */
+            color: #fff;
+        }
+
+        .navbar {
+            background-color: #000;
+            color: #fff;
+            padding: 15px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            margin-right: 20px;
+            color: #fff;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-links li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ff4500; /* Hover color */
+        }
+
+        /* Main Header */
+        #home {
+            background: url('header-background.jpg') no-repeat center center;
+            background-size: cover;
+            color: #fff;
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        #home h1 {
+            font-size: 48px;
+        }
+
+        #home p {
+            font-size: 24px;
+        }
+
+        /* Featured Models Section */
+        #models {
+            background-color: #fff;
+            padding: 60px 0;
+        }
+
+        .model-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px;
+            text-align: center;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .model-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        /* Additional Styles for Improved Look */
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #ff4500;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #ff5700;
+        }
+
+        /* Additional styles for a professional look */
+        .section-title {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            margin-bottom: 40px;
+            color: #666;
+        }
+        .cz
+        {
+            color: #333;
+        }
+
+        /* Contact Section */
+        #contact {
+            background-color: #000; /* Background color similar to Bugatti website */
+            color: #fff;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        #contact h2 {
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        #contact p {
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        #contact-email {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">Supercars Showcase</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#models">Models</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Header -->
+    <section id="home">
+        <div class="container">
+            <h1>Welcome to Supercars Showcase</h1>
+            <p>Explore the world of luxury supercars.</p>
+            <a href="#models" class="cta-button">Explore Models</a>
+        </div>
+    </section>
+
+    <!-- Featured Models Section -->
+    <section id="models">
+        <div class="container">
+            <h2 class="section-title">Featured Models</h2>
+            <p class="section-subtitle">Discover the finest selection of luxury supercars.</p>
+            <div class="model-card">
+                <img src="https://c4.wallpaperflare.com/wallpaper/961/870/471/the-sky-mountains-lights-koenigsegg-hypercar-hd-wallpaper-preview.jpg" alt="Koenigsegg" class="model-image">
+                <div class="cz">
+                <h3 >Koenigsegg</h3>
+                <p  >Experience the engineering marvels of Koenigsegg supercars.</p>
+            </div>
+            </div>
+            <div class="model-card">
+                <img src="https://c4.wallpaperflare.com/wallpaper/982/228/46/pagani-pagani-huayra-car-pagani-huayra-bc-wallpaper-preview.jpg" alt="Pagani" class="model-image">
+                <div class="cz">
+                <h3>Pagani</h3>
+                <p>Indulge in the elegance and power of Pagani automobiles.</p>
+                </div>
+            </div>
+            <div class="model-card">
+                <img src="https://c4.wallpaperflare.com/wallpaper/541/587/661/buggati-supercars-race-cars-wallpaper-preview.jpg" alt="Bugatti" class="model-image">
+                <div class="cz">
+                <h3>Bugatti</h3>
+                <p>Explore the legendary Bugatti hypercars.</p>
+            </div>
+            </div>
+            <div class="model-card">
+                <img src="https://c4.wallpaperflare.com/wallpaper/675/747/599/vehicles-lykan-hypersport-lykan-hypersport-wallpaper-preview.jpg" alt="Bugatti" class="model-image">
+                <div class="cz">
+                <h3>Lykan Hypersport</h3>
+                <p>seven of one hypercar.</p>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <p>If you have any inquiries or want to get in touch, please feel free to email us at:</p>
+            <div id="contact-email">assudanirr@rknec.edu</div>
+        </div>
+    </section>
+
+</body>
+</html>
