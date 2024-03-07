@@ -4,10 +4,11 @@ import logging
 log = logging.getLogger('git_repo.gogs')
 
 from ..service import register_target, RepositoryService, os
-from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
+from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError, ResourcePermissionError
 from ...tools import columnize
 
-from gogs_client import GogsApi, GogsRepo, Token, UsernamePassword, ApiFailure
+# import gogs_client
+from gitea_client import GiteaApi, GiteaRepo, Token, UsernamePassword, ApiFailure
 from requests import Session, HTTPError
 from urllib.parse import urlparse, urlunparse
 from datetime import datetime
@@ -17,7 +18,7 @@ import functools
 from git import config as git_config
 from git.exc import GitCommandError
 
-class GogsClient(GogsApi):
+class GogsClient(GiteaApi):
     def __init__(self):
         self.session = Session()
 
@@ -53,11 +54,11 @@ class GogsClient(GogsApi):
         elif user in self.orgs():
             data = dict(name=repo, private=self.default_private)
             response = self._post('/org/{}/repos'.format(user), auth=self.auth, data=data)
-            repository = GogsRepo.from_json(self._check_ok(response).json())
+            repository = GiteaRepo.from_json(self._check_ok(response).json())
         else:
             data = dict(name=repo, private=self.default_private)
             response = self._post('/admin/users/{}/repos'.format(user), auth=self.auth, data=data)
-            repository = GogsRepo.from_json(self._check_ok(response).json())
+            repository = GiteaRepo.from_json(self._check_ok(response).json())
 
     def delete_repository(self, user, repo):
         return self.delete_repo(self.auth, user, repo)
@@ -93,11 +94,11 @@ class GogsService(RepositoryService):
             if err.response is not None and err.response.status_code == 401:
                 if not self._privatekey:
                     raise ConnectionError('Could not connect to GoGS. '
-                                          'Please configure .gitconfig '
-                                          'with your gogs private key.') from err
+                                        'Please configure .gitconfig '
+                                        'with your gogs private key.') from err
                 else:
                     raise ConnectionError('Could not connect to GoGS. '
-                                          'Check your configuration and try again.') from err
+                                        'Check your configuration and try again.') from err
             else:
                 raise err
 
@@ -105,7 +106,7 @@ class GogsService(RepositoryService):
     def get_auth_token(cls, login, password, prompt=None):
         import platform
         name = 'git-repo token used on {}'.format(platform.node())
-        gg = GogsApi(cls.build_url(cls))
+        gg = GiteaApi(cls.build_url(cls))
         auth = UsernamePassword(login, password)
         tokens = gg.get_tokens(auth, login)
         tokens = dict((token.name, token.token) for token in tokens)
@@ -239,7 +240,7 @@ class GogsService(RepositoryService):
             log.warning('This project has an upstream, but the API does not give information on which.')
             return None
         elif project.parent:
-            namespace, project = parent.full_name.split('/')
+            namespace, project = project.parent.full_name.split('/')
             return self.format_path(project, namespace, rw=rw)
         else:
             return None
