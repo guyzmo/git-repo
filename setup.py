@@ -4,7 +4,12 @@ from setuptools import setup, find_packages
 
 import sys, os
 
-import pip
+# import pip
+try: # for pip >= 10
+    from pip._internal.req import parse_requirements
+except ImportError: # for pip <= 9.0.3
+    from pip.req import parse_requirements
+
 
 from setuptools import setup, find_packages, dist
 from setuptools.command.test import test as TestCommand
@@ -118,18 +123,18 @@ class Buildout(Command):
 requirements_links = []
 
 def requirements(spec=None):
-    spec = '{}{}.txt'.format('requirements',
-            '-'+spec if spec else '')
+    spec = '{}{}{}.txt'.format('requirements',
+            '-' if spec else '' ,spec if spec else '')
     requires = []
 
-    requirements = pip.req.parse_requirements(
-        spec, session=pip.download.PipSession())
+    requirements = parse_requirements(
+        spec, session=False)
 
     for item in requirements:
         if getattr(item, 'link', None):
             requirements_links.append(str(item.link))
-        if item.req:
-            requires.append(str(item.req))
+        if item.requirement and item.requirement != '.':
+            requires.append(str(item.requirement))
 
     return requires
 
