@@ -4,9 +4,12 @@ import logging
 log = logging.getLogger('git_repo.gogs')
 
 from ..service import register_target, RepositoryService, os
-from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError
+from ...exceptions import ResourceError, ResourceExistsError, ResourceNotFoundError, ResourcePermissionError
 from ...tools import columnize
 
+# import gogs_client
+# TODO: Eroor resolution
+# ? TypeError: attrib() got an unexpected keyword argument 'convert'
 from gogs_client import GogsApi, GogsRepo, Token, UsernamePassword, ApiFailure
 from requests import Session, HTTPError
 from urllib.parse import urlparse, urlunparse
@@ -239,7 +242,7 @@ class GogsService(RepositoryService):
             log.warning('This project has an upstream, but the API does not give information on which.')
             return None
         elif project.parent:
-            namespace, project = parent.full_name.split('/')
+            namespace, project = project.parent.full_name.split('/')
             return self.format_path(project, namespace, rw=rw)
         else:
             return None
