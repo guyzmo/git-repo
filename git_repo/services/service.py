@@ -160,7 +160,10 @@ class RepositoryService:
         else:
             config = repository.config_reader()
         target = cls.command_map.get(command, command)
-        conf_section = list(filter(lambda n: 'gitrepo' in n and target in n, config.sections()))
+        if target:
+            conf_section = list(filter(lambda n: 'gitrepo' in n and target in n, config.sections()))
+        else:
+            conf_section = []
 
         http_section = [config._sections[scheme] for scheme in ('http', 'https') if scheme in config.sections()]
 
