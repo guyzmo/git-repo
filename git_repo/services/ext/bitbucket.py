@@ -97,7 +97,7 @@ class BitbucketService(RepositoryService):
 
     def list(self, user, _long=False):
         try:
-            user = User.find_user_by_username(user)
+            user = User.find_user_by_username(user, client=self.bb.client)
         except HTTPError as err:
             raise ResourceNotFoundError("User {} does not exists.".format(user)) from err
 
