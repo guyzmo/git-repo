@@ -214,7 +214,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
             '<branch>': None,
             '<target>': self.target,
             '<target_repo>': None,
-            '<user>/<repo>': '',
+            '<namespace>/<repo>': '',
             'add': False,
             'clone': False,
             'create': False,
@@ -236,7 +236,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
             '<request>': None,
             '<local_branch>': None,
             '<remote_branch>': None,
-            '<user>/<repo>': None,
+            '<namespace>/<repo>': None,
         }
         cli_args.update(d)
         cli_args.update(args)
@@ -251,7 +251,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
         Repo.init(os.path.join(self.tempdir.name, create_repo))
         assert rc == main(self.setup_args({
             'add': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for add".format(rc)
         return RepositoryService._current._did_add
@@ -259,7 +259,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
     def main_clone(self, repo, rc=0, args={}):
         assert rc == main(self.setup_args({
             'clone': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for clone".format(rc)
         return RepositoryService._current._did_clone
@@ -271,7 +271,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
             Repo.init(repo_path)
         assert rc == main(self.setup_args({
             'create': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for create".format(rc)
         return RepositoryService._current._did_create
@@ -283,7 +283,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
             Repo.init(repo_path)
         assert rc == main(self.setup_args({
             'delete': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--path': self.tempdir.name,
         }, args)), "Non {} result for delete".format(rc)
         return RepositoryService._current._did_delete
@@ -291,7 +291,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
     def main_fork(self, repo=None, rc=0, args={}):
         assert rc == main(self.setup_args({
             'fork': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for fork".format(rc)
         return RepositoryService._current._did_fork
@@ -343,7 +343,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
         assert rc == main(self.setup_args({
             'request': True,
             'list': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--clone': True,
             '--path': self.tempdir.name
         }, args)), "Non {} result for request list".format(rc)
@@ -353,7 +353,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
         assert rc == main(self.setup_args({
             'request': True,
             'fetch': True,
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--clone': True,
             '--path': self.tempdir.name
         }, args)), "Non {} result for request fetch".format(rc)
@@ -363,7 +363,6 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
         assert rc == main(self.setup_args({
             'request': True,
             'create': True,
-            '<user>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for request create".format(rc)
         return RepositoryService._current._did_request_create
@@ -371,7 +370,6 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
     def main_open(self, repo=None, rc=0, args={}):
         assert rc == main(self.setup_args({
             'open': True,
-            '<user>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for open".format(rc)
         return RepositoryService._current._did_open
@@ -387,7 +385,7 @@ class GitRepoMainTestCase(TestGitPopenMockupMixin):
 
     def main_noop(self, repo, rc=1, args={}):
         assert rc == main(self.setup_args({
-            '<user>/<repo>': repo,
+            '<namespace>/<repo>': repo,
             '--path': self.tempdir.name
         }, args)), "Non {} result for no-action".format(rc)
 
