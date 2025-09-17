@@ -28,13 +28,16 @@ class GitlabService(RepositoryService):
         super().__init__(*args, **kwarg)
 
     def connect(self):
+        # Allow external setup of gitlab object (for testing with betamax)
+        if not hasattr(self, 'gl') or self.gl is None:
+            self.gl = gitlab.Gitlab(self.url_ro,
+                    private_token=self._privatekey
+            )
+            # For older python-gitlab versions, set session after initialization
+            self.gl.session = self.session
+
         if self.session_proxy:
             self.gl.session.proxies.update(self.session_proxy)
-
-        self.gl = gitlab.Gitlab(self.url_ro,
-                session=self.session,
-                private_token=self._privatekey
-        )
 
         self.gl.ssl_verify = self.session_certificate or not self.session_insecure
 

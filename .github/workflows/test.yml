@@ -1,0 +1,79 @@
+name: Tests
+
+on:
+    push:
+        branches: [main, master, devel]
+    pull_request:
+        branches: [main, master, devel]
+
+jobs:
+    test:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [ubuntu-latest, macos-latest]
+                python-version: ["3.5", "3.6"]
+                exclude:
+                    # Python 3.5 is not available on ubuntu-latest (20.04+)
+                    - os: ubuntu-latest
+                      python-version: "3.5"
+                include:
+                    # Add Python 3.5 on ubuntu-18.04 for compatibility
+                    - os: ubuntu-18.04
+                      python-version: "3.5"
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install pyenv (Ubuntu)
+              if: runner.os == 'Linux'
+              run: |
+                  sudo apt-get install -y pyenv
+
+            - name: Install pyenv (macOS)
+              if: runner.os == 'macOS'
+              run: |
+                  brew install pyenv
+
+            - name: Install Python ${{ matrix.python-version }} with pyenv
+              run: |
+                  export PYENV_ROOT="$HOME/.pyenv"
+                  export PATH="$PYENV_ROOT/bin:$PATH"
+                  eval "$(pyenv init -)"
+                  pyenv install ${{ matrix.python-version }}
+                  pyenv global ${{ matrix.python-version }}
+
+            - name: Install system dependencies (Ubuntu)
+              if: runner.os == 'Linux'
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y git pandoc
+
+            - name: Install system dependencies (macOS)
+              if: runner.os == 'macOS'
+              run: |
+                  brew update
+                  brew install pandoc
+
+            - name: Install Python dependencies
+              run: |
+                  export PYENV_ROOT="$HOME/.pyenv"
+                  export PATH="$PYENV_ROOT/bin:$PATH"
+                  eval "$(pyenv init -)"
+                  python -m pip install --upgrade pip
+                  python -m venv var
+                  var/bin/pip install -r requirements-test.txt
+
+            - name: Run tests
+              env:
+                  TRAVIS_GH3: 1
+              run: |
+                  var/bin/py.test --cov=git_repo --cov-report=term-missing tests/
+
+            - name: Upload coverage to Codecov
+              if: matrix.python-version == '3.9' && matrix.os == 'ubuntu-latest'
+              uses: codecov/codecov-action@v3
+              with:
+                  file: ./coverage.xml
+                  fail_ci_if_error: false

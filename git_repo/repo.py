@@ -150,6 +150,12 @@ class GitRepoRunner(KeywordArgumentParser):
     def init(self):  # pragma: no cover
         if 'GIT_WORK_TREE' in os.environ.keys() or 'GIT_DIR' in os.environ.keys():
             del os.environ['GIT_WORK_TREE']
+        # Initialize repo_name and namespace to prevent AttributeError
+        self.repo_name = None
+        self.namespace = None
+        self.repo_slug = None
+        self._auto_slug = False
+        self.target = None
 
     def get_service(self, lookup_repository=True, resolve_targets=None):
         if not lookup_repository:
@@ -201,6 +207,10 @@ class GitRepoRunner(KeywordArgumentParser):
 
         log.addHandler(logging.StreamHandler())
 
+    @store_parameter('<target>')
+    def set_target(self, target):
+        self.target = target
+
     @store_parameter('<namespace>/<repo>')
     def set_repo_slug(self, repo_slug, auto=False):
         self.repo_slug = EXTRACT_URL_RE.sub('', repo_slug) if repo_slug else repo_slug
@@ -214,10 +224,12 @@ class GitRepoRunner(KeywordArgumentParser):
             self.namespace = '/'.join(namespace)
 
             # This needs to be manually plucked because otherwise it'll be unset for some commands.
-            service = RepositoryService.get_service(None, self.target)
-            if len(namespace) > service._max_nested_namespaces:
-                raise ArgumentError('Too many slashes.'
-                                    'The maximum depth of namespaces is: {}'.format(service._max_nested_namespaces))
+            # Only validate namespace depth if target is set (defer validation if target not yet parsed)
+            if self.target is not None:
+                service = RepositoryService.get_service(None, self.target)
+                if len(namespace) > service._max_nested_namespaces:
+                    raise ArgumentError('Too many slashes.'
+                                        'The maximum depth of namespaces is: {}'.format(service._max_nested_namespaces))
         else:
             self.namespace = None
             self.repo_name = self.repo_slug

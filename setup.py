@@ -4,8 +4,6 @@ from setuptools import setup, find_packages
 
 import sys, os
 
-import pip
-
 from setuptools import setup, find_packages, dist
 from setuptools.command.test import test as TestCommand
 from distutils.core import Command
@@ -122,14 +120,20 @@ def requirements(spec=None):
             '-'+spec if spec else '')
     requires = []
 
-    requirements = pip.req.parse_requirements(
-        spec, session=pip.download.PipSession())
-
-    for item in requirements:
-        if getattr(item, 'link', None):
-            requirements_links.append(str(item.link))
-        if item.req:
-            requires.append(str(item.req))
+    # Simple file parsing approach - more reliable for temporary fix
+    try:
+        with open(spec, 'r') as f:
+            for line in f:
+                line = line.strip()
+                # Skip comments, empty lines, and pip directives (-r, -e, etc.)
+                if line and not line.startswith('#') and not line.startswith('-'):
+                    # Handle git+https links
+                    if line.startswith('git+') or line.startswith('http'):
+                        requirements_links.append(line)
+                    else:
+                        requires.append(line)
+    except FileNotFoundError:
+        pass
 
     return requires
 
