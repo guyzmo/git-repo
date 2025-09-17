@@ -26,10 +26,23 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - name: Set up Python ${{ matrix.python-version }}
-              uses: actions/setup-python@v4
-              with:
-                  python-version: ${{ matrix.python-version }}
+            - name: Install pyenv (Ubuntu)
+              if: runner.os == 'Linux'
+              run: |
+                  sudo apt-get install -y pyenv
+
+            - name: Install pyenv (macOS)
+              if: runner.os == 'macOS'
+              run: |
+                  brew install pyenv
+
+            - name: Install Python ${{ matrix.python-version }} with pyenv
+              run: |
+                  export PYENV_ROOT="$HOME/.pyenv"
+                  export PATH="$PYENV_ROOT/bin:$PATH"
+                  eval "$(pyenv init -)"
+                  pyenv install ${{ matrix.python-version }}
+                  pyenv global ${{ matrix.python-version }}
 
             - name: Install system dependencies (Ubuntu)
               if: runner.os == 'Linux'
@@ -45,10 +58,12 @@ jobs:
 
             - name: Install Python dependencies
               run: |
+                  export PYENV_ROOT="$HOME/.pyenv"
+                  export PATH="$PYENV_ROOT/bin:$PATH"
+                  eval "$(pyenv init -)"
                   python -m pip install --upgrade pip
                   python -m venv var
                   var/bin/pip install -r requirements-test.txt
-                  pip install -r requirements-test.txt
 
             - name: Run tests
               env:
