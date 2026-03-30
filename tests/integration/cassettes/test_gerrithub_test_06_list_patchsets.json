@@ -1,0 +1,91 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2017-12-16T19:27:24",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic UGhhbnRvbS00MjovRk45NTI2TE84MkxYTXJucWJUNWE3Y25wSkY4b2hVTVFRQ1l6TkgzTVE=",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "python-requests/2.18.2"
+        },
+        "method": "GET",
+        "uri": "https://review.gerrithub.io/a/config/server/version"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ")]}'\n\"2.13.6-3044-g7e9c06d\"\n"
+        },
+        "headers": {
+          "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Disposition": "attachment",
+          "Content-Length": "28",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Sat, 16 Dec 2017 19:27:24 GMT",
+          "Expires": "Mon, 01 Jan 1990 00:00:00 GMT",
+          "Pragma": "no-cache",
+          "Server": "Apache/2.4.6 (CentOS)",
+          "Set-Cookie": "JSESSIONID=3nr3a8sa72mq1cjeg8od4d6vd;Path=/;Secure",
+          "X-Content-Type-Options": "nosniff"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://review.gerrithub.io/a/config/server/version"
+      }
+    },
+    {
+      "recorded_at": "2017-12-16T19:27:26",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic UGhhbnRvbS00MjovRk45NTI2TE84MkxYTXJucWJUNWE3Y25wSkY4b2hVTVFRQ1l6TkgzTVE=",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "Cookie": "JSESSIONID=3nr3a8sa72mq1cjeg8od4d6vd",
+          "User-Agent": "python-requests/2.18.2"
+        },
+        "method": "GET",
+        "uri": "https://review.gerrithub.io/a/changes/?q=project:TestUser/DemoRepository%20status:open"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ")]}'\n[{\"id\":\"TestUser%2FDemoRepository~master~Ie7a5fef8f15e8ce0d0633a36730119c86dde53a8\",\"project\":\"TestUser/DemoRepository\",\"branch\":\"master\",\"hashtags\":[],\"change_id\":\"Ie7a5fef8f15e8ce0d0633a36730119c86dde53a8\",\"subject\":\"Commit-24\",\"status\":\"NEW\",\"created\":\"2017-12-16 18:28:19.363000000\",\"updated\":\"2017-12-16 18:28:19.363000000\",\"submit_type\":\"MERGE_IF_NECESSARY\",\"mergeable\":true,\"insertions\":1,\"deletions\":0,\"unresolved_comment_count\":0,\"_number\":392074,\"owner\":{\"_account_id\":1013076}},{\"id\":\"TestUser%2FDemoRepository~master~Ia69043c886bfec332183d59f41f3ae5034f63e9f\",\"project\":\"TestUser/DemoRepository\",\"branch\":\"master\",\"hashtags\":[],\"change_id\":\"Ia69043c886bfec332183d59f41f3ae5034f63e9f\",\"subject\":\"Commit-23\",\"status\":\"NEW\",\"created\":\"2017-12-16 18:28:19.363000000\",\"updated\":\"2017-12-16 18:28:19.363000000\",\"submit_type\":\"MERGE_IF_NECESSARY\",\"mergeable\":true,\"insertions\":1,\"deletions\":0,\"unresolved_comment_count\":0,\"_number\":392073,\"owner\":{\"_account_id\":1013076}},{\"id\":\"TestUser%2FDemoRepository~master~I5bd30f9c2b946ff807c857a33fbc6769e0228dd3\",\"project\":\"TestUser/DemoRepository\",\"branch\":\"master\",\"hashtags\":[],\"change_id\":\"I5bd30f9c2b946ff807c857a33fbc6769e0228dd3\",\"subject\":\"Commit-22\",\"status\":\"NEW\",\"created\":\"2017-12-16 18:28:19.363000000\",\"updated\":\"2017-12-16 18:28:19.363000000\",\"submit_type\":\"MERGE_IF_NECESSARY\",\"mergeable\":true,\"insertions\":1,\"deletions\":0,\"unresolved_comment_count\":0,\"_number\":392072,\"owner\":{\"_account_id\":1013076}},{\"id\":\"TestUser%2FDemoRepository~master~I85150d1c45f106fbdd9f6ce530fc0def00e15f87\",\"project\":\"TestUser/DemoRepository\",\"branch\":\"master\",\"hashtags\":[],\"change_id\":\"I85150d1c45f106fbdd9f6ce530fc0def00e15f87\",\"subject\":\"Commit-21\",\"status\":\"NEW\",\"created\":\"2017-12-16 18:24:31.417000000\",\"updated\":\"2017-12-16 18:24:31.417000000\",\"submit_type\":\"MERGE_IF_NECESSARY\",\"mergeable\":true,\"insertions\":1,\"deletions\":0,\"unresolved_comment_count\":0,\"_number\":392071,\"owner\":{\"_account_id\":1013076}},{\"id\":\"TestUser%2FDemoRepository~master~I46124e0349b6ef4ab98fc9231967b8d54022b5b5\",\"project\":\"TestUser/DemoRepository\",\"branch\":\"master\",\"hashtags\":[],\"change_id\":\"I46124e0349b6ef4ab98fc9231967b8d54022b5b5\",\"subject\":\"Commit-20\",\"status\":\"NEW\",\"created\":\"2017-12-16 18:24:31.417000000\",\"updated\":\"2017-12-16 18:24:31.417000000\",\"submit_type\":\"MERGE_IF_NECESSARY\",\"mergeable\":true,\"insertions\":1,\"deletions\":0,\"unresolved_comment_count\":0,\"_number\":392070,\"owner\":{\"_account_id\":1013076}},{\"id\":\"TestUser%2FDemoRepository~master~Icdf20761639488ce5d8a3c8697f1d6b2821695aa\",\"project\":\"TestUser/DemoRepository\",\"branch\":\"master\",\"hashtags\":[],\"change_id\":\"Icdf20761639488ce5d8a3c8697f1d6b2821695aa\",\"subject\":\"Commit-19\",\"status\":\"NEW\",\"created\":\"2017-12-16 18:24:31.417000000\",\"updated\":\"2017-12-16 18:24:31.417000000\",\"submit_type\":\"MERGE_IF_NECESSARY\",\"mergeable\":true,\"insertions\":1,\"deletions\":0,\"unresolved_comment_count\":0,\"_number\":392069,\"owner\":{\"_account_id\":1013076}},{\"id\":\"TestUser%2FDemoRepository~master~I35ab4558aa5fb18dbc9363187507390076e0eecf\",\"project\":\"TestUser/DemoRepository\",\"branch\":\"master\",\"hashtags\":[],\"change_id\":\"I35ab4558aa5fb18dbc9363187507390076e0eecf\",\"subject\":\"Add second file\",\"status\":\"NEW\",\"created\":\"2017-12-16 17:10:17.823000000\",\"updated\":\"2017-12-16 17:10:17.823000000\",\"submit_type\":\"MERGE_IF_NECESSARY\",\"mergeable\":true,\"insertions\":1,\"deletions\":0,\"unresolved_comment_count\":0,\"_number\":392065,\"owner\":{\"_account_id\":1013076}},{\"id\":\"TestUser%2FDemoRepository~master~Iefe80940e547053c8e450aa034e6ab142d62e4ea\",\"project\":\"TestUser/DemoRepository\",\"branch\":\"master\",\"hashtags\":[],\"change_id\":\"Iefe80940e547053c8e450aa034e6ab142d62e4ea\",\"subject\":\"Commit-37\",\"status\":\"NEW\",\"created\":\"2017-12-16 17:10:17.823000000\",\"updated\":\"2017-12-16 17:10:17.823000000\",\"submit_type\":\"MERGE_IF_NECESSARY\",\"mergeable\":true,\"insertions\":1,\"deletions\":0,\"unresolved_comment_count\":0,\"_number\":392064,\"owner\":{\"_account_id\":1013076}},{\"id\":\"TestUser%2FDemoRepository~master~I8f5f19a87cc90bb5784d4a8f51af887beb00c460\",\"project\":\"TestUser/DemoRepository\",\"branch\":\"master\",\"hashtags\":[],\"change_id\":\"I8f5f19a87cc90bb5784d4a8f51af887beb00c460\",\"subject\":\"Commit-36\",\"status\":\"NEW\",\"created\":\"2017-12-16 16:13:56.184000000\",\"updated\":\"2017-12-16 16:13:56.184000000\",\"submit_type\":\"MERGE_IF_NECESSARY\",\"mergeable\":true,\"insertions\":1,\"deletions\":0,\"unresolved_comment_count\":0,\"_number\":392062,\"owner\":{\"_account_id\":1013076}},{\"id\":\"TestUser%2FDemoRepository~master~I9e49a0eff8ed9d93b314e6e454413643fd6baa9a\",\"project\":\"TestUser/DemoRepository\",\"branch\":\"master\",\"hashtags\":[],\"change_id\":\"I9e49a0eff8ed9d93b314e6e454413643fd6baa9a\",\"subject\":\"Commit-35\",\"status\":\"NEW\",\"created\":\"2017-12-16 16:13:56.184000000\",\"updated\":\"2017-12-16 16:13:56.184000000\",\"submit_type\":\"MERGE_IF_NECESSARY\",\"mergeable\":true,\"insertions\":1,\"deletions\":0,\"unresolved_comment_count\":0,\"_number\":392061,\"owner\":{\"_account_id\":1013076}}]\n"
+        },
+        "headers": {
+          "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Disposition": "attachment",
+          "Content-Length": "4933",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Sat, 16 Dec 2017 19:27:26 GMT",
+          "Expires": "Mon, 01 Jan 1990 00:00:00 GMT",
+          "Pragma": "no-cache",
+          "Server": "Apache/2.4.6 (CentOS)",
+          "X-Content-Type-Options": "nosniff"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://review.gerrithub.io/a/changes/?q=project:TestUser/DemoRepository%20status:open"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

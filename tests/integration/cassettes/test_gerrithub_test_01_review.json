@@ -1,0 +1,48 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2017-12-15T14:57:54",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic UGhhbnRvbS00MjovRk45NTI2TE84MkxYTXJucWJUNWE3Y25wSkY4b2hVTVFRQ1l6TkgzTVE=",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "python-requests/2.18.2"
+        },
+        "method": "GET",
+        "uri": "https://review.gerrithub.io/a/config/server/version"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ")]}'\n\"2.13.6-3044-g7e9c06d\"\n"
+        },
+        "headers": {
+          "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Disposition": "attachment",
+          "Content-Length": "28",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Fri, 15 Dec 2017 14:57:54 GMT",
+          "Expires": "Mon, 01 Jan 1990 00:00:00 GMT",
+          "Pragma": "no-cache",
+          "Server": "Apache/2.4.6 (CentOS)",
+          "Set-Cookie": "JSESSIONID=11nhmra540f822wlpl1srbr9s;Path=/;Secure",
+          "X-Content-Type-Options": "nosniff"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://review.gerrithub.io/a/config/server/version"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

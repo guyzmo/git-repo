@@ -237,23 +237,20 @@ section in the gitconfig:
 
     [gitrepo "bitbucket"]
         username = ford.prefect
-        token = YourOtherSecretKey
+        token = YourSecretAppKey
 
     [gitrepo "gogs"]
         fqdn = UrlOfYourGogs
         token = YourVerySecretKey
 
-Here, we're setting the basics: just the private token. You'll notice that for bitbucket
-the private token is your username and password seperated by a column. That's because
-bitbucket does not offer throw away private tokens for tools (I might implement BB's OAuth
-at some point).
+Here, we're setting the basics: just the private token. Notice that the token needed for Bitbucket are an App-token, not to be confused with an OAuth-token, which are also avaiable from the Butbucket settings.
 
 You also have the ability to set up an alias:
 
     [gitrepo "bitbucket"]
         alias = bit
         username = ford.prefect
-        token = YourOtherSecretKey
+        token = YourSecretAppKey
 
 that will change the command you use for a name you'll prefer to handle actions
 for the service you use:
@@ -294,6 +291,18 @@ Your can run the following command to do this automagically:
 if you want to use another path, you can change the defaults:
 
     python -m git_repo.extract_config ~/.gitconfig-repos ~/.gitconfig
+
+### Configuring Gerrit
+
+Please note: when configuration wizard will ask you for password, do not provide
+your Gerrit account password, but enter `HTTP password` instead. You can setup
+it on [Settings > HTTP Password page](https://review.gerrithub.io/#/settings/http-password)
+
+You may also need to tweak your `~/.gitconfig`:
+* set `ro-suffix` if your Gerrit isn't served at server root. For example, set
+  `ro-suffix` to `/r` if your Gerrit is hosted at `https://review.host.com/r`
+* set `ssh-port` parameter to set custom port for ssh connection to Gerrit (default: 29418)
+* set `auth-type`: basic (default) or digest
 
 ### Development
 

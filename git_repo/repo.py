@@ -1,4 +1,4 @@
-#!/usr/bin/env pytho
+#!/usr/bin/env python3
 
 '''
 Usage:
@@ -159,9 +159,9 @@ class GitRepoRunner(KeywordArgumentParser):
             # Try to resolve existing repository path
             try:
                 try:
-                    repository = Repo(os.path.join(self.path, self.repo_name or ''))
+                    repository = Repo(os.path.join(self.path, self.repo_name or ''), search_parent_directories=True)
                 except NoSuchPathError:
-                    repository = Repo(self.path)
+                    repository = Repo(self.path, search_parent_directories=True)
             except InvalidGitRepositoryError:
                 raise FileNotFoundError('Cannot find path to the repository.')
             service = RepositoryService.get_service(repository, self.target)
@@ -326,7 +326,10 @@ class GitRepoRunner(KeywordArgumentParser):
         except Exception as err:
             if os.path.exists(repo_path):
                 shutil.rmtree(repo_path)
-            raise ResourceNotFoundError(err.args[2].decode('utf-8')) from err
+            if 'Permission denied' in str(err):
+                raise ResourceNotFoundError('Permission denied. Have you added your SSH key to the remote service?') from err
+            else:
+                raise ResourceNotFoundError(err.args[2].decode('utf-8')) from err
 
     @register_action('create')
     def do_create(self):
@@ -426,17 +429,18 @@ class GitRepoRunner(KeywordArgumentParser):
 
         service = self.get_service(resolve_targets=('upstream', '{service}', 'origin'))
 
-        new_request = service.request_create(self.namespace,
+        print_iter(service.request_create(
+                self.namespace,
                 self.repo_name,
                 self.local_branch,
                 self.remote_branch,
                 self.title,
                 self.message,
                 self._auto_slug,
-                request_edition)
-        log.info('Successfully created request of `{local}` onto `{project}:{remote}`, with id `{ref}`!'.format(**new_request))
-        if 'url' in new_request:
-            log.info('available at: {url}'.format(**new_request))
+                request_edition
+            )
+        )
+
         return 0
 
     @register_action('request', 'fetch')

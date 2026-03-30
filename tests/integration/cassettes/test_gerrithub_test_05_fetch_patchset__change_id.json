@@ -1,0 +1,220 @@
+{
+  "http_interactions": [
+    {
+      "recorded_at": "2017-12-20T12:17:05",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic UGhhbnRvbS00MjovRk45NTI2TE84MkxYTXJucWJUNWE3Y25wSkY4b2hVTVFRQ1l6TkgzTVE=",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "User-Agent": "python-requests/2.10.0"
+        },
+        "method": "GET",
+        "uri": "https://review.gerrithub.io/a/config/server/version"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ")]}'\n\"2.13.6-3044-g7e9c06d\"\n"
+        },
+        "headers": {
+          "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Disposition": "attachment",
+          "Content-Length": "28",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Wed, 20 Dec 2017 12:17:05 GMT",
+          "Expires": "Mon, 01 Jan 1990 00:00:00 GMT",
+          "Pragma": "no-cache",
+          "Server": "Apache/2.4.6 (CentOS)",
+          "Set-Cookie": "JSESSIONID=gurggwed4htl1pqb20oxh4fpy;Path=/;Secure",
+          "X-Content-Type-Options": "nosniff"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://review.gerrithub.io/a/config/server/version"
+      }
+    },
+    {
+      "recorded_at": "2017-12-20T12:17:06",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic UGhhbnRvbS00MjovRk45NTI2TE84MkxYTXJucWJUNWE3Y25wSkY4b2hVTVFRQ1l6TkgzTVE=",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "Cookie": "JSESSIONID=gurggwed4htl1pqb20oxh4fpy",
+          "User-Agent": "python-requests/2.10.0"
+        },
+        "method": "GET",
+        "uri": "https://review.gerrithub.io/a/projects/TestUser%2FDemoRepository"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ")]}'\n{\"id\":\"TestUser%2FDemoRepository\",\"name\":\"TestUser/DemoRepository\",\"parent\":\"All-Projects\",\"description\":\"Just a demo repository for some testing\",\"state\":\"ACTIVE\",\"web_links\":[{\"name\":\"GitHub\",\"url\":\"https://github.com/TestUser/DemoRepository\"}]}\n"
+        },
+        "headers": {
+          "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Disposition": "attachment",
+          "Content-Length": "259",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Wed, 20 Dec 2017 12:17:06 GMT",
+          "Expires": "Mon, 01 Jan 1990 00:00:00 GMT",
+          "Pragma": "no-cache",
+          "Server": "Apache/2.4.6 (CentOS)",
+          "X-Content-Type-Options": "nosniff"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://review.gerrithub.io/a/projects/TestUser%2FDemoRepository"
+      }
+    },
+    {
+      "recorded_at": "2017-12-20T12:17:06",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic UGhhbnRvbS00MjovRk45NTI2TE84MkxYTXJucWJUNWE3Y25wSkY4b2hVTVFRQ1l6TkgzTVE=",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "Cookie": "JSESSIONID=gurggwed4htl1pqb20oxh4fpy",
+          "User-Agent": "python-requests/2.10.0"
+        },
+        "method": "GET",
+        "uri": "https://review.gerrithub.io/a/projects/TestUser%2FDemoRepository/branches"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ")]}'\n[{\"ref\":\"HEAD\",\"revision\":\"master\"},{\"web_links\":[{\"name\":\"GitHub\",\"url\":\"https://github.com/TestUser/DemoRepository/tree/refs/meta/config\"}],\"ref\":\"refs/meta/config\",\"revision\":\"3d3d58c5516834d9fcd92d4d10efe5d3b878bdb4\"},{\"web_links\":[{\"name\":\"GitHub\",\"url\":\"https://github.com/TestUser/DemoRepository/tree/refs/heads/master\"}],\"ref\":\"refs/heads/master\",\"revision\":\"d8ffe1ba74eee8dbbf1c305d0828594b65064d24\"},{\"web_links\":[{\"name\":\"GitHub\",\"url\":\"https://github.com/TestUser/DemoRepository/tree/refs/heads/second_branch\"}],\"ref\":\"refs/heads/second_branch\",\"revision\":\"734a6e38bf82c9f1bd5e0d66d3fe06b9010a9b37\",\"can_delete\":true}]\n"
+        },
+        "headers": {
+          "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Disposition": "attachment",
+          "Content-Length": "642",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Wed, 20 Dec 2017 12:17:06 GMT",
+          "Expires": "Mon, 01 Jan 1990 00:00:00 GMT",
+          "Pragma": "no-cache",
+          "Server": "Apache/2.4.6 (CentOS)",
+          "X-Content-Type-Options": "nosniff"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://review.gerrithub.io/a/projects/TestUser%2FDemoRepository/branches"
+      }
+    },
+    {
+      "recorded_at": "2017-12-20T12:17:07",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic UGhhbnRvbS00MjovRk45NTI2TE84MkxYTXJucWJUNWE3Y25wSkY4b2hVTVFRQ1l6TkgzTVE=",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "Cookie": "JSESSIONID=gurggwed4htl1pqb20oxh4fpy",
+          "User-Agent": "python-requests/2.10.0"
+        },
+        "method": "GET",
+        "uri": "https://review.gerrithub.io/a/changes/?q=change:%20I873f1207d6&o=CURRENT_REVISION"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ")]}'\n[{\"id\":\"TestUser%2FDemoRepository~master~I873f1207d660256dd00851852754b8bc3cd7a321\",\"project\":\"TestUser/DemoRepository\",\"branch\":\"master\",\"hashtags\":[],\"change_id\":\"I873f1207d660256dd00851852754b8bc3cd7a321\",\"subject\":\"Test2\",\"status\":\"NEW\",\"created\":\"2017-12-17 08:22:09.808000000\",\"updated\":\"2017-12-17 08:23:37.652000000\",\"submit_type\":\"MERGE_IF_NECESSARY\",\"mergeable\":true,\"insertions\":2,\"deletions\":0,\"unresolved_comment_count\":0,\"_number\":392089,\"owner\":{\"_account_id\":1013076},\"current_revision\":\"010ea1b90c48f414f868b854e7cd946802bbd58d\",\"revisions\":{\"010ea1b90c48f414f868b854e7cd946802bbd58d\":{\"kind\":\"REWORK\",\"_number\":2,\"created\":\"2017-12-17 08:23:37.652000000\",\"uploader\":{\"_account_id\":1013076},\"ref\":\"refs/changes/89/392089/2\",\"fetch\":{\"ssh\":{\"url\":\"ssh://TestUser@review.gerrithub.io:29418/TestUser/DemoRepository\",\"ref\":\"refs/changes/89/392089/2\"},\"anonymous http\":{\"url\":\"https://review.gerrithub.io/TestUser/DemoRepository\",\"ref\":\"refs/changes/89/392089/2\"},\"http\":{\"url\":\"https://TestUser@review.gerrithub.io/a/TestUser/DemoRepository\",\"ref\":\"refs/changes/89/392089/2\"}}}}}]\n"
+        },
+        "headers": {
+          "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Disposition": "attachment",
+          "Content-Length": "1113",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Wed, 20 Dec 2017 12:17:07 GMT",
+          "Expires": "Mon, 01 Jan 1990 00:00:00 GMT",
+          "Pragma": "no-cache",
+          "Server": "Apache/2.4.6 (CentOS)",
+          "X-Content-Type-Options": "nosniff"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://review.gerrithub.io/a/changes/?q=change:%20I873f1207d6&o=CURRENT_REVISION"
+      }
+    },
+    {
+      "recorded_at": "2017-12-20T12:17:08",
+      "request": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ""
+        },
+        "headers": {
+          "Accept": "application/json",
+          "Accept-Encoding": "identity",
+          "Authorization": "Basic UGhhbnRvbS00MjovRk45NTI2TE84MkxYTXJucWJUNWE3Y25wSkY4b2hVTVFRQ1l6TkgzTVE=",
+          "Connection": "keep-alive",
+          "Content-Type": "application/json",
+          "Cookie": "JSESSIONID=gurggwed4htl1pqb20oxh4fpy",
+          "User-Agent": "python-requests/2.10.0"
+        },
+        "method": "GET",
+        "uri": "https://review.gerrithub.io/a/changes/I873f1207d6/"
+      },
+      "response": {
+        "body": {
+          "encoding": "utf-8",
+          "string": ")]}'\n{\"id\":\"TestUser%2FDemoRepository~master~I873f1207d660256dd00851852754b8bc3cd7a321\",\"project\":\"TestUser/DemoRepository\",\"branch\":\"master\",\"hashtags\":[],\"change_id\":\"I873f1207d660256dd00851852754b8bc3cd7a321\",\"subject\":\"Test2\",\"status\":\"NEW\",\"created\":\"2017-12-17 08:22:09.808000000\",\"updated\":\"2017-12-17 08:23:37.652000000\",\"submit_type\":\"MERGE_IF_NECESSARY\",\"mergeable\":true,\"insertions\":2,\"deletions\":0,\"unresolved_comment_count\":0,\"_number\":392089,\"owner\":{\"_account_id\":1013076}}\n"
+        },
+        "headers": {
+          "Cache-Control": "private, max-age=0, must-revalidate",
+          "Connection": "close",
+          "Content-Disposition": "attachment",
+          "Content-Length": "493",
+          "Content-Type": "application/json;charset=utf-8",
+          "Date": "Wed, 20 Dec 2017 12:17:08 GMT",
+          "ETag": "91431ddfec9102cd51eddb5fc36ba743",
+          "Expires": "Wed, 20 Dec 2017 12:17:08 GMT",
+          "Server": "Apache/2.4.6 (CentOS)",
+          "X-Content-Type-Options": "nosniff"
+        },
+        "status": {
+          "code": 200,
+          "message": "OK"
+        },
+        "url": "https://review.gerrithub.io/a/changes/I873f1207d6/"
+      }
+    }
+  ],
+  "recorded_with": "betamax/0.5.1"
+}

@@ -7,3 +7,4 @@ github3.py<1.0.0
 python-gitlab>=1.0.0
 gogs-client>=1.0.3
 pybitbucket_fork>=0.12.2
+python-gerritclient>=0.0.1dev137

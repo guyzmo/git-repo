@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import logging
 log = logging.getLogger('git_repo.gitlab')
@@ -44,7 +44,7 @@ class GitlabService(RepositoryService):
     def create(self, user, repo, add=False):
         try:
             group = self.gl.groups.search(user)
-            data = {'name': repo}
+            data = {'name': repo, 'path': repo}
             if group:
                 data['namespace_id'] = group[0].id
             self.gl.projects.create(data=data)
@@ -313,13 +313,14 @@ class GitlabService(RepositoryService):
                     }
             )
 
-            return {
-                'local': from_branch,
-                'project': '/'.join([onto_user, onto_repo]),
-                'remote': onto_branch,
-                'url': request.web_url,
-                'ref': request.iid
-            }
+            yield '{}'
+            yield ['Successfully created request of `{local}` onto `{project}:{remote}, with id `{ref}'.format(
+                local=from_branch,
+                project='/'.join([onto_user, onto_repo]),
+                remote=onto_branch,
+                ref=request.iid
+            )]
+            yield ['available at {}'.format(request.web_url)]
 
         except GitlabGetError as err:
             raise ResourceNotFoundError(err) from err

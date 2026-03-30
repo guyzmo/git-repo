@@ -24,6 +24,8 @@ def extract_gitrepo_conf(gconf_old, gconf_new):
     print("🍻 git-repo configuration extracted to new file: {}".format(gconf_new))
 
 if __name__ == '__main__':
+    if sys.version_info < (3, ):
+        sys.exit('Please use with python version 3')
     if '-h' in sys.argv or '--help' in sys.argv:
         sys.exit('Usage: {} [.gitconfig-repos] [.gitconfig]'.format(sys.argv[0]))
     sys.exit(extract_gitrepo_conf(
