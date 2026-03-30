@@ -1,0 +1,82 @@
+.TH "git-repo" "1"
+.SH NAME
+git-repo
+.SH SYNOPSIS
+git-repo [OPTIONS] COMMAND [ARGS]
+.SH DESCRIPTION
+git-repo is a tool for managing repository services from your git CLI tool.
+.SH COMMANDS
+.TP
+.B fork
+Create a personal fork of the current repository on the remote service.
+.TP
+.B create
+Create a new repository, optionally seeding it from local content.
+.TP
+.B delete
+Delete a repository or remote resource managed by git-repo.
+.TP
+.B open
+Open the repository or resource page in the default browser.
+.TP
+.B list
+List repositories or resources visible to the current account.
+.TP
+.B clone
+Clone a remote repository into the local workspace.
+.TP
+.B add
+Add collaborators, files, or other assets to the current repository context.
+.TP
+.B request
+Create or update a merge or pull request for the current branch.
+.TP
+.B gist
+Manage gists or snippets associated with the current service account.
+.TP
+.B config
+Inspect or update git-repo configuration values.
+.SH OPTIONS
+.TP
+.B --path \fIpath\fP
+Set the base filesystem path used for repository operations.
+.TP
+.B --verbose
+Enable verbose logging to show detailed progress information.
+.TP
+.B --branch \fIbranch\fP
+Specify the target branch when creating or updating resources.
+.TP
+.B --add \fIvalue\fP
+Provide an additional collaborator, file, or metadata value to include.
+.TP
+.B --force
+Bypass safety checks and force the requested action.
+.TP
+.B --long
+Display extended details in tabular and listing outputs.
+.TP
+.B --title \fItitle\fP
+Set the title used for created repositories, requests, or gists.
+.TP
+.B --message \fImessage\fP
+Attach a descriptive message to the resource being created or updated.
+.TP
+.B --secret
+Mark the created resource as secret or private when supported.
+.TP
+.B --config \fIkey\fP=\fIvalue\fP
+Override a configuration value for the duration of the command.
+.TP
+.B --help
+Show command usage information and exit.
+.SH EXAMPLES
+.TP
+.B git-repo fork --path ~/workspace/projects
+Create a fork of the current repository and clone it into the given path.
+.TP
+.B git-repo request --branch feature/login --title "Add login flow" --message "Implements OAuth login"
+Open a pull request for the feature branch with a title and message.
+.TP
+.B git-repo list --long --verbose
+List repositories with detailed information and verbose progress output.
