@@ -326,7 +326,10 @@ class GitRepoRunner(KeywordArgumentParser):
         except Exception as err:
             if os.path.exists(repo_path):
                 shutil.rmtree(repo_path)
-            raise ResourceNotFoundError(err.args[2].decode('utf-8')) from err
+            if 'Permission denied' in str(err):
+                raise ResourceNotFoundError('Permission denied. Have you added your SSH key to the remote service?') from err
+            else:
+                raise ResourceNotFoundError(err.args[2].decode('utf-8')) from err
 
     @register_action('create')
     def do_create(self):
